@@ -2,6 +2,7 @@
   "name": "beacon",
   "version": "1.0.0",
   "description": "Personal stock-monitoring bot for whiskey/spirits product pages",
+  "type": "module",
   "main": "checker.js",
   "scripts": {
     "start": "node checker.js",
