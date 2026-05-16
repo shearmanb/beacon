@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beacon Dashboard</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --green: #2ecc71;
+      --blue: #3498db;
+      --red: #e74c3c;
+      --yellow: #f1c40f;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; min-height: 100vh; }
+    #gate { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    #gate form { background: var(--surface); padding: 2rem; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 1rem; min-width: 300px; }
+    #gate h1 { font-size: 1.5rem; }
+    #gate input { padding: .6rem .8rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem; }
+    #gate button { padding: .6rem 1.2rem; border-radius: 8px; border: none; background: var(--blue); color: #fff; font-size: 1rem; cursor: pointer; }
+    #gate .error { color: var(--red); font-size: .875rem; }
+    #app { display: none; max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: .75rem; }
+    header h1 { font-size: 1.5rem; }
+    .header-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .btn { padding: .4rem .9rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .875rem; cursor: pointer; white-space: nowrap; }
+    .btn:hover { border-color: var(--blue); }
+    .btn-primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .btn-primary:hover { opacity: .85; }
+    .status { font-size: .8rem; color: var(--muted); }
+    section { margin-bottom: 2rem; }
+    section h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: .75rem; }
+    .site-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .site-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
+    .site-card h3 { font-size: .95rem; margin-bottom: .5rem; }
+    .site-card .meta { font-size: .8rem; color: var(--muted); display: flex; flex-direction: column; gap: .2rem; }
+    .site-card .badge { display: inline-block; padding: .2rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 600; }
+    .badge-green { background: rgba(46,204,113,.15); color: var(--green); }
+    .badge-blue { background: rgba(52,152,219,.15); color: var(--blue); }
+    .badge-red { background: rgba(231,76,60,.15); color: var(--red); }
+    .badge-yellow { background: rgba(241,196,15,.15); color: var(--yellow); }
+    .site-card .toggle-row { margin-top: .75rem; display: flex; align-items: center; gap: .5rem; font-size: .8rem; }
+    .toggle { position: relative; display: inline-block; width: 36px; height: 20px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; inset: 0; background: var(--border); border-radius: 20px; transition: .2s; cursor: pointer; }
+    .slider:before { content: ""; position: absolute; width: 14px; height: 14px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+    input:checked + .slider { background: var(--yellow); }
+    input:checked + .slider:before { transform: translateX(16px); }
+    .controls { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .75rem; }
+    .controls input, .controls select { padding: .4rem .7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .875rem; }
+    .controls input { flex: 1; min-width: 160px; }
+    table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+    th { text-align: left; padding: .5rem .75rem; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); }
+    td { padding: .5rem .75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .avail-yes { color: var(--green); font-weight: 600; }
+    .avail-no { color: var(--red); }
+    .thumb { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; }
+    .history-list { display: flex; flex-direction: column; gap: .5rem; max-height: 400px; overflow-y: auto; }
+    .history-item { display: flex; gap: .75rem; align-items: flex-start; padding: .5rem .75rem; border-radius: 8px; background: var(--surface); border-left: 3px solid var(--border); font-size: .85rem; }
+    .history-item.new_product { border-left-color: var(--blue); }
+    .history-item.restock { border-left-color: var(--green); }
+    .history-item.sold_out { border-left-color: var(--red); }
+    .history-time { color: var(--muted); white-space: nowrap; min-width: 80px; }
+    .token-hint { font-size: .75rem; color: var(--muted); margin-top: .25rem; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .empty { color: var(--muted); font-size: .875rem; padding: 1rem 0; }
+  </style>
+</head>
+<body>
+
+<div id="gate">
+  <form id="gate-form">
+    <h1>🔦 Beacon</h1>
+    <p style="color:var(--muted);font-size:.9rem">Stock monitoring dashboard</p>
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password" />
+    <button type="submit">Unlock</button>
+    <div class="error" id="pw-error" style="display:none">Incorrect password</div>
+  </form>
+</div>
+
+<div id="app">
+  <header>
+    <h1>🔦 Beacon</h1>
+    <div class="header-actions">
+      <span class="status" id="refresh-status">Loading…</span>
+      <button class="btn" onclick="loadData()">Refresh</button>
+      <button class="btn btn-primary" id="run-now-btn" onclick="triggerRun()" style="display:none">▶ Run Now</button>
+      <button class="btn" onclick="promptToken()">GitHub Token</button>
+    </div>
+  </header>
+
+  <section>
+    <h2>Sites</h2>
+    <div class="site-cards" id="site-cards">
+      <div class="empty">Loading…</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Products</h2>
+    <div class="controls">
+      <input type="text" id="search" placeholder="Search products…" oninput="renderProducts()" />
+      <select id="filter-site" onchange="renderProducts()">
+        <option value="">All sites</option>
+      </select>
+      <select id="filter-avail" onchange="renderProducts()">
+        <option value="">All availability</option>
+        <option value="yes">Available</option>
+        <option value="no">Sold Out</option>
+      </select>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Product</th>
+          <th>Site</th>
+          <th>Price</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="products-tbody">
+        <tr><td colspan="5" class="empty">Loading…</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Alert History</h2>
+    <div class="history-list" id="history-list">
+      <div class="empty">Loading…</div>
+    </div>
+  </section>
+</div>
+
+<script>
+  // ── CONFIGURE THESE ──────────────────────────────────────────────────────────
+  const REPO_OWNER    = 'shearmanb';
+  const REPO_NAME     = 'beacon';
+  const DASH_PASSWORD = 'your-password-here';
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main`;
+  const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
+  const TOKEN_KEY = 'beacon_gh_token';
+
+  let state = {};
+  let history = [];
+  let config = { sites: [] };
+
+  // ── Auth gate ────────────────────────────────────────────────────────────────
+  document.getElementById('gate-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const pw = document.getElementById('pw-input').value;
+    if (pw === DASH_PASSWORD) {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      loadData();
+      setInterval(loadData, 120_000);
+    } else {
+      document.getElementById('pw-error').style.display = 'block';
+    }
+  });
+
+  // ── Data loading ─────────────────────────────────────────────────────────────
+  async function loadData() {
+    document.getElementById('refresh-status').textContent = 'Refreshing…';
+    try {
+      const [stateText, historyText, configText] = await Promise.all([
+        fetchRaw('state.json'),
+        fetchRaw('alert_history.json'),
+        fetchRaw('config.js'),
+      ]);
+      state = JSON.parse(stateText);
+      history = JSON.parse(historyText);
+      config.sites = parseConfigSites(configText);
+      renderAll();
+      document.getElementById('refresh-status').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+    } catch (err) {
+      document.getElementById('refresh-status').textContent = `Error: ${err.message}`;
+    }
+  }
+
+  async function fetchRaw(path) {
+    const res = await fetch(`${RAW_BASE}/${path}?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`${res.status} fetching ${path}`);
+    return res.text();
+  }
+
+  function parseConfigSites(js) {
+    // Extract site objects via a simple regex for display purposes.
+    // Full execution not used — we only need name, id, imminent, intervalMinutes.
+    const sites = [];
+    const blocks = js.matchAll(/\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/gs);
+    for (const block of blocks) {
+      const b = block[1];
+      const name = (b.match(/name:\s*["']([^"']+)["']/) || [])[1];
+      const id   = (b.match(/id:\s*["']([^"']+)["']/) || [])[1];
+      const imminent = /imminent:\s*true/.test(b);
+      const interval = parseInt((b.match(/intervalMinutes:\s*(\d+)/) || [])[1] ?? '0');
+      if (name && id) sites.push({ name, id, imminent, intervalMinutes: interval });
+    }
+    return sites;
+  }
+
+  // ── Render ───────────────────────────────────────────────────────────────────
+  function renderAll() {
+    renderSiteCards();
+    renderProducts();
+    renderHistory();
+    updateSiteFilter();
+    const token = localStorage.getItem(TOKEN_KEY);
+    document.getElementById('run-now-btn').style.display = token ? 'inline-block' : 'none';
+  }
+
+  function renderSiteCards() {
+    const container = document.getElementById('site-cards');
+    if (!config.sites.length) { container.innerHTML = '<div class="empty">No sites configured</div>'; return; }
+
+    container.innerHTML = config.sites.map(site => {
+      const s = state[site.id] || {};
+      const products = Object.values(s.products || {});
+      const inStock = products.filter(p => p.available).length;
+      const total = products.length;
+      const checked = s.lastChecked ? new Date(s.lastChecked).toLocaleString() : 'Never';
+      const imminentChecked = site.imminent;
+
+      return `<div class="site-card">
+        <h3>${site.name}</h3>
+        <div class="meta">
+          <span>Last checked: ${checked}</span>
+          <span>${total} products &mdash; ${inStock} in stock</span>
+          <span>Interval: ${site.intervalMinutes} min</span>
+        </div>
+        <div class="toggle-row">
+          <label class="toggle">
+            <input type="checkbox" ${imminentChecked ? 'checked' : ''} onchange="toggleImminent('${site.id}', this.checked)" />
+            <span class="slider"></span>
+          </label>
+          <span>Imminent mode <span class="badge ${imminentChecked ? 'badge-yellow' : ''}">${imminentChecked ? '🔥 ON' : 'OFF'}</span></span>
+        </div>
+        <div class="token-hint">Requires GitHub token to toggle</div>
+      </div>`;
+    }).join('');
+  }
+
+  function allProducts() {
+    const result = [];
+    for (const [siteId, s] of Object.entries(state)) {
+      const siteName = config.sites.find(x => x.id === siteId)?.name ?? siteId;
+      for (const p of Object.values(s.products || {})) {
+        result.push({ ...p, siteId, siteName });
+      }
+    }
+    return result;
+  }
+
+  function renderProducts() {
+    const search = document.getElementById('search').value.toLowerCase();
+    const filterSite = document.getElementById('filter-site').value;
+    const filterAvail = document.getElementById('filter-avail').value;
+
+    let products = allProducts();
+    if (search) products = products.filter(p => p.title.toLowerCase().includes(search));
+    if (filterSite) products = products.filter(p => p.siteId === filterSite);
+    if (filterAvail === 'yes') products = products.filter(p => p.available);
+    if (filterAvail === 'no') products = products.filter(p => !p.available);
+
+    const tbody = document.getElementById('products-tbody');
+    if (!products.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="empty">No products found</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = products.map(p => `
+      <tr>
+        <td>${p.image ? `<img class="thumb" src="${p.image}" alt="" loading="lazy" />` : ''}</td>
+        <td><a href="${p.url}" target="_blank" rel="noopener">${p.title}</a></td>
+        <td>${p.siteName}</td>
+        <td>${p.minPrice != null ? '$' + p.minPrice.toFixed(2) : '—'}</td>
+        <td class="${p.available ? 'avail-yes' : 'avail-no'}">${p.available ? 'In Stock' : 'Sold Out'}</td>
+      </tr>`).join('');
+  }
+
+  function renderHistory() {
+    const list = document.getElementById('history-list');
+    if (!history.length) { list.innerHTML = '<div class="empty">No alerts yet</div>'; return; }
+
+    const recent = [...history].reverse().slice(0, 100);
+    list.innerHTML = recent.map(h => {
+      const label = h.type === 'new_product' ? '🆕 New' : h.type === 'restock' ? '✅ Restock' : '❌ Sold Out';
+      const time = new Date(h.timestamp).toLocaleString();
+      return `<div class="history-item ${h.type}">
+        <span class="history-time">${time}</span>
+        <span>${label} &mdash; <a href="${h.product.url}" target="_blank" rel="noopener">${h.product.title}</a> <span style="color:var(--muted)">(${h.siteName})</span></span>
+      </div>`;
+    }).join('');
+  }
+
+  function updateSiteFilter() {
+    const sel = document.getElementById('filter-site');
+    const current = sel.value;
+    sel.innerHTML = '<option value="">All sites</option>' +
+      config.sites.map(s => `<option value="${s.id}" ${s.id === current ? 'selected' : ''}>${s.name}</option>`).join('');
+  }
+
+  // ── GitHub actions (require token) ───────────────────────────────────────────
+  function promptToken() {
+    const current = localStorage.getItem(TOKEN_KEY) || '';
+    const val = prompt('GitHub fine-grained PAT (Contents + Actions write):\nLeave blank to clear.', current);
+    if (val === null) return;
+    if (val.trim()) { localStorage.setItem(TOKEN_KEY, val.trim()); alert('Token saved.'); }
+    else { localStorage.removeItem(TOKEN_KEY); alert('Token cleared.'); }
+    renderAll();
+  }
+
+  async function triggerRun() {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) { alert('Add a GitHub token first.'); return; }
+    const res = await fetch(`${API_BASE}/actions/workflows/check.yml/dispatches`, {
+      method: 'POST',
+      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref: 'main' }),
+    });
+    if (res.ok || res.status === 204) { alert('Run triggered! Check Actions tab in ~30s.'); }
+    else { alert(`Failed: ${res.status}`); }
+  }
+
+  async function toggleImminent(siteId, value) {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) { alert('Add a GitHub token to toggle imminent mode.'); renderSiteCards(); return; }
+
+    const res = await fetch(`${API_BASE}/contents/config.js`, {
+      headers: { Authorization: `token ${token}` },
+    });
+    if (!res.ok) { alert('Could not fetch config.js'); renderSiteCards(); return; }
+
+    const data = await res.json();
+    const content = atob(data.content.replace(/\n/g, ''));
+
+    // Find the site block and flip its imminent value.
+    // Matches: id: "the_id", ... imminent: true/false within the same object block.
+    const updated = flipImminent(content, siteId, value);
+    if (updated === content) { alert('Could not find site in config to update.'); return; }
+
+    const putRes = await fetch(`${API_BASE}/contents/config.js`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `chore: ${value ? 'enable' : 'disable'} imminent mode for ${siteId} [skip ci]`,
+        content: btoa(updated),
+        sha: data.sha,
+        branch: 'main',
+      }),
+    });
+
+    if (putRes.ok || putRes.status === 200) {
+      alert(`Imminent mode ${value ? 'enabled' : 'disabled'} for ${siteId}`);
+      await loadData();
+    } else {
+      alert(`Failed to update config: ${putRes.status}`);
+      renderSiteCards();
+    }
+  }
+
+  function flipImminent(js, siteId, value) {
+    // Split on site blocks, find the one with the target id, flip imminent.
+    const idPattern = new RegExp(`id:\\s*["']${siteId}["']`);
+    const lines = js.split('\n');
+    let depth = 0;
+    let inTarget = false;
+    let objectStart = -1;
+    const result = [...lines];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      for (const ch of line) {
+        if (ch === '{') { depth++; if (depth === 2 && inTarget) objectStart = i; }
+        if (ch === '}') { if (depth === 2 && inTarget) { inTarget = false; objectStart = -1; } depth--; }
+      }
+      if (idPattern.test(line)) inTarget = true;
+      if (inTarget && /imminent:\s*(true|false)/.test(line) && !/imminentInterval/.test(line)) {
+        result[i] = line.replace(/imminent:\s*(true|false)/, `imminent: ${value}`);
+        return result.join('\n');
+      }
+    }
+    return js;
+  }
+</script>
+</body>
+</html>
