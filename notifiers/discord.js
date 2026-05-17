@@ -62,8 +62,12 @@ export async function sendAlert(webhookUrl, siteName, alert) {
   return postWebhook(webhookUrl, payload);
 }
 
-function postWebhook(webhookUrl, payload) {
-  return new Promise((resolve, reject) => {
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+async function postWebhook(webhookUrl, payload, attempt = 0) {
+  const body = await new Promise((resolve, reject) => {
     const parsed = new URL(webhookUrl);
     const options = {
       hostname: parsed.hostname,
@@ -78,17 +82,21 @@ function postWebhook(webhookUrl, payload) {
     const req = request(options, (res) => {
       const chunks = [];
       res.on("data", (c) => chunks.push(c));
-      res.on("end", () => {
-        if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve();
-        } else {
-          reject(new Error(`Discord webhook returned ${res.statusCode}: ${Buffer.concat(chunks).toString()}`));
-        }
-      });
+      res.on("end", () => resolve({ status: res.statusCode, body: Buffer.concat(chunks).toString() }));
     });
 
     req.on("error", reject);
     req.write(payload);
     req.end();
   });
+
+  if (body.status === 429 && attempt < 4) {
+    const retryAfter = JSON.parse(body.body)?.retry_after ?? 1;
+    await sleep(retryAfter * 1000 + 200);
+    return postWebhook(webhookUrl, payload, attempt + 1);
+  }
+
+  if (body.status < 200 || body.status >= 300) {
+    throw new Error(`Discord webhook returned ${body.status}: ${body.body}`);
+  }
 }

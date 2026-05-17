@@ -12,6 +12,16 @@ const SKIP_STRINGS = [
   "terms",
   "about",
   "home",
+  "abv:",
+  "age:",
+  "cooperage:",
+  "tasting notes:",
+  "distilled in",
+  "bottled at",
+  "matured in",
+  "cask strength",
+  "no coloring",
+  "no filtering",
 ];
 
 export async function checkSite(site, previousState) {
