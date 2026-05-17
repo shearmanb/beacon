@@ -71,6 +71,16 @@
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .empty { color: var(--muted); font-size: .875rem; padding: 1rem 0; }
+    .site-card.disabled { opacity: 0.45; }
+    .toggle-enabled input:checked + .slider { background: var(--green); }
+    .reveries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .reveries-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+    .reveries-card .rev-img { width: 100%; height: 140px; object-fit: cover; display: block; }
+    .reveries-card .rev-img-placeholder { height: 140px; background: var(--border); }
+    .reveries-card .rev-body { padding: .75rem; display: flex; flex-direction: column; gap: .3rem; flex: 1; }
+    .reveries-card .rev-title { font-size: .85rem; font-weight: 600; line-height: 1.3; color: var(--text); }
+    .reveries-card .rev-title:hover { text-decoration: underline; }
+    .reveries-card .rev-meta { font-size: .75rem; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -99,6 +109,13 @@
   <section>
     <h2>Sites</h2>
     <div class="site-cards" id="site-cards">
+      <div class="empty">Loading…</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>✨ New Reveries</h2>
+    <div class="reveries-grid" id="reveries-grid">
       <div class="empty">Loading…</div>
     </div>
   </section>
@@ -204,8 +221,9 @@
       const name = (b.match(/name:\s*["']([^"']+)["']/) || [])[1];
       const id   = (b.match(/id:\s*["']([^"']+)["']/) || [])[1];
       const imminent = /imminent:\s*true/.test(b);
+      const enabled = !/enabled:\s*false/.test(b);
       const interval = parseInt((b.match(/intervalMinutes:\s*(\d+)/) || [])[1] ?? '0');
-      if (name && id) sites.push({ name, id, imminent, intervalMinutes: interval });
+      if (name && id) sites.push({ name, id, imminent, enabled, intervalMinutes: interval });
     }
     return sites;
   }
@@ -213,6 +231,7 @@
   // ── Render ───────────────────────────────────────────────────────────────────
   function renderAll() {
     renderSiteCards();
+    renderReveries();
     renderProducts();
     renderHistory();
     updateSiteFilter();
@@ -231,13 +250,21 @@
       const total = products.length;
       const checked = s.lastChecked ? new Date(s.lastChecked).toLocaleString() : 'Never';
       const imminentChecked = site.imminent;
+      const isEnabled = site.enabled !== false;
 
-      return `<div class="site-card">
+      return `<div class="site-card${isEnabled ? '' : ' disabled'}">
         <h3>${site.name}</h3>
         <div class="meta">
           <span>Last checked: ${checked}</span>
           <span>${total} products &mdash; ${inStock} in stock</span>
           <span>Interval: ${site.intervalMinutes} min</span>
+        </div>
+        <div class="toggle-row">
+          <label class="toggle toggle-enabled">
+            <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleEnabled('${site.id}', this.checked)" />
+            <span class="slider"></span>
+          </label>
+          <span>Monitoring <span class="badge ${isEnabled ? 'badge-green' : 'badge-red'}">${isEnabled ? 'ON' : 'OFF'}</span></span>
         </div>
         <div class="toggle-row">
           <label class="toggle">
@@ -304,6 +331,29 @@
     }).join('');
   }
 
+  function renderReveries() {
+    const grid = document.getElementById('reveries-grid');
+    const products = allProducts().filter(p => p.title.toLowerCase().includes('reveries'));
+    if (!products.length) {
+      grid.innerHTML = '<div class="empty">No Reveries products found</div>';
+      return;
+    }
+    grid.innerHTML = products.map(p => `
+      <div class="reveries-card">
+        ${p.image
+          ? `<img class="rev-img" src="${p.image}" alt="" loading="lazy" />`
+          : `<div class="rev-img-placeholder"></div>`}
+        <div class="rev-body">
+          <a href="${p.url}" target="_blank" rel="noopener" class="rev-title">${p.title}</a>
+          <div class="rev-meta">${p.siteName}</div>
+          <div style="display:flex;align-items:center;gap:.5rem;margin-top:.25rem">
+            ${p.minPrice != null ? `<span class="rev-meta">$${p.minPrice.toFixed(2)}</span>` : ''}
+            <span class="badge ${p.available ? 'badge-green' : 'badge-red'}">${p.available ? 'In Stock' : 'Sold Out'}</span>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
   function updateSiteFilter() {
     const sel = document.getElementById('filter-site');
     const current = sel.value;
@@ -331,6 +381,41 @@
     });
     if (res.ok || res.status === 204) { alert('Run triggered! Check Actions tab in ~30s.'); }
     else { alert(`Failed: ${res.status}`); }
+  }
+
+  async function toggleEnabled(siteId, value) {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) { alert('Add a GitHub token to toggle monitoring.'); renderSiteCards(); return; }
+
+    const res = await fetch(`${API_BASE}/contents/config.js`, {
+      headers: { Authorization: `token ${token}` },
+    });
+    if (!res.ok) { alert('Could not fetch config.js'); renderSiteCards(); return; }
+
+    const data = await res.json();
+    const content = atob(data.content.replace(/\n/g, ''));
+
+    const updated = flipEnabled(content, siteId, value);
+    if (updated === content) { alert('Could not find site in config to update.'); return; }
+
+    const putRes = await fetch(`${API_BASE}/contents/config.js`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `chore: ${value ? 'enable' : 'disable'} monitoring for ${siteId} [skip ci]`,
+        content: btoa(updated),
+        sha: data.sha,
+        branch: 'main',
+      }),
+    });
+
+    if (putRes.ok || putRes.status === 200) {
+      alert(`Monitoring ${value ? 'enabled' : 'disabled'} for ${siteId}`);
+      await loadData();
+    } else {
+      alert(`Failed to update config: ${putRes.status}`);
+      renderSiteCards();
+    }
   }
 
   async function toggleImminent(siteId, value) {
@@ -368,6 +453,28 @@
       alert(`Failed to update config: ${putRes.status}`);
       renderSiteCards();
     }
+  }
+
+  function flipEnabled(js, siteId, value) {
+    const idPattern = new RegExp(`id:\\s*["']${siteId}["']`);
+    const lines = js.split('\n');
+    let depth = 0;
+    let inTarget = false;
+    const result = [...lines];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      for (const ch of line) {
+        if (ch === '{') depth++;
+        if (ch === '}') { if (depth === 2 && inTarget) inTarget = false; depth--; }
+      }
+      if (idPattern.test(line)) inTarget = true;
+      if (inTarget && /enabled:\s*(true|false)/.test(line)) {
+        result[i] = line.replace(/enabled:\s*(true|false)/, `enabled: ${value}`);
+        return result.join('\n');
+      }
+    }
+    return js;
   }
 
   function flipImminent(js, siteId, value) {
