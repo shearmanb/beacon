@@ -40,8 +40,8 @@ function buildProductMap(products, siteUrl) {
   const map = {};
 
   for (const p of products) {
-    const minPrice = Math.min(...p.variants.map((v) => parseFloat(v.price)));
-    const available = p.variants.some((v) => v.available);
+    const minPrice = p.variants?.length ? Math.min(...p.variants.map((v) => parseFloat(v.price))) : null;
+    const available = p.variants?.some((v) => v.available) ?? false;
     const image = p.images?.[0]?.src ?? null;
 
     map[p.handle] = {
@@ -83,9 +83,9 @@ function applyFilters(products, filters) {
     if (filters.availableOnly) {
       if (!p.variants.some((v) => v.available)) return false;
     }
-    const minPrice = Math.min(...p.variants.map((v) => parseFloat(v.price)));
-    if (filters.minPriceDollars != null && minPrice < filters.minPriceDollars) return false;
-    if (filters.maxPriceDollars != null && minPrice > filters.maxPriceDollars) return false;
+    const minPrice = p.variants?.length ? Math.min(...p.variants.map((v) => parseFloat(v.price))) : null;
+    if (filters.minPriceDollars != null && (minPrice == null || minPrice < filters.minPriceDollars)) return false;
+    if (filters.maxPriceDollars != null && (minPrice == null || minPrice > filters.maxPriceDollars)) return false;
     return true;
   });
 }

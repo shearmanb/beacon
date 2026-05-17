@@ -245,6 +245,7 @@
   let history = [];
   let config = { sites: [] };
   let ignored = {};
+  let lastLoadedAt = null;
 
   function esc(s) {
     return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -258,6 +259,17 @@
       hour: 'numeric', minute: '2-digit', hour12: true,
     }) + ' EST';
   }
+
+  function updateDataAge() {
+    if (!lastLoadedAt) return;
+    const el = document.getElementById('refresh-status');
+    const mins = Math.floor((Date.now() - lastLoadedAt) / 60_000);
+    const age = mins < 1 ? 'just now' : `${mins} min ago`;
+    el.textContent = `Data Last Updated: ${fmtEST(new Date(lastLoadedAt))} (${age})`;
+    el.style.color = mins >= 15 ? 'var(--red)' : mins >= 5 ? 'var(--yellow)' : '';
+  }
+
+  setInterval(updateDataAge, 30_000);
 
   function setVersionText(dateStr) {
     const text = dateStr ? `${VERSION} · App update: ${dateStr}` : VERSION;
@@ -305,8 +317,9 @@
       history = JSON.parse(historyText);
       config.sites = parseConfigSites(configText);
       ignored = JSON.parse(ignoredText);
+      lastLoadedAt = Date.now();
       renderAll();
-      document.getElementById('refresh-status').textContent = `Data Last Updated: ${fmtEST(new Date())}`;
+      updateDataAge();
     } catch (err) {
       document.getElementById('refresh-status').textContent = `Error: ${err.message}`;
     }
