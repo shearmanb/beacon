@@ -623,36 +623,41 @@
     if (!token) { alert('Add a GitHub token to toggle monitoring.'); renderSiteCards(); return; }
 
     if (el) el.disabled = true;
+    try {
+      const res = await fetch(`${API_BASE}/contents/config.js`, {
+        headers: { Authorization: `token ${token}` },
+      });
+      if (!res.ok) { alert('Could not fetch config.js'); renderSiteCards(); return; }
 
-    const res = await fetch(`${API_BASE}/contents/config.js`, {
-      headers: { Authorization: `token ${token}` },
-    });
-    if (!res.ok) { alert('Could not fetch config.js'); renderSiteCards(); return; }
+      const data = await res.json();
+      const content = atob(data.content.replace(/\n/g, ''));
 
-    const data = await res.json();
-    const content = atob(data.content.replace(/\n/g, ''));
+      const updated = flipEnabled(content, siteId, value);
+      if (updated === content) { alert('Could not find site in config to update.'); return; }
 
-    const updated = flipEnabled(content, siteId, value);
-    if (updated === content) { alert('Could not find site in config to update.'); return; }
+      const putRes = await fetch(`${API_BASE}/contents/config.js`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `chore: ${value ? 'enable' : 'disable'} monitoring for ${siteId} [skip ci]`,
+          content: btoa(updated),
+          sha: data.sha,
+          branch: 'main',
+        }),
+      });
 
-    const putRes = await fetch(`${API_BASE}/contents/config.js`, {
-      method: 'PUT',
-      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: `chore: ${value ? 'enable' : 'disable'} monitoring for ${siteId} [skip ci]`,
-        content: btoa(updated),
-        sha: data.sha,
-        branch: 'main',
-      }),
-    });
-
-    if (putRes.ok || putRes.status === 200) {
-      alert(`Monitoring ${value ? 'enabled' : 'disabled'} for ${siteId}`);
-      await loadData();
-    } else {
-      alert(`Failed to update config: ${putRes.status}`);
-      if (el) el.disabled = false;
+      if (putRes.ok || putRes.status === 200) {
+        alert(`Monitoring ${value ? 'enabled' : 'disabled'} for ${siteId}`);
+        await loadData();
+      } else {
+        alert(`Failed to update config: ${putRes.status}`);
+        renderSiteCards();
+      }
+    } catch (err) {
+      alert(`Error: ${err.message}`);
       renderSiteCards();
+    } finally {
+      if (el) el.disabled = false;
     }
   }
 
@@ -661,37 +666,41 @@
     if (!token) { alert('Add a GitHub token to toggle imminent mode.'); renderSiteCards(); return; }
 
     if (el) el.disabled = true;
-    const res = await fetch(`${API_BASE}/contents/config.js`, {
-      headers: { Authorization: `token ${token}` },
-    });
-    if (!res.ok) { alert('Could not fetch config.js'); if (el) el.disabled = false; renderSiteCards(); return; }
+    try {
+      const res = await fetch(`${API_BASE}/contents/config.js`, {
+        headers: { Authorization: `token ${token}` },
+      });
+      if (!res.ok) { alert('Could not fetch config.js'); renderSiteCards(); return; }
 
-    const data = await res.json();
-    const content = atob(data.content.replace(/\n/g, ''));
+      const data = await res.json();
+      const content = atob(data.content.replace(/\n/g, ''));
 
-    // Find the site block and flip its imminent value.
-    // Matches: id: "the_id", ... imminent: true/false within the same object block.
-    const updated = flipImminent(content, siteId, value);
-    if (updated === content) { alert('Could not find site in config to update.'); return; }
+      const updated = flipImminent(content, siteId, value);
+      if (updated === content) { alert('Could not find site in config to update.'); return; }
 
-    const putRes = await fetch(`${API_BASE}/contents/config.js`, {
-      method: 'PUT',
-      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: `chore: ${value ? 'enable' : 'disable'} imminent mode for ${siteId} [skip ci]`,
-        content: btoa(updated),
-        sha: data.sha,
-        branch: 'main',
-      }),
-    });
+      const putRes = await fetch(`${API_BASE}/contents/config.js`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `chore: ${value ? 'enable' : 'disable'} imminent mode for ${siteId} [skip ci]`,
+          content: btoa(updated),
+          sha: data.sha,
+          branch: 'main',
+        }),
+      });
 
-    if (putRes.ok || putRes.status === 200) {
-      alert(`Imminent mode ${value ? 'enabled' : 'disabled'} for ${siteId}`);
-      await loadData();
-    } else {
-      alert(`Failed to update config: ${putRes.status}`);
-      if (el) el.disabled = false;
+      if (putRes.ok || putRes.status === 200) {
+        alert(`Imminent mode ${value ? 'enabled' : 'disabled'} for ${siteId}`);
+        await loadData();
+      } else {
+        alert(`Failed to update config: ${putRes.status}`);
+        renderSiteCards();
+      }
+    } catch (err) {
+      alert(`Error: ${err.message}`);
       renderSiteCards();
+    } finally {
+      if (el) el.disabled = false;
     }
   }
 

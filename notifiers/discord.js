@@ -93,7 +93,8 @@ async function postWebhook(webhookUrl, payload, attempt = 0) {
   });
 
   if (body.status === 429 && attempt < 4) {
-    const retryAfter = JSON.parse(body.body)?.retry_after ?? 1;
+    let retryAfter = 1;
+    try { retryAfter = JSON.parse(body.body)?.retry_after ?? 1; } catch { /* use default */ }
     await sleep(retryAfter * 1000 + 200);
     return postWebhook(webhookUrl, payload, attempt + 1);
   }

@@ -2,7 +2,8 @@ import { https } from "../lib/fetch.js";
 
 function getMinPrice(variants) {
   if (!variants?.length) return null;
-  return Math.min(...variants.map((v) => parseFloat(v.price)));
+  const prices = variants.map((v) => parseFloat(v.price)).filter((n) => !isNaN(n));
+  return prices.length ? Math.min(...prices) : null;
 }
 
 function isAvailable(variants) {
