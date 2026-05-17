@@ -845,7 +845,7 @@
   "reveries_official": {
     "lastChecked": "2026-05-17T16:33:23.835Z",
     "productCount": 3,
-    "pageReset": true,
+    "pageReset": false,
     "products": {
       "the-reveries-8-year-only-all-the-time": {
         "handle": "the-reveries-8-year-only-all-the-time",
@@ -880,8 +880,7 @@
         "image": null,
         "url": "https://www.thereveries.co/shop"
       }
-    },
-    "resetReason": "Zero products returned (possible Coming Soon reset)"
+    }
   },
   "fountain_inn_dc": {
     "lastChecked": "2026-05-17T16:33:22.982Z",

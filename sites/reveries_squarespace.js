@@ -56,14 +56,34 @@ export async function checkSite(site, previousState) {
     }
   }
 
-  // ── 2. Empty result when we had products before → treat as reset ─────────────
+  // ── 2. Empty result when we had products before → verify via HTML before declaring reset ──────
+  // The JSON API can transiently return 0 items (rate limit, API hiccup) even when the shop is
+  // live. Only treat as a real reset if the HTML also shows a reset signal; otherwise preserve
+  // the previous product list and log a warning.
   if (
     productMap !== null &&
     Object.keys(productMap).length === 0 &&
     Object.keys(prevProducts).length > 0
   ) {
-    resetReason = "Zero products returned (possible Coming Soon reset)";
-    productMap = null;
+    try {
+      const html = await https(site.url, { headers: BASE_HEADERS });
+      const lower = html.toLowerCase();
+      const signal = RESET_SIGNALS.find((s) => lower.includes(s));
+      if (signal) {
+        resetReason = `Reset signal in HTML: "${signal}"`;
+        productMap = null;
+      } else {
+        // Site is live and shows no reset signals — likely a transient empty API response.
+        // Preserve previous products so we don't lose state on a blip.
+        console.log(`[${site.name}] JSON API returned 0 products but HTML looks normal — preserving previous state`);
+        productMap = prevProducts;
+      }
+    } catch (htmlErr) {
+      // Can't reach the site at all — treat conservatively: don't declare reset on a network error,
+      // just preserve the previous state and wait for the next check.
+      console.log(`[${site.name}] JSON API empty + HTML fetch failed (${htmlErr.message}) — preserving previous state`);
+      productMap = prevProducts;
+    }
   }
 
   // ── 3. Handle reset ──────────────────────────────────────────────────────────
