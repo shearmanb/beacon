@@ -58,6 +58,7 @@
     th { text-align: left; padding: .5rem .75rem; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); }
     td { padding: .5rem .75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
+    .badge-reveries { background: rgba(155,89,182,.2); color: #c39bd3; border: 1px solid rgba(155,89,182,.35); font-size: .7rem; padding: .15rem .4rem; border-radius: 5px; font-weight: 600; white-space: nowrap; margin-left: .4rem; vertical-align: middle; }
     .avail-yes { color: var(--green); font-weight: 600; }
     .avail-no { color: var(--red); }
     .thumb { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; }
@@ -306,14 +307,18 @@
       return;
     }
 
-    tbody.innerHTML = products.map(p => `
-      <tr>
+    tbody.innerHTML = products.map(p => {
+      const isReveries = p.title.toLowerCase().includes('reveries') ||
+        p.siteId === 'reveries_official' || p.siteId === 'sharedpour_reveries';
+      const revBadge = isReveries ? '<span class="badge-reveries">✨ Reveries</span>' : '';
+      return `<tr>
         <td>${p.image ? `<img class="thumb" src="${p.image}" alt="" loading="lazy" />` : ''}</td>
-        <td><a href="${p.url}" target="_blank" rel="noopener">${p.title}</a></td>
+        <td><a href="${p.url}" target="_blank" rel="noopener">${p.title}</a>${revBadge}</td>
         <td>${p.siteName}</td>
         <td>${p.minPrice != null ? '$' + p.minPrice.toFixed(2) : '—'}</td>
         <td class="${p.available ? 'avail-yes' : 'avail-no'}">${p.available ? 'In Stock' : 'Sold Out'}</td>
-      </tr>`).join('');
+      </tr>`;
+    }).join('');
   }
 
   function renderHistory() {
