@@ -13,15 +13,20 @@ const NTFY_TOPIC = process.env.NTFY_TOPIC;
 function loadState() {
   try {
     return JSON.parse(readFileSync(STATE_FILE, "utf8"));
-  } catch {
-    return {};
+  } catch (err) {
+    if (err.code === "ENOENT") return {};
+    console.error(`[state] Cannot parse state.json: ${err.message}`);
+    console.error("[state] Aborting — fix or delete state.json to avoid re-alerting all known products.");
+    process.exit(1);
   }
 }
 
 function loadIgnored() {
   try {
     return JSON.parse(readFileSync(IGNORED_FILE, "utf8"));
-  } catch {
+  } catch (err) {
+    if (err.code === "ENOENT") return {};
+    console.error(`[ignored] Cannot parse ignored_products.json: ${err.message} — continuing with empty ignore list.`);
     return {};
   }
 }

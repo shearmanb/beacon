@@ -1,5 +1,14 @@
 import { https } from "../lib/fetch.js";
 
+function getMinPrice(variants) {
+  if (!variants?.length) return null;
+  return Math.min(...variants.map((v) => parseFloat(v.price)));
+}
+
+function isAvailable(variants) {
+  return variants?.some((v) => v.available) ?? false;
+}
+
 export async function checkSite(site, previousState) {
   const products = await fetchAllProducts(site);
   const filtered = applyFilters(products, site.filters);
@@ -40,8 +49,8 @@ function buildProductMap(products, siteUrl) {
   const map = {};
 
   for (const p of products) {
-    const minPrice = p.variants?.length ? Math.min(...p.variants.map((v) => parseFloat(v.price))) : null;
-    const available = p.variants?.some((v) => v.available) ?? false;
+    const minPrice = getMinPrice(p.variants);
+    const available = isAvailable(p.variants);
     const image = p.images?.[0]?.src ?? null;
 
     map[p.handle] = {
@@ -81,9 +90,9 @@ function applyFilters(products, filters) {
       if (!filters.tags.some((t) => ptags.includes(t))) return false;
     }
     if (filters.availableOnly) {
-      if (!p.variants.some((v) => v.available)) return false;
+      if (!isAvailable(p.variants)) return false;
     }
-    const minPrice = p.variants?.length ? Math.min(...p.variants.map((v) => parseFloat(v.price))) : null;
+    const minPrice = getMinPrice(p.variants);
     if (filters.minPriceDollars != null && (minPrice == null || minPrice < filters.minPriceDollars)) return false;
     if (filters.maxPriceDollars != null && (minPrice == null || minPrice > filters.maxPriceDollars)) return false;
     return true;
