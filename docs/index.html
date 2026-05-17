@@ -42,7 +42,7 @@
     .section-header:hover { background: rgba(255,255,255,.04); }
     .section-header h2 { font-size: .82rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text); font-weight: 700; margin: 0; display: flex; align-items: center; gap: .55rem; }
     .section-header h2 .sec-icon { font-size: 1rem; }
-    .section-chevron { color: var(--muted); font-size: .75rem; transition: transform .2s; display: inline-block; }
+    .section-chevron { color: var(--muted); font-size: 1.1rem; line-height: 1; transition: transform .2s; display: inline-block; }
     .section-header.sec-collapsed .section-chevron { transform: rotate(-90deg); }
     .section-body { padding: 1rem; background: var(--bg); }
     .section-body.sec-hidden { display: none; }
@@ -131,11 +131,11 @@
   </header>
 
   <section class="sec-sites">
-    <div class="section-header" onclick="toggleSection('sec-sites')">
+    <div class="section-header" onclick="toggleSection('sites')">
       <h2><span class="sec-icon">📡</span> Sites</h2>
       <span class="section-chevron">▾</span>
     </div>
-    <div class="section-body" id="body-sec-sites">
+    <div class="section-body" id="body-sites">
       <div class="site-cards" id="site-cards">
         <div class="empty">Loading…</div>
       </div>
@@ -143,11 +143,11 @@
   </section>
 
   <section class="sec-reveries">
-    <div class="section-header" onclick="toggleSection('sec-reveries')">
-      <h2><span class="sec-icon">✨</span> New Reveries</h2>
+    <div class="section-header" onclick="toggleSection('reveries')">
+      <h2><span class="sec-icon">✨</span> Reveries</h2>
       <span class="section-chevron">▾</span>
     </div>
-    <div class="section-body" id="body-sec-reveries">
+    <div class="section-body" id="body-reveries">
       <div class="reveries-grid" id="reveries-grid">
         <div class="empty">Loading…</div>
       </div>
@@ -155,11 +155,11 @@
   </section>
 
   <section class="sec-products">
-    <div class="section-header" onclick="toggleSection('sec-products')">
+    <div class="section-header" onclick="toggleSection('products')">
       <h2><span class="sec-icon">📦</span> Products</h2>
       <span class="section-chevron">▾</span>
     </div>
-    <div class="section-body" id="body-sec-products">
+    <div class="section-body" id="body-products">
       <div class="controls">
         <input type="text" id="search" placeholder="Search products…" oninput="renderProducts()" />
         <select id="filter-site" onchange="renderProducts()">
@@ -169,6 +169,20 @@
           <option value="">All availability</option>
           <option value="yes">Available</option>
           <option value="no">Sold Out</option>
+        </select>
+        <select id="filter-reveries" onchange="renderProducts()">
+          <option value="">All products</option>
+          <option value="yes">Reveries only</option>
+          <option value="no">Non-Reveries</option>
+        </select>
+        <select id="filter-price" onchange="renderProducts()">
+          <option value="">Any price</option>
+          <option value="0-50">$0 – $50</option>
+          <option value="50-100">$50 – $100</option>
+          <option value="100-150">$100 – $150</option>
+          <option value="150-250">$150 – $250</option>
+          <option value="250-300">$250 – $300</option>
+          <option value="300+">Over $300</option>
         </select>
         <select id="filter-ignored" onchange="renderProducts()">
           <option value="visible">Hide ignored</option>
@@ -195,11 +209,11 @@
   </section>
 
   <section class="sec-history">
-    <div class="section-header" onclick="toggleSection('sec-history')">
+    <div class="section-header" onclick="toggleSection('history')">
       <h2><span class="sec-icon">🔔</span> Alert History</h2>
       <span class="section-chevron">▾</span>
     </div>
-    <div class="section-body" id="body-sec-history">
+    <div class="section-body" id="body-history">
       <div class="history-list" id="history-list">
         <div class="empty">Loading…</div>
       </div>
@@ -342,19 +356,36 @@
     return result;
   }
 
+  function isReveriesProduct(p) {
+    return p.title.toLowerCase().includes('reveries') ||
+      p.siteId === 'reveries_official' || p.siteId === 'sharedpour_reveries';
+  }
+
   function renderProducts() {
-    const search = document.getElementById('search').value.toLowerCase();
-    const filterSite = document.getElementById('filter-site').value;
-    const filterAvail = document.getElementById('filter-avail').value;
-    const filterIgnored = document.getElementById('filter-ignored').value;
+    const search       = document.getElementById('search').value.toLowerCase();
+    const filterSite   = document.getElementById('filter-site').value;
+    const filterAvail  = document.getElementById('filter-avail').value;
+    const filterRev    = document.getElementById('filter-reveries').value;
+    const filterPrice  = document.getElementById('filter-price').value;
+    const filterIgnored= document.getElementById('filter-ignored').value;
 
     let products = allProducts();
-    if (search) products = products.filter(p => p.title.toLowerCase().includes(search));
-    if (filterSite) products = products.filter(p => p.siteId === filterSite);
+    if (search)  products = products.filter(p => p.title.toLowerCase().includes(search));
+    if (filterSite)  products = products.filter(p => p.siteId === filterSite);
     if (filterAvail === 'yes') products = products.filter(p => p.available);
-    if (filterAvail === 'no') products = products.filter(p => !p.available);
+    if (filterAvail === 'no')  products = products.filter(p => !p.available);
+    if (filterRev === 'yes')   products = products.filter(p => isReveriesProduct(p));
+    if (filterRev === 'no')    products = products.filter(p => !isReveriesProduct(p));
+    if (filterPrice) {
+      if (filterPrice === '300+') {
+        products = products.filter(p => p.minPrice != null && p.minPrice > 300);
+      } else {
+        const [lo, hi] = filterPrice.split('-').map(Number);
+        products = products.filter(p => p.minPrice != null && p.minPrice >= lo && p.minPrice <= hi);
+      }
+    }
     if (filterIgnored === 'visible') products = products.filter(p => !ignored[p.handle]);
-    if (filterIgnored === 'only') products = products.filter(p => !!ignored[p.handle]);
+    if (filterIgnored === 'only')    products = products.filter(p => !!ignored[p.handle]);
 
     const tbody = document.getElementById('products-tbody');
     if (!products.length) {
@@ -363,9 +394,7 @@
     }
 
     tbody.innerHTML = products.map(p => {
-      const isReveries = p.title.toLowerCase().includes('reveries') ||
-        p.siteId === 'reveries_official' || p.siteId === 'sharedpour_reveries';
-      const revBadge = isReveries ? '<span class="badge-reveries">✨ Reveries</span>' : '';
+      const revBadge = isReveriesProduct(p) ? '<span class="badge-reveries">✨ Reveries</span>' : '';
       const isIgnored = !!ignored[p.handle];
       const ignoreBtn = `<button class="btn-sm ${isIgnored ? 'unignore' : ''}" onclick="toggleIgnore('${p.handle}', ${!isIgnored})">${isIgnored ? 'Unignore' : 'Ignore'}</button>`;
       return `<tr class="${isIgnored ? 'ignored-row' : ''}">
@@ -403,17 +432,29 @@
     }
 
     const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
-    const recentHandles = new Set(
-      history
-        .filter(h => h.timestamp && new Date(h.timestamp).getTime() > oneDayAgo)
-        .map(h => h.product?.handle)
-        .filter(Boolean)
-    );
+    // Most recent alert timestamp per handle
+    const lastAlert = {};
+    for (const h of history) {
+      if (!h.timestamp || !h.product?.handle) continue;
+      const t = new Date(h.timestamp).getTime();
+      if (!lastAlert[h.product.handle] || t > lastAlert[h.product.handle]) {
+        lastAlert[h.product.handle] = t;
+      }
+    }
 
-    grid.innerHTML = products.map(p => {
+    // Sort: in-stock first, then by most recent alert desc, then alphabetically
+    const sorted = [...products].sort((a, b) => {
+      if (a.available !== b.available) return a.available ? -1 : 1;
+      const ta = lastAlert[a.handle] ?? 0;
+      const tb = lastAlert[b.handle] ?? 0;
+      if (tb !== ta) return tb - ta;
+      return a.title.localeCompare(b.title);
+    });
+
+    grid.innerHTML = sorted.map(p => {
       const cls = p.available ? 'rev-in' : 'rev-out';
       const statusLabel = p.available ? 'In Stock' : 'Sold Out';
-      const isRecent = recentHandles.has(p.handle);
+      const isRecent = (lastAlert[p.handle] ?? 0) > oneDayAgo;
       return `
         <div class="reveries-card ${cls}">
           <div class="rev-status-bar ${cls}">${statusLabel}</div>
@@ -603,8 +644,9 @@
     localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...set]));
   }
   function toggleSection(id) {
-    const header = document.querySelector(`.sec-${id} .section-header`);
-    const body   = document.getElementById(`body-sec-${id}`);
+    // id is e.g. 'sites', 'reveries' — section has class sec-{id}, body has id body-{id}
+    const header = document.querySelector(`section.sec-${id} .section-header`);
+    const body   = document.getElementById(`body-${id}`);
     if (!header || !body) return;
     const collapsed = loadCollapsed();
     if (header.classList.contains('sec-collapsed')) {
@@ -621,8 +663,8 @@
   function initSections() {
     const collapsed = loadCollapsed();
     for (const id of collapsed) {
-      const header = document.querySelector(`.sec-${id} .section-header`);
-      const body   = document.getElementById(`body-sec-${id}`);
+      const header = document.querySelector(`section.sec-${id} .section-header`);
+      const body   = document.getElementById(`body-${id}`);
       if (header && body) {
         header.classList.add('sec-collapsed');
         body.classList.add('sec-hidden');
