@@ -322,7 +322,7 @@
 
     const recent = [...history].reverse().slice(0, 100);
     list.innerHTML = recent.map(h => {
-      const label = h.type === 'new_product' ? '🆕 New' : h.type === 'restock' ? '✅ Restock' : '❌ Sold Out';
+      const label = h.type === 'new_product' ? '🆕 New' : h.type === 'restock' ? '✅ Restock' : h.type === 'sold_out' ? '❌ Sold Out' : h.type === 'site_reset' ? '⚠️ Reset' : h.type;
       const time = new Date(h.timestamp).toLocaleString();
       return `<div class="history-item ${h.type}">
         <span class="history-time">${time}</span>

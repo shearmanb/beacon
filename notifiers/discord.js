@@ -5,12 +5,14 @@ const COLORS = {
   new_product: 0x3498db, // blue
   restock: 0x2ecc71,     // green
   sold_out: 0xe74c3c,    // red
+  site_reset: 0xf39c12,  // orange
 };
 
 const LABELS = {
   new_product: "New Product",
   restock: "Back In Stock",
   sold_out: "Sold Out",
+  site_reset: "⚠️ Site Reset",
 };
 
 export async function sendAlert(webhookUrl, siteName, alert) {

@@ -844,7 +844,8 @@
   },
   "reveries_official": {
     "lastChecked": "2026-05-17T01:34:10.004Z",
-    "productCount": 14,
+    "productCount": 3,
+    "pageReset": false,
     "products": {
       "the-reveries-8-year-only-all-the-time": {
         "handle": "the-reveries-8-year-only-all-the-time",
@@ -852,74 +853,8 @@
         "vendor": "The Reveries",
         "productType": "Whiskey",
         "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "distilled-in-kentucky-matured-in-kentucky-amp-virginia": {
-        "handle": "distilled-in-kentucky-matured-in-kentucky-amp-virginia",
-        "title": "Distilled in Kentucky, Matured in Kentucky &amp; Virginia",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "bottled-at-cask-strength-no-coloring-or-filtering": {
-        "handle": "bottled-at-cask-strength-no-coloring-or-filtering",
-        "title": "Bottled at Cask Strength; No Coloring or Filtering",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "abv-63-1-abv": {
-        "handle": "abv-63-1-abv",
-        "title": "ABV: 63.1% ABV",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "age-8-years-aged": {
-        "handle": "age-8-years-aged",
-        "title": "AGE: 8 Years Aged",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "cooperage-independent-stave-kentucky": {
-        "handle": "cooperage-independent-stave-kentucky",
-        "title": "Cooperage: Independent Stave (Kentucky)",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "tasting-notes-massive-maple-black-pepper-candied-ginger-and-fat-aged-tobacco-bracing-oak": {
-        "handle": "tasting-notes-massive-maple-black-pepper-candied-ginger-and-fat-aged-tobacco-bracing-oak",
-        "title": "Tasting Notes:  Massive maple, black pepper, candied ginger and fat, aged tobacco. Bracing oak.",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
+        "minPrice": 84.99,
+        "available": false,
         "image": null,
         "url": "https://www.thereveries.co/shop"
       },
@@ -929,30 +864,8 @@
         "vendor": "The Reveries",
         "productType": "Whiskey",
         "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "abv-62-4-abv": {
-        "handle": "abv-62-4-abv",
-        "title": "ABV: 62.4% ABV",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "tasting-notes-nougat-and-cream-apple-butter-and-red-berries-meets-blackberry-and-brown-butter-maple-and-baking-spice": {
-        "handle": "tasting-notes-nougat-and-cream-apple-butter-and-red-berries-meets-blackberry-and-brown-butter-maple-and-baking-spice",
-        "title": "Tasting Notes:  Nougat and cream, apple butter and red berries meets blackberry and brown butter, maple and baking spice.",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
+        "minPrice": 84.99,
+        "available": false,
         "image": null,
         "url": "https://www.thereveries.co/shop"
       },
@@ -962,41 +875,8 @@
         "vendor": "The Reveries",
         "productType": "Whiskey",
         "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "abv-59-abv": {
-        "handle": "abv-59-abv",
-        "title": "ABV: 59% ABV",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "age-14-years-aged": {
-        "handle": "age-14-years-aged",
-        "title": "AGE: 14 Years Aged",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "tasting-notes-blackberry-compote-meets-dark-cherry-cola-rich-ginger-decadent-tropical-fruits-and-lingonberry-with-a-tart-oaky-finish": {
-        "handle": "tasting-notes-blackberry-compote-meets-dark-cherry-cola-rich-ginger-decadent-tropical-fruits-and-lingonberry-with-a-tart-oaky-finish",
-        "title": "Tasting Notes: Blackberry compote meets dark cherry cola, rich ginger, decadent tropical fruits and lingonberry with a tart, oaky, finish.",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": null,
-        "available": true,
+        "minPrice": 269.99,
+        "available": false,
         "image": null,
         "url": "https://www.thereveries.co/shop"
       }
