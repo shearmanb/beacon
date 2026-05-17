@@ -6,12 +6,21 @@ import { sendAlert as sendDiscordAlert } from "./notifiers/discord.js";
 import { sendAlert as sendNtfyAlert } from "./notifiers/ntfy.js";
 
 const STATE_FILE = resolve("state.json");
+const IGNORED_FILE = resolve("ignored_products.json");
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
 const NTFY_TOPIC = process.env.NTFY_TOPIC;
 
 function loadState() {
   try {
     return JSON.parse(readFileSync(STATE_FILE, "utf8"));
+  } catch {
+    return {};
+  }
+}
+
+function loadIgnored() {
+  try {
+    return JSON.parse(readFileSync(IGNORED_FILE, "utf8"));
   } catch {
     return {};
   }
@@ -40,6 +49,7 @@ async function loadStrategy(strategyName) {
 
 async function run() {
   const globalState = loadState();
+  const ignored = loadIgnored();
   const newHistory = [];
   let stateChanged = false;
 
@@ -61,9 +71,10 @@ async function run() {
       globalState[site.id] = state;
       stateChanged = true;
 
-      console.log(`[${site.name}] ${Object.keys(state.products).length} products, ${alerts.length} alerts`);
+      const filteredAlerts = alerts.filter((a) => !ignored[a.product?.handle]);
+      console.log(`[${site.name}] ${Object.keys(state.products).length} products, ${filteredAlerts.length} alerts (${alerts.length - filteredAlerts.length} ignored)`);
 
-      for (const alert of alerts) {
+      for (const alert of filteredAlerts) {
         console.log(`  → ${alert.type}: ${alert.product.title}`);
 
         const historyEvent = {

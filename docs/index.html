@@ -59,6 +59,12 @@
     td { padding: .5rem .75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
     .badge-reveries { background: rgba(155,89,182,.2); color: #c39bd3; border: 1px solid rgba(155,89,182,.35); font-size: .7rem; padding: .15rem .4rem; border-radius: 5px; font-weight: 600; white-space: nowrap; margin-left: .4rem; vertical-align: middle; }
+    .btn-sm { padding: .2rem .55rem; font-size: .75rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; white-space: nowrap; }
+    .btn-sm:hover { border-color: var(--red); color: var(--red); }
+    .btn-sm.unignore { border-color: var(--border); color: var(--muted); }
+    .btn-sm.unignore:hover { border-color: var(--green); color: var(--green); }
+    tr.ignored-row td { opacity: 0.4; }
+    tr.ignored-row td:last-child { opacity: 1; }
     .avail-yes { color: var(--green); font-weight: 600; }
     .avail-no { color: var(--red); }
     .thumb { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; }
@@ -133,6 +139,11 @@
         <option value="yes">Available</option>
         <option value="no">Sold Out</option>
       </select>
+      <select id="filter-ignored" onchange="renderProducts()">
+        <option value="visible">Hide ignored</option>
+        <option value="all">Show all</option>
+        <option value="only">Ignored only</option>
+      </select>
     </div>
     <table>
       <thead>
@@ -142,10 +153,11 @@
           <th>Site</th>
           <th>Price</th>
           <th>Status</th>
+          <th></th>
         </tr>
       </thead>
       <tbody id="products-tbody">
-        <tr><td colspan="5" class="empty">Loading…</td></tr>
+        <tr><td colspan="6" class="empty">Loading…</td></tr>
       </tbody>
     </table>
   </section>
@@ -172,6 +184,7 @@
   let state = {};
   let history = [];
   let config = { sites: [] };
+  let ignored = {};
 
   // ── Auth gate ────────────────────────────────────────────────────────────────
   document.getElementById('gate-form').addEventListener('submit', (e) => {
@@ -191,14 +204,16 @@
   async function loadData() {
     document.getElementById('refresh-status').textContent = 'Refreshing…';
     try {
-      const [stateText, historyText, configText] = await Promise.all([
+      const [stateText, historyText, configText, ignoredText] = await Promise.all([
         fetchRaw('state.json'),
         fetchRaw('alert_history.json'),
         fetchRaw('config.js'),
+        fetchRaw('ignored_products.json').catch(() => '{}'),
       ]);
       state = JSON.parse(stateText);
       history = JSON.parse(historyText);
       config.sites = parseConfigSites(configText);
+      ignored = JSON.parse(ignoredText);
       renderAll();
       document.getElementById('refresh-status').textContent = `Updated ${new Date().toLocaleTimeString()}`;
     } catch (err) {
@@ -294,16 +309,19 @@
     const search = document.getElementById('search').value.toLowerCase();
     const filterSite = document.getElementById('filter-site').value;
     const filterAvail = document.getElementById('filter-avail').value;
+    const filterIgnored = document.getElementById('filter-ignored').value;
 
     let products = allProducts();
     if (search) products = products.filter(p => p.title.toLowerCase().includes(search));
     if (filterSite) products = products.filter(p => p.siteId === filterSite);
     if (filterAvail === 'yes') products = products.filter(p => p.available);
     if (filterAvail === 'no') products = products.filter(p => !p.available);
+    if (filterIgnored === 'visible') products = products.filter(p => !ignored[p.handle]);
+    if (filterIgnored === 'only') products = products.filter(p => !!ignored[p.handle]);
 
     const tbody = document.getElementById('products-tbody');
     if (!products.length) {
-      tbody.innerHTML = '<tr><td colspan="5" class="empty">No products found</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" class="empty">No products found</td></tr>';
       return;
     }
 
@@ -311,12 +329,17 @@
       const isReveries = p.title.toLowerCase().includes('reveries') ||
         p.siteId === 'reveries_official' || p.siteId === 'sharedpour_reveries';
       const revBadge = isReveries ? '<span class="badge-reveries">✨ Reveries</span>' : '';
-      return `<tr>
+      const isIgnored = !!ignored[p.handle];
+      const ignoreBtn = localStorage.getItem(TOKEN_KEY)
+        ? `<button class="btn-sm ${isIgnored ? 'unignore' : ''}" onclick="toggleIgnore('${p.handle}', ${!isIgnored})">${isIgnored ? 'Unignore' : 'Ignore'}</button>`
+        : '';
+      return `<tr class="${isIgnored ? 'ignored-row' : ''}">
         <td>${p.image ? `<img class="thumb" src="${p.image}" alt="" loading="lazy" />` : ''}</td>
         <td><a href="${p.url}" target="_blank" rel="noopener">${p.title}</a>${revBadge}</td>
         <td>${p.siteName}</td>
         <td>${p.minPrice != null ? '$' + p.minPrice.toFixed(2) : '—'}</td>
         <td class="${p.available ? 'avail-yes' : 'avail-no'}">${p.available ? 'In Stock' : 'Sold Out'}</td>
+        <td>${ignoreBtn}</td>
       </tr>`;
     }).join('');
   }
@@ -386,6 +409,47 @@
     });
     if (res.ok || res.status === 204) { alert('Run triggered! Check Actions tab in ~30s.'); }
     else { alert(`Failed: ${res.status}`); }
+  }
+
+  async function toggleIgnore(handle, shouldIgnore) {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) { alert('Add a GitHub token to ignore products.'); return; }
+
+    const res = await fetch(`${API_BASE}/contents/ignored_products.json`, {
+      headers: { Authorization: `token ${token}` },
+    });
+
+    let sha = null;
+    let current = {};
+    if (res.ok) {
+      const data = await res.json();
+      sha = data.sha;
+      current = JSON.parse(atob(data.content.replace(/\n/g, '')));
+    }
+
+    if (shouldIgnore) current[handle] = true;
+    else delete current[handle];
+
+    const body = {
+      message: `chore: ${shouldIgnore ? 'ignore' : 'unignore'} ${handle} [skip ci]`,
+      content: btoa(JSON.stringify(current, null, 2)),
+      branch: 'main',
+    };
+    if (sha) body.sha = sha;
+
+    const putRes = await fetch(`${API_BASE}/contents/ignored_products.json`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (putRes.ok || putRes.status === 200 || putRes.status === 201) {
+      if (shouldIgnore) ignored[handle] = true;
+      else delete ignored[handle];
+      renderProducts();
+    } else {
+      alert(`Failed: ${putRes.status}`);
+    }
   }
 
   async function toggleEnabled(siteId, value) {
