@@ -28,7 +28,7 @@ export const sites = [
   {
     name: "SharedPour – The Reveries",
     id: "sharedpour_reveries",
-    enabled: false,
+    enabled: true,
     strategy: "shopify_collection",
     url: "https://sharedpour.com",
     intervalMinutes: 20,
