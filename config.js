@@ -30,8 +30,7 @@ export const sites = [
     id: "sharedpour_reveries",
     enabled: true,
     strategy: "shopify_collection",
-    url: "https://sharedpour.com/collections/vendors",
-    collectionParams: "q=The+Reveries&rb_vendor=The+Reveries",
+    url: "https://sharedpour.com",
     intervalMinutes: 20,
     imminentIntervalMinutes: 2,
     imminent: false,
@@ -41,7 +40,7 @@ export const sites = [
     filters: {
       titleContains: [],
       titleExcludes: [],
-      vendorIs: [],
+      vendorIs: ["The Reveries"],
       productType: [],
       tags: [],
       minPriceDollars: null,
