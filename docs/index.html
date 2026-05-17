@@ -296,6 +296,7 @@
     e.preventDefault();
     const pw = document.getElementById('pw-input').value;
     if (pw === DASH_PASSWORD) {
+      document.getElementById('pw-input').value = '';
       document.getElementById('gate').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       loadData();
@@ -308,22 +309,26 @@
   // ── Data loading ─────────────────────────────────────────────────────────────
   async function loadData() {
     document.getElementById('refresh-status').textContent = 'Refreshing…';
-    try {
-      const [stateText, historyText, configText, ignoredText] = await Promise.all([
-        fetchRaw('state.json'),
-        fetchRaw('alert_history.json'),
-        fetchRaw('config.js'),
-        fetchRaw('ignored_products.json').catch(() => '{}'),
-      ]);
-      state = JSON.parse(stateText);
-      history = JSON.parse(historyText);
-      config.sites = parseConfigSites(configText);
-      ignored = JSON.parse(ignoredText);
-      lastLoadedAt = Date.now();
-      renderAll();
+    const errors = [];
+
+    const [stateText, historyText, configText, ignoredText] = await Promise.all([
+      fetchRaw('state.json').catch(e => { errors.push(`state: ${e.message}`); return null; }),
+      fetchRaw('alert_history.json').catch(e => { errors.push(`history: ${e.message}`); return null; }),
+      fetchRaw('config.js').catch(e => { errors.push(`config: ${e.message}`); return null; }),
+      fetchRaw('ignored_products.json').catch(() => '{}'),
+    ]);
+
+    if (stateText)   state         = JSON.parse(stateText);
+    if (historyText) history       = JSON.parse(historyText);
+    if (configText)  config.sites  = parseConfigSites(configText);
+    ignored = JSON.parse(ignoredText);
+
+    lastLoadedAt = Date.now();
+    renderAll();
+    if (errors.length) {
+      document.getElementById('refresh-status').textContent = `Partial load — errors: ${errors.join(', ')}`;
+    } else {
       updateDataAge();
-    } catch (err) {
-      document.getElementById('refresh-status').textContent = `Error: ${err.message}`;
     }
   }
 
@@ -549,8 +554,17 @@
     const current = localStorage.getItem(TOKEN_KEY) || '';
     const val = prompt('GitHub fine-grained PAT (Contents + Actions write):\nLeave blank to clear.', current);
     if (val === null) return;
-    if (val.trim()) { localStorage.setItem(TOKEN_KEY, val.trim()); alert('Token saved.'); }
-    else { localStorage.removeItem(TOKEN_KEY); alert('Token cleared.'); }
+    const trimmed = val.trim();
+    if (trimmed) {
+      if (!trimmed.startsWith('ghp_') && !trimmed.startsWith('github_pat_')) {
+        if (!confirm('This doesn\'t look like a GitHub token (should start with ghp_ or github_pat_). Save anyway?')) return;
+      }
+      localStorage.setItem(TOKEN_KEY, trimmed);
+      alert('Token saved.');
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+      alert('Token cleared.');
+    }
     renderAll();
   }
 
@@ -774,14 +788,13 @@
     const lines = js.split('\n');
     let depth = 0;
     let inTarget = false;
-    let objectStart = -1;
     const result = [...lines];
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       for (const ch of line) {
-        if (ch === '{') { depth++; if (depth === 2 && inTarget) objectStart = i; }
-        if (ch === '}') { if (depth === 2 && inTarget) { inTarget = false; objectStart = -1; } depth--; }
+        if (ch === '{') depth++;
+        if (ch === '}') { if (depth === 2 && inTarget) inTarget = false; depth--; }
       }
       if (idPattern.test(line)) inTarget = true;
       if (inTarget && /imminent:\s*(true|false)/.test(line) && !/imminentInterval/.test(line)) {
