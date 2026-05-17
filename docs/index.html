@@ -246,6 +246,10 @@
   let config = { sites: [] };
   let ignored = {};
 
+  function esc(s) {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
   // ── Version display ──────────────────────────────────────────────────────────
   function fmtEST(date) {
     return date.toLocaleString('en-US', {
@@ -357,12 +361,12 @@
 
       const isReset = !!s.pageReset;
       const resetBanner = isReset
-        ? `<div class="site-reset-banner">⚠️ Site reset — Coming Soon / password wall detected<br><span style="font-weight:400;opacity:.8">${s.resetReason || ''}</span></div>`
+        ? `<div class="site-reset-banner">⚠️ Site reset — Coming Soon / password wall detected<br><span style="font-weight:400;opacity:.8">${esc(s.resetReason)}</span></div>`
         : '';
 
       return `<div class="site-card${isEnabled ? '' : ' disabled'}${isReset ? ' site-in-reset' : ''}">
         ${resetBanner}
-        <h3>${site.name}</h3>
+        <h3>${esc(site.name)}</h3>
         <div class="meta">
           <span>Last checked: ${checked}</span>
           <span>${total} products &mdash; ${inStock} in stock</span>
@@ -370,14 +374,14 @@
         </div>
         <div class="toggle-row">
           <label class="toggle toggle-enabled">
-            <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleEnabled('${site.id}', this.checked)" />
+            <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleEnabled('${site.id}', this.checked, this)" />
             <span class="slider"></span>
           </label>
           <span>Monitoring <span class="badge ${isEnabled ? 'badge-green' : 'badge-red'}">${isEnabled ? 'ON' : 'OFF'}</span></span>
         </div>
         <div class="toggle-row">
           <label class="toggle">
-            <input type="checkbox" ${imminentChecked ? 'checked' : ''} onchange="toggleImminent('${site.id}', this.checked)" />
+            <input type="checkbox" ${imminentChecked ? 'checked' : ''} onchange="toggleImminent('${site.id}', this.checked, this)" />
             <span class="slider"></span>
           </label>
           <span>Imminent mode <span class="badge ${imminentChecked ? 'badge-yellow' : ''}">${imminentChecked ? '🔥 ON' : 'OFF'}</span></span>
@@ -438,11 +442,11 @@
     tbody.innerHTML = products.map(p => {
       const revBadge = isReveriesProduct(p) ? '<span class="badge-reveries">✨ Reveries</span>' : '';
       const isIgnored = !!ignored[p.handle];
-      const ignoreBtn = `<button class="btn-sm ${isIgnored ? 'unignore' : ''}" onclick="toggleIgnore('${p.handle}', ${!isIgnored})">${isIgnored ? 'Unignore' : 'Ignore'}</button>`;
+      const ignoreBtn = `<button class="btn-sm ${isIgnored ? 'unignore' : ''}" onclick="toggleIgnore('${esc(p.handle)}', ${!isIgnored}, this)">${isIgnored ? 'Unignore' : 'Ignore'}</button>`;
       return `<tr class="${isIgnored ? 'ignored-row' : ''}">
-        <td>${p.image ? `<img class="thumb" src="${p.image}" alt="" loading="lazy" />` : ''}</td>
-        <td><a href="${p.url}" target="_blank" rel="noopener">${p.title}</a>${revBadge}</td>
-        <td>${p.siteName}</td>
+        <td>${p.image ? `<img class="thumb" src="${esc(p.image)}" alt="" loading="lazy" />` : ''}</td>
+        <td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>${revBadge}</td>
+        <td>${esc(p.siteName)}</td>
         <td>${p.minPrice != null ? '$' + p.minPrice.toFixed(2) : '—'}</td>
         <td class="${p.available ? 'avail-yes' : 'avail-no'}">${p.available ? 'In Stock' : 'Sold Out'}</td>
         <td>${ignoreBtn}</td>
@@ -458,9 +462,9 @@
     list.innerHTML = recent.map(h => {
       const label = h.type === 'new_product' ? '🆕 New' : h.type === 'restock' ? '✅ Restock' : h.type === 'sold_out' ? '❌ Sold Out' : h.type === 'site_reset' ? '⚠️ Reset' : h.type;
       const time = new Date(h.timestamp).toLocaleString();
-      return `<div class="history-item ${h.type}">
-        <span class="history-time">${time}</span>
-        <span>${label} &mdash; <a href="${h.product.url}" target="_blank" rel="noopener">${h.product.title}</a> <span style="color:var(--muted)">(${h.siteName})</span></span>
+      return `<div class="history-item ${esc(h.type)}">
+        <span class="history-time">${esc(time)}</span>
+        <span>${label} &mdash; <a href="${esc(h.product.url)}" target="_blank" rel="noopener">${esc(h.product.title)}</a> <span style="color:var(--muted)">(${esc(h.siteName)})</span></span>
       </div>`;
     }).join('');
   }
@@ -504,8 +508,8 @@
             ? `<img class="rev-img" src="${p.image}" alt="" loading="lazy" />`
             : `<div class="rev-img-placeholder"></div>`}
           <div class="rev-body">
-            <a href="${p.url}" target="_blank" rel="noopener" class="rev-title">${p.title}</a>
-            <div class="rev-meta">${p.siteName}</div>
+            <a href="${esc(p.url)}" target="_blank" rel="noopener" class="rev-title">${esc(p.title)}</a>
+            <div class="rev-meta">${esc(p.siteName)}</div>
             ${p.minPrice != null ? `<div class="rev-meta">$${p.minPrice.toFixed(2)}</div>` : ''}
           </div>
           ${isRecent ? '<div class="rev-updated-flag">🕐 Updated &lt;24h</div>' : ''}
@@ -533,19 +537,27 @@
   async function triggerRun() {
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) { alert('Add a GitHub token first.'); return; }
-    const res = await fetch(`${API_BASE}/actions/workflows/check.yml/dispatches`, {
-      method: 'POST',
-      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ref: 'main' }),
-    });
-    if (res.ok || res.status === 204) { alert('Run triggered! Check Actions tab in ~30s.'); }
-    else { alert(`Failed: ${res.status}`); }
+    const btn = document.getElementById('run-now-btn');
+    btn.disabled = true;
+    try {
+      const res = await fetch(`${API_BASE}/actions/workflows/check.yml/dispatches`, {
+        method: 'POST',
+        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: 'main' }),
+      });
+      if (res.ok || res.status === 204) { alert('Run triggered! Check Actions tab in ~30s.'); }
+      else { alert(`Failed: ${res.status}`); }
+    } finally {
+      btn.disabled = false;
+    }
   }
 
-  async function toggleIgnore(handle, shouldIgnore) {
+  async function toggleIgnore(handle, shouldIgnore, btn) {
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) { alert('Add a GitHub token to ignore products.'); return; }
 
+    if (btn) btn.disabled = true;
+    try {
     const res = await fetch(`${API_BASE}/contents/ignored_products.json`, {
       headers: { Authorization: `token ${token}` },
     });
@@ -581,11 +593,16 @@
     } else {
       alert(`Failed: ${putRes.status}`);
     }
+    } finally {
+      if (btn) btn.disabled = false;
+    }
   }
 
-  async function toggleEnabled(siteId, value) {
+  async function toggleEnabled(siteId, value, el) {
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) { alert('Add a GitHub token to toggle monitoring.'); renderSiteCards(); return; }
+
+    if (el) el.disabled = true;
 
     const res = await fetch(`${API_BASE}/contents/config.js`, {
       headers: { Authorization: `token ${token}` },
@@ -614,18 +631,20 @@
       await loadData();
     } else {
       alert(`Failed to update config: ${putRes.status}`);
+      if (el) el.disabled = false;
       renderSiteCards();
     }
   }
 
-  async function toggleImminent(siteId, value) {
+  async function toggleImminent(siteId, value, el) {
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) { alert('Add a GitHub token to toggle imminent mode.'); renderSiteCards(); return; }
 
+    if (el) el.disabled = true;
     const res = await fetch(`${API_BASE}/contents/config.js`, {
       headers: { Authorization: `token ${token}` },
     });
-    if (!res.ok) { alert('Could not fetch config.js'); renderSiteCards(); return; }
+    if (!res.ok) { alert('Could not fetch config.js'); if (el) el.disabled = false; renderSiteCards(); return; }
 
     const data = await res.json();
     const content = atob(data.content.replace(/\n/g, ''));
@@ -651,6 +670,7 @@
       await loadData();
     } else {
       alert(`Failed to update config: ${putRes.status}`);
+      if (el) el.disabled = false;
       renderSiteCards();
     }
   }
