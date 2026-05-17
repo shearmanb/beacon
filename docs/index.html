@@ -90,6 +90,8 @@
     a:hover { text-decoration: underline; }
     .empty { color: var(--muted); font-size: .875rem; padding: 1rem 0; }
     .site-card.disabled { opacity: 0.45; }
+    .site-card.site-in-reset { border-color: rgba(241,196,15,.5); border-top: 3px solid var(--yellow); }
+    .site-reset-banner { background: rgba(241,196,15,.1); border-bottom: 1px solid rgba(241,196,15,.25); color: var(--yellow); font-size: .75rem; font-weight: 600; padding: .5rem .75rem; margin: -1rem -1rem .75rem; line-height: 1.4; }
     .toggle-enabled input:checked + .slider { background: var(--green); }
     .reveries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .65rem; }
     .reveries-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
@@ -319,7 +321,13 @@
       const imminentChecked = site.imminent;
       const isEnabled = site.enabled !== false;
 
-      return `<div class="site-card${isEnabled ? '' : ' disabled'}">
+      const isReset = !!s.pageReset;
+      const resetBanner = isReset
+        ? `<div class="site-reset-banner">⚠️ Site reset — Coming Soon / password wall detected<br><span style="font-weight:400;opacity:.8">${s.resetReason || ''}</span></div>`
+        : '';
+
+      return `<div class="site-card${isEnabled ? '' : ' disabled'}${isReset ? ' site-in-reset' : ''}">
+        ${resetBanner}
         <h3>${site.name}</h3>
         <div class="meta">
           <span>Last checked: ${checked}</span>
