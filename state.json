@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-17T01:34:06.444Z",
+    "lastChecked": "2026-05-17T04:17:19.622Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -814,7 +814,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-17T01:34:09.800Z",
+    "lastChecked": "2026-05-17T04:17:19.724Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -843,9 +843,9 @@
     }
   },
   "reveries_official": {
-    "lastChecked": "2026-05-17T01:34:10.004Z",
+    "lastChecked": "2026-05-17T04:17:25.963Z",
     "productCount": 3,
-    "pageReset": false,
+    "pageReset": true,
     "products": {
       "the-reveries-8-year-only-all-the-time": {
         "handle": "the-reveries-8-year-only-all-the-time",
@@ -879,6 +879,171 @@
         "available": false,
         "image": null,
         "url": "https://www.thereveries.co/shop"
+      }
+    },
+    "resetReason": "Zero products returned (possible Coming Soon reset)"
+  },
+  "fountain_inn_dc": {
+    "lastChecked": "2026-05-17T04:17:20.046Z",
+    "productCount": 2,
+    "products": {
+      "the-reveries-8-year-single-barrel-the-fountain-inn": {
+        "handle": "the-reveries-8-year-single-barrel-the-fountain-inn",
+        "title": "The Reveries: 8 Year Single Barrel: The Fountain Inn",
+        "vendor": "Bottle Shop at The Fountain Inn",
+        "productType": "",
+        "tags": [],
+        "minPrice": 80,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5615.heic?v=1778790984",
+        "url": "https://shop.fountaininndc.com/products/the-reveries-8-year-single-barrel-the-fountain-inn"
+      },
+      "reveries-the-deep": {
+        "handle": "reveries-the-deep",
+        "title": "Reveries \"THE DEEP\"",
+        "vendor": "Bottle Shop at The Fountain Inn",
+        "productType": "",
+        "tags": [],
+        "minPrice": 129,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5590.heic?v=1778098989",
+        "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
+      }
+    }
+  },
+  "bourbon_concierge": {
+    "lastChecked": "2026-05-17T04:17:23.581Z",
+    "productCount": 8,
+    "products": {
+      "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
+        "handle": "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711",
+        "title": "THE REVERIES: Behemoth 14 Year single barrel Kentucky Straight Bourbon (#25711)",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "100-200",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "presale",
+          "Single Barrel",
+          "single barrel selections",
+          "the-reveries"
+        ],
+        "minPrice": 289,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/20260514_161201.jpg?v=1778789679",
+        "url": "https://thebourbonconcierge.com/products/the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711"
+      },
+      "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
+        "handle": "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1",
+        "title": "THE REVERIES: THE DEEP Kentucky Straight Bourbon Finished In French Oak Casks (Tide #1)",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "100-200",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "presale",
+          "Single Barrel",
+          "single barrel selections",
+          "the-reveries"
+        ],
+        "minPrice": 129.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/THE_REVERIES_THE_DEEP_Kentucky_Straight_Bourbon_Finished_In_French_Oak_Casks_Tide_1_1.png?v=1778781129",
+        "url": "https://thebourbonconcierge.com/products/the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1"
+      },
+      "the-reveries-17-year-single-barrel-fadens-finest-exclusive-single-barrel-129-7-proof": {
+        "handle": "the-reveries-17-year-single-barrel-fadens-finest-exclusive-single-barrel-129-7-proof",
+        "title": "THE REVERIES 17 Year Single Barrel \"Faden's Finest\" Exclusive Single Barrel - 129.7 Proof",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "American-Bourbon",
+          "Bourbon"
+        ],
+        "minPrice": 399,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/THE_REVERIES_17_Year_Single_Barrel__Faden_s_Finest__Exclusive_Single_Barrel_-_129.7_Proof.png?v=1777399288",
+        "url": "https://thebourbonconcierge.com/products/the-reveries-17-year-single-barrel-fadens-finest-exclusive-single-barrel-129-7-proof"
+      },
+      "the-reveries-time-rots-15-year-single-barrel-barrel-strength-bourbon": {
+        "handle": "the-reveries-time-rots-15-year-single-barrel-barrel-strength-bourbon",
+        "title": "THE REVERIES \"Time Rots\" 15 Year Single Barrel Barrel Strength Bourbon",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "American-Bourbon",
+          "Bourbon"
+        ],
+        "minPrice": 329.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/Screenshot2025-12-19at10.17.38.png?v=1766157465",
+        "url": "https://thebourbonconcierge.com/products/the-reveries-time-rots-15-year-single-barrel-barrel-strength-bourbon"
+      },
+      "the-reveries-the-bones-15-year-single-barrel-barrel-strength-bourbon": {
+        "handle": "the-reveries-the-bones-15-year-single-barrel-barrel-strength-bourbon",
+        "title": "THE REVERIES \"The Bones\" 15 Year Single Barrel Barrel Strength Bourbon",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "American-Bourbon",
+          "Bourbon"
+        ],
+        "minPrice": 329.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/Screenshot2025-12-19at10.19.39.png?v=1766157585",
+        "url": "https://thebourbonconcierge.com/products/the-reveries-the-bones-15-year-single-barrel-barrel-strength-bourbon"
+      },
+      "the-reveries-enclave-17-year-single-barrel-barrel-strength-bourbon": {
+        "handle": "the-reveries-enclave-17-year-single-barrel-barrel-strength-bourbon",
+        "title": "THE REVERIES \"Enclave\" 17 Year Single Barrel Barrel Strength Bourbon",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "American-Bourbon",
+          "Bourbon"
+        ],
+        "minPrice": 399.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/853302FD-D821-4A75-8EA0-ECA7539003DD.jpg?v=1766173124",
+        "url": "https://thebourbonconcierge.com/products/the-reveries-enclave-17-year-single-barrel-barrel-strength-bourbon"
+      },
+      "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
+        "handle": "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon",
+        "title": "THE REVERIES \"007\" 7 Year Single Barrel Barrel Strength Bourbon",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "American-Bourbon",
+          "Bourbon"
+        ],
+        "minPrice": 79.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/8D6BDB22-41E4-40BB-8D9A-7F5EC041C8AB.jpg?v=1766173149",
+        "url": "https://thebourbonconcierge.com/products/the-reveries-007-7-year-single-barrel-barrel-strength-bourbon"
+      },
+      "the-reveries-bourbon-concierge-single-barrel-xxxpf": {
+        "handle": "the-reveries-bourbon-concierge-single-barrel-xxxpf",
+        "title": "THE REVERIES 16 Year Single Barrel \"Bourbon Concierge\" Exclusive Single Barrel - 126.2 Proof",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "American-Bourbon",
+          "Bourbon"
+        ],
+        "minPrice": 329,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/20251120_163648.jpg?v=1763674963",
+        "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     }
   }
