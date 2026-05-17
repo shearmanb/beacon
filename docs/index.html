@@ -52,6 +52,8 @@
     .site-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
     .site-card h3 { font-size: .95rem; margin-bottom: .5rem; }
     .site-card .meta { font-size: .8rem; color: var(--muted); display: flex; flex-direction: column; gap: .2rem; }
+    .meta-stale { color: var(--yellow) !important; }
+    .meta-overdue { color: var(--red) !important; }
     .site-card .badge { display: inline-block; padding: .2rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 600; }
     .badge-green { background: rgba(46,204,113,.15); color: var(--green); }
     .badge-blue { background: rgba(52,152,219,.15); color: var(--blue); }
@@ -372,6 +374,11 @@
       const imminentChecked = site.imminent;
       const isEnabled = site.enabled !== false;
 
+      const minsAgo = s.lastChecked ? (Date.now() - new Date(s.lastChecked).getTime()) / 60_000 : null;
+      const checkedClass = (isEnabled && minsAgo != null && site.intervalMinutes > 0)
+        ? (minsAgo > site.intervalMinutes * 4 ? 'meta-overdue' : minsAgo > site.intervalMinutes * 2 ? 'meta-stale' : '')
+        : '';
+
       const isReset = !!s.pageReset;
       const resetBanner = isReset
         ? `<div class="site-reset-banner">⚠️ Site reset — Coming Soon / password wall detected<br><span style="font-weight:400;opacity:.8">${esc(s.resetReason)}</span></div>`
@@ -381,7 +388,7 @@
         ${resetBanner}
         <h3>${esc(site.name)}</h3>
         <div class="meta">
-          <span>Last checked: ${checked}</span>
+          <span${checkedClass ? ` class="${checkedClass}"` : ''}>Last checked: ${checked}</span>
           <span>${total} products &mdash; ${inStock} in stock</span>
           <span>Interval: ${site.intervalMinutes} min</span>
         </div>
@@ -688,8 +695,12 @@
     }
   }
 
+  function escapeRegex(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   function flipEnabled(js, siteId, value) {
-    const idPattern = new RegExp(`id:\\s*["']${siteId}["']`);
+    const idPattern = new RegExp(`id:\\s*["']${escapeRegex(siteId)}["']`);
     const lines = js.split('\n');
     let depth = 0;
     let inTarget = false;
@@ -750,7 +761,7 @@
 
   function flipImminent(js, siteId, value) {
     // Split on site blocks, find the one with the target id, flip imminent.
-    const idPattern = new RegExp(`id:\\s*["']${siteId}["']`);
+    const idPattern = new RegExp(`id:\\s*["']${escapeRegex(siteId)}["']`);
     const lines = js.split('\n');
     let depth = 0;
     let inTarget = false;
