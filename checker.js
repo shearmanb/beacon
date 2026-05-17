@@ -35,10 +35,27 @@ function saveState(state) {
   writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
 }
 
+function getEffectiveInterval(site) {
+  const { schedule } = site;
+  if (!schedule) return site.intervalMinutes;
+  const fixed = parseInt(schedule, 10);
+  if (!isNaN(fixed)) return fixed;
+  if (schedule === "working_hours_heavy") {
+    const hour = parseInt(
+      new Date().toLocaleString("en-US", { timeZone: "America/New_York", hour: "numeric", hour12: false }),
+      10
+    );
+    if (hour >= 9 && hour < 18) return 5;
+    if (hour >= 18 && hour < 22) return 20;
+    return 300;
+  }
+  return site.intervalMinutes;
+}
+
 function shouldCheck(site, siteState) {
   if (!siteState?.lastChecked) return true;
   const elapsed = (Date.now() - new Date(siteState.lastChecked).getTime()) / 1000 / 60;
-  const interval = site.imminent ? site.imminentIntervalMinutes : site.intervalMinutes;
+  const interval = site.imminent ? site.imminentIntervalMinutes : getEffectiveInterval(site);
   return elapsed >= interval;
 }
 
