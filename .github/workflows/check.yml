@@ -26,7 +26,13 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-        run: node checker.js
+        run: |
+          echo "=== state.json before run ==="
+          cat state.json
+          echo "=== running checker ==="
+          node checker.js
+          echo "=== state.json after run ==="
+          cat state.json
 
       - name: Commit updated state
         run: |
