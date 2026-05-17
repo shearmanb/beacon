@@ -467,7 +467,7 @@
 
   function renderReveries() {
     const grid = document.getElementById('reveries-grid');
-    const products = allProducts().filter(p => p.title.toLowerCase().includes('reveries'));
+    const products = allProducts().filter(p => isReveriesProduct(p));
     if (!products.length) {
       grid.innerHTML = '<div class="empty">No Reveries products found</div>';
       return;
