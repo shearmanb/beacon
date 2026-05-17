@@ -330,9 +330,7 @@
         p.siteId === 'reveries_official' || p.siteId === 'sharedpour_reveries';
       const revBadge = isReveries ? '<span class="badge-reveries">✨ Reveries</span>' : '';
       const isIgnored = !!ignored[p.handle];
-      const ignoreBtn = localStorage.getItem(TOKEN_KEY)
-        ? `<button class="btn-sm ${isIgnored ? 'unignore' : ''}" onclick="toggleIgnore('${p.handle}', ${!isIgnored})">${isIgnored ? 'Unignore' : 'Ignore'}</button>`
-        : '';
+      const ignoreBtn = `<button class="btn-sm ${isIgnored ? 'unignore' : ''}" onclick="toggleIgnore('${p.handle}', ${!isIgnored})">${isIgnored ? 'Unignore' : 'Ignore'}</button>`;
       return `<tr class="${isIgnored ? 'ignored-row' : ''}">
         <td>${p.image ? `<img class="thumb" src="${p.image}" alt="" loading="lazy" />` : ''}</td>
         <td><a href="${p.url}" target="_blank" rel="noopener">${p.title}</a>${revBadge}</td>
