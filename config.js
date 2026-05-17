@@ -38,9 +38,9 @@ export const sites = [
     alertOnRestock: true,
     alertOnSoldOut: false,
     filters: {
-      titleContains: [],
+      titleContains: ["Reveries"],
       titleExcludes: [],
-      vendorIs: ["The Reveries"],
+      vendorIs: [],
       productType: [],
       tags: [],
       minPriceDollars: null,
