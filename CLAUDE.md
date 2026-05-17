@@ -40,6 +40,8 @@ Requires `DISCORD_WEBHOOK_URL` env var to send alerts. Run without it to check s
 |----|-----|----------|-------|
 | `sharedpour_t8ke` | sharedpour.com/collections/t8ke | shopify_collection | 37 products baselined |
 | `sharedpour_reveries` | sharedpour.com (filtered by title) | shopify_collection | 1 product: THE DEEP (sold out) |
+| `fountain_inn_dc` | shop.fountaininndc.com (filtered by title) | shopify_collection | titleContains: ["Reveries"]; The Deep + 8yr expected |
+| `bourbon_concierge` | thebourbonconcierge.com (filtered by title) | shopify_collection | titleContains: ["Reveries"]; large catalog, Reveries only |
 | `reveries_official` | thereveries.co/shop | reveries_squarespace | 3 real releases, all sold out |
 
 ## Infrastructure
@@ -106,7 +108,7 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
 ## Open features (backlog)
 
 - **Scheduling (feature 2)** — per-site schedule dropdown in the dashboard replacing fixed `intervalMinutes`. Options: 5 / 15 / 30 / 60 min, plus "Working Hours Heavy" (9am–6pm every 5 min, 6–10pm every 20 min, 10pm–8am twice ≈ every 5 hrs). Requires: new `schedule` field in `config.js`, `getEffectiveInterval(site)` logic in `checker.js`, dropdown UI in site cards (token-gated write).
-- **Add site wizard (feature 3)** — modal form in the dashboard to add a new site to `config.js` via GitHub API. Fields: name, ID (auto-slugged from name), strategy dropdown, URL, schedule, filters. Tricky part: serializing a JS object back into `config.js` format cleanly.
+- **Add site wizard (feature 3)** — modal form in the dashboard to add a new site to `config.js` via GitHub API. Fields: name, ID (auto-slugged from name), strategy dropdown, URL, schedule, filters. Tricky part: serializing a JS object back into `config.js` format cleanly. Deferred — for small numbers of new sites, direct edits to `config.js` are simpler.
 
 ## Known quirks
 
