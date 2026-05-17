@@ -33,8 +33,19 @@
     .btn-primary { background: var(--blue); border-color: var(--blue); color: #fff; }
     .btn-primary:hover { opacity: .85; }
     .status { font-size: .8rem; color: var(--muted); }
-    section { margin-bottom: 2rem; }
-    section h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: .75rem; }
+    section { margin-bottom: 1.25rem; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    section.sec-sites    { border-top: 3px solid var(--blue); }
+    section.sec-reveries { border-top: 3px solid #9b59b6; }
+    section.sec-products { border-top: 3px solid #1abc9c; }
+    section.sec-history  { border-top: 3px solid var(--yellow); }
+    .section-header { display: flex; align-items: center; justify-content: space-between; padding: .7rem 1rem; background: var(--surface); cursor: pointer; user-select: none; border-bottom: 1px solid var(--border); }
+    .section-header:hover { background: rgba(255,255,255,.04); }
+    .section-header h2 { font-size: .82rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text); font-weight: 700; margin: 0; display: flex; align-items: center; gap: .55rem; }
+    .section-header h2 .sec-icon { font-size: 1rem; }
+    .section-chevron { color: var(--muted); font-size: .75rem; transition: transform .2s; display: inline-block; }
+    .section-header.sec-collapsed .section-chevron { transform: rotate(-90deg); }
+    .section-body { padding: 1rem; background: var(--bg); }
+    .section-body.sec-hidden { display: none; }
     .site-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
     .site-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
     .site-card h3 { font-size: .95rem; margin-bottom: .5rem; }
@@ -119,59 +130,79 @@
     </div>
   </header>
 
-  <section>
-    <h2>Sites</h2>
-    <div class="site-cards" id="site-cards">
-      <div class="empty">Loading…</div>
+  <section class="sec-sites">
+    <div class="section-header" onclick="toggleSection('sec-sites')">
+      <h2><span class="sec-icon">📡</span> Sites</h2>
+      <span class="section-chevron">▾</span>
+    </div>
+    <div class="section-body" id="body-sec-sites">
+      <div class="site-cards" id="site-cards">
+        <div class="empty">Loading…</div>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2>✨ New Reveries</h2>
-    <div class="reveries-grid" id="reveries-grid">
-      <div class="empty">Loading…</div>
+  <section class="sec-reveries">
+    <div class="section-header" onclick="toggleSection('sec-reveries')">
+      <h2><span class="sec-icon">✨</span> New Reveries</h2>
+      <span class="section-chevron">▾</span>
+    </div>
+    <div class="section-body" id="body-sec-reveries">
+      <div class="reveries-grid" id="reveries-grid">
+        <div class="empty">Loading…</div>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2>Products</h2>
-    <div class="controls">
-      <input type="text" id="search" placeholder="Search products…" oninput="renderProducts()" />
-      <select id="filter-site" onchange="renderProducts()">
-        <option value="">All sites</option>
-      </select>
-      <select id="filter-avail" onchange="renderProducts()">
-        <option value="">All availability</option>
-        <option value="yes">Available</option>
-        <option value="no">Sold Out</option>
-      </select>
-      <select id="filter-ignored" onchange="renderProducts()">
-        <option value="visible">Hide ignored</option>
-        <option value="all">Show all</option>
-        <option value="only">Ignored only</option>
-      </select>
+  <section class="sec-products">
+    <div class="section-header" onclick="toggleSection('sec-products')">
+      <h2><span class="sec-icon">📦</span> Products</h2>
+      <span class="section-chevron">▾</span>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th>Product</th>
-          <th>Site</th>
-          <th>Price</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="products-tbody">
-        <tr><td colspan="6" class="empty">Loading…</td></tr>
-      </tbody>
-    </table>
+    <div class="section-body" id="body-sec-products">
+      <div class="controls">
+        <input type="text" id="search" placeholder="Search products…" oninput="renderProducts()" />
+        <select id="filter-site" onchange="renderProducts()">
+          <option value="">All sites</option>
+        </select>
+        <select id="filter-avail" onchange="renderProducts()">
+          <option value="">All availability</option>
+          <option value="yes">Available</option>
+          <option value="no">Sold Out</option>
+        </select>
+        <select id="filter-ignored" onchange="renderProducts()">
+          <option value="visible">Hide ignored</option>
+          <option value="all">Show all</option>
+          <option value="only">Ignored only</option>
+        </select>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Product</th>
+            <th>Site</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="products-tbody">
+          <tr><td colspan="6" class="empty">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
-  <section>
-    <h2>Alert History</h2>
-    <div class="history-list" id="history-list">
-      <div class="empty">Loading…</div>
+  <section class="sec-history">
+    <div class="section-header" onclick="toggleSection('sec-history')">
+      <h2><span class="sec-icon">🔔</span> Alert History</h2>
+      <span class="section-chevron">▾</span>
+    </div>
+    <div class="section-body" id="body-sec-history">
+      <div class="history-list" id="history-list">
+        <div class="empty">Loading…</div>
+      </div>
     </div>
   </section>
 </div>
@@ -562,6 +593,43 @@
     }
     return js;
   }
+
+  // ── Section collapse ─────────────────────────────────────────────────────────
+  const COLLAPSE_KEY = 'beacon_collapsed';
+  function loadCollapsed() {
+    try { return new Set(JSON.parse(localStorage.getItem(COLLAPSE_KEY) || '[]')); } catch { return new Set(); }
+  }
+  function saveCollapsed(set) {
+    localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...set]));
+  }
+  function toggleSection(id) {
+    const header = document.querySelector(`.sec-${id} .section-header`);
+    const body   = document.getElementById(`body-sec-${id}`);
+    if (!header || !body) return;
+    const collapsed = loadCollapsed();
+    if (header.classList.contains('sec-collapsed')) {
+      header.classList.remove('sec-collapsed');
+      body.classList.remove('sec-hidden');
+      collapsed.delete(id);
+    } else {
+      header.classList.add('sec-collapsed');
+      body.classList.add('sec-hidden');
+      collapsed.add(id);
+    }
+    saveCollapsed(collapsed);
+  }
+  function initSections() {
+    const collapsed = loadCollapsed();
+    for (const id of collapsed) {
+      const header = document.querySelector(`.sec-${id} .section-header`);
+      const body   = document.getElementById(`body-sec-${id}`);
+      if (header && body) {
+        header.classList.add('sec-collapsed');
+        body.classList.add('sec-hidden');
+      }
+    }
+  }
+  initSections();
 
   function flipImminent(js, siteId, value) {
     // Split on site blocks, find the one with the target id, flip imminent.
