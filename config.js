@@ -57,7 +57,7 @@ export const sites = [
     strategy: "shopify_collection",
     url: "https://shop.fountaininndc.com",
     intervalMinutes: 30,
-    schedule: "bar_hours_fi",
+    schedule: "bar_schedule_fi",
     imminentIntervalMinutes: 2,
     imminent: false,
     alertOnNewProduct: true,
