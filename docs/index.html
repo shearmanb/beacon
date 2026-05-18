@@ -139,6 +139,11 @@
     .sched-add-form input.input-narrow { flex: 0 0 80px; }
     .sched-add-form input::placeholder { color: var(--muted); }
     .sched-add-err { color: var(--red); font-size: .75rem; display: none; }
+    .sched-field-label { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; margin-bottom: .25rem; }
+    .sched-text-input { width: 100%; padding: .38rem .6rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .85rem; }
+    .sched-rule-row { display: flex; align-items: center; gap: .4rem; padding: .3rem .5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; font-size: .8rem; flex-wrap: wrap; }
+    .sched-rule-sel { padding: .25rem .35rem; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .8rem; }
+    .sched-rule-num { width: 58px; padding: .25rem .35rem; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .8rem; }
   </style>
 </head>
 <body>
@@ -249,29 +254,61 @@
 
   <!-- Schedule management modal -->
   <div class="modal-overlay" id="schedule-modal" onclick="handleModalOverlayClick(event)">
-    <div class="modal">
+    <div class="modal" style="width:480px">
       <div class="modal-header">
-        <h3>⚙ Manage Schedules</h3>
+        <h3 id="sched-modal-title">⚙ Manage Schedules</h3>
         <button class="modal-close" onclick="closeScheduleModal()">✕</button>
       </div>
-      <div class="modal-body">
+
+      <!-- ── List view ── -->
+      <div class="modal-body" id="sched-view-list">
         <div>
-          <div class="sched-section-label">Built-in presets</div>
-          <div class="sched-list" id="sched-builtin-list"></div>
+          <div class="sched-section-label">Named schedules <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.7rem">(time-based, editable)</span></div>
+          <div class="sched-list" id="sched-named-list"></div>
+          <button class="btn" style="margin-top:.45rem;font-size:.79rem" onclick="editNamedSchedule(null)">+ Add named schedule</button>
         </div>
         <div>
-          <div class="sched-section-label">Custom presets</div>
-          <div class="sched-list" id="sched-custom-list"><div class="empty" style="font-size:.8rem">No custom presets yet</div></div>
-        </div>
-        <div>
-          <div class="sched-section-label">Add preset</div>
-          <div class="sched-add-form">
+          <div class="sched-section-label">Fixed presets</div>
+          <div class="sched-list" id="sched-fixed-builtin"></div>
+          <div class="sched-list" id="sched-custom-list" style="margin-top:.3rem"></div>
+          <div class="sched-add-form" style="margin-top:.45rem">
+            <div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">Add fixed preset</div>
             <div class="form-row">
               <input type="text" id="sched-new-label" placeholder="Label (e.g. Drop Day)" />
               <input type="number" id="sched-new-minutes" class="input-narrow" placeholder="min" min="1" max="9999" />
             </div>
             <div class="sched-add-err" id="sched-add-err"></div>
-            <button class="btn btn-primary" style="align-self:flex-start" onclick="addSchedulePreset()">Add preset</button>
+            <button class="btn btn-primary" style="align-self:flex-start" onclick="addSchedulePreset()">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Edit view ── -->
+      <div class="modal-body" id="sched-view-edit" style="display:none">
+        <button class="btn" style="align-self:flex-start;margin-bottom:.75rem;font-size:.8rem" onclick="showSchedListView()">← Back</button>
+        <div style="display:flex;flex-direction:column;gap:.65rem">
+          <div>
+            <label class="sched-field-label">Label</label>
+            <input class="sched-text-input" id="sched-edit-label" type="text" placeholder="e.g. Working Hours Heavy" oninput="autoSlugEditId()" />
+          </div>
+          <div>
+            <label class="sched-field-label">ID <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(schedule value stored in config.js)</span></label>
+            <input class="sched-text-input" id="sched-edit-id" type="text" placeholder="e.g. working_hours_heavy" />
+          </div>
+          <div>
+            <div class="sched-field-label" style="margin-bottom:.35rem">Time windows <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(ET, evaluated top-to-bottom)</span></div>
+            <div id="sched-rules-list" style="display:flex;flex-direction:column;gap:.3rem"></div>
+            <button class="btn" style="margin-top:.4rem;font-size:.79rem" onclick="addSchedRule()">+ Add window</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;background:var(--bg);border:1px solid var(--border);border-radius:7px">
+            <span style="flex:1;font-size:.82rem;font-weight:500;color:var(--muted)">Default interval (fallback)</span>
+            <input type="number" id="sched-edit-default" min="1" max="9999" style="width:65px;padding:.28rem .45rem;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.82rem" placeholder="min" />
+            <span style="font-size:.82rem;color:var(--muted)">min</span>
+          </div>
+          <div class="sched-add-err" id="sched-edit-err"></div>
+          <div style="display:flex;gap:.5rem">
+            <button class="btn btn-primary" onclick="saveNamedSchedule()">Save schedule</button>
+            <button class="btn" onclick="showSchedListView()">Cancel</button>
           </div>
         </div>
       </div>
@@ -301,15 +338,45 @@
   const VERSION  = 'v0.4';
 
   const BUILTIN_SCHEDULE_OPTIONS = [
-    { value: '5',                   label: '5 min' },
-    { value: '15',                  label: '15 min' },
-    { value: '20',                  label: '20 min' },
-    { value: '30',                  label: '30 min' },
-    { value: '60',                  label: '60 min' },
-    { value: 'working_hours_heavy', label: '⏰ Working Hours Heavy' },
+    { value: '5',  label: '5 min' },
+    { value: '15', label: '15 min' },
+    { value: '20', label: '20 min' },
+    { value: '30', label: '30 min' },
+    { value: '60', label: '60 min' },
   ];
 
   const CUSTOM_SCHEDULES_KEY = 'beacon_custom_schedules';
+
+  // Fallback if schedules.json hasn't loaded yet or doesn't exist
+  const DEFAULT_NAMED_SCHEDULES = {
+    working_hours_heavy: {
+      label: '⏰ Working Hours Heavy',
+      builtin: true,
+      rules: [
+        { fromHour: 9,  toHour: 18, interval: 5 },
+        { fromHour: 18, toHour: 22, interval: 20 },
+        { defaultInterval: 300 },
+      ],
+    },
+  };
+
+  function fmtHour(h) {
+    if (h === 0)  return '12am';
+    if (h === 12) return '12pm';
+    return h < 12 ? `${h}am` : `${h - 12}pm`;
+  }
+
+  function formatScheduleRules(rules) {
+    return rules.map(r =>
+      r.defaultInterval != null
+        ? `${r.defaultInterval}min default`
+        : `${r.interval}min ${fmtHour(r.fromHour)}–${fmtHour(r.toHour)}`
+    ).join(' · ');
+  }
+
+  function getNamedSchedules() {
+    return Object.keys(schedules).length ? schedules : DEFAULT_NAMED_SCHEDULES;
+  }
 
   function loadCustomSchedules() {
     try { return JSON.parse(localStorage.getItem(CUSTOM_SCHEDULES_KEY) || '[]'); } catch { return []; }
@@ -320,45 +387,63 @@
   }
 
   function getScheduleOptions() {
+    const namedOpts = Object.entries(getNamedSchedules()).map(([key, def]) => ({
+      value: key, label: def.label || key,
+    }));
     const custom = loadCustomSchedules();
     return [
       ...BUILTIN_SCHEDULE_OPTIONS,
+      ...namedOpts,
       ...custom.map(c => ({ value: c.value, label: c.label })),
     ];
   }
 
+  function safeBtoa(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+
   function openScheduleModal() {
-    renderScheduleModal();
+    showSchedListView();
     document.getElementById('schedule-modal').classList.add('open');
   }
 
   function closeScheduleModal() {
     document.getElementById('schedule-modal').classList.remove('open');
-    document.getElementById('sched-new-label').value = '';
-    document.getElementById('sched-new-minutes').value = '';
-    document.getElementById('sched-add-err').style.display = 'none';
   }
 
   function handleModalOverlayClick(e) {
     if (e.target === document.getElementById('schedule-modal')) closeScheduleModal();
   }
 
+  function showSchedListView() {
+    document.getElementById('sched-view-list').style.display = '';
+    document.getElementById('sched-view-edit').style.display = 'none';
+    document.getElementById('sched-modal-title').textContent = '⚙ Manage Schedules';
+    renderScheduleModal();
+  }
+
   function renderScheduleModal() {
-    const builtinEl = document.getElementById('sched-builtin-list');
-    builtinEl.innerHTML = BUILTIN_SCHEDULE_OPTIONS.map(o =>
-      `<div class="sched-item builtin">
-        <span class="sched-label">${esc(o.label)}</span>
-        <span class="sched-value">${o.value === 'working_hours_heavy' ? 'dynamic' : o.value + ' min'}</span>
+    // Named schedules
+    const named = getNamedSchedules();
+    document.getElementById('sched-named-list').innerHTML = Object.entries(named).map(([key, def]) =>
+      `<div class="sched-item" style="align-items:flex-start">
+        <div style="flex:1;min-width:0">
+          <div class="sched-label">${esc(def.label || key)}</div>
+          ${def.rules?.length ? `<div class="sched-value" style="margin-top:.15rem;white-space:normal">${esc(formatScheduleRules(def.rules))}</div>` : ''}
+        </div>
+        <button class="btn-sm" style="flex-shrink:0" onclick="editNamedSchedule('${esc(key)}')">Edit</button>
+        ${!def.builtin ? `<button class="btn-icon" onclick="deleteNamedSchedule('${esc(key)}')">✕</button>` : ''}
       </div>`
+    ).join('') || '<div class="empty" style="font-size:.8rem">No named schedules</div>';
+
+    // Fixed built-ins
+    document.getElementById('sched-fixed-builtin').innerHTML = [5,15,20,30,60].map(m =>
+      `<div class="sched-item builtin"><span class="sched-label">${m} min</span><span class="sched-value">fixed</span></div>`
     ).join('');
 
+    // Custom fixed presets
     const custom = loadCustomSchedules();
-    const customEl = document.getElementById('sched-custom-list');
-    if (!custom.length) {
-      customEl.innerHTML = '<div class="empty" style="font-size:.8rem">No custom presets yet</div>';
-      return;
-    }
-    customEl.innerHTML = custom.map((c, i) =>
+    document.getElementById('sched-custom-list').innerHTML = custom.map((c, i) =>
       `<div class="sched-item">
         <span class="sched-label">${esc(c.label)}</span>
         <span class="sched-value">${esc(c.value)} min</span>
@@ -371,16 +456,13 @@
     const label = document.getElementById('sched-new-label').value.trim();
     const minutes = parseInt(document.getElementById('sched-new-minutes').value, 10);
     const errEl = document.getElementById('sched-add-err');
-
     if (!label) { errEl.textContent = 'Label is required.'; errEl.style.display = 'block'; return; }
-    if (!minutes || minutes < 1 || minutes > 9999) { errEl.textContent = 'Enter a valid interval (1–9999 minutes).'; errEl.style.display = 'block'; return; }
-    errEl.style.display = 'none';
-
+    if (!minutes || minutes < 1 || minutes > 9999) { errEl.textContent = 'Enter a valid interval (1–9999 min).'; errEl.style.display = 'block'; return; }
     const custom = loadCustomSchedules();
     if (custom.some(c => c.label.toLowerCase() === label.toLowerCase())) {
       errEl.textContent = 'A preset with that label already exists.'; errEl.style.display = 'block'; return;
     }
-
+    errEl.style.display = 'none';
     custom.push({ label, value: String(minutes) });
     saveCustomSchedules(custom);
     document.getElementById('sched-new-label').value = '';
@@ -397,18 +479,156 @@
     renderSiteCards();
   }
 
+  // ── Named schedule editor ─────────────────────────────────────────────────────
+  let _editingKey = null;
+  let _editRules  = [];
+
+  function editNamedSchedule(key) {
+    _editingKey = key;
+    const def = key ? getNamedSchedules()[key] : null;
+
+    document.getElementById('sched-modal-title').textContent = key ? 'Edit Schedule' : 'New Named Schedule';
+    document.getElementById('sched-edit-label').value = def?.label || '';
+    const idField = document.getElementById('sched-edit-id');
+    idField.value = key || '';
+    idField.disabled = !!(def?.builtin);
+
+    const defaultRule = (def?.rules || []).find(r => r.defaultInterval != null);
+    document.getElementById('sched-edit-default').value = defaultRule?.defaultInterval ?? '';
+
+    _editRules = (def?.rules || [])
+      .filter(r => r.defaultInterval == null)
+      .map(r => ({ ...r }));
+
+    document.getElementById('sched-edit-err').style.display = 'none';
+    renderRulesList();
+    document.getElementById('sched-view-list').style.display = 'none';
+    document.getElementById('sched-view-edit').style.display = '';
+  }
+
+  function renderRulesList() {
+    document.getElementById('sched-rules-list').innerHTML = _editRules.length
+      ? _editRules.map((rule, i) => {
+          const fromOpts = Array.from({length:24},(_,h)=>`<option value="${h}"${h===rule.fromHour?' selected':''}>${fmtHour(h)}</option>`).join('');
+          const toOpts   = Array.from({length:24},(_,h)=>`<option value="${h}"${h===rule.toHour?' selected':''}>${fmtHour(h)}</option>`).join('');
+          return `<div class="sched-rule-row">
+            <select class="sched-rule-sel" onchange="_editRules[${i}].fromHour=+this.value">${fromOpts}</select>
+            <span style="color:var(--muted);font-size:.78rem">to</span>
+            <select class="sched-rule-sel" onchange="_editRules[${i}].toHour=+this.value">${toOpts}</select>
+            <span style="color:var(--muted);font-size:.78rem">→</span>
+            <input class="sched-rule-num" type="number" min="1" max="9999" value="${rule.interval||''}" placeholder="min"
+              onchange="_editRules[${i}].interval=+this.value" />
+            <span style="color:var(--muted);font-size:.78rem">min</span>
+            <button class="btn-icon" onclick="removeSchedRule(${i})">✕</button>
+          </div>`;
+        }).join('')
+      : '<div class="empty" style="font-size:.78rem">No time windows — add one or set a default below.</div>';
+  }
+
+  function addSchedRule() {
+    _editRules.push({ fromHour: 9, toHour: 18, interval: 5 });
+    renderRulesList();
+  }
+
+  function removeSchedRule(i) {
+    _editRules.splice(i, 1);
+    renderRulesList();
+  }
+
+  function autoSlugEditId() {
+    const idField = document.getElementById('sched-edit-id');
+    if (!idField.disabled && !_editingKey) {
+      idField.value = document.getElementById('sched-edit-label').value
+        .toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    }
+  }
+
+  async function saveNamedSchedule() {
+    const label = document.getElementById('sched-edit-label').value.trim();
+    const id    = document.getElementById('sched-edit-id').value.trim();
+    const defaultInterval = parseInt(document.getElementById('sched-edit-default').value, 10);
+    const errEl = document.getElementById('sched-edit-err');
+
+    if (!label) { errEl.textContent = 'Label is required.'; errEl.style.display = 'block'; return; }
+    if (!id || !/^[a-z0-9_]+$/.test(id)) {
+      errEl.textContent = 'ID must be lowercase letters, numbers, and underscores.'; errEl.style.display = 'block'; return;
+    }
+    if (!_editRules.length && isNaN(defaultInterval)) {
+      errEl.textContent = 'Add at least one time window or a default interval.'; errEl.style.display = 'block'; return;
+    }
+    for (const r of _editRules) {
+      if (!r.interval || r.interval < 1) {
+        errEl.textContent = 'Each time window needs a valid interval.'; errEl.style.display = 'block'; return;
+      }
+    }
+    errEl.style.display = 'none';
+
+    const updated = { ...getNamedSchedules() };
+    const existing = updated[_editingKey || id];
+    const rules = [
+      ..._editRules.map(r => ({ fromHour: r.fromHour, toHour: r.toHour, interval: r.interval })),
+      ...(!isNaN(defaultInterval) ? [{ defaultInterval }] : []),
+    ];
+    updated[id] = { label, ...(existing?.builtin ? { builtin: true } : {}), rules };
+    if (_editingKey && _editingKey !== id) delete updated[_editingKey];
+
+    await saveSchedulesToRepo(updated);
+  }
+
+  async function deleteNamedSchedule(key) {
+    if (!confirm(`Delete schedule "${key}"?\nSites using it will fall back to their intervalMinutes.`)) return;
+    const updated = { ...getNamedSchedules() };
+    delete updated[key];
+    await saveSchedulesToRepo(updated);
+  }
+
+  async function saveSchedulesToRepo(namedSchedules) {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) { alert('Add a GitHub token to save schedules.'); return; }
+    try {
+      const res = await fetch(`${API_BASE}/contents/schedules.json`, {
+        headers: { Authorization: `token ${token}` },
+      });
+      let sha = null;
+      if (res.ok) { sha = (await res.json()).sha; }
+      else if (res.status !== 404) { alert(`Failed to fetch schedules.json: ${res.status}`); return; }
+
+      const putRes = await fetch(`${API_BASE}/contents/schedules.json`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'chore: update schedules.json [skip ci]',
+          content: safeBtoa(JSON.stringify(namedSchedules, null, 2)),
+          branch: 'main',
+          ...(sha ? { sha } : {}),
+        }),
+      });
+      if (putRes.ok || putRes.status === 200 || putRes.status === 201) {
+        schedules = namedSchedules;
+        showSchedListView();
+        renderSiteCards();
+      } else {
+        alert(`Failed to save: ${putRes.status}`);
+      }
+    } catch (err) {
+      alert(`Error: ${err.message}`);
+    }
+  }
+
   function getEffectiveInterval(site) {
     const { schedule } = site;
     if (!schedule) return site.intervalMinutes;
     const fixed = parseInt(schedule, 10);
     if (!isNaN(fixed)) return fixed;
-    if (schedule === 'working_hours_heavy') {
+    const def = getNamedSchedules()[schedule];
+    if (def?.rules) {
       const hour = parseInt(
         new Date().toLocaleString('en-US', { timeZone: 'America/New_York', hour: 'numeric', hour12: false }), 10
       );
-      if (hour >= 9 && hour < 18) return 5;
-      if (hour >= 18 && hour < 22) return 20;
-      return 300;
+      for (const rule of def.rules) {
+        if (rule.defaultInterval != null) return rule.defaultInterval;
+        if (rule.fromHour != null && hour >= rule.fromHour && hour < rule.toHour) return rule.interval;
+      }
     }
     return site.intervalMinutes;
   }
@@ -420,6 +640,7 @@
   let history = [];
   let config = { sites: [] };
   let ignored = {};
+  let schedules = {};
   let lastLoadedAt = null;
 
   function esc(s) {
@@ -486,16 +707,18 @@
     document.getElementById('refresh-status').textContent = 'Refreshing…';
     const errors = [];
 
-    const [stateText, historyText, configText, ignoredText] = await Promise.all([
+    const [stateText, historyText, configText, ignoredText, schedulesText] = await Promise.all([
       fetchRaw('state.json').catch(e => { errors.push(`state: ${e.message}`); return null; }),
       fetchRaw('alert_history.json').catch(e => { errors.push(`history: ${e.message}`); return null; }),
       fetchRaw('config.js').catch(e => { errors.push(`config: ${e.message}`); return null; }),
       fetchRaw('ignored_products.json').catch(() => '{}'),
+      fetchRaw('schedules.json').catch(() => null),
     ]);
 
-    if (stateText)   state         = JSON.parse(stateText);
-    if (historyText) history       = JSON.parse(historyText);
-    if (configText)  config.sites  = parseConfigSites(configText);
+    if (stateText)     state        = JSON.parse(stateText);
+    if (historyText)   history      = JSON.parse(historyText);
+    if (configText)    config.sites = parseConfigSites(configText);
+    if (schedulesText) schedules    = JSON.parse(schedulesText);
     ignored = JSON.parse(ignoredText);
 
     lastLoadedAt = Date.now();
@@ -573,8 +796,11 @@
           <span${checkedClass ? ` class="${checkedClass}"` : ''}>Last checked: ${checked}</span>
           <span>${total} products &mdash; ${inStock} in stock</span>
         </div>
-        <div class="schedule-row">
-          <label>Schedule${site.schedule === 'working_hours_heavy' ? ` <span class="schedule-hint">(${effInterval} min now)</span>` : ''}</label>
+        ${(() => {
+          const schedDef = getNamedSchedules()[site.schedule];
+          const breakdown = schedDef?.rules?.length ? formatScheduleRules(schedDef.rules) : null;
+          return `<div class="schedule-row">
+          <label>Schedule${schedDef ? ` <span class="schedule-hint">(${effInterval} min now)</span>` : ''}</label>
           <select class="schedule-select" onchange="setSchedule('${esc(site.id)}', this.value, this)">
             ${(schedOpts => {
               const current = site.schedule ?? '';
@@ -583,7 +809,9 @@
               return extra + schedOpts.map(o => `<option value="${o.value}"${o.value === current ? ' selected' : ''}>${o.label}</option>`).join('');
             })(getScheduleOptions())}
           </select>
-        </div>
+          ${breakdown ? `<div class="schedule-hint" style="margin-top:.2rem;font-size:.7rem;line-height:1.5">${esc(breakdown)}</div>` : ''}
+        </div>`;
+        })()}
         <div class="toggle-row">
           <label class="toggle toggle-enabled">
             <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleEnabled('${site.id}', this.checked, this)" />
