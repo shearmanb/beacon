@@ -16,7 +16,7 @@ Requires `DISCORD_WEBHOOK_URL` env var to send alerts. Run without it to check s
 
 ## Architecture
 
-**Entry point**: `checker.js` — loads `state.json` and `ignored_products.json`, iterates `config.js` sites, calls the appropriate strategy module, diffs results against previous state, filters out ignored products, sends alerts, writes updated `state.json` and appends to `alert_history.json`.
+**Entry point**: `checker.js` — loads `state.json`, `ignored_products.json`, and `schedules.json`, iterates `config.js` sites, calls the appropriate strategy module, diffs results against previous state, filters out ignored products, sends alerts, writes updated `state.json` and appends to `alert_history.json`.
 
 **The only file edited day-to-day**: `config.js` — add/remove sites, change schedule, flip `imminent: true` on drop days, adjust filters.
 
@@ -30,7 +30,22 @@ Requires `DISCORD_WEBHOOK_URL` env var to send alerts. Run without it to check s
 
 **Ignored products**: `ignored_products.json` — a flat object keyed by product handle (`{ "some-handle": true }`). `checker.js` loads this and filters matching products from alerts before Discord/history. Ignored products still exist in `state.json` so unignoring never triggers a false "new product" alert. The dashboard writes this file via the GitHub API.
 
-**Scheduling**: One GitHub Actions cron at `*/5 * * * *` (platform minimum). Each site has a `schedule` field — `checker.js` calls `getEffectiveInterval(site)` to determine whether enough time has elapsed. Fixed schedules (`"5"`, `"15"`, `"20"`, `"30"`, `"60"`) parse directly to minutes. `"working_hours_heavy"` maps to 5 min (9am–6pm ET), 20 min (6pm–10pm ET), or 300 min (10pm–9am ET). Falls back to `intervalMinutes` if `schedule` is absent. `imminentIntervalMinutes` overrides everything when `imminent: true`.
+**Scheduling**: One GitHub Actions cron at `*/5 * * * *` (platform minimum). Each site has a `schedule` field — `checker.js` calls `getEffectiveInterval(site, schedules)` to determine whether enough time has elapsed. Fixed schedules (`"5"`, `"15"`, `"20"`, `"30"`, `"60"`) parse directly to minutes. Named schedules (e.g. `"working_hours_heavy"`) are resolved by looking up the key in `schedules.json` and evaluating the `rules` array in order (time windows checked against ET hour, last rule wins as default). Falls back to `intervalMinutes` if `schedule` is absent or unresolvable. `imminentIntervalMinutes` overrides everything when `imminent: true`.
+
+**Named schedule definitions** (`schedules.json`): A repo-level JSON file mapping schedule IDs to definitions. Each definition has a `label`, optional `builtin: true`, and a `rules` array. Rules are evaluated top-to-bottom; a rule is either a time window `{ fromHour, toHour, interval }` (ET, 24h) or a default `{ defaultInterval }`. The file is written by the dashboard via GitHub API and read by `checker.js` at startup. If absent, `checker.js` falls back to hardcoded logic for `working_hours_heavy`. Example:
+```json
+{
+  "working_hours_heavy": {
+    "label": "⏰ Working Hours Heavy",
+    "builtin": true,
+    "rules": [
+      { "fromHour": 9, "toHour": 18, "interval": 5 },
+      { "fromHour": 18, "toHour": 22, "interval": 20 },
+      { "defaultInterval": 300 }
+    ]
+  }
+}
+```
 
 **Alerts**: Discord webhook with rich embeds. Color coded: blue = new product, green = restock, red = sold out, orange = site reset. Rate limit retries are built into `notifiers/discord.js` (429 → parse `retry_after` with JSON fallback → sleep → retry up to 4 times). `notifiers/ntfy.js` is stubbed and disabled.
 
@@ -46,30 +61,36 @@ Requires `DISCORD_WEBHOOK_URL` env var to send alerts. Run without it to check s
 
 ## Infrastructure
 
-- **GitHub Actions**: `.github/workflows/check.yml` — cron + `workflow_dispatch`. Needs `permissions: contents: write` to commit state back. Commits `state.json`, `alert_history.json`, and `ignored_products.json`.
+- **GitHub Actions**: `.github/workflows/check.yml` — cron + `workflow_dispatch`. Needs `permissions: contents: write` to commit state back. Commits `state.json`, `alert_history.json`, and `ignored_products.json`. (`schedules.json` is committed by the dashboard via GitHub API, not by the workflow.)
 - **GitHub Secret**: `DISCORD_WEBHOOK_URL` — the Discord channel webhook. Never put this in code.
 - **GitHub Pages**: served from `/docs`, password is `beam` (client-side gate, hardcoded in `docs/index.html`). Dashboard auto-refreshes every 2 min by fetching raw files from GitHub. `REPO_OWNER` and `REPO_NAME` constants are set at the top of `docs/index.html`.
 - **Default branch**: `main`. The cron fires on the default branch — if it ever runs on the wrong branch again, check repo Settings → Default branch.
-- **GitHub token**: A fine-grained PAT stored in browser localStorage (`beacon_gh_token`). Needs Contents + Actions read/write on the `beacon` repo. Required for dashboard write actions: Monitoring toggle, Imminent mode toggle, Schedule dropdown, Ignore/Unignore products. Tokens can be created at github.com → Settings → Developer settings → Fine-grained tokens. The dashboard warns if a saved value doesn't start with `ghp_` or `github_pat_`.
+- **GitHub token**: A fine-grained PAT stored in browser localStorage (`beacon_gh_token`). Needs Contents + Actions read/write on the `beacon` repo. Required for dashboard write actions: Monitoring toggle, Imminent mode toggle, Schedule dropdown, Ignore/Unignore products, Schedule manager saves. Also used to authenticate the version-date fetch (avoids 60 req/hr unauthenticated rate limit). Tokens can be created at github.com → Settings → Developer settings → Fine-grained tokens. The dashboard warns if a saved value doesn't start with `ghp_` or `github_pat_`.
 
 ## Dashboard features (`docs/index.html`) — v0.4
 
-The dashboard is a single static HTML file fetching raw GitHub files every 2 minutes.
+The dashboard is a single static HTML file fetching raw GitHub files every 2 minutes. Fetches: `state.json`, `alert_history.json`, `config.js`, `ignored_products.json`, `schedules.json`.
 
-**Header**: Shows `v0.4 · App update: [date/time] EST` under the Beacon title. Refresh status shows `Data Last Updated: [date/time] EST (X min ago)` — turns yellow after 5 min, red after 15 min of no successful refresh.
+**Header**: Shows `v0.4 · App update: [date/time] EST` under the Beacon title (populated by `fetchLastCodeCommit()` using the GitHub token if available to avoid rate limits). Refresh status shows `Data Last Updated: [date/time] EST (X min ago)` — turns yellow after 5 min, red after 15 min of no successful refresh.
 
 **Sections (top to bottom):**
 1. **Sites** — cards for each configured site showing last checked, product count, and three token-gated controls:
-   - **Schedule dropdown** — writes `schedule: "..."` to `config.js` via `flipSchedule()`. Options: 5 / 15 / 20 / 30 / 60 min, ⏰ Working Hours Heavy. Shows current effective interval in parens when Working Hours Heavy is active. Last-checked timestamp turns yellow (>2× effective interval overdue) or red (>4×).
+   - **Schedule dropdown** — writes `schedule: "..."` to `config.js` via `flipSchedule()`. Options: 5 / 15 / 20 / 30 / 60 min (fixed), named schedules from `schedules.json`, and custom fixed presets from localStorage. When a named schedule is selected, its rule breakdown shows under the dropdown (e.g. `5min 9am–6pm · 20min 6pm–10pm · 300min default`). Last-checked timestamp turns yellow (>2× overdue) or red (>4×).
    - **Monitoring ON/OFF** (green toggle) — writes `enabled: true/false` via `flipEnabled()`
    - **Imminent mode** (yellow toggle) — writes `imminent: true/false` via `flipImminent()`
-2. **✨ New Reveries** — grid of product cards for any product whose title contains "reveries" OR whose siteId is `reveries_official`/`sharedpour_reveries`
+2. **✨ Reveries** — grid of product cards for any product whose title contains "reveries" OR whose siteId is `reveries_official`/`sharedpour_reveries`
 3. **Products** — filterable table with search, site filter, availability filter, and ignored filter. Each row has a purple **✨ Reveries** badge and an Ignore/Unignore button.
 4. **Alert History** — last 100 alerts, color-coded. Types: 🆕 New, ✅ Restock, ❌ Sold Out, ⚠️ Reset
 
-**Header actions**: Refresh, ▶ Run Now (token required), GitHub Token (save/clear PAT with format validation).
+**Header actions**: Refresh, ▶ Run Now (token required), ⚙ Schedules (opens schedule manager), GitHub Token (save/clear PAT with format validation).
+
+**Schedule manager modal** (⚙ Schedules button): Two-view modal.
+- *List view*: Named schedules (from `schedules.json`) shown with their rule breakdown and Edit button. Built-in named schedules (e.g. `working_hours_heavy`) can be edited but not deleted. Fixed presets (localStorage) shown below with delete. Add fixed preset form at bottom.
+- *Edit view*: Label, ID (auto-slugged from label; locked for built-ins), time windows table (from/to hour dropdowns + interval per row, add/remove rows), default interval fallback. Saves to `schedules.json` via GitHub API (`saveSchedulesToRepo()`). New custom named schedules can be added with any ID — `checker.js` will resolve them if they exist in `schedules.json`.
 
 **Config parsing**: `parseConfigSites()` extracts `name`, `id`, `enabled`, `imminent`, `intervalMinutes`, `schedule` via regex. `flipEnabled()`, `flipImminent()`, `flipSchedule()` do line-by-line replacement. All use `escapeRegex()` to safely build RegExp from siteId. All async write handlers use try/finally to guarantee button re-enable.
+
+**Schedule resolution** (dashboard): `getEffectiveInterval(site)` uses `getNamedSchedules()` which returns loaded `schedules` global if populated, else falls back to `DEFAULT_NAMED_SCHEDULES` (hardcoded `working_hours_heavy`). `getScheduleOptions()` merges fixed built-ins + named schedules + localStorage presets. `safeBtoa()` handles unicode labels when saving to GitHub API.
 
 **Security**: All product titles, URLs, site names, and external strings are passed through `esc()` before `innerHTML` insertion to prevent XSS.
 
@@ -90,7 +111,7 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
   strategy: "shopify_collection",   // or "reveries_squarespace"
   url: "https://...",
   intervalMinutes: 20,              // fallback if schedule is absent
-  schedule: "20",                   // "5"|"15"|"20"|"30"|"60"|"working_hours_heavy" (changeable from dashboard)
+  schedule: "20",                   // "5"|"15"|"20"|"30"|"60" or any key in schedules.json (changeable from dashboard)
   imminentIntervalMinutes: 2,       // reserved for future sub-5-min worker; overrides schedule when imminent: true
   imminent: false,                  // flip true on drop days (togglable from dashboard)
   alertOnNewProduct: true,
