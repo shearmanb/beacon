@@ -5,6 +5,10 @@ on:
     - cron: "*/5 * * * *"   # every 5 minutes (GitHub's minimum)
   workflow_dispatch:          # manual "Run Now" trigger
 
+concurrency:
+  group: beacon-check
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -34,4 +38,4 @@ jobs:
           git config user.email "beacon-bot@users.noreply.github.com"
           git add state.json alert_history.json ignored_products.json
           git diff --staged --quiet || git commit -m "chore: update state [skip ci]"
-          git push || (git pull --rebase && git push)
+          git push || (git pull --rebase -X theirs && git push)
