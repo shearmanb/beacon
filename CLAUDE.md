@@ -134,6 +134,8 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
 
 - **Add site wizard (feature 3)** — modal form in the dashboard to add a new site to `config.js` via GitHub API. Fields: name, ID (auto-slugged from name), strategy dropdown, URL, schedule, filters. Tricky part: serializing a JS object back into `config.js` format cleanly. Deferred — for small numbers of new sites, direct edits to `config.js` are simpler.
 
+- **Move checker to persistent process (feature 4)** — GitHub Actions `*/5` cron is unreliable (15–80 min delays are common under load). True every-minute checking requires a persistent Node.js process running `setInterval(run, 60_000)` on an always-on host. **Fly.io free tier** is the recommended target: 3 shared-CPU VMs stay running (no sleep), `fly secrets set` for env vars, deploy via CLI. Render free tier sleeps after 15 min of inactivity (paid $7/mo needed). Changes required: add `fly.toml`, convert `checker.js` exit-after-one-run model to a loop, keep all GitHub state push logic as-is. The `imminentIntervalMinutes` field on each site is already wired for sub-5-min overrides and would activate automatically once the process runs on a tight loop.
+
 ## Known quirks
 
 - The `package.json` warning about `MODULE_TYPELESS_PACKAGE_JSON` should not appear — `"type": "module"` is set. If it reappears, the cron may have switched to the wrong branch.
