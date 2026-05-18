@@ -23,8 +23,8 @@
       }
     ]
   },
-  "bar_hours_fi": {
-    "label": "Bar Hours (FI)",
+  "bar_schedule_fi": {
+    "label": "Bar Schedule (FI)",
     "rules": [
       {
         "fromHour": 14,
@@ -33,7 +33,7 @@
       },
       {
         "fromHour": 20,
-        "toHour": 13,
+        "toHour": 14,
         "interval": 20
       }
     ]
