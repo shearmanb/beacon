@@ -98,6 +98,8 @@
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .empty { color: var(--muted); font-size: .875rem; padding: 1rem 0; }
+    .site-refreshing-bar { background: rgba(52,152,219,.1); border-bottom: 1px solid rgba(52,152,219,.2); color: var(--blue); font-size: .72rem; font-weight: 600; padding: .35rem .75rem; margin: -1rem -1rem .75rem; animation: beacon-pulse 1s ease-in-out infinite; }
+    @keyframes beacon-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
     .site-card.disabled { opacity: 0.45; }
     .site-card.site-in-reset { border-color: rgba(241,196,15,.5); border-top: 3px solid var(--yellow); }
     .site-reset-banner { background: rgba(241,196,15,.1); border-bottom: 1px solid rgba(241,196,15,.25); color: var(--yellow); font-size: .75rem; font-weight: 600; padding: .5rem .75rem; margin: -1rem -1rem .75rem; line-height: 1.4; }
@@ -642,6 +644,7 @@
   let ignored = {};
   let schedules = {};
   let lastLoadedAt = null;
+  let isRefreshing = false;
 
   function esc(s) {
     return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -704,7 +707,9 @@
 
   // ── Data loading ─────────────────────────────────────────────────────────────
   async function loadData() {
+    isRefreshing = true;
     document.getElementById('refresh-status').textContent = 'Refreshing…';
+    if (config.sites.length) renderSiteCards();
     const errors = [];
 
     const [stateText, historyText, configText, ignoredText, schedulesText] = await Promise.all([
@@ -722,6 +727,7 @@
     ignored = JSON.parse(ignoredText);
 
     lastLoadedAt = Date.now();
+    isRefreshing = false;
     renderAll();
     if (errors.length) {
       document.getElementById('refresh-status').textContent = `Partial load — errors: ${errors.join(', ')}`;
@@ -789,8 +795,11 @@
         ? `<div class="site-reset-banner">⚠️ Site reset — Coming Soon / password wall detected<br><span style="font-weight:400;opacity:.8">${esc(s.resetReason)}</span></div>`
         : '';
 
+      const refreshingBar = isRefreshing
+        ? `<div class="site-refreshing-bar">↻ Refreshing…</div>`
+        : '';
       return `<div class="site-card${isEnabled ? '' : ' disabled'}${isReset ? ' site-in-reset' : ''}">
-        ${resetBanner}
+        ${refreshingBar}${resetBanner}
         <h3>${esc(site.name)}</h3>
         <div class="meta">
           <span${checkedClass ? ` class="${checkedClass}"` : ''}>Last checked: ${checked}</span>
