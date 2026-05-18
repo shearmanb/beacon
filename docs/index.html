@@ -790,6 +790,15 @@
         ? (minsAgo > effInterval * 4 ? 'meta-overdue' : minsAgo > effInterval * 2 ? 'meta-stale' : '')
         : '';
 
+      const nextRefreshText = (() => {
+        if (!isEnabled || !s.lastChecked || !effInterval) return null;
+        const nextMs = new Date(s.lastChecked).getTime() + effInterval * 60_000;
+        const diffMins = (nextMs - Date.now()) / 60_000;
+        if (diffMins <= 0) return 'overdue';
+        if (diffMins < 1) return 'in < 1 min';
+        return `in ${Math.round(diffMins)} min`;
+      })();
+
       const isReset = !!s.pageReset;
       const resetBanner = isReset
         ? `<div class="site-reset-banner">⚠️ Site reset — Coming Soon / password wall detected<br><span style="font-weight:400;opacity:.8">${esc(s.resetReason)}</span></div>`
@@ -803,6 +812,7 @@
         <h3>${esc(site.name)}</h3>
         <div class="meta">
           <span${checkedClass ? ` class="${checkedClass}"` : ''}>Last checked: ${checked}</span>
+          ${nextRefreshText ? `<span${checkedClass === 'meta-overdue' ? ' class="meta-overdue"' : checkedClass === 'meta-stale' ? ' class="meta-stale"' : ''}>Next refresh: ${nextRefreshText}</span>` : ''}
           <span>${total} products &mdash; ${inStock} in stock</span>
         </div>
         ${(() => {
