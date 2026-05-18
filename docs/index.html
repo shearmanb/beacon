@@ -453,7 +453,9 @@
   }
 
   async function fetchLastCodeCommit() {
-    const res = await fetch(`${API_BASE}/commits?per_page=20`);
+    const token = localStorage.getItem(TOKEN_KEY);
+    const headers = token ? { Authorization: `token ${token}` } : {};
+    const res = await fetch(`${API_BASE}/commits?per_page=20`, { headers });
     if (!res.ok) return;
     const commits = await res.json();
     const codeCommit = commits.find(c => !c.commit.message.includes('[skip ci]'));
