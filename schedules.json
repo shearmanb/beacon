@@ -22,5 +22,20 @@
         "defaultInterval": 300
       }
     ]
+  },
+  "bar_hours_fi": {
+    "label": "Bar Hours (FI)",
+    "rules": [
+      {
+        "fromHour": 14,
+        "toHour": 20,
+        "interval": 5
+      },
+      {
+        "fromHour": 20,
+        "toHour": 13,
+        "interval": 20
+      }
+    ]
   }
 }
