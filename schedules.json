@@ -3,9 +3,24 @@
     "label": "⏰ Working Hours Heavy",
     "builtin": true,
     "rules": [
-      { "fromHour": 9, "toHour": 18, "interval": 5 },
-      { "fromHour": 18, "toHour": 22, "interval": 20 },
-      { "defaultInterval": 300 }
+      {
+        "fromHour": 9,
+        "toHour": 18,
+        "interval": 5
+      },
+      {
+        "fromHour": 18,
+        "toHour": 22,
+        "interval": 20
+      },
+      {
+        "fromHour": 22,
+        "toHour": 9,
+        "interval": 120
+      },
+      {
+        "defaultInterval": 300
+      }
     ]
   }
 }
