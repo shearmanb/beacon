@@ -81,7 +81,7 @@ export const sites = [
     strategy: "shopify_collection",
     url: "https://thebourbonconcierge.com",
     intervalMinutes: 30,
-    schedule: "15",
+    schedule: "5",
     imminentIntervalMinutes: 2,
     imminent: false,
     alertOnNewProduct: true,
