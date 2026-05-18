@@ -34,8 +34,16 @@ jobs:
 
       - name: Commit updated state
         run: |
+          cp state.json /tmp/state.json
+          cp alert_history.json /tmp/alert_history.json
+          cp ignored_products.json /tmp/ignored_products.json
           git config user.name "beacon-bot"
           git config user.email "beacon-bot@users.noreply.github.com"
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/state.json state.json
+          cp /tmp/alert_history.json alert_history.json
+          cp /tmp/ignored_products.json ignored_products.json
           git add state.json alert_history.json ignored_products.json
           git diff --staged --quiet || git commit -m "chore: update state [skip ci]"
-          git push || (git pull --rebase -X theirs && git push)
+          git push
