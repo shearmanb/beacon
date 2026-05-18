@@ -9,7 +9,7 @@ export const sites = [
     strategy: "shopify_collection",
     url: "https://sharedpour.com/collections/t8ke",
     intervalMinutes: 20,
-    schedule: "20",
+    schedule: "60",
     imminentIntervalMinutes: 2,
     imminent: false,
     alertOnNewProduct: true,
