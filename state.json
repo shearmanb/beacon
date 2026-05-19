@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-19T10:02:12.836Z",
+    "lastChecked": "2026-05-19T12:51:03.272Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -377,27 +377,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_39_T8KE_Selection_Front.jpg?v=1757451767",
         "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-39"
       },
-      "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke": {
-        "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke",
-        "title": "El Jolgorio Mezcal Artesanal: Tepeztate Edition 40 T8KE Exclusive Batch",
-        "vendor": "El Jolgorio",
-        "productType": "",
-        "tags": [
-          "100-200",
-          "artesanal",
-          "black-friday-2025",
-          "el-jolgorio",
-          "Mezcal: Joven",
-          "Mezcal: Tepeztate",
-          "over-10",
-          "t8ke",
-          "xmas-2025"
-        ],
-        "minPrice": 139.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_40_T8KE_Selection_Front.jpg?v=1757451767",
-        "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke"
-      },
       "green-river-single-barrel-2026": {
         "handle": "green-river-single-barrel-2026",
         "title": "Green River Single Barrel T8KE II.II Private Barrel Selection",
@@ -420,6 +399,27 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a0899ab2-3bfe-3e3b-a563-71cf4ead8e7d.jpg?v=1778418189",
         "url": "https://sharedpour.com/products/green-river-single-barrel-2026"
+      },
+      "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke": {
+        "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke",
+        "title": "El Jolgorio Mezcal Artesanal: Tepeztate Edition 40 T8KE Exclusive Batch",
+        "vendor": "El Jolgorio",
+        "productType": "",
+        "tags": [
+          "100-200",
+          "artesanal",
+          "black-friday-2025",
+          "el-jolgorio",
+          "Mezcal: Joven",
+          "Mezcal: Tepeztate",
+          "over-10",
+          "t8ke",
+          "xmas-2025"
+        ],
+        "minPrice": 139.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_40_T8KE_Selection_Front.jpg?v=1757451767",
+        "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke"
       },
       "starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof": {
         "handle": "starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof",
@@ -814,7 +814,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-19T10:02:12.942Z",
+    "lastChecked": "2026-05-19T12:51:03.429Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -843,7 +843,7 @@
     }
   },
   "reveries_official": {
-    "lastChecked": "2026-05-19T10:02:15.508Z",
+    "lastChecked": "2026-05-19T12:51:07.797Z",
     "productCount": 3,
     "products": {
       "the-reveries-8-year-only-all-the-time": {
@@ -883,7 +883,7 @@
     "pageReset": false
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-05-19T10:02:13.183Z",
+    "lastChecked": "2026-05-19T12:51:03.872Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -911,7 +911,7 @@
     }
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-05-19T10:02:15.033Z",
+    "lastChecked": "2026-05-19T12:51:07.454Z",
     "productCount": 8,
     "products": {
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
