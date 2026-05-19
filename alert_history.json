@@ -1521,5 +1521,353 @@
       "available": false,
       "image": null
     }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:43.518Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "bull-run-distillery-12-year-straight-bourbon-madeira-finish",
+      "title": "Bull Run Distillery 12 Year Straight Bourbon Madeira Finish T8KE Single Barrel",
+      "vendor": "Bull Run",
+      "productType": "Whiskey",
+      "tags": [
+        "50-100",
+        "bull-run",
+        "over-10",
+        "whiskey"
+      ],
+      "minPrice": 64.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/0f9d566b-1b05-15a1-a9c8-dcc0ef7ddfa6.jpg?v=1766328085",
+      "url": "https://sharedpour.com/products/bull-run-distillery-12-year-straight-bourbon-madeira-finish"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:43.803Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "t8ke-x-new-louisville-barrel-house-the-bones-w65-wheated-bourbon",
+      "title": "T8KE x New Louisville Barrel House \"THE BONES\" W65 8 Year Wheated Bourbon",
+      "vendor": "Nulu",
+      "productType": "Bourbon",
+      "tags": [
+        "50-100",
+        "bourbon",
+        "nulu",
+        "over-10"
+      ],
+      "minPrice": 99.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/354fb4f7-074e-ad9d-f88d-0d1b2fa568e2.jpg?v=1772984000",
+      "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-w65-wheated-bourbon"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:43.973Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "t8ke-x-new-louisville-barrel-house-the-bones-ky232-9-year-kentucky-bourbon",
+      "title": "T8KE x New Louisville Barrel House \"THE BONES\" KY232 9 Year Kentucky Bourbon",
+      "vendor": "Nulu",
+      "productType": "Bourbon",
+      "tags": [
+        "100-200",
+        "bourbon",
+        "nulu",
+        "over-10"
+      ],
+      "minPrice": 109.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/cce37087-f29b-bc7a-2ad6-28da228e57c0.jpg?v=1772983896",
+      "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-ky232-9-year-kentucky-bourbon"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:44.098Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "t8ke-x-new-louisville-barrel-house-the-bones-ky248-9-year-kentucky-bourbon",
+      "title": "T8KE x New Louisville Barrel House \"THE BONES\" KY248 9 Year Kentucky Bourbon",
+      "vendor": "Nulu",
+      "productType": "Bourbon",
+      "tags": [
+        "100-200",
+        "bourbon",
+        "nulu",
+        "over-10"
+      ],
+      "minPrice": 109.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/c1503a6a-cdc2-d2a9-af34-a6e1489b3d60.jpg?v=1772983871",
+      "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-ky248-9-year-kentucky-bourbon"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:44.216Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "jack-daniels-single-barrel-barrel-proof-rye-t8ke-x-endalz-64",
+      "title": "Jack Daniel's Single Barrel Barrel Proof Rye \"T8ke x ENDALZ\" 64% 25-25695",
+      "vendor": "Jack Daniel's",
+      "productType": "Whiskey",
+      "tags": [
+        "50-100",
+        "Barrel Pick",
+        "barrel picks",
+        "jack-daniels",
+        "over-10",
+        "SEARCHANISE_IGNORE",
+        "Single Barrel",
+        "single barrel selections",
+        "whiskey"
+      ],
+      "minPrice": 89.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1dcd29d4-c288-6719-9d5e-f198bdfea6e6.jpg?v=1774182414",
+      "url": "https://sharedpour.com/products/jack-daniels-single-barrel-barrel-proof-rye-t8ke-x-endalz-64"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:44.395Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "green-river-single-barrel-2026",
+      "title": "Green River Single Barrel T8KE II.II Private Barrel Selection",
+      "vendor": "Green River",
+      "productType": "Bourbon",
+      "tags": [
+        "50-100",
+        "American-Bourbon",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "Bourbon Whiskey",
+        "green-river",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 69.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a0899ab2-3bfe-3e3b-a563-71cf4ead8e7d.jpg?v=1778418189",
+      "url": "https://sharedpour.com/products/green-river-single-barrel-2026"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:44.506Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "peerless-single-barrel-bourbon-t8ke-2026",
+      "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #190809107",
+      "vendor": "Kentucky Peerless",
+      "productType": "Bourbon",
+      "tags": [
+        "100-200",
+        "American-Bourbon",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "Bourbon Whiskey",
+        "kentucky-peerless",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 119.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
+      "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-2026"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:44.631Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "peerless-single-barrel-bourbon-t8ke-171214110",
+      "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #171214110",
+      "vendor": "Kentucky Peerless",
+      "productType": "Bourbon",
+      "tags": [
+        "100-200",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "kentucky-peerless",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 119.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
+      "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-171214110"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:45.457Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "peerless-single-barrel-rye-t8ke-2026",
+      "title": "Peerless Distilling Single Barrel Barrel Strength Rye T8KE r/Bourbon Private Select (2026)",
+      "vendor": "Kentucky Peerless",
+      "productType": "Rye Whiskey",
+      "tags": [
+        "100-200",
+        "Barrel Pick",
+        "barrel picks",
+        "Bourbon Whiskey",
+        "kentucky-peerless",
+        "over-10",
+        "rye-whiskey",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 119.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f6e1b297-b0dd-184a-39cc-a63f5c2b2ac0.jpg?v=1778418010",
+      "url": "https://sharedpour.com/products/peerless-single-barrel-rye-t8ke-2026"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:45.612Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "scotch-malt-whisky-society-44-196-properly-nutty-t8ke-x-smws-exclusive-single-cask-18-year-speyside",
+      "title": "SMWS 44.196 “Properly Nutty” T8KE x Scotch Malt Whisky Society Exclusive Single Cask 18 Year Speyside [Craigellachie]",
+      "vendor": "Scotch Malt Whisky Society",
+      "productType": "Scotch",
+      "tags": [
+        "200-300",
+        "Barrel Pick",
+        "barrel picks",
+        "Brands: The Scotch Malt Whisky Society",
+        "over-10",
+        "scotch",
+        "scotch-malt-whisky-society",
+        "Scotch: Single Malt Scotch",
+        "SEARCHANISE_IGNORE",
+        "Single Barrel",
+        "single barrel selections"
+      ],
+      "minPrice": 249.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00724.jpg?v=1775827384",
+      "url": "https://sharedpour.com/products/scotch-malt-whisky-society-44-196-properly-nutty-t8ke-x-smws-exclusive-single-cask-18-year-speyside"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:45.732Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "neta-pulquero-cenizo-mezcal-celso-garcia-cruz-aficionados",
+      "title": "Neta Pulquero Cenizo Mezcal Celso Garcia Cruz (T8KE x Aficionados Exclusive Batch)",
+      "vendor": "NETA",
+      "productType": "Agave",
+      "tags": [
+        "100-200",
+        "agave",
+        "Barrel Pick",
+        "barrel picks",
+        "neta",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections"
+      ],
+      "minPrice": 199.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d16592c1-e66b-4f3e-d3e7-b05dc2d28a67.jpg?v=1773577629",
+      "url": "https://sharedpour.com/products/neta-pulquero-cenizo-mezcal-celso-garcia-cruz-aficionados"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:46.481Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "bull-run-distillery-17-year-t8ke-apf-183-single-barrel-straight-american-whiskey-pinot-noir-finish-selection-copy",
+      "title": "Bull Run Distillery 17 Year T8KE APF-183 Single Barrel Straight American Whiskey Pinot Noir Finish Selection",
+      "vendor": "Bull Run",
+      "productType": "Whiskey",
+      "tags": [
+        "50-100",
+        "bull-run",
+        "over-10",
+        "whiskey"
+      ],
+      "minPrice": 89.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6f16bdc1-e850-c3f4-425f-f65fe96287f6.jpg?v=1766328186",
+      "url": "https://sharedpour.com/products/bull-run-distillery-17-year-t8ke-apf-183-single-barrel-straight-american-whiskey-pinot-noir-finish-selection-copy"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:46.592Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "bull-run-distillery-17-year-t8ke-single-barrel-straight-american-whiskey-pinot-noir-finish-selection",
+      "title": "Bull Run Distillery 17 Year T8KE APF-148 Single Barrel Straight American Whiskey Pinot Noir Finish Selection",
+      "vendor": "Bull Run",
+      "productType": "",
+      "tags": [
+        "50-100",
+        "bull-run",
+        "over-10"
+      ],
+      "minPrice": 89.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/4f784ec2-0978-7687-e694-d6c2c94b8c93.jpg?v=1766328137",
+      "url": "https://sharedpour.com/products/bull-run-distillery-17-year-t8ke-single-barrel-straight-american-whiskey-pinot-noir-finish-selection"
+    }
+  },
+  {
+    "timestamp": "2026-05-19T19:36:47.321Z",
+    "siteId": "sharedpour_t8ke_all",
+    "siteName": "SharedPour – T8KE (All Products)",
+    "type": "new_product",
+    "product": {
+      "handle": "bull-run-distillery-9-year-straight-bourbon-sherry-finish",
+      "title": "Bull Run Distillery 9 Year Straight Bourbon Sherry Finish T8KE Single Barrel",
+      "vendor": "Bull Run",
+      "productType": "Whiskey",
+      "tags": [
+        "50-100",
+        "bull-run",
+        "over-10",
+        "whiskey"
+      ],
+      "minPrice": 59.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/194cd3cf-d641-3375-1266-08175f787b64.jpg?v=1766328052",
+      "url": "https://sharedpour.com/products/bull-run-distillery-9-year-straight-bourbon-sherry-finish"
+    }
   }
 ]
