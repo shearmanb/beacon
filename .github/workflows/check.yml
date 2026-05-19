@@ -43,4 +43,4 @@ jobs:
           cp /tmp/ignored_products.json ignored_products.json
           git add state.json alert_history.json ignored_products.json
           git diff --staged --quiet || git commit -m "chore: update state [skip ci]"
-          git push
+          git push || (git pull --rebase && git push)
