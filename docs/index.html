@@ -1174,7 +1174,7 @@
         return result.join('\n');
       }
     }
-    return js;
+    return null;
   }
 
   async function setSchedule(siteId, value, el) {
@@ -1191,7 +1191,8 @@
       const data = await res.json();
       const content = atob(data.content.replace(/\n/g, ''));
       const updated = flipSchedule(content, siteId, value);
-      if (updated === content) { alert('Could not find schedule field in config to update.'); return; }
+      if (updated === null) { alert('Could not find schedule field in config to update.'); return; }
+      if (updated === content) { return; }
 
       const putRes = await fetch(`${API_BASE}/contents/config.js`, {
         method: 'PUT',
