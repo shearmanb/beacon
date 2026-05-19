@@ -105,7 +105,7 @@ export const sites = [
     strategy: "reveries_squarespace",
     url: "https://www.thereveries.co/shop",
     intervalMinutes: 30,
-    schedule: "30",
+    schedule: "60",
     imminentIntervalMinutes: 2,
     imminent: false,
     alertOnNewProduct: true,
