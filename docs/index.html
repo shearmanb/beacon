@@ -98,6 +98,12 @@
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .empty { color: var(--muted); font-size: .875rem; padding: 1rem 0; }
+    .worker-banner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: .82rem; flex-wrap: wrap; }
+    .worker-banner.ok      { background: rgba(46,204,113,.1);  border: 1px solid rgba(46,204,113,.3);  color: var(--green); }
+    .worker-banner.warn    { background: rgba(241,196,15,.1);  border: 1px solid rgba(241,196,15,.3);  color: var(--yellow); }
+    .worker-banner.critical{ background: rgba(231,76,60,.12);  border: 1px solid rgba(231,76,60,.4);   color: var(--red); }
+    .worker-banner.unknown { background: rgba(100,116,139,.1); border: 1px solid var(--border);        color: var(--muted); }
+    .worker-banner .btn-emergency { padding: .3rem .75rem; border-radius: 6px; border: 1px solid currentColor; background: transparent; color: inherit; font-size: .78rem; cursor: pointer; white-space: nowrap; }
     .site-refreshing-bar { background: rgba(52,152,219,.1); border-bottom: 1px solid rgba(52,152,219,.2); color: var(--blue); font-size: .72rem; font-weight: 600; padding: .35rem .75rem; margin: -1rem -1rem .75rem; animation: beacon-pulse 1s ease-in-out infinite; }
     @keyframes beacon-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
     .site-card.disabled { opacity: 0.45; }
@@ -175,6 +181,8 @@
       <button class="btn" onclick="promptToken()">GitHub Token</button>
     </div>
   </header>
+
+  <div id="worker-banner" style="display:none"></div>
 
   <section class="sec-sites">
     <div class="section-header" onclick="toggleSection('sites')">
@@ -769,6 +777,94 @@
     updateSiteFilter();
     const token = localStorage.getItem(TOKEN_KEY);
     document.getElementById('run-now-btn').style.display = token ? 'inline-block' : 'none';
+    renderWorkerHealth();
+  }
+
+  function renderWorkerHealth() {
+    const banner = document.getElementById('worker-banner');
+    if (!state || !Object.keys(state).length) { banner.style.display = 'none'; return; }
+
+    // Find most recent lastChecked across all sites
+    let mostRecentMs = null;
+    for (const s of Object.values(state)) {
+      if (s.lastChecked) {
+        const t = new Date(s.lastChecked).getTime();
+        if (mostRecentMs === null || t > mostRecentMs) mostRecentMs = t;
+      }
+    }
+
+    if (mostRecentMs === null) {
+      banner.style.display = 'none';
+      return;
+    }
+
+    const minsAgo = (Date.now() - mostRecentMs) / 60_000;
+    const lastStr = new Date(mostRecentMs).toLocaleTimeString();
+
+    let level, icon, msg, showEmergency;
+    if (minsAgo < 6) {
+      level = 'ok'; icon = '🟢'; msg = `Railway worker healthy — last check ${Math.round(minsAgo)}m ago (${lastStr})`; showEmergency = false;
+    } else if (minsAgo < 15) {
+      level = 'warn'; icon = '🟡'; msg = `Worker delayed — last check ${Math.round(minsAgo)}m ago (${lastStr}). May be a slow run.`; showEmergency = false;
+    } else {
+      level = 'critical'; icon = '🔴'; msg = `Worker appears down — last check ${Math.round(minsAgo)}m ago (${lastStr}). Re-enable GitHub Actions as backup?`; showEmergency = true;
+    }
+
+    const token = localStorage.getItem(TOKEN_KEY);
+    const emergencyBtn = (showEmergency && token)
+      ? `<button class="btn-emergency" onclick="reenableGHActions()">Re-enable GitHub Actions backup</button>`
+      : '';
+
+    banner.className = `worker-banner ${level}`;
+    banner.style.display = 'flex';
+    banner.innerHTML = `<span>${esc(icon + ' ' + msg)}</span>${emergencyBtn}`;
+  }
+
+  async function reenableGHActions() {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) { alert('Add a GitHub token first.'); return; }
+
+    const confirmed = confirm(
+      'This will re-add the GitHub Actions cron schedule to check.yml as an emergency backup.\n\n' +
+      'Both Railway and GitHub Actions will run simultaneously until you manually remove the cron again. Continue?'
+    );
+    if (!confirmed) return;
+
+    try {
+      // Fetch current check.yml
+      const res = await fetch(`${API_BASE}/contents/.github/workflows/check.yml`, {
+        headers: { Authorization: `token ${token}` },
+      });
+      if (!res.ok) throw new Error(`Failed to fetch check.yml: ${res.status}`);
+      const data = await res.json();
+      const current = atob(data.content.replace(/\n/g, ''));
+
+      // Inject cron back in — replace the single workflow_dispatch-only line
+      const updated = current.replace(
+        /on:\s*\n\s*workflow_dispatch:.*\n/,
+        'on:\n  schedule:\n    - cron: "3,8,13,18,23,28,33,38,43,48,53,58 * * * *"\n  workflow_dispatch:\n'
+      );
+
+      if (updated === current) {
+        alert('Could not find the expected pattern in check.yml — edit it manually.');
+        return;
+      }
+
+      const putRes = await fetch(`${API_BASE}/contents/.github/workflows/check.yml`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'fix: re-enable GitHub Actions cron as emergency backup [skip ci]',
+          content: btoa(updated),
+          sha: data.sha,
+          branch: 'main',
+        }),
+      });
+      if (!putRes.ok) throw new Error(`Failed to update check.yml: ${putRes.status}`);
+      alert('Done — GitHub Actions cron re-enabled. It will fire within 5 minutes. Remember to disable it again once Railway is healthy.');
+    } catch (err) {
+      alert(`Error: ${err.message}`);
+    }
   }
 
   function renderSiteCards() {
