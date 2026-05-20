@@ -1,9 +1,7 @@
 name: Beacon Check
 
 on:
-  schedule:
-    - cron: "3,8,13,18,23,28,33,38,43,48,53,58 * * * *"   # every 5 min, offset +3 to avoid congested :00/:15/:30/:45 slots
-  workflow_dispatch:          # manual "Run Now" trigger
+  workflow_dispatch:          # manual trigger only — regular checks now run on Railway
 
 
 permissions:

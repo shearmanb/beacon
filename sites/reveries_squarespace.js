@@ -1,10 +1,5 @@
 import { https } from "../lib/fetch.js";
 
-const BASE_HEADERS = {
-  "User-Agent":
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-};
-
 // Strings that indicate the shop has been replaced with a holding page
 const RESET_SIGNALS = [
   "coming soon",
@@ -42,7 +37,7 @@ export async function checkSite(site, previousState) {
     } else {
       // JSON parse failed or network issue — try HTML fallback
       try {
-        const html = await https(site.url, { headers: BASE_HEADERS });
+        const html = await https(site.url, {});
         const lower = html.toLowerCase();
         const signal = RESET_SIGNALS.find((s) => lower.includes(s));
         if (signal) {
@@ -66,7 +61,7 @@ export async function checkSite(site, previousState) {
     Object.keys(prevProducts).length > 0
   ) {
     try {
-      const html = await https(site.url, { headers: BASE_HEADERS });
+      const html = await https(site.url, {});
       const lower = html.toLowerCase();
       const signal = RESET_SIGNALS.find((s) => lower.includes(s));
       if (signal) {
@@ -132,7 +127,7 @@ export async function checkSite(site, previousState) {
 // ── Squarespace JSON API ──────────────────────────────────────────────────────
 async function fetchJsonProducts(url) {
   const jsonUrl = url.includes("?") ? `${url}&format=json` : `${url}?format=json`;
-  const text = await https(jsonUrl, { headers: BASE_HEADERS });
+  const text = await https(jsonUrl, {});
   const data = JSON.parse(text);
 
   const items = data?.collection?.items ?? data?.items ?? [];
