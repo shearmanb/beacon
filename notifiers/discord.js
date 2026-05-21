@@ -2,10 +2,11 @@ import { request } from "node:https";
 import { URL } from "node:url";
 
 const COLORS = {
-  new_product: 0x3498db, // blue
-  restock: 0x2ecc71,     // green
-  sold_out: 0xe74c3c,    // red
-  site_reset: 0xf39c12,  // orange
+  new_product: 0x3498db,  // blue
+  restock: 0x2ecc71,      // green
+  sold_out: 0xe74c3c,     // red
+  site_reset: 0xf39c12,   // orange
+  site_changed: 0x9b59b6, // purple
 };
 
 const LABELS = {
@@ -13,6 +14,7 @@ const LABELS = {
   restock: "Back In Stock",
   sold_out: "Sold Out",
   site_reset: "🌊 Wave Reset",
+  site_changed: "🔔 Store Changed",
 };
 
 export async function sendAlert(webhookUrl, siteName, alert) {
@@ -22,14 +24,20 @@ export async function sendAlert(webhookUrl, siteName, alert) {
 
   let embed;
 
-  if (type === "site_reset") {
+  if (type === "site_reset" || type === "site_changed") {
+    const defaultDesc =
+      type === "site_reset"
+        ? "Coming Soon page detected — shop has reset between waves."
+        : "Something changed on the store page.";
+    const extraFields =
+      type === "site_reset"
+        ? [{ name: "Expected", value: "New bottles in 2–14 days", inline: true }]
+        : [];
     embed = {
       title: `${label} — ${siteName}`,
       color,
-      description: product.note ?? "Coming Soon page detected — shop has reset between waves.",
-      fields: [
-        { name: "Expected", value: "New bottles in 2–14 days", inline: true },
-      ],
+      description: product.note ?? defaultDesc,
+      fields: extraFields,
       url: product.url,
       timestamp: new Date().toISOString(),
     };

@@ -143,21 +143,12 @@ async function fetchJsonProducts(url) {
     if (!item.title) continue;
     const handle = slugify(item.title);
 
-    // thereveries.co does not use native Squarespace Commerce — variant sold/stock
-    // fields are unreliable. Only mark unavailable when ALL variants have sold===true
-    // explicitly (unlimited overrides). Ambiguous (sold===null, any stock) = available.
+    // thereveries.co uses a custom checkout, not native Squarespace Commerce.
+    // All variant sold/stock fields are unreliable (typically sold=true for everything).
+    // Default available=true; HTML override will correct if sold-out markup is found.
     const sc = item.structuredContent ?? {};
     const variants = sc.variants ?? item.variants ?? [];
-    let available;
-    if (variants.length === 0) {
-      available = true;
-    } else {
-      available = !variants.every((v) => v.sold === true && !v.unlimited);
-    }
-
-    // Top-level isSoldOut is more reliable than variant data when present
-    if (sc.isSoldOut === true) available = false;
-    if (sc.isSoldOut === false) available = true;
+    const available = true;
 
     const cents = variants[0]?.price ?? null;
     const minPrice = cents != null ? Math.round(cents) / 100 : null;
@@ -171,12 +162,6 @@ async function fetchJsonProducts(url) {
 
     const baseOrigin = new URL(url).origin;
     const fullUrl = item.fullUrl ? `${baseOrigin}${item.fullUrl}` : url;
-
-    // Diagnostic: log variant stock data + isSoldOut so we can see what the API returns
-    const vInfo = variants.length > 0
-      ? variants.map((v) => `sold=${v.sold},stock=${v.stock},unlimited=${v.unlimited}`).join("; ")
-      : "(none)";
-    console.log(`  [JSON] "${item.title}" available=${available} isSoldOut=${sc.isSoldOut ?? "n/a"} variants: ${vInfo}`);
 
     map[handle] = {
       handle,

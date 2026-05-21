@@ -94,6 +94,7 @@
     .history-item.new_product { border-left-color: var(--blue); }
     .history-item.restock { border-left-color: var(--green); }
     .history-item.sold_out { border-left-color: var(--red); }
+    .history-item.site_changed { border-left-color: #9b59b6; }
     .history-time { color: var(--muted); white-space: nowrap; min-width: 80px; }
     .token-hint { font-size: .75rem; color: var(--muted); margin-top: .25rem; }
     a { color: var(--blue); text-decoration: none; }
@@ -1091,7 +1092,7 @@
 
     const recent = [...history].reverse().slice(0, 100);
     list.innerHTML = recent.map(h => {
-      const label = h.type === 'new_product' ? '🆕 New' : h.type === 'restock' ? '✅ Restock' : h.type === 'sold_out' ? '❌ Sold Out' : h.type === 'site_reset' ? '⚠️ Reset' : h.type;
+      const label = h.type === 'new_product' ? '🆕 New' : h.type === 'restock' ? '✅ Restock' : h.type === 'sold_out' ? '❌ Sold Out' : h.type === 'site_reset' ? '⚠️ Reset' : h.type === 'site_changed' ? '🔔 Changed' : h.type;
       const time = new Date(h.timestamp).toLocaleString();
       return `<div class="history-item ${esc(h.type)}">
         <span class="history-time">${esc(time)}</span>
