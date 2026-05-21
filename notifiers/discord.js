@@ -12,7 +12,7 @@ const LABELS = {
   new_product: "New Product",
   restock: "Back In Stock",
   sold_out: "Sold Out",
-  site_reset: "⚠️ Site Reset",
+  site_reset: "🌊 Wave Reset",
 };
 
 export async function sendAlert(webhookUrl, siteName, alert) {
@@ -20,27 +20,42 @@ export async function sendAlert(webhookUrl, siteName, alert) {
   const color = COLORS[type] ?? 0x95a5a6;
   const label = LABELS[type] ?? type;
 
-  const priceStr =
-    product.minPrice != null ? `$${product.minPrice.toFixed(2)}` : "Price unknown";
+  let embed;
 
-  const embed = {
-    title: `${label}: ${product.title}`,
-    color,
-    description: `**${siteName}**`,
-    fields: [
-      { name: "Price", value: priceStr, inline: true },
-      { name: "Status", value: product.available ? "✅ Available" : "❌ Sold Out", inline: true },
-    ],
-    url: product.url,
-    timestamp: new Date().toISOString(),
-  };
+  if (type === "site_reset") {
+    embed = {
+      title: `${label} — ${siteName}`,
+      color,
+      description: product.note ?? "Coming Soon page detected — shop has reset between waves.",
+      fields: [
+        { name: "Expected", value: "New bottles in 2–14 days", inline: true },
+      ],
+      url: product.url,
+      timestamp: new Date().toISOString(),
+    };
+  } else {
+    const priceStr =
+      product.minPrice != null ? `$${product.minPrice.toFixed(2)}` : "Price unknown";
 
-  if (product.vendor) {
-    embed.fields.push({ name: "Vendor", value: product.vendor, inline: true });
-  }
+    embed = {
+      title: `${label}: ${product.title}`,
+      color,
+      description: `**${siteName}**`,
+      fields: [
+        { name: "Price", value: priceStr, inline: true },
+        { name: "Status", value: product.available ? "✅ Available" : "❌ Sold Out", inline: true },
+      ],
+      url: product.url,
+      timestamp: new Date().toISOString(),
+    };
 
-  if (product.image) {
-    embed.thumbnail = { url: product.image };
+    if (product.vendor) {
+      embed.fields.push({ name: "Vendor", value: product.vendor, inline: true });
+    }
+
+    if (product.image) {
+      embed.thumbnail = { url: product.image };
+    }
   }
 
   const payload = JSON.stringify({
@@ -53,7 +68,7 @@ export async function sendAlert(webhookUrl, siteName, alert) {
           {
             type: 2,
             style: 5,
-            label: "View Product",
+            label: type === "site_reset" ? "View Site" : "View Product",
             url: product.url,
           },
         ],

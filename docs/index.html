@@ -15,6 +15,7 @@
       --blue: #3498db;
       --red: #e74c3c;
       --yellow: #f1c40f;
+      --orange: #e67e22;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; min-height: 100vh; }
@@ -103,6 +104,11 @@
     .site-card.disabled { opacity: 0.45; }
     .site-card.site-in-reset { border-color: rgba(241,196,15,.5); border-top: 3px solid var(--yellow); }
     .site-reset-banner { background: rgba(241,196,15,.1); border-bottom: 1px solid rgba(241,196,15,.25); color: var(--yellow); font-size: .75rem; font-weight: 600; padding: .5rem .75rem; margin: -1rem -1rem .75rem; line-height: 1.4; }
+    .site-card.wave-reset { border-color: rgba(230,126,34,.6); border-top: 3px solid var(--orange); animation: wave-reset-pulse 2.5s ease-in-out infinite; }
+    @keyframes wave-reset-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(230,126,34,0); } 50% { box-shadow: 0 0 10px 3px rgba(230,126,34,.2); } }
+    .site-reset-banner.wave-reset { background: rgba(230,126,34,.12); border-bottom-color: rgba(230,126,34,.3); color: var(--orange); }
+    .site-card-header h3 a { color: var(--text); text-decoration: underline; text-decoration-style: dotted; text-decoration-color: rgba(226,232,240,.4); text-underline-offset: 3px; }
+    .site-card-header h3 a:hover { text-decoration-color: var(--text); }
     .toggle-enabled input:checked + .slider { background: var(--green); }
     .reveries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .65rem; }
     .reveries-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
@@ -803,9 +809,18 @@
       const enabled = !/enabled:\s*false/.test(b);
       const interval  = parseInt((b.match(/intervalMinutes:\s*(\d+)/) || [])[1] ?? '0');
       const schedule  = (b.match(/schedule:\s*["']([^"']+)["']/) || [])[1] ?? null;
-      if (name && id) sites.push({ name, id, imminent, enabled, intervalMinutes: interval, schedule });
+      const url = (b.match(/url:\s*["']([^"']+)["']/) || [])[1] ?? null;
+      const tcMatch = b.match(/titleContains:\s*\[([^\]]*)\]/);
+      const titleContains = tcMatch ? [...tcMatch[1].matchAll(/["']([^"']+)["']/g)].map(m => m[1]) : [];
+      if (name && id) sites.push({ name, id, imminent, enabled, intervalMinutes: interval, schedule, url, titleContains });
     }
     return sites;
+  }
+
+  function getSiteUrl(site) {
+    if (!site.url) return null;
+    if (site.titleContains?.length) return site.url + '/search?q=' + encodeURIComponent(site.titleContains[0]);
+    return site.url;
   }
 
   // ── Render ───────────────────────────────────────────────────────────────────
@@ -943,17 +958,24 @@
       })();
 
       const isReset = !!s.pageReset;
+      const isWaveReset = isReset && site.id === 'reveries_official';
       const resetBanner = isReset
-        ? `<div class="site-reset-banner">⚠️ Site reset — Coming Soon / password wall detected<br><span style="font-weight:400;opacity:.8">${esc(s.resetReason)}</span></div>`
+        ? isWaveReset
+          ? `<div class="site-reset-banner wave-reset">🌊 Wave Reset — Coming Soon page detected<br><span style="font-weight:400;opacity:.85">New bottles expected in 2–14 days · ${esc(s.resetReason)}</span></div>`
+          : `<div class="site-reset-banner">⚠️ Site reset — Coming Soon / password wall detected<br><span style="font-weight:400;opacity:.8">${esc(s.resetReason)}</span></div>`
         : '';
 
       const refreshingBar = isRefreshing
         ? `<div class="site-refreshing-bar">↻ Refreshing…</div>`
         : '';
-      return `<div class="site-card${isEnabled ? '' : ' disabled'}${isReset ? ' site-in-reset' : ''}">
+      const siteUrl = getSiteUrl(site);
+      const siteTitleHtml = siteUrl
+        ? `<a href="${esc(siteUrl)}" target="_blank" rel="noopener noreferrer">${esc(site.name)}</a>`
+        : esc(site.name);
+      return `<div class="site-card${isEnabled ? '' : ' disabled'}${isWaveReset ? ' wave-reset' : isReset ? ' site-in-reset' : ''}">
         ${refreshingBar}${resetBanner}
         <div class="site-card-header">
-          <h3>${esc(site.name)}</h3>
+          <h3>${siteTitleHtml}</h3>
           ${siteChipHtml(site, s)}
         </div>
         <div class="meta">
