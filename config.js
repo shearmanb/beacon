@@ -123,15 +123,18 @@ export const sites = [
     },
   },
   {
-    // thereveries.co/shop is a headless Squarespace frontend that loads products
-    // from SharedPour's Shopify store via GraphQL (confirmed via DevTools Network).
-    // The ?format=json endpoint returns page metadata only — zero products, always.
-    // Fix: use shopify_collection pointing at the actual SharedPour collection.
+    // thereveries.co/shop embeds a Shopify Buy Button (collection 367215214747 on
+    // shared-pour.myshopify.com). That collection is only published to the Buy Button
+    // channel — not the Online Store — so the REST /products.json API returns empty.
+    // The Storefront API with the public token from the page JS sees it correctly.
     name: "The Reveries – Official Shop",
     id: "reveries_official",
     enabled: true,
-    strategy: "shopify_collection",
-    url: "https://sharedpour.com/collections/the-reveries-no-sun-wakes-for-me-collection",
+    strategy: "shopify_storefront",
+    url: "https://www.thereveries.co/shop",
+    storefrontDomain: "shared-pour.myshopify.com",
+    storefrontAccessToken: "9238d5183f01462f5ba642447811ebb8",
+    storefrontCollectionId: "367215214747",
     intervalMinutes: 30,
     schedule: "15",
     imminentIntervalMinutes: 2,
@@ -139,16 +142,7 @@ export const sites = [
     alertOnNewProduct: true,
     alertOnRestock: true,
     alertOnSoldOut: false,
-    filters: {
-      titleContains: [],
-      titleExcludes: [],
-      vendorIs: [],
-      productType: [],
-      tags: [],
-      minPriceDollars: null,
-      maxPriceDollars: null,
-      availableOnly: false,
-    },
+    filters: {},
   },
   {
     // Disabled — was watching thereveries.co/shop?format=json which returns page
