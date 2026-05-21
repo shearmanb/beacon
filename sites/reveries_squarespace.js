@@ -98,12 +98,13 @@ export async function checkSite(site, previousState) {
             {
               type: "site_reset",
               product: {
-                title: `${site.name} — page may have reset (Coming Soon?)`,
+                title: site.name,
                 url: site.url,
                 vendor: null,
                 minPrice: null,
                 available: false,
                 image: null,
+                note: `Coming Soon page detected — new bottles expected in 2–14 days.\n_Detected: ${resetReason}_`,
               },
             },
           ],
