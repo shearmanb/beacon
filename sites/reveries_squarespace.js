@@ -143,20 +143,21 @@ async function fetchJsonProducts(url) {
     if (!item.title) continue;
     const handle = slugify(item.title);
 
-    // Variants carry stock info; fall back gracefully if absent.
-    // NOTE: availability from variants is unreliable for some shops and will be
-    // overridden by applyHtmlAvailability() after this fetch.
-    const variants = item.structuredContent?.variants ?? item.variants ?? [];
+    // thereveries.co does not use native Squarespace Commerce — variant sold/stock
+    // fields are unreliable. Only mark unavailable when ALL variants have sold===true
+    // explicitly (unlimited overrides). Ambiguous (sold===null, any stock) = available.
+    const sc = item.structuredContent ?? {};
+    const variants = sc.variants ?? item.variants ?? [];
     let available;
     if (variants.length === 0) {
-      available = true; // unknown — assume available; HTML will correct if wrong
+      available = true;
     } else {
-      // sold===false is authoritative: Squarespace explicitly marks it as not sold out,
-      // regardless of stock count (stock:0 + sold:false = still purchasable)
-      available = variants.some(
-        (v) => v.unlimited || v.sold === false || (v.sold == null && (v.stock == null || v.stock > 0))
-      );
+      available = !variants.every((v) => v.sold === true && !v.unlimited);
     }
+
+    // Top-level isSoldOut is more reliable than variant data when present
+    if (sc.isSoldOut === true) available = false;
+    if (sc.isSoldOut === false) available = true;
 
     const cents = variants[0]?.price ?? null;
     const minPrice = cents != null ? Math.round(cents) / 100 : null;
@@ -165,18 +166,17 @@ async function fetchJsonProducts(url) {
       item.assetUrl ??
       item.thumbnail?.imageUrl ??
       item.mainImage?.imageUrl ??
+      sc.featuredImage?.url ??
       null;
 
     const baseOrigin = new URL(url).origin;
     const fullUrl = item.fullUrl ? `${baseOrigin}${item.fullUrl}` : url;
 
-    // Diagnostic: log variant stock data so we can verify the JSON API values
-    if (variants.length > 0) {
-      const vInfo = variants.map((v) => `sold=${v.sold},stock=${v.stock},unlimited=${v.unlimited}`).join("; ");
-      console.log(`  [JSON] "${item.title}" available=${available} variants: ${vInfo}`);
-    } else {
-      console.log(`  [JSON] "${item.title}" available=${available} (no variants)`);
-    }
+    // Diagnostic: log variant stock data + isSoldOut so we can see what the API returns
+    const vInfo = variants.length > 0
+      ? variants.map((v) => `sold=${v.sold},stock=${v.stock},unlimited=${v.unlimited}`).join("; ")
+      : "(none)";
+    console.log(`  [JSON] "${item.title}" available=${available} isSoldOut=${sc.isSoldOut ?? "n/a"} variants: ${vInfo}`);
 
     map[handle] = {
       handle,
