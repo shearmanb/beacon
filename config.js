@@ -133,7 +133,7 @@ export const sites = [
     imminentIntervalMinutes: 2,
     imminent: false,
     alertOnNewProduct: true,
-    alertOnRestock: false,
+    alertOnRestock: true,
     alertOnSoldOut: false,
     filters: {
       titleContains: [],

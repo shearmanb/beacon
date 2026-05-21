@@ -148,7 +148,9 @@ async function fetchJsonProducts(url) {
       available = true; // unknown — assume available
     } else {
       available = variants.some(
-        (v) => v.unlimited || (!v.sold && (v.stock == null || v.stock > 0))
+        // sold===false is authoritative: Squarespace explicitly marks it as not sold out,
+        // regardless of stock count (stock:0 + sold:false = still purchasable in Squarespace)
+        (v) => v.unlimited || v.sold === false || (v.sold == null && (v.stock == null || v.stock > 0))
       );
     }
 
