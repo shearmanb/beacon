@@ -1,5 +1,9 @@
 import { https } from "../lib/fetch.js";
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function getMinPrice(variants) {
   if (!variants?.length) return null;
   const prices = variants.map((v) => parseFloat(v.price)).filter((n) => !isNaN(n));
@@ -33,6 +37,7 @@ async function fetchAllProducts(site) {
   let page = 1;
 
   while (true) {
+    if (page > 1) await sleep(300 + Math.floor(Math.random() * 500));
     const url = `${base}/products.json?limit=250&page=${page}${extraParams}`;
     const data = await https(url);
     const json = JSON.parse(data);
