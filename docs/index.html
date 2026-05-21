@@ -98,12 +98,6 @@
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .empty { color: var(--muted); font-size: .875rem; padding: 1rem 0; }
-    .worker-banner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: .82rem; flex-wrap: wrap; }
-    .worker-banner.ok      { background: rgba(46,204,113,.1);  border: 1px solid rgba(46,204,113,.3);  color: var(--green); }
-    .worker-banner.warn    { background: rgba(241,196,15,.1);  border: 1px solid rgba(241,196,15,.3);  color: var(--yellow); }
-    .worker-banner.critical{ background: rgba(231,76,60,.12);  border: 1px solid rgba(231,76,60,.4);   color: var(--red); }
-    .worker-banner.unknown { background: rgba(100,116,139,.1); border: 1px solid var(--border);        color: var(--muted); }
-    .worker-banner .btn-emergency { padding: .3rem .75rem; border-radius: 6px; border: 1px solid currentColor; background: transparent; color: inherit; font-size: .78rem; cursor: pointer; white-space: nowrap; }
     .site-refreshing-bar { background: rgba(52,152,219,.1); border-bottom: 1px solid rgba(52,152,219,.2); color: var(--blue); font-size: .72rem; font-weight: 600; padding: .35rem .75rem; margin: -1rem -1rem .75rem; animation: beacon-pulse 1s ease-in-out infinite; }
     @keyframes beacon-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
     .site-card.disabled { opacity: 0.45; }
@@ -152,6 +146,13 @@
     .sched-rule-row { display: flex; align-items: center; gap: .4rem; padding: .3rem .5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; font-size: .8rem; flex-wrap: wrap; }
     .sched-rule-sel { padding: .25rem .35rem; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .8rem; }
     .sched-rule-num { width: 58px; padding: .25rem .35rem; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .8rem; }
+    /* ── Worker health chip (inline in Sites header) ── */
+    .worker-chip { display: inline-flex; align-items: center; gap: .3rem; font-size: .74rem; font-weight: 600; padding: .18rem .55rem; border-radius: 20px; white-space: nowrap; cursor: default; }
+    .worker-chip.ok       { background: rgba(46,204,113,.12); color: var(--green); }
+    .worker-chip.warn     { background: rgba(241,196,15,.12);  color: var(--yellow); }
+    .worker-chip.critical { background: rgba(231,76,60,.12);   color: var(--red); }
+    .worker-chip .chip-btn { background: none; border: 1px solid currentColor; color: inherit; cursor: pointer; font-size: .69rem; font-weight: 600; padding: .1rem .4rem; border-radius: 10px; margin-left: .25rem; }
+    .worker-chip .chip-btn:hover { opacity: .75; }
     /* ── Sandbox ── */
     section.sec-sandbox { border-top: 3px solid #e67e22; }
     .sandbox-form { display: flex; flex-direction: column; gap: .75rem; }
@@ -192,11 +193,10 @@
     </div>
   </header>
 
-  <div id="worker-banner" style="display:none"></div>
-
   <section class="sec-sites">
     <div class="section-header" onclick="toggleSection('sites')">
       <h2><span class="sec-icon">📡</span> Sites</h2>
+      <span id="worker-status-chip"></span>
       <span class="section-chevron">▾</span>
     </div>
     <div class="section-body" id="body-sites">
@@ -818,10 +818,10 @@
   }
 
   function renderWorkerHealth() {
-    const banner = document.getElementById('worker-banner');
-    if (!state || !Object.keys(state).length) { banner.style.display = 'none'; return; }
+    const chip = document.getElementById('worker-status-chip');
+    if (!chip) return;
+    if (!state || !Object.keys(state).length) { chip.innerHTML = ''; chip.className = ''; return; }
 
-    // Find most recent lastChecked across all sites
     let mostRecentMs = null;
     for (const s of Object.values(state)) {
       if (s.lastChecked) {
@@ -829,32 +829,25 @@
         if (mostRecentMs === null || t > mostRecentMs) mostRecentMs = t;
       }
     }
-
-    if (mostRecentMs === null) {
-      banner.style.display = 'none';
-      return;
-    }
+    if (mostRecentMs === null) { chip.innerHTML = ''; chip.className = ''; return; }
 
     const minsAgo = (Date.now() - mostRecentMs) / 60_000;
-    const lastStr = new Date(mostRecentMs).toLocaleTimeString();
-
-    let level, icon, msg, showEmergency;
-    if (minsAgo < 6) {
-      level = 'ok'; icon = '🟢'; msg = `Railway worker healthy — last check ${Math.round(minsAgo)}m ago (${lastStr})`; showEmergency = false;
-    } else if (minsAgo < 15) {
-      level = 'warn'; icon = '🟡'; msg = `Worker delayed — last check ${Math.round(minsAgo)}m ago (${lastStr}). May be a slow run.`; showEmergency = false;
-    } else {
-      level = 'critical'; icon = '🔴'; msg = `Worker appears down — last check ${Math.round(minsAgo)}m ago (${lastStr}). Re-enable GitHub Actions as backup?`; showEmergency = true;
-    }
-
+    const ago = minsAgo < 1 ? '<1m ago' : `${Math.round(minsAgo)}m ago`;
     const token = localStorage.getItem(TOKEN_KEY);
-    const emergencyBtn = (showEmergency && token)
-      ? `<button class="btn-emergency" onclick="reenableGHActions()">Re-enable GitHub Actions backup</button>`
-      : '';
 
-    banner.className = `worker-banner ${level}`;
-    banner.style.display = 'flex';
-    banner.innerHTML = `<span>${esc(icon + ' ' + msg)}</span>${emergencyBtn}`;
+    if (minsAgo < 6) {
+      chip.className = 'worker-chip ok';
+      chip.innerHTML = `🟢 ${esc(ago)}`;
+    } else if (minsAgo < 15) {
+      chip.className = 'worker-chip warn';
+      chip.innerHTML = `🟡 ${esc(ago)}`;
+    } else {
+      const btn = token
+        ? `<button class="chip-btn" onclick="event.stopPropagation();reenableGHActions()">Re-enable Actions</button>`
+        : '';
+      chip.className = 'worker-chip critical';
+      chip.innerHTML = `🔴 DOWN${btn}`;
+    }
   }
 
   async function reenableGHActions() {

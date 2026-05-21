@@ -99,6 +99,30 @@ export const sites = [
     },
   },
   {
+    // DISABLED — enable once you've confirmed the page is SSR and the button text appears in View Source.
+    // If the page is JS-rendered, find the API call in DevTools → Network and use that URL instead.
+    name: "Wild Turkey – Gold Foil Edition",
+    id: "wild_turkey_gold_foil",
+    enabled: false,
+    strategy: "html_text_monitor",
+    url: "https://www.wildturkeybourbon.com/en-us/products/",
+    intervalMinutes: 30,
+    schedule: "30",
+    imminentIntervalMinutes: 5,
+    imminent: false,
+    alertOnNewProduct: false,
+    alertOnRestock: true,
+    alertOnSoldOut: false,
+    filters: {},
+    monitor: {
+      anchorText: "Gold Foil",
+      // First match wins — put the "buy" states before "SEE DETAILS"
+      watchTexts: ["ADD TO CART", "BUY NOW", "BUY", "IN STOCK", "SEE DETAILS"],
+      alertValues: ["ADD TO CART", "BUY NOW", "BUY", "IN STOCK"],
+      windowChars: 3000,
+    },
+  },
+  {
     name: "The Reveries – Official Shop",
     id: "reveries_official",
     enabled: true,
