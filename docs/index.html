@@ -1218,12 +1218,34 @@
     const btn = document.getElementById('run-now-btn');
     btn.disabled = true;
     try {
+      // Clear lastChecked so all sites are checked regardless of schedule
+      const stateRes = await fetch(`${API_BASE}/contents/state.json`, {
+        headers: { Authorization: `token ${token}` },
+      });
+      if (stateRes.ok) {
+        const stateData = await stateRes.json();
+        const stateObj = JSON.parse(atob(stateData.content.replace(/\n/g, '')));
+        for (const key of Object.keys(stateObj)) {
+          delete stateObj[key].lastChecked;
+        }
+        await fetch(`${API_BASE}/contents/state.json`, {
+          method: 'PUT',
+          headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: 'chore: clear lastChecked for forced run [skip ci]',
+            content: btoa(JSON.stringify(stateObj, null, 2)),
+            sha: stateData.sha,
+            branch: 'main',
+          }),
+        });
+      }
+
       const res = await fetch(`${API_BASE}/actions/workflows/check.yml/dispatches`, {
         method: 'POST',
         headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ ref: 'main' }),
       });
-      if (res.ok || res.status === 204) { alert('Run triggered! Check Actions tab in ~30s.'); }
+      if (res.ok || res.status === 204) { alert('Run triggered — all sites will be checked now. Check Actions tab in ~30s.'); }
       else { alert(`Failed: ${res.status}`); }
     } finally {
       btn.disabled = false;
@@ -1306,8 +1328,9 @@
       });
 
       if (putRes.ok || putRes.status === 200) {
-        alert(`Monitoring ${value ? 'enabled' : 'disabled'} for ${siteId}`);
-        await loadData();
+        const site = config.sites.find(s => s.id === siteId);
+        if (site) site.enabled = value;
+        renderSiteCards();
       } else {
         alert(`Failed to update config: ${putRes.status}`);
         renderSiteCards();
@@ -1349,8 +1372,9 @@
       });
 
       if (putRes.ok || putRes.status === 200) {
-        alert(`Imminent mode ${value ? 'enabled' : 'disabled'} for ${siteId}`);
-        await loadData();
+        const site = config.sites.find(s => s.id === siteId);
+        if (site) site.imminent = value;
+        renderSiteCards();
       } else {
         alert(`Failed to update config: ${putRes.status}`);
         renderSiteCards();
@@ -1417,7 +1441,9 @@
       });
 
       if (putRes.ok || putRes.status === 200) {
-        await loadData();
+        const site = config.sites.find(s => s.id === siteId);
+        if (site) site.schedule = value;
+        renderSiteCards();
       } else {
         alert(`Failed to update config: ${putRes.status}`);
         renderSiteCards();
