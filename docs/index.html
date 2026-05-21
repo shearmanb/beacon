@@ -152,6 +152,16 @@
     .sched-rule-row { display: flex; align-items: center; gap: .4rem; padding: .3rem .5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; font-size: .8rem; flex-wrap: wrap; }
     .sched-rule-sel { padding: .25rem .35rem; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .8rem; }
     .sched-rule-num { width: 58px; padding: .25rem .35rem; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .8rem; }
+    /* ── Sandbox ── */
+    section.sec-sandbox { border-top: 3px solid #e67e22; }
+    .sandbox-form { display: flex; flex-direction: column; gap: .75rem; }
+    .sandbox-form-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .sandbox-form-row input { flex: 1; min-width: 180px; padding: .4rem .7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .875rem; }
+    .sandbox-form-row select { padding: .4rem .7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .875rem; cursor: pointer; }
+    .sandbox-note { font-size: .75rem; color: var(--muted); font-style: italic; }
+    .sandbox-summary { font-size: .85rem; color: var(--muted); margin: .75rem 0 .5rem; padding: .4rem .6rem; background: var(--surface); border-radius: 6px; }
+    .sandbox-error { color: var(--red); font-size: .875rem; padding: .5rem 0; }
+    .sandbox-loading { color: var(--muted); font-size: .875rem; padding: .75rem 0; }
   </style>
 </head>
 <body>
@@ -334,6 +344,33 @@
       <div class="history-list" id="history-list">
         <div class="empty">Loading…</div>
       </div>
+    </div>
+  </section>
+
+  <section class="sec-sandbox">
+    <div class="section-header sec-collapsed" onclick="toggleSection('sandbox')">
+      <h2><span class="sec-icon">🧪</span> Test Site</h2>
+      <span class="section-chevron">▾</span>
+    </div>
+    <div class="section-body sec-hidden" id="body-sandbox">
+      <div class="sandbox-form">
+        <div class="sandbox-form-row">
+          <input type="url" id="sandbox-url" placeholder="https://store.example.com/collections/whiskey" style="flex:2" />
+          <select id="sandbox-strategy">
+            <option value="shopify_collection">Shopify collection</option>
+            <option value="reveries_squarespace">Squarespace</option>
+          </select>
+        </div>
+        <div class="sandbox-form-row">
+          <input type="text" id="sandbox-filter" placeholder="Title filter — optional, comma-separated (e.g. T8KE, Reveries)" />
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+          <button class="btn btn-primary" id="sandbox-run-btn" onclick="runSandboxTest()">🧪 Run Test</button>
+          <button class="btn" id="sandbox-clear-btn" onclick="clearSandbox()" style="display:none">Clear</button>
+          <span class="sandbox-note">Results are not saved and will not trigger alerts.</span>
+        </div>
+      </div>
+      <div id="sandbox-results"></div>
     </div>
   </section>
 </div>
@@ -947,8 +984,10 @@
   }
 
   function allProducts() {
+    const configuredIds = new Set(config.sites.map(s => s.id));
     const result = [];
     for (const [siteId, s] of Object.entries(state)) {
+      if (!configuredIds.has(siteId)) continue;
       const siteName = config.sites.find(x => x.id === siteId)?.name ?? siteId;
       for (const p of Object.values(s.products || {})) {
         result.push({ ...p, siteId, siteName });
@@ -1374,6 +1413,130 @@
     }
   }
   initSections();
+
+  // ── Sandbox / test tab ───────────────────────────────────────────────────────
+  async function runSandboxTest() {
+    const rawUrl = document.getElementById('sandbox-url').value.trim();
+    const strategy = document.getElementById('sandbox-strategy').value;
+    const rawFilter = document.getElementById('sandbox-filter').value.trim();
+    const titleFilter = rawFilter ? rawFilter.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+    const results = document.getElementById('sandbox-results');
+    if (!rawUrl) { results.innerHTML = '<div class="sandbox-error">Enter a URL first.</div>'; return; }
+
+    let url;
+    try { url = new URL(rawUrl).href; } catch {
+      results.innerHTML = '<div class="sandbox-error">Invalid URL.</div>'; return;
+    }
+
+    const btn = document.getElementById('sandbox-run-btn');
+    const clearBtn = document.getElementById('sandbox-clear-btn');
+    btn.disabled = true;
+    clearBtn.style.display = 'none';
+    results.innerHTML = '<div class="sandbox-loading">⏳ Fetching…</div>';
+
+    try {
+      const products = strategy === 'shopify_collection'
+        ? await sandboxFetchShopify(url, titleFilter)
+        : await sandboxFetchSquarespace(url);
+      renderSandboxResults(products, titleFilter, url);
+    } catch (err) {
+      let msg = err.message;
+      if (msg === 'Failed to fetch' || msg.includes('NetworkError') || msg.includes('CORS')) {
+        msg = 'Could not fetch — the site may block cross-origin requests. Shopify /products.json and Squarespace ?format=json usually work; other endpoints may not.';
+      }
+      results.innerHTML = `<div class="sandbox-error">⚠️ ${esc(msg)}</div>`;
+    } finally {
+      btn.disabled = false;
+      clearBtn.style.display = '';
+    }
+  }
+
+  async function sandboxFetchShopify(baseUrl, titleFilter) {
+    const base = baseUrl.replace(/\/$/, '');
+    const all = [];
+    let page = 1;
+    while (page <= 5) {
+      const res = await fetch(`${base}/products.json?limit=250&page=${page}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const batch = data.products ?? [];
+      all.push(...batch);
+      if (batch.length < 250) break;
+      page++;
+    }
+    const filtered = titleFilter.length
+      ? all.filter(p => titleFilter.some(t => p.title.toLowerCase().includes(t.toLowerCase())))
+      : all;
+    const origin = new URL(baseUrl).origin;
+    return filtered.map(p => ({
+      title: p.title,
+      vendor: p.vendor ?? null,
+      minPrice: (() => {
+        const prices = (p.variants ?? []).map(v => parseFloat(v.price)).filter(n => !isNaN(n));
+        return prices.length ? Math.min(...prices) : null;
+      })(),
+      available: (p.variants ?? []).some(v => v.available),
+      image: p.images?.[0]?.src ?? null,
+      url: `${origin}/products/${p.handle}`,
+    }));
+  }
+
+  async function sandboxFetchSquarespace(pageUrl) {
+    const apiUrl = pageUrl.includes('?') ? `${pageUrl}&format=json` : `${pageUrl}?format=json`;
+    const res = await fetch(apiUrl);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const items = data?.collection?.items ?? data?.items ?? [];
+    const origin = new URL(pageUrl).origin;
+    return items.filter(item => item.title).map(item => {
+      const variants = item.structuredContent?.variants ?? item.variants ?? [];
+      const available = variants.length === 0
+        ? true
+        : variants.some(v => v.unlimited || (!v.sold && (v.stock == null || v.stock > 0)));
+      const cents = variants[0]?.price ?? null;
+      return {
+        title: item.title,
+        vendor: null,
+        minPrice: cents != null ? Math.round(cents) / 100 : null,
+        available,
+        image: item.assetUrl ?? item.thumbnail?.imageUrl ?? null,
+        url: item.fullUrl ? `${origin}${item.fullUrl}` : pageUrl,
+      };
+    });
+  }
+
+  function renderSandboxResults(products, titleFilter, url) {
+    const results = document.getElementById('sandbox-results');
+    if (!products.length) {
+      const filterNote = titleFilter.length ? ` matching "${esc(titleFilter.join(', '))}"` : '';
+      results.innerHTML = `<div class="empty" style="padding:.75rem 0">No products found${filterNote} at <a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></div>`;
+      return;
+    }
+    const inStock = products.filter(p => p.available).length;
+    const moreNote = products.length === 1250 ? ' (capped at 1250 — may be more)' : '';
+    results.innerHTML = `
+      <div class="sandbox-summary">${products.length} product${products.length !== 1 ? 's' : ''} found — ${inStock} in stock${moreNote}</div>
+      <table>
+        <thead><tr><th></th><th>Product</th><th>Price</th><th>Status</th></tr></thead>
+        <tbody>
+          ${products.map(p => `<tr>
+            <td>${p.image ? `<img class="thumb" src="${esc(p.image)}" alt="" loading="lazy" />` : ''}</td>
+            <td>
+              <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+              ${p.vendor ? `<br><span style="color:var(--muted);font-size:.75rem">${esc(p.vendor)}</span>` : ''}
+            </td>
+            <td>${p.minPrice != null ? '$' + p.minPrice.toFixed(2) : '—'}</td>
+            <td class="${p.available ? 'avail-yes' : 'avail-no'}">${p.available ? 'In Stock' : 'Sold Out'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  function clearSandbox() {
+    document.getElementById('sandbox-results').innerHTML = '';
+    document.getElementById('sandbox-clear-btn').style.display = 'none';
+  }
 
   function flipImminent(js, siteId, value) {
     // Split on site blocks, find the one with the target id, flip imminent.
