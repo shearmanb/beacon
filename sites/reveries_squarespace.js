@@ -51,32 +51,36 @@ export async function checkSite(site, previousState) {
     }
   }
 
-  // ── 2. Empty result when we had products before → verify via HTML before declaring reset ──────
-  // The JSON API can transiently return 0 items (rate limit, API hiccup) even when the shop is
-  // live. Only treat as a real reset if the HTML also shows a reset signal; otherwise preserve
-  // the previous product list and log a warning.
-  if (
-    productMap !== null &&
-    Object.keys(productMap).length === 0 &&
-    Object.keys(prevProducts).length > 0
-  ) {
+  // ── 2. Always fetch HTML when JSON API gave us products ──────────────────────
+  // The Squarespace JSON API variant data is unreliable for this shop — it can
+  // return wrong stock status even when products are purchasable on the page.
+  // Squarespace reliably marks sold-out products with ProductItem--sold-out on the
+  // <article> element, so we always parse HTML to override availability.
+  // This also handles reset detection and transient-empty checks in one fetch.
+  if (productMap !== null) {
+    let html = null;
     try {
-      const html = await https(site.url, {});
+      html = await https(site.url, {});
+    } catch (htmlErr) {
+      console.log(`[${site.name}] HTML fetch failed (${htmlErr.message})`);
+    }
+
+    if (html !== null) {
       const lower = html.toLowerCase();
       const signal = RESET_SIGNALS.find((s) => lower.includes(s));
+
       if (signal) {
         resetReason = `Reset signal in HTML: "${signal}"`;
         productMap = null;
-      } else {
-        // Site is live and shows no reset signals — likely a transient empty API response.
-        // Preserve previous products so we don't lose state on a blip.
+      } else if (Object.keys(productMap).length === 0 && Object.keys(prevProducts).length > 0) {
         console.log(`[${site.name}] JSON API returned 0 products but HTML looks normal — preserving previous state`);
         productMap = prevProducts;
+      } else {
+        // Override availability (and fill in images/URLs) from HTML
+        applyHtmlAvailability(html, productMap, site.url, site.name);
       }
-    } catch (htmlErr) {
-      // Can't reach the site at all — treat conservatively: don't declare reset on a network error,
-      // just preserve the previous state and wait for the next check.
-      console.log(`[${site.name}] JSON API empty + HTML fetch failed (${htmlErr.message}) — preserving previous state`);
+    } else if (Object.keys(productMap).length === 0 && Object.keys(prevProducts).length > 0) {
+      console.log(`[${site.name}] JSON API empty + HTML fetch failed — preserving previous state`);
       productMap = prevProducts;
     }
   }
@@ -91,7 +95,7 @@ export async function checkSite(site, previousState) {
         pageReset: true,
         resetReason,
       },
-      // Only alert once — not every 30-min check while it stays in reset
+      // Only alert once — not every 5-min check while it stays in reset
       alerts: alreadyInReset
         ? []
         : [
@@ -139,17 +143,17 @@ async function fetchJsonProducts(url) {
     if (!item.title) continue;
     const handle = slugify(item.title);
 
-    // Variants carry stock info; fall back gracefully if absent
-    const variants =
-      item.structuredContent?.variants ?? item.variants ?? [];
-
+    // Variants carry stock info; fall back gracefully if absent.
+    // NOTE: availability from variants is unreliable for some shops and will be
+    // overridden by applyHtmlAvailability() after this fetch.
+    const variants = item.structuredContent?.variants ?? item.variants ?? [];
     let available;
     if (variants.length === 0) {
-      available = true; // unknown — assume available
+      available = true; // unknown — assume available; HTML will correct if wrong
     } else {
+      // sold===false is authoritative: Squarespace explicitly marks it as not sold out,
+      // regardless of stock count (stock:0 + sold:false = still purchasable)
       available = variants.some(
-        // sold===false is authoritative: Squarespace explicitly marks it as not sold out,
-        // regardless of stock count (stock:0 + sold:false = still purchasable in Squarespace)
         (v) => v.unlimited || v.sold === false || (v.sold == null && (v.stock == null || v.stock > 0))
       );
     }
@@ -164,9 +168,7 @@ async function fetchJsonProducts(url) {
       null;
 
     const baseOrigin = new URL(url).origin;
-    const fullUrl = item.fullUrl
-      ? `${baseOrigin}${item.fullUrl}`
-      : url;
+    const fullUrl = item.fullUrl ? `${baseOrigin}${item.fullUrl}` : url;
 
     map[handle] = {
       handle,
@@ -184,7 +186,90 @@ async function fetchJsonProducts(url) {
   return map;
 }
 
-// ── HTML fallback ─────────────────────────────────────────────────────────────
+// ── HTML availability override ────────────────────────────────────────────────
+// Squarespace renders sold-out products with `ProductItem--sold-out` on the
+// <article> element. We parse each product article block, match it to a known
+// product by title keywords, and set availability accordingly.
+// Also fills in image and product URL when the JSON API didn't provide them.
+function applyHtmlAvailability(html, productMap, siteUrl, siteName) {
+  // Strip scripts/styles so we don't match class names inside JS strings
+  const cleanHtml = html
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "");
+
+  const baseOrigin = new URL(siteUrl).origin;
+  let applied = 0;
+
+  for (const match of cleanHtml.matchAll(/<article([^>]*)>([\s\S]*?)<\/article>/gi)) {
+    const [, attrs, content] = match;
+    if (!/productitem/i.test(attrs)) continue;
+
+    const soldOut = /productitem--sold-out/i.test(attrs);
+
+    // Plain text of this article (for title matching)
+    const text = content
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&quot;/g, '"')
+      .replace(/&#8220;/g, "“")
+      .replace(/&#8221;/g, "”")
+      .replace(/&amp;/g, "&")
+      .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n))
+      .replace(/\s+/g, " ")
+      .toLowerCase()
+      .trim();
+
+    // Image: prefer data-src (lazy-load) then src
+    const imgMatch =
+      content.match(/<img[^>]+data-src="([^"]+)"/i) ??
+      content.match(/<img[^>]+src="(https?[^"]+)"/i);
+    const imageUrl = imgMatch?.[1] ?? null;
+
+    // Product page link (relative path under /shop or /products)
+    const linkMatch =
+      content.match(/href="(\/shop\/[^"?#]+)"/i) ??
+      content.match(/href="(\/products\/[^"?#]+)"/i);
+    const productPath = linkMatch?.[1] ?? null;
+
+    // Match article to a product by scoring title-word overlap.
+    // Using best-match (highest score) avoids false matches when common words
+    // like "REVERIES" or "YEAR" appear in every product title.
+    let bestProduct = null;
+    let bestScore = 0;
+
+    for (const product of Object.values(productMap)) {
+      const words = product.title
+        .replace(/[^\w\s]/g, " ")
+        .split(/\s+/)
+        .filter((w) => w.length >= 4)
+        .map((w) => w.toLowerCase());
+
+      const score = words.filter((w) => text.includes(w)).length;
+      if (score > bestScore) {
+        bestScore = score;
+        bestProduct = product;
+      }
+    }
+
+    if (bestProduct && bestScore >= 1) {
+      bestProduct.available = !soldOut;
+      if (imageUrl && !bestProduct.image) bestProduct.image = imageUrl;
+      if (productPath && bestProduct.url === siteUrl) {
+        bestProduct.url = `${baseOrigin}${productPath}`;
+      }
+      applied++;
+    }
+  }
+
+  if (applied > 0) {
+    console.log(`  [${siteName}] HTML availability applied to ${applied} product(s)`);
+  } else {
+    // No <article class="ProductItem"> found — HTML structure may differ.
+    // JSON API availability is kept as-is.
+    console.log(`  [${siteName}] No ProductItem article blocks found in HTML — keeping JSON API availability`);
+  }
+}
+
+// ── HTML fallback (when JSON API is completely unavailable) ───────────────────
 function parseHtmlProducts(html) {
   const matches = html.matchAll(/<h4[^>]*>([\s\S]*?)<\/h4>/gi);
   const seen = new Set();
@@ -210,7 +295,7 @@ function parseHtmlProducts(html) {
       productType: "Whiskey",
       tags: [],
       minPrice: null,
-      available: true, // HTML can't determine stock; assume listed = available
+      available: true, // HTML h4 fallback can't determine stock; assume listed = available
       image: null,
       url: "https://www.thereveries.co/shop",
     };
