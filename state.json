@@ -842,46 +842,6 @@
       }
     }
   },
-  "reveries_official": {
-    "lastChecked": "2026-05-21T20:00:39.889Z",
-    "productCount": 3,
-    "products": {
-      "the-reveries-8-year-only-all-the-time": {
-        "handle": "the-reveries-8-year-only-all-the-time",
-        "title": "THE REVERIES 8 YEAR “ONLY ALL THE TIME”",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": 84.99,
-        "available": false,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "the-reveries-8-year-wake-of-the-ship": {
-        "handle": "the-reveries-8-year-wake-of-the-ship",
-        "title": "THE REVERIES 8 YEAR “Wake Of The Ship”",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": 84.99,
-        "available": false,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      },
-      "the-reveries-14-year-no-sun-wakes-for-me": {
-        "handle": "the-reveries-14-year-no-sun-wakes-for-me",
-        "title": "THE REVERIES 14 YEAR “NO SUN WAKES FOR ME”",
-        "vendor": "The Reveries",
-        "productType": "Whiskey",
-        "tags": [],
-        "minPrice": 269.99,
-        "available": false,
-        "image": null,
-        "url": "https://www.thereveries.co/shop"
-      }
-    },
-    "pageReset": false
-  },
   "fountain_inn_dc": {
     "lastChecked": "2026-05-21T19:59:28.475Z",
     "productCount": 2,
@@ -1442,7 +1402,7 @@
       },
       "scotch-malt-whisky-society-44-196-properly-nutty-t8ke-x-smws-exclusive-single-cask-18-year-speyside": {
         "handle": "scotch-malt-whisky-society-44-196-properly-nutty-t8ke-x-smws-exclusive-single-cask-18-year-speyside",
-        "title": "SMWS 44.196 “Properly Nutty” T8KE x Scotch Malt Whisky Society Exclusive Single Cask 18 Year Speyside [Craigellachie]",
+        "title": "SMWS 44.196 \u201cProperly Nutty\u201d T8KE x Scotch Malt Whisky Society Exclusive Single Cask 18 Year Speyside [Craigellachie]",
         "vendor": "Scotch Malt Whisky Society",
         "productType": "Scotch",
         "tags": [

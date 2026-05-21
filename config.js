@@ -123,11 +123,15 @@ export const sites = [
     },
   },
   {
+    // thereveries.co/shop is a headless Squarespace frontend that loads products
+    // from SharedPour's Shopify store via GraphQL (confirmed via DevTools Network).
+    // The ?format=json endpoint returns page metadata only — zero products, always.
+    // Fix: use shopify_collection pointing at the actual SharedPour collection.
     name: "The Reveries – Official Shop",
     id: "reveries_official",
     enabled: true,
-    strategy: "reveries_squarespace",
-    url: "https://www.thereveries.co/shop",
+    strategy: "shopify_collection",
+    url: "https://sharedpour.com/collections/the-reveries-no-sun-wakes-for-me-collection",
     intervalMinutes: 30,
     schedule: "5",
     imminentIntervalMinutes: 2,
@@ -147,12 +151,11 @@ export const sites = [
     },
   },
   {
-    // Blunt change monitor — alerts on ANY change to the Reveries shop JSON API:
-    // new products, removals, variant data updates, anything. Complementary to
-    // reveries_official which does structured per-product diffs.
+    // Disabled — was watching thereveries.co/shop?format=json which returns page
+    // metadata only (no products). reveries_official now covers the real data source.
     name: "The Reveries – Change Monitor",
     id: "reveries_official_monitor",
-    enabled: true,
+    enabled: false,
     strategy: "squarespace_json_monitor",
     url: "https://www.thereveries.co/shop",
     intervalMinutes: 30,
