@@ -79,6 +79,7 @@ async function loadStrategy(name) {
   if (strategyCache[name]) return strategyCache[name];
   const loaders = {
     shopify_collection: () => import("./sites/shopify_collection.js"),
+    shopify_storefront: () => import("./sites/shopify_storefront.js"),
     reveries_squarespace: () => import("./sites/reveries_squarespace.js"),
   };
   const loader = loaders[name];
