@@ -1957,7 +1957,7 @@
     }
   },
   "reveries_official": {
-    "lastChecked": "2026-05-21T22:16:08.371Z",
+    "lastChecked": "2026-05-21T22:31:24.413Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-only-all-the-time-barrel-strength-bourbon-t8ke-reserve-cask": {
@@ -1983,6 +1983,7 @@
         "url": "https://www.thereveries.co/shop"
       }
     },
+    "collectionEmpty": false,
     "pageReset": false
   }
 }
