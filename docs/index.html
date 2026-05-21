@@ -822,23 +822,34 @@
     if (!chip) return;
     if (!state || !Object.keys(state).length) { chip.innerHTML = ''; chip.className = ''; return; }
 
+    // Find the most recently checked enabled site and use its current effective
+    // interval as the baseline — so off-hours schedules (e.g. 300 min) don't
+    // falsely trip the DOWN threshold.
     let mostRecentMs = null;
-    for (const s of Object.values(state)) {
-      if (s.lastChecked) {
-        const t = new Date(s.lastChecked).getTime();
-        if (mostRecentMs === null || t > mostRecentMs) mostRecentMs = t;
+    let relevantInterval = 5;
+    for (const site of config.sites) {
+      if (!site.enabled) continue;
+      const s = state[site.id];
+      if (!s?.lastChecked) continue;
+      const t = new Date(s.lastChecked).getTime();
+      if (mostRecentMs === null || t > mostRecentMs) {
+        mostRecentMs = t;
+        relevantInterval = getEffectiveInterval(site) || 5;
       }
     }
     if (mostRecentMs === null) { chip.innerHTML = ''; chip.className = ''; return; }
 
     const minsAgo = (Date.now() - mostRecentMs) / 60_000;
-    const ago = minsAgo < 1 ? '<1m ago' : `${Math.round(minsAgo)}m ago`;
+    const ago = minsAgo < 1 ? '<1m ago'
+      : minsAgo < 90 ? `${Math.round(minsAgo)}m ago`
+      : `${(minsAgo / 60).toFixed(1)}h ago`;
     const token = localStorage.getItem(TOKEN_KEY);
 
-    if (minsAgo < 6) {
+    // ok = within 2× interval, warn = within 4×, down = beyond 4×
+    if (minsAgo <= relevantInterval * 2) {
       chip.className = 'worker-chip ok';
       chip.innerHTML = `🟢 ${esc(ago)}`;
-    } else if (minsAgo < 15) {
+    } else if (minsAgo <= relevantInterval * 4) {
       chip.className = 'worker-chip warn';
       chip.innerHTML = `🟡 ${esc(ago)}`;
     } else {
