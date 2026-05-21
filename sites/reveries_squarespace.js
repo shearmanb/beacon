@@ -170,6 +170,14 @@ async function fetchJsonProducts(url) {
     const baseOrigin = new URL(url).origin;
     const fullUrl = item.fullUrl ? `${baseOrigin}${item.fullUrl}` : url;
 
+    // Diagnostic: log variant stock data so we can verify the JSON API values
+    if (variants.length > 0) {
+      const vInfo = variants.map((v) => `sold=${v.sold},stock=${v.stock},unlimited=${v.unlimited}`).join("; ");
+      console.log(`  [JSON] "${item.title}" available=${available} variants: ${vInfo}`);
+    } else {
+      console.log(`  [JSON] "${item.title}" available=${available} (no variants)`);
+    }
+
     map[handle] = {
       handle,
       title: item.title,
@@ -191,6 +199,7 @@ async function fetchJsonProducts(url) {
 // <article> element. We parse each product article block, match it to a known
 // product by title keywords, and set availability accordingly.
 // Also fills in image and product URL when the JSON API didn't provide them.
+// Returns the set of product handles that were matched in the HTML.
 function applyHtmlAvailability(html, productMap, siteUrl, siteName) {
   // Strip scripts/styles so we don't match class names inside JS strings
   const cleanHtml = html
@@ -198,75 +207,135 @@ function applyHtmlAvailability(html, productMap, siteUrl, siteName) {
     .replace(/<style[\s\S]*?<\/style>/gi, "");
 
   const baseOrigin = new URL(siteUrl).origin;
+
+  // Diagnostics — visible in GitHub Actions logs
+  const articleCount = (html.match(/<article/gi) ?? []).length;
+  const piMentions = (html.match(/productitem/gi) ?? []).length;
+  const acquireCount = (html.match(/acquire dread/gi) ?? []).length;
+  const addCartCount = (html.match(/add to cart/gi) ?? []).length;
+  console.log(
+    `  [${siteName}] HTML ${html.length} chars | ` +
+    `<article>: ${articleCount} | productitem: ${piMentions} | ` +
+    `"acquire dread": ${acquireCount} | "add to cart": ${addCartCount}`
+  );
+
+  const matched = new Set();
   let applied = 0;
 
+  // ── Strategy A: <article class="ProductItem[--sold-out]"> ──────────────────
   for (const match of cleanHtml.matchAll(/<article([^>]*)>([\s\S]*?)<\/article>/gi)) {
     const [, attrs, content] = match;
     if (!/productitem/i.test(attrs)) continue;
 
     const soldOut = /productitem--sold-out/i.test(attrs);
+    const result = extractProductInfo(content, soldOut, productMap, siteUrl, baseOrigin);
+    if (result) {
+      matched.add(result.handle);
+      applied++;
+    }
+  }
 
-    // Plain text of this article (for title matching)
-    const text = content
-      .replace(/<[^>]+>/g, " ")
-      .replace(/&quot;/g, '"')
-      .replace(/&#8220;/g, "“")
-      .replace(/&#8221;/g, "”")
-      .replace(/&amp;/g, "&")
-      .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n))
-      .replace(/\s+/g, " ")
-      .toLowerCase()
-      .trim();
-
-    // Image: prefer data-src (lazy-load) then src
-    const imgMatch =
-      content.match(/<img[^>]+data-src="([^"]+)"/i) ??
-      content.match(/<img[^>]+src="(https?[^"]+)"/i);
-    const imageUrl = imgMatch?.[1] ?? null;
-
-    // Product page link (relative path under /shop or /products)
-    const linkMatch =
-      content.match(/href="(\/shop\/[^"?#]+)"/i) ??
-      content.match(/href="(\/products\/[^"?#]+)"/i);
-    const productPath = linkMatch?.[1] ?? null;
-
-    // Match article to a product by scoring title-word overlap.
-    // Using best-match (highest score) avoids false matches when common words
-    // like "REVERIES" or "YEAR" appear in every product title.
-    let bestProduct = null;
-    let bestScore = 0;
-
-    for (const product of Object.values(productMap)) {
-      const words = product.title
-        .replace(/[^\w\s]/g, " ")
-        .split(/\s+/)
-        .filter((w) => w.length >= 4)
-        .map((w) => w.toLowerCase());
-
-      const score = words.filter((w) => text.includes(w)).length;
-      if (score > bestScore) {
-        bestScore = score;
-        bestProduct = product;
+  // ── Strategy B: <li class="ProductList-item[--sold-out]"> (7.1 grid layout) ─
+  if (applied === 0) {
+    for (const match of cleanHtml.matchAll(/<li([^>]*class="[^"]*ProductList-item[^"]*"[^>]*)>([\s\S]*?)<\/li>/gi)) {
+      const [, attrs, content] = match;
+      const soldOut = /ProductList-item--sold-out/i.test(attrs);
+      const result = extractProductInfo(content, soldOut, productMap, siteUrl, baseOrigin);
+      if (result) {
+        matched.add(result.handle);
+        applied++;
       }
     }
+  }
 
-    if (bestProduct && bestScore >= 1) {
-      bestProduct.available = !soldOut;
-      if (imageUrl && !bestProduct.image) bestProduct.image = imageUrl;
-      if (productPath && bestProduct.url === siteUrl) {
-        bestProduct.url = `${baseOrigin}${productPath}`;
-      }
+  // ── Strategy C: proximity of title text to "acquire dread" / "add to cart" ─
+  // Fallback when the page is partially server-rendered or uses non-standard markup.
+  if (applied === 0 && (acquireCount > 0 || addCartCount > 0)) {
+    console.log(`  [${siteName}] Falling back to button-proximity availability detection`);
+    const lowerHtml = html.toLowerCase();
+    for (const product of Object.values(productMap)) {
+      const titleLower = product.title.toLowerCase();
+      const titleIdx = lowerHtml.indexOf(titleLower);
+      if (titleIdx === -1) continue;
+      // Search within 3000 chars after the title for a buy button
+      const window = lowerHtml.slice(titleIdx, titleIdx + 3000);
+      const hasBuyButton = /acquire dread|add to cart|buy now/.test(window);
+      product.available = hasBuyButton;
+      matched.add(product.handle);
       applied++;
+      console.log(`    ${product.title}: ${hasBuyButton ? "AVAILABLE (button found)" : "SOLD OUT (no button)"}`);
     }
   }
 
   if (applied > 0) {
     console.log(`  [${siteName}] HTML availability applied to ${applied} product(s)`);
+    // Mark any JSON-API product that wasn't visible in HTML as sold out.
+    // This handles products the store has removed or hidden since last check.
+    for (const product of Object.values(productMap)) {
+      if (!matched.has(product.handle)) {
+        if (product.available) {
+          console.log(`  [${siteName}] "${product.title}" not found in HTML — marking unavailable`);
+        }
+        product.available = false;
+      }
+    }
   } else {
-    // No <article class="ProductItem"> found — HTML structure may differ.
-    // JSON API availability is kept as-is.
-    console.log(`  [${siteName}] No ProductItem article blocks found in HTML — keeping JSON API availability`);
+    // Page may be fully client-side rendered — keep JSON API availability as-is.
+    console.log(`  [${siteName}] No product blocks found in HTML — keeping JSON API availability`);
   }
+}
+
+// Shared helper: extract availability/image/url from a product HTML block and
+// match it to a productMap entry. Returns the matched product or null.
+function extractProductInfo(content, soldOut, productMap, siteUrl, baseOrigin) {
+  const text = content
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&quot;/g, '"')
+    .replace(/&#8220;/g, "“")
+    .replace(/&#8221;/g, "”")
+    .replace(/&amp;/g, "&")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n))
+    .replace(/\s+/g, " ")
+    .toLowerCase()
+    .trim();
+
+  const imgMatch =
+    content.match(/<img[^>]+data-src="([^"]+)"/i) ??
+    content.match(/<img[^>]+src="(https?[^"]+)"/i);
+  const imageUrl = imgMatch?.[1] ?? null;
+
+  const linkMatch =
+    content.match(/href="(\/shop\/[^"?#]+)"/i) ??
+    content.match(/href="(\/products\/[^"?#]+)"/i) ??
+    content.match(/href="(\/store\/[^"?#]+)"/i);
+  const productPath = linkMatch?.[1] ?? null;
+
+  let bestProduct = null;
+  let bestScore = 0;
+
+  for (const product of Object.values(productMap)) {
+    const words = product.title
+      .replace(/[^\w\s]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length >= 4)
+      .map((w) => w.toLowerCase());
+
+    const score = words.filter((w) => text.includes(w)).length;
+    if (score > bestScore) {
+      bestScore = score;
+      bestProduct = product;
+    }
+  }
+
+  if (bestProduct && bestScore >= 1) {
+    bestProduct.available = !soldOut;
+    if (imageUrl && !bestProduct.image) bestProduct.image = imageUrl;
+    if (productPath && bestProduct.url === siteUrl) {
+      bestProduct.url = `${baseOrigin}${productPath}`;
+    }
+    return bestProduct;
+  }
+  return null;
 }
 
 // ── HTML fallback (when JSON API is completely unavailable) ───────────────────
