@@ -155,7 +155,7 @@ export const sites = [
     // metadata only (no products). reveries_official now covers the real data source.
     name: "The Reveries – Change Monitor",
     id: "reveries_official_monitor",
-    enabled: false,
+    enabled: true,
     strategy: "squarespace_json_monitor",
     url: "https://www.thereveries.co/shop",
     intervalMinutes: 30,
