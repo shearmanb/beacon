@@ -1937,5 +1937,22 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RevPlaceholder.png?v=1773967832",
       "url": "https://www.thereveries.co/shop"
     }
+  },
+  {
+    "timestamp": "2026-05-21T22:47:14.413Z",
+    "siteId": "reveries_official",
+    "siteName": "The Reveries – Official Shop",
+    "type": "sold_out",
+    "product": {
+      "handle": "the-reveries-8-year-single-barrel-wake-of-the-ship-barrel-strength-bourbon-t8ke-reserve-cask",
+      "title": "The Reveries: 8 Year Single Barrel \"Wake of the Ship\" Barrel Strength Bourbon T8ke Reserve Cask",
+      "vendor": "The Reveries",
+      "productType": "Whiskey",
+      "tags": [],
+      "minPrice": 84.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RevPlaceholder.png?v=1773967832",
+      "url": "https://www.thereveries.co/shop"
+    }
   }
 ]
