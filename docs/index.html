@@ -151,8 +151,11 @@
     .worker-chip.ok       { background: rgba(46,204,113,.12); color: var(--green); }
     .worker-chip.warn     { background: rgba(241,196,15,.12);  color: var(--yellow); }
     .worker-chip.critical { background: rgba(231,76,60,.12);   color: var(--red); }
+    .worker-chip.unknown  { background: rgba(100,116,139,.1);  color: var(--muted); }
     .worker-chip .chip-btn { background: none; border: 1px solid currentColor; color: inherit; cursor: pointer; font-size: .69rem; font-weight: 600; padding: .1rem .4rem; border-radius: 10px; margin-left: .25rem; }
     .worker-chip .chip-btn:hover { opacity: .75; }
+    .site-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; margin-bottom: .5rem; }
+    .site-card-header h3 { margin: 0; }
     /* ── Sandbox ── */
     section.sec-sandbox { border-top: 3px solid #e67e22; }
     .sandbox-form { display: flex; flex-direction: column; gap: .75rem; }
@@ -817,48 +820,51 @@
     renderWorkerHealth();
   }
 
+  // Returns {level, ago} for one site, or null if disabled.
+  function getSiteHealth(site, siteState) {
+    if (!site.enabled) return null;
+    if (!siteState?.lastChecked) return { level: 'unknown', ago: 'never' };
+    const minsAgo = (Date.now() - new Date(siteState.lastChecked).getTime()) / 60_000;
+    const interval = getEffectiveInterval(site) || 5;
+    const ago = minsAgo < 1 ? '<1m' : minsAgo < 90 ? `${Math.round(minsAgo)}m` : `${(minsAgo / 60).toFixed(1)}h`;
+    const level = minsAgo <= interval * 2 ? 'ok' : minsAgo <= interval * 4 ? 'warn' : 'critical';
+    return { level, ago };
+  }
+
+  function siteChipHtml(site, siteState) {
+    const h = getSiteHealth(site, siteState);
+    if (!h) return '';
+    const icons = { ok: '🟢', warn: '🟡', critical: '🔴', unknown: '⚪' };
+    const label = h.level === 'critical' ? 'down' : h.level === 'unknown' ? 'never' : esc(h.ago);
+    return `<span class="worker-chip ${h.level}" style="font-size:.7rem;padding:.1rem .4rem">${icons[h.level] ?? '⚪'} ${label}</span>`;
+  }
+
   function renderWorkerHealth() {
     const chip = document.getElementById('worker-status-chip');
     if (!chip) return;
-    if (!state || !Object.keys(state).length) { chip.innerHTML = ''; chip.className = ''; return; }
+    const enabledSites = config.sites.filter(s => s.enabled);
+    if (!enabledSites.length) { chip.innerHTML = ''; chip.className = ''; return; }
 
-    // Find the most recently checked enabled site and use its current effective
-    // interval as the baseline — so off-hours schedules (e.g. 300 min) don't
-    // falsely trip the DOWN threshold.
-    let mostRecentMs = null;
-    let relevantInterval = 5;
-    for (const site of config.sites) {
-      if (!site.enabled) continue;
-      const s = state[site.id];
-      if (!s?.lastChecked) continue;
-      const t = new Date(s.lastChecked).getTime();
-      if (mostRecentMs === null || t > mostRecentMs) {
-        mostRecentMs = t;
-        relevantInterval = getEffectiveInterval(site) || 5;
-      }
-    }
-    if (mostRecentMs === null) { chip.innerHTML = ''; chip.className = ''; return; }
-
-    const minsAgo = (Date.now() - mostRecentMs) / 60_000;
-    const ago = minsAgo < 1 ? '<1m ago'
-      : minsAgo < 90 ? `${Math.round(minsAgo)}m ago`
-      : `${(minsAgo / 60).toFixed(1)}h ago`;
+    const healths = enabledSites.map(s => getSiteHealth(s, state[s.id]));
+    const okCount       = healths.filter(h => h?.level === 'ok').length;
+    const criticalCount = healths.filter(h => h?.level === 'critical').length;
+    const total = enabledSites.length;
     const token = localStorage.getItem(TOKEN_KEY);
 
-    // ok = within 2× interval, warn = within 4×, down = beyond 4×
-    if (minsAgo <= relevantInterval * 2) {
-      chip.className = 'worker-chip ok';
-      chip.innerHTML = `🟢 ${esc(ago)}`;
-    } else if (minsAgo <= relevantInterval * 4) {
-      chip.className = 'worker-chip warn';
-      chip.innerHTML = `🟡 ${esc(ago)}`;
+    let level, icon, label;
+    if (criticalCount === total) {
+      level = 'critical'; icon = '🔴'; label = `0/${total}`;
+    } else if (okCount === total) {
+      level = 'ok'; icon = '🟢'; label = `${total}/${total}`;
     } else {
-      const btn = token
-        ? `<button class="chip-btn" onclick="event.stopPropagation();reenableGHActions()">Re-enable Actions</button>`
-        : '';
-      chip.className = 'worker-chip critical';
-      chip.innerHTML = `🔴 DOWN${btn}`;
+      level = 'warn'; icon = '🟡'; label = `${okCount}/${total} ok`;
     }
+
+    const btn = (level === 'critical' && token)
+      ? `<button class="chip-btn" onclick="event.stopPropagation();reenableGHActions()">Re-enable Actions</button>`
+      : '';
+    chip.className = `worker-chip ${level}`;
+    chip.innerHTML = `${icon} ${esc(label)}${btn}`;
   }
 
   async function reenableGHActions() {
@@ -946,7 +952,10 @@
         : '';
       return `<div class="site-card${isEnabled ? '' : ' disabled'}${isReset ? ' site-in-reset' : ''}">
         ${refreshingBar}${resetBanner}
-        <h3>${esc(site.name)}</h3>
+        <div class="site-card-header">
+          <h3>${esc(site.name)}</h3>
+          ${siteChipHtml(site, s)}
+        </div>
         <div class="meta">
           <span${checkedClass ? ` class="${checkedClass}"` : ''}>Last checked: ${checked}</span>
           ${nextRefreshText ? `<span${checkedClass === 'meta-overdue' ? ' class="meta-overdue"' : checkedClass === 'meta-stale' ? ' class="meta-stale"' : ''}>Next refresh: ${nextRefreshText}</span>` : ''}
