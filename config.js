@@ -141,7 +141,7 @@ export const sites = [
     imminent: false,
     alertOnNewProduct: true,
     alertOnRestock: true,
-    alertOnSoldOut: false,
+    alertOnSoldOut: true,
     filters: {},
   },
   {
