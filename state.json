@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-21T14:42:26.431Z",
+    "lastChecked": "2026-05-21T14:47:44.524Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -192,7 +192,7 @@
           "t8ke",
           "whiskey"
         ],
-        "minPrice": 99.99,
+        "minPrice": 74.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1255213e-491a-fec6-72f3-e9e0e63fa29a.png?v=1770052416",
         "url": "https://sharedpour.com/products/t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml"
@@ -814,7 +814,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-21T14:42:29.875Z",
+    "lastChecked": "2026-05-21T14:47:47.961Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -911,7 +911,7 @@
     }
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-05-21T14:42:38.829Z",
+    "lastChecked": "2026-05-21T14:47:56.935Z",
     "productCount": 8,
     "products": {
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
