@@ -91,6 +91,7 @@ async function loadStrategy(strategyName) {
   const strategies = {
     shopify_collection: () => import("./sites/shopify_collection.js"),
     reveries_squarespace: () => import("./sites/reveries_squarespace.js"),
+    squarespace_json_monitor: () => import("./sites/squarespace_json_monitor.js"),
     html_text_monitor: () => import("./sites/html_text_monitor.js"),
   };
   const loader = strategies[strategyName];

@@ -146,4 +146,22 @@ export const sites = [
       availableOnly: false,
     },
   },
+  {
+    // Blunt change monitor — alerts on ANY change to the Reveries shop JSON API:
+    // new products, removals, variant data updates, anything. Complementary to
+    // reveries_official which does structured per-product diffs.
+    name: "The Reveries – Change Monitor",
+    id: "reveries_official_monitor",
+    enabled: true,
+    strategy: "squarespace_json_monitor",
+    url: "https://www.thereveries.co/shop",
+    intervalMinutes: 30,
+    schedule: "5",
+    imminentIntervalMinutes: 2,
+    imminent: false,
+    alertOnNewProduct: false,
+    alertOnRestock: false,
+    alertOnSoldOut: false,
+    filters: {},
+  },
 ];
