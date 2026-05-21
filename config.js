@@ -133,7 +133,7 @@ export const sites = [
     strategy: "shopify_collection",
     url: "https://sharedpour.com/collections/the-reveries-no-sun-wakes-for-me-collection",
     intervalMinutes: 30,
-    schedule: "5",
+    schedule: "15",
     imminentIntervalMinutes: 2,
     imminent: false,
     alertOnNewProduct: true,
