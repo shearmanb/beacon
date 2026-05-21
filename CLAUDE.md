@@ -136,6 +136,8 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
 
 ## Open features (backlog)
 
+- **⚠️ TODO (one-time setup): activate ignore→Discord notifications** — the dashboard now sends a Discord embed when a product is ignored/unignored, but the webhook URL must be saved in the browser first. Open the dashboard → click **Discord Webhook** in the header → paste in the Discord webhook URL (same one stored in the `DISCORD_WEBHOOK_URL` GitHub secret). Saved to `localStorage`; only needs to be done once per browser.
+
 - **Wild Turkey Gold Foil Edition monitor** — site entry already added to `config.js` (disabled) using the `html_text_monitor` strategy. Two things needed before enabling: (1) confirm the button text ("SEE DETAILS" → "ADD TO CART" etc.) appears in raw page source (View Source, not DevTools Elements) — if not, the page is JS-rendered and plain fetch won't see it; (2) if JS-rendered, open DevTools → Network, reload the page, and find the API call that returns product availability — use that URL as the `url` in config instead. The `monitor.watchTexts` and `monitor.alertValues` arrays in config.js are already set up; just flip `enabled: true` once the right URL is confirmed.
 
 - **Add site wizard (feature 3)** — modal form in the dashboard to add a new site to `config.js` via GitHub API. Fields: name, ID (auto-slugged from name), strategy dropdown, URL, schedule, filters. Tricky part: serializing a JS object back into `config.js` format cleanly. Deferred — for small numbers of new sites, direct edits to `config.js` are simpler.
