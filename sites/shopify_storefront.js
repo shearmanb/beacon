@@ -44,6 +44,7 @@ function storefrontPost(domain, token, query) {
 
 export async function checkSite(site, previousState) {
   const prevProducts = previousState?.products ?? {};
+  const alreadyEmpty = previousState?.collectionEmpty === true;
   const { storefrontDomain, storefrontAccessToken, storefrontCollectionId } = site;
 
   const gid = `gid://shopify/Collection/${storefrontCollectionId}`;
@@ -90,6 +91,36 @@ export async function checkSite(site, previousState) {
     console.log(`  ${p.title}: ${p.available ? "AVAILABLE" : "SOLD OUT"}`);
   }
 
+  // If the collection comes back empty but we had products before, the embed
+  // was likely updated with a new collection ID. Fire a one-time Discord alert.
+  const hadProducts = Object.keys(prevProducts).length > 0;
+  if (nodes.length === 0 && hadProducts) {
+    console.log(`[${site.name}] Collection returned 0 products — possible collection ID change`);
+    return {
+      state: {
+        ...previousState,
+        lastChecked: new Date().toISOString(),
+        collectionEmpty: true,
+      },
+      alerts: alreadyEmpty
+        ? []
+        : [
+            {
+              type: "site_reset",
+              product: {
+                title: site.name,
+                url: site.url,
+                vendor: null,
+                minPrice: null,
+                available: false,
+                image: null,
+                note: `Storefront API returned 0 products. The shop embed may have switched to a new Shopify collection ID.\n_Check View Source on ${site.url} for the new id: value in ShopifyBuyInit._`,
+              },
+            },
+          ],
+    };
+  }
+
   const alerts = diff(prevProducts, productMap, site);
 
   return {
@@ -97,6 +128,7 @@ export async function checkSite(site, previousState) {
       lastChecked: new Date().toISOString(),
       productCount: Object.keys(productMap).length,
       products: productMap,
+      collectionEmpty: false,
       pageReset: false,
     },
     alerts,
