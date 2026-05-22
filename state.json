@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-22T16:46:05.393Z",
+    "lastChecked": "2026-05-22T16:51:34.165Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -814,9 +814,26 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-22T16:46:08.861Z",
-    "productCount": 1,
+    "lastChecked": "2026-05-22T16:51:39.930Z",
+    "productCount": 2,
     "products": {
+      "the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection": {
+        "handle": "the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection",
+        "title": "THE REVERIES 8 Year Single Barrel #27394 \"Certified Pimp\" Liberty Barrel Club Private Barrel Selection",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "bourbon",
+          "over-10",
+          "presale",
+          "the-reveries"
+        ],
+        "minPrice": 84.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CertifiedPimp.png?v=1778249299",
+        "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection"
+      },
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
         "handle": "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1",
         "title": "THE REVERIES: THE DEEP Kentucky Straight Bourbon Finished In French Oak Casks (Tide #1)",
@@ -871,7 +888,7 @@
     }
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-05-22T16:46:18.018Z",
+    "lastChecked": "2026-05-22T16:51:47.965Z",
     "productCount": 8,
     "products": {
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
