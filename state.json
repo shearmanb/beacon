@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-22T15:30:42.055Z",
+    "lastChecked": "2026-05-22T15:35:57.052Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -658,7 +658,7 @@
           "westland",
           "whiskey"
         ],
-        "minPrice": 99.99,
+        "minPrice": 79.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/356515a1-e14b-45b6-fc1d-0985cd0973d2.jpg?v=1766327960",
         "url": "https://sharedpour.com/products/westland-american-single-malt-cask-3855"
@@ -697,7 +697,7 @@
           "westland",
           "whiskey"
         ],
-        "minPrice": 99.99,
+        "minPrice": 79.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e8d4cd80-4ab8-077f-345b-74dd98f1f862.jpg?v=1773577422",
         "url": "https://sharedpour.com/products/westland-american-single-malt-cask-1757"
@@ -814,7 +814,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-22T15:30:46.375Z",
+    "lastChecked": "2026-05-22T15:36:01.143Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -871,7 +871,7 @@
     }
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-05-22T15:30:54.109Z",
+    "lastChecked": "2026-05-22T15:36:10.595Z",
     "productCount": 8,
     "products": {
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
