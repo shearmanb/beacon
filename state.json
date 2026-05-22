@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-22T06:43:37.746Z",
+    "lastChecked": "2026-05-22T11:44:09.632Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -197,6 +197,29 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1255213e-491a-fec6-72f3-e9e0e63fa29a.png?v=1770052416",
         "url": "https://sharedpour.com/products/t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml"
       },
+      "pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke": {
+        "handle": "pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke",
+        "title": "Pinhook Black Label 6 Year True Small Batch Bourbon Whiskey Single Barrel - Selected by T8KE",
+        "vendor": "Pinhook",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "pinhook",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 99.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/8df56ab5-9e80-33a1-40aa-aecb2b7f8747.jpg?v=1775394875",
+        "url": "https://sharedpour.com/products/pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke"
+      },
       "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive": {
         "handle": "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive",
         "title": "Barrell Craft Spirits x Collaboration With T8KE Single Barrel Barrel Strength 11 Year Ice Wine & French Oak Cask r/Bourbon Exclusive",
@@ -220,29 +243,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f7f2a6fa-844a-bd29-8fa6-93a9a0be0341.jpg?v=1768742030",
         "url": "https://sharedpour.com/products/barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive"
-      },
-      "pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke": {
-        "handle": "pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke",
-        "title": "Pinhook Black Label 6 Year True Small Batch Bourbon Whiskey Single Barrel - Selected by T8KE",
-        "vendor": "Pinhook",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "pinhook",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 99.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/8df56ab5-9e80-33a1-40aa-aecb2b7f8747.jpg?v=1775394875",
-        "url": "https://sharedpour.com/products/pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke"
       },
       "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3": {
         "handle": "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3",
@@ -309,27 +309,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/73c57145-5074-ea67-92ef-32d2cb39cf79.jpg?v=1776644198",
         "url": "https://sharedpour.com/products/heaven-hill-bottled-in-bond-single-barrel"
       },
-      "peerless-single-barrel-bourbon-t8ke-171214110": {
-        "handle": "peerless-single-barrel-bourbon-t8ke-171214110",
-        "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #171214110",
-        "vendor": "Kentucky Peerless",
-        "productType": "Bourbon",
-        "tags": [
-          "100-200",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "kentucky-peerless",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 119.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
-        "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-171214110"
-      },
       "augusta-wheated-bourbon-t8ke-single-barrel-26-1761-straight-bourbon": {
         "handle": "augusta-wheated-bourbon-t8ke-single-barrel-26-1761-straight-bourbon",
         "title": "Augusta Wheated Bourbon T8KE Single Barrel #26-21 Straight Bourbon",
@@ -352,6 +331,27 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/b3623675-71f3-657d-4d4a-f64e34eb5d2a.jpg?v=1775395761",
         "url": "https://sharedpour.com/products/augusta-wheated-bourbon-t8ke-single-barrel-26-1761-straight-bourbon"
+      },
+      "peerless-single-barrel-bourbon-t8ke-171214110": {
+        "handle": "peerless-single-barrel-bourbon-t8ke-171214110",
+        "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #171214110",
+        "vendor": "Kentucky Peerless",
+        "productType": "Bourbon",
+        "tags": [
+          "100-200",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "kentucky-peerless",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 119.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
+        "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-171214110"
       },
       "el-jolgorio-mezcal-artesanal-tepeztate-edition-39": {
         "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-39",
@@ -814,7 +814,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-22T06:43:41.053Z",
+    "lastChecked": "2026-05-22T11:44:15.037Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
