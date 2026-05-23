@@ -33,7 +33,7 @@ export const sites = [
     strategy: "shopify_collection",
     url: "https://sharedpour.com",
     intervalMinutes: 20,
-    schedule: "weekend_light_20_mins",
+    schedule: "30",
     imminentIntervalMinutes: 2,
     imminent: false,
     alertOnNewProduct: true,
