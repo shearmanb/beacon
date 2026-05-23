@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-23T06:43:24.657Z",
+    "lastChecked": "2026-05-23T11:44:17.037Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -197,29 +197,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1255213e-491a-fec6-72f3-e9e0e63fa29a.png?v=1770052416",
         "url": "https://sharedpour.com/products/t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml"
       },
-      "pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke": {
-        "handle": "pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke",
-        "title": "Pinhook Black Label 6 Year True Small Batch Bourbon Whiskey Single Barrel - Selected by T8KE",
-        "vendor": "Pinhook",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "pinhook",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 99.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/8df56ab5-9e80-33a1-40aa-aecb2b7f8747.jpg?v=1775394875",
-        "url": "https://sharedpour.com/products/pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke"
-      },
       "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive": {
         "handle": "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive",
         "title": "Barrell Craft Spirits x Collaboration With T8KE Single Barrel Barrel Strength 11 Year Ice Wine & French Oak Cask r/Bourbon Exclusive",
@@ -244,6 +221,29 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f7f2a6fa-844a-bd29-8fa6-93a9a0be0341.jpg?v=1768742030",
         "url": "https://sharedpour.com/products/barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive"
       },
+      "pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke": {
+        "handle": "pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke",
+        "title": "Pinhook Black Label 6 Year True Small Batch Bourbon Whiskey Single Barrel - Selected by T8KE",
+        "vendor": "Pinhook",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "pinhook",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 99.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/8df56ab5-9e80-33a1-40aa-aecb2b7f8747.jpg?v=1775394875",
+        "url": "https://sharedpour.com/products/pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke"
+      },
       "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3": {
         "handle": "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3",
         "title": "Jack Daniel's Single Barrel Barrel Proof Tennessee Whiskey \"T8ke x ENDALZ\" 64.3% #25-25234",
@@ -261,7 +261,7 @@
           "whiskey"
         ],
         "minPrice": 89.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1792a6ca-2f22-c9c9-4540-4f0971aa79d1.jpg?v=1774182274",
         "url": "https://sharedpour.com/products/jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3"
       },
@@ -400,27 +400,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a0899ab2-3bfe-3e3b-a563-71cf4ead8e7d.jpg?v=1778418189",
         "url": "https://sharedpour.com/products/green-river-single-barrel-2026"
       },
-      "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke": {
-        "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke",
-        "title": "El Jolgorio Mezcal Artesanal: Tepeztate Edition 40 T8KE Exclusive Batch",
-        "vendor": "El Jolgorio",
-        "productType": "",
-        "tags": [
-          "100-200",
-          "artesanal",
-          "black-friday-2025",
-          "el-jolgorio",
-          "Mezcal: Joven",
-          "Mezcal: Tepeztate",
-          "over-10",
-          "t8ke",
-          "xmas-2025"
-        ],
-        "minPrice": 139.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_40_T8KE_Selection_Front.jpg?v=1757451767",
-        "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke"
-      },
       "starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof": {
         "handle": "starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof",
         "title": "Starlight Single Barrel Rose Champagne Finished Bourbon T8KE Single Barrel Select #25-8257 116.4 Proof",
@@ -442,6 +421,27 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/eca812b6-76d6-08eb-400b-649659f7be4b.jpg?v=1777207320",
         "url": "https://sharedpour.com/products/starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof"
+      },
+      "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke": {
+        "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke",
+        "title": "El Jolgorio Mezcal Artesanal: Tepeztate Edition 40 T8KE Exclusive Batch",
+        "vendor": "El Jolgorio",
+        "productType": "",
+        "tags": [
+          "100-200",
+          "artesanal",
+          "black-friday-2025",
+          "el-jolgorio",
+          "Mezcal: Joven",
+          "Mezcal: Tepeztate",
+          "over-10",
+          "t8ke",
+          "xmas-2025"
+        ],
+        "minPrice": 139.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_40_T8KE_Selection_Front.jpg?v=1757451767",
+        "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke"
       },
       "penelope-estate-10-year-36-rye-pen25-407-t8ke-x-bourbonfinds-126-7-proof-single-barrel-selection": {
         "handle": "penelope-estate-10-year-36-rye-pen25-407-t8ke-x-bourbonfinds-126-7-proof-single-barrel-selection",
@@ -596,6 +596,28 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/0835fa5f-b427-103a-40af-379fb7716238.jpg?v=1777207285",
         "url": "https://sharedpour.com/products/starlight-single-barrel-px-sherry-finished-rye-t8ke-single-barrel-select-25-8426-114-proof"
       },
+      "bardstown-single-barrel-bourbon-t8ke-2026": {
+        "handle": "bardstown-single-barrel-bourbon-t8ke-2026",
+        "title": "Bardstown Single Barrel Bourbon T8KE II.I 54.1% ABV",
+        "vendor": "Bardstown Bourbon Company",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 89.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
+        "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026"
+      },
       "nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky186": {
         "handle": "nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky186",
         "title": "NULU x T8KE Single Barrel Hazmat Kentucky Bourbon KY186",
@@ -618,28 +640,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/54355f83-7483-3e73-de49-04c3ec0d4424.jpg?v=1764513339",
         "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky186"
-      },
-      "bardstown-single-barrel-bourbon-t8ke-2026": {
-        "handle": "bardstown-single-barrel-bourbon-t8ke-2026",
-        "title": "Bardstown Single Barrel Bourbon T8KE II.I 54.1% ABV",
-        "vendor": "Bardstown Bourbon Company",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 89.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
-        "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026"
       },
       "westland-american-single-malt-cask-3855": {
         "handle": "westland-american-single-malt-cask-3855",
@@ -814,7 +814,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-23T06:43:28.355Z",
+    "lastChecked": "2026-05-23T11:44:22.552Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection": {
