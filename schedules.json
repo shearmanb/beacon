@@ -37,5 +37,13 @@
         "interval": 20
       }
     ]
+  },
+  "weekend_light_20_mins": {
+    "label": "Weekend Light (20 mins)",
+    "rules": [
+      {
+        "defaultInterval": 20
+      }
+    ]
   }
 }
