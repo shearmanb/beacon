@@ -814,7 +814,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-24T00:15:18.281Z",
+    "lastChecked": "2026-05-24T00:45:39.576Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection": {
@@ -830,7 +830,7 @@
           "the-reveries"
         ],
         "minPrice": 84.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CertifiedPimp.png?v=1778249299",
         "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection"
       },
@@ -860,7 +860,7 @@
     }
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-05-24T00:15:23.814Z",
+    "lastChecked": "2026-05-24T00:45:44.944Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-the-fountain-inn": {
