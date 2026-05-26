@@ -1994,5 +1994,33 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CertifiedPimp.png?v=1778249299",
       "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection"
     }
+  },
+  {
+    "timestamp": "2026-05-26T15:49:02.045Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection",
+      "title": "Penelope Special Barrel “Project X” Maple Brulee Single Barrel Barrel Strength T8KE Private Selection",
+      "vendor": "Penelope",
+      "productType": "",
+      "tags": [
+        "50-100",
+        "Barrel Pick",
+        "barrel picks",
+        "Bourbon Whiskey",
+        "limited",
+        "over-10",
+        "penelope",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 79.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/B0000856.jpg?v=1762520718",
+      "url": "https://sharedpour.com/products/penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection"
+    }
   }
 ]
