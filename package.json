@@ -5,7 +5,8 @@
   "type": "module",
   "main": "checker.js",
   "scripts": {
-    "start": "node checker.js",
+    "start": "node worker.js",
+    "worker": "node worker.js",
     "check": "node checker.js"
   },
   "engines": {

@@ -1,4 +1,5 @@
 import { https } from "../lib/fetch.js";
+import { diff } from "../lib/diff.js";
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -105,24 +106,3 @@ function applyFilters(products, filters) {
   });
 }
 
-function diff(previous, current, site) {
-  const alerts = [];
-
-  for (const [handle, product] of Object.entries(current)) {
-    if (!previous[handle]) {
-      if (site.alertOnNewProduct) {
-        alerts.push({ type: "new_product", product });
-      }
-    } else {
-      const prev = previous[handle];
-      if (!prev.available && product.available && site.alertOnRestock) {
-        alerts.push({ type: "restock", product });
-      }
-      if (prev.available && !product.available && site.alertOnSoldOut) {
-        alerts.push({ type: "sold_out", product });
-      }
-    }
-  }
-
-  return alerts;
-}

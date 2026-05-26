@@ -1,5 +1,5 @@
 // ⭐ This is the only file you need to edit day-to-day.
-// Flip `imminent: true` on drop days to enable faster checking (via Render worker).
+// Flip `imminent: true` on drop days to enable faster checking (via Railway worker).
 
 export const sites = [
   {

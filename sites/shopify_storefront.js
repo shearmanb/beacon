@@ -1,4 +1,5 @@
 import { request } from "node:https";
+import { diff } from "../lib/diff.js";
 
 const API_VERSION = "2024-01";
 
@@ -135,16 +136,3 @@ export async function checkSite(site, previousState) {
   };
 }
 
-function diff(previous, current, site) {
-  const alerts = [];
-  for (const [handle, product] of Object.entries(current)) {
-    if (!previous[handle]) {
-      if (site.alertOnNewProduct) alerts.push({ type: "new_product", product });
-    } else if (!previous[handle].available && product.available) {
-      if (site.alertOnRestock) alerts.push({ type: "restock", product });
-    } else if (previous[handle].available && !product.available) {
-      if (site.alertOnSoldOut) alerts.push({ type: "sold_out", product });
-    }
-  }
-  return alerts;
-}
