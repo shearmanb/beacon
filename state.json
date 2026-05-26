@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-26T15:18:48.222Z",
-    "productCount": 37,
+    "lastChecked": "2026-05-26T15:49:02.045Z",
+    "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -443,6 +443,28 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/eca812b6-76d6-08eb-400b-649659f7be4b.jpg?v=1777207320",
         "url": "https://sharedpour.com/products/starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof"
+      },
+      "penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection": {
+        "handle": "penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection",
+        "title": "Penelope Special Barrel “Project X” Maple Brulee Single Barrel Barrel Strength T8KE Private Selection",
+        "vendor": "Penelope",
+        "productType": "",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "Bourbon Whiskey",
+          "limited",
+          "over-10",
+          "penelope",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 79.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/B0000856.jpg?v=1762520718",
+        "url": "https://sharedpour.com/products/penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection"
       },
       "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke": {
         "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke",
