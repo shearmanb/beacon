@@ -685,7 +685,12 @@
       );
       for (const rule of def.rules) {
         if (rule.defaultInterval != null) return rule.defaultInterval;
-        if (rule.fromHour != null && hour >= rule.fromHour && hour < rule.toHour) return rule.interval;
+        if (rule.fromHour != null) {
+          const matches = rule.fromHour <= rule.toHour
+            ? hour >= rule.fromHour && hour < rule.toHour
+            : hour >= rule.fromHour || hour < rule.toHour;
+          if (matches) return rule.interval;
+        }
       }
     }
     return site.intervalMinutes;
@@ -1315,7 +1320,8 @@
       const content = atob(data.content.replace(/\n/g, ''));
 
       const updated = flipEnabled(content, siteId, value);
-      if (updated === content) { alert('Could not find site in config to update.'); return; }
+      if (updated === null) { alert('Could not find site in config to update.'); return; }
+      if (updated === content) { return; }
 
       const putRes = await fetch(`${API_BASE}/contents/config.js`, {
         method: 'PUT',
@@ -1359,7 +1365,8 @@
       const content = atob(data.content.replace(/\n/g, ''));
 
       const updated = flipImminent(content, siteId, value);
-      if (updated === content) { alert('Could not find site in config to update.'); return; }
+      if (updated === null) { alert('Could not find site in config to update.'); return; }
+      if (updated === content) { return; }
 
       const putRes = await fetch(`${API_BASE}/contents/config.js`, {
         method: 'PUT',
@@ -1457,6 +1464,7 @@
     }
   }
 
+  // Returns updated JS string, or null if the site/field was not found.
   function flipEnabled(js, siteId, value) {
     const idPattern = new RegExp(`id:\\s*["']${escapeRegex(siteId)}["']`);
     const lines = js.split('\n');
@@ -1476,7 +1484,7 @@
         return result.join('\n');
       }
     }
-    return js;
+    return null;
   }
 
   // ── Section collapse ─────────────────────────────────────────────────────────
@@ -1641,8 +1649,8 @@
     document.getElementById('sandbox-clear-btn').style.display = 'none';
   }
 
+  // Returns updated JS string, or null if the site/field was not found.
   function flipImminent(js, siteId, value) {
-    // Split on site blocks, find the one with the target id, flip imminent.
     const idPattern = new RegExp(`id:\\s*["']${escapeRegex(siteId)}["']`);
     const lines = js.split('\n');
     let depth = 0;
@@ -1661,7 +1669,7 @@
         return result.join('\n');
       }
     }
-    return js;
+    return null;
   }
 </script>
 </body>

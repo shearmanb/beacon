@@ -6,6 +6,7 @@
 import { sites } from "./config.js";
 import { sendAlert as sendDiscordAlert } from "./notifiers/discord.js";
 import { readFile, writeFile } from "./lib/github.js";
+import { shouldCheck } from "./lib/schedule.js";
 
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
 const LOOP_BASE_MS = 60_000;
@@ -22,71 +23,19 @@ function jitter(baseMs, spreadMs) {
   return Math.max(0, baseMs + (Math.random() * 2 - 1) * spreadMs);
 }
 
-// ── Schedule helpers (mirrors checker.js exactly) ─────────────────────────────
-
-function getEtHour() {
-  return parseInt(
-    new Date().toLocaleString("en-US", {
-      timeZone: "America/New_York",
-      hour: "numeric",
-      hour12: false,
-    }),
-    10
-  );
-}
-
-function resolveNamedSchedule(scheduleName, schedules) {
-  const def = schedules[scheduleName];
-  if (!def?.rules) return null;
-  const hour = getEtHour();
-  for (const rule of def.rules) {
-    if (rule.defaultInterval != null) return rule.defaultInterval;
-    if (rule.fromHour != null && hour >= rule.fromHour && hour < rule.toHour) return rule.interval;
-  }
-  return null;
-}
-
-function getEffectiveInterval(site, schedules) {
-  const { schedule } = site;
-  if (!schedule) return site.intervalMinutes;
-  const fixed = parseInt(schedule, 10);
-  if (!isNaN(fixed)) return fixed;
-  const resolved = resolveNamedSchedule(schedule, schedules);
-  if (resolved != null) return resolved;
-  if (schedule === "working_hours_heavy") {
-    const hour = getEtHour();
-    if (hour >= 9 && hour < 18) return 5;
-    if (hour >= 18 && hour < 22) return 20;
-    return 300;
-  }
-  return site.intervalMinutes;
-}
-
-function shouldCheck(site, siteState, schedules) {
-  if (!siteState?.lastChecked) return true;
-  const elapsed = (Date.now() - new Date(siteState.lastChecked).getTime()) / 1000 / 60;
-  const interval = site.imminent
-    ? site.imminentIntervalMinutes
-    : getEffectiveInterval(site, schedules);
-  return elapsed >= interval;
-}
-
 // ── Strategy loader ───────────────────────────────────────────────────────────
 
-const strategyCache = {};
-
 async function loadStrategy(name) {
-  if (strategyCache[name]) return strategyCache[name];
   const loaders = {
     shopify_collection: () => import("./sites/shopify_collection.js"),
     shopify_storefront: () => import("./sites/shopify_storefront.js"),
     reveries_squarespace: () => import("./sites/reveries_squarespace.js"),
+    squarespace_json_monitor: () => import("./sites/squarespace_json_monitor.js"),
+    html_text_monitor: () => import("./sites/html_text_monitor.js"),
   };
   const loader = loaders[name];
   if (!loader) throw new Error(`Unknown strategy: ${name}`);
-  const mod = await loader();
-  strategyCache[name] = mod;
-  return mod;
+  return loader();
 }
 
 // ── In-memory state ───────────────────────────────────────────────────────────
