@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-26T16:19:56.249Z",
-    "productCount": 43,
+    "lastChecked": "2026-05-26T16:50:20.916Z",
+    "productCount": 44,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -68,6 +68,27 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-16at07.12.45.png?v=1760613170",
         "url": "https://sharedpour.com/products/bardstown-bourbon-co-single-barrel-t8ke"
+      },
+      "george-dickel-single-barrel-15yr-bourbon": {
+        "handle": "george-dickel-single-barrel-15yr-bourbon",
+        "title": "George Dickel Single Barrel 15 Year T8KE for r/Bourbon Single Barrels",
+        "vendor": "George Dickel",
+        "productType": "American Whiskey",
+        "tags": [
+          "50-100",
+          "american-whiskey",
+          "Barrel Pick",
+          "barrel picks",
+          "george-dickel",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 89.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6d895bc4-bd75-fad6-ec34-33e9f01c7f8f.png?v=1763298402",
+        "url": "https://sharedpour.com/products/george-dickel-single-barrel-15yr-bourbon"
       },
       "barrell-craft-spirits-x-t8ke-synthesis-i": {
         "handle": "barrell-craft-spirits-x-t8ke-synthesis-i",
@@ -726,7 +747,7 @@
           "t8ke"
         ],
         "minPrice": 149.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/69ef617f-07f4-06f0-ac4b-c0bec34140fd.jpg?v=1768741942",
         "url": "https://sharedpour.com/products/rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection"
       },
