@@ -2160,5 +2160,147 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/caaee377-89bb-a349-d872-6a944acfa2da.jpg?v=1769429268",
       "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-straight-bourbon-legion-t8ke-reserve-cask"
     }
+  },
+  {
+    "timestamp": "2026-05-26T16:19:56.249Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "traverse-city-whiskey-company-x-t8ke-barrel-proof-cherry-single-barrel-bourbon-18-1854",
+      "title": "Traverse City Whiskey Company x T8KE Barrel Proof Cherry Single Barrel Bourbon #18-1854",
+      "vendor": "Traverse City Whiskey Co.",
+      "productType": "Bourbon",
+      "tags": [
+        "50-100",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke",
+        "traverse-city-whiskey-co"
+      ],
+      "minPrice": 89.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00579.jpg?v=1772282441",
+      "url": "https://sharedpour.com/products/traverse-city-whiskey-company-x-t8ke-barrel-proof-cherry-single-barrel-bourbon-18-1854"
+    }
+  },
+  {
+    "timestamp": "2026-05-26T16:19:56.450Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "penelope-estate-10-year-21-rye-pen24-133-t8ke-102-4-proof-single-barrel-selection",
+      "title": "Penelope Estate 10 Year 21% Rye PEN24-133 T8KE 102.2 Proof Single Barrel Selection",
+      "vendor": "Penelope",
+      "productType": "Bourbon",
+      "tags": [
+        "100-200",
+        "American-Bourbon",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "Bourbon Whiskey",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 149.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6ee3678b-8ecb-0e4b-5fa6-84e0a5223e49.jpg?v=1759677013",
+      "url": "https://sharedpour.com/products/penelope-estate-10-year-21-rye-pen24-133-t8ke-102-4-proof-single-barrel-selection"
+    }
+  },
+  {
+    "timestamp": "2026-05-26T16:19:56.610Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "el-jolgorio-mezcal-artesanal-tobala-edition-36",
+      "title": "El Jolgorio Mezcal Artesanal: Tobala Edition 36 T8KE Exclusive Batch Selection",
+      "vendor": "El Jolgorio",
+      "productType": "",
+      "tags": [
+        "100-200",
+        "artesanal",
+        "Barrel Pick",
+        "barrel picks",
+        "black-friday-2025",
+        "el-jolgorio",
+        "Mezcal: Joven",
+        "Mezcal: Tobala",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 139.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tobala_Edition_36_T8KE_Selection_Front.jpg?v=1757451768",
+      "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tobala-edition-36"
+    }
+  },
+  {
+    "timestamp": "2026-05-26T16:19:56.793Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "nulu-x-t8ke-single-barrel-double-oaked-bourbon-ky32",
+      "title": "NULU x T8KE Single Barrel Double Oaked Bourbon KY32",
+      "vendor": "Nulu",
+      "productType": "",
+      "tags": [
+        "50-100",
+        "American-Bourbon",
+        "Barrel Pick",
+        "barrel picks",
+        "Bourbon Whiskey",
+        "nulu",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke",
+        "xmas-2025"
+      ],
+      "minPrice": 89.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/03ce9659-bd5b-5778-5767-808e3427954d.jpg?v=1765038363",
+      "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-double-oaked-bourbon-ky32"
+    }
+  },
+  {
+    "timestamp": "2026-05-26T16:19:57.084Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection",
+      "title": "Rare Character x T8ke Single Barrel Bourbon Whiskey PLT-025 66.08% ABV Selection",
+      "vendor": "Rare Character",
+      "productType": "",
+      "tags": [
+        "100-200",
+        "American-Bourbon",
+        "Barrel Pick",
+        "barrel picks",
+        "Bourbon Whiskey",
+        "over-10",
+        "rare-character",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 149.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/69ef617f-07f4-06f0-ac4b-c0bec34140fd.jpg?v=1768741942",
+      "url": "https://sharedpour.com/products/rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection"
+    }
   }
 ]
