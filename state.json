@@ -836,9 +836,117 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-26T15:30:22.654Z",
-    "productCount": 2,
+    "lastChecked": "2026-05-26T16:01:21.556Z",
+    "productCount": 7,
     "products": {
+      "the-reveries-8-year-single-barrel-straight-bourbon-bonsai-t8ke-reserve-cask": {
+        "handle": "the-reveries-8-year-single-barrel-straight-bourbon-bonsai-t8ke-reserve-cask",
+        "title": "THE REVERIES 8 Year Single Barrel Straight Bourbon \"BONSAI\" T8KE Reserve Cask",
+        "vendor": "The Reveries",
+        "productType": "",
+        "tags": [
+          "50-100",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "Bourbon Whiskey",
+          "over-10",
+          "SEARCHANISE_IGNORE",
+          "Single Barrel",
+          "single barrel selections",
+          "the-reveries"
+        ],
+        "minPrice": 84.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f9cd7e16-5116-a7ed-6033-f9974205691e_69082b15-ec58-4ba0-9286-2a0a2e927acc.jpg?v=1771159707",
+        "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-straight-bourbon-bonsai-t8ke-reserve-cask"
+      },
+      "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
+        "handle": "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon",
+        "title": "THE REVERIES \"007\" 7 Year Single Barrel Barrel Strength Bourbon",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke",
+          "the-reveries"
+        ],
+        "minPrice": 79.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-12-26at07.48.49.png?v=1766753338",
+        "url": "https://sharedpour.com/products/the-reveries-007-7-year-single-barrel-barrel-strength-bourbon"
+      },
+      "the-reveries-8-year-single-barrel-straight-bourbon-cask-in-point-evi-dense-exclusive-selection": {
+        "handle": "the-reveries-8-year-single-barrel-straight-bourbon-cask-in-point-evi-dense-exclusive-selection",
+        "title": "THE REVERIES 8 Year Single Barrel Straight Bourbon \"Cask In Point: Evi-dense\" Exclusive Selection",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "the-reveries"
+        ],
+        "minPrice": 79.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Evidense.png?v=1769262181",
+        "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-straight-bourbon-cask-in-point-evi-dense-exclusive-selection"
+      },
+      "the-reveries-9-year-single-barrel-2ten90-single-barrel-selection": {
+        "handle": "the-reveries-9-year-single-barrel-2ten90-single-barrel-selection",
+        "title": "THE REVERIES 9 Year Single Barrel 2TEN90 Single Barrel Selection",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "100-200",
+          "2ten90",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "the-reveries"
+        ],
+        "minPrice": 109.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-07-20at16.14.23.png?v=1753042473",
+        "url": "https://sharedpour.com/products/the-reveries-9-year-single-barrel-2ten90-single-barrel-selection"
+      },
+      "the-reveries-8-year-single-barrel-straight-bourbon-legion-t8ke-reserve-cask": {
+        "handle": "the-reveries-8-year-single-barrel-straight-bourbon-legion-t8ke-reserve-cask",
+        "title": "THE REVERIES 8 Year Single Barrel Straight Bourbon \"LEGION\" T8KE Reserve Cask",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "the-reveries"
+        ],
+        "minPrice": 84.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/caaee377-89bb-a349-d872-6a944acfa2da.jpg?v=1769429268",
+        "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-straight-bourbon-legion-t8ke-reserve-cask"
+      },
       "the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection": {
         "handle": "the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection",
         "title": "THE REVERIES 8 Year Single Barrel #27394 \"Certified Pimp\" Liberty Barrel Club Private Barrel Selection",
@@ -882,7 +990,7 @@
     }
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-05-26T15:30:27.353Z",
+    "lastChecked": "2026-05-26T16:01:27.299Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-the-fountain-inn": {
