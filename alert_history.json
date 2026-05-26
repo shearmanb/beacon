@@ -2357,5 +2357,33 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/69ef617f-07f4-06f0-ac4b-c0bec34140fd.jpg?v=1768741942",
       "url": "https://sharedpour.com/products/rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection"
     }
+  },
+  {
+    "timestamp": "2026-05-26T17:51:27.020Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "sold_out",
+    "product": {
+      "handle": "penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection",
+      "title": "Penelope Special Barrel “Project X” Maple Brulee Single Barrel Barrel Strength T8KE Private Selection",
+      "vendor": "Penelope",
+      "productType": "",
+      "tags": [
+        "50-100",
+        "Barrel Pick",
+        "barrel picks",
+        "Bourbon Whiskey",
+        "limited",
+        "over-10",
+        "penelope",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 79.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/B0000856.jpg?v=1762520718",
+      "url": "https://sharedpour.com/products/penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection"
+    }
   }
 ]
