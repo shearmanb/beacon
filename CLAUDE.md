@@ -24,27 +24,31 @@ Requires `DISCORD_WEBHOOK_URL` env var to send alerts. Run without it to check s
 
 **The only file edited day-to-day**: `config.js` — add/remove sites, change schedule, flip `imminent: true` on drop days, adjust filters.
 
-**Strategy pattern**: Each site declares a `strategy` field. `checker.js` dynamically imports `sites/<strategy>.js` and calls `checkSite(site, previousState)`. Both strategies return `{ state, alerts }` where `state` replaces the previous entry in `state.json`.
+**Strategy pattern**: Each site declares a `strategy` field. `checker.js` and `worker.js` dynamically import `sites/<strategy>.js` and call `checkSite(site, previousState)`. All strategies return `{ state, alerts }` where `state` replaces the previous entry in `state.json`. Shared logic lives in `lib/schedule.js` (interval resolution, `shouldCheck`) and `lib/diff.js` (new/restock/sold-out diff).
 
-**Two strategies today**:
+**Five strategies**:
 - `shopify_collection` — hits `[url]/products.json?limit=250&page=N`, paginates until a short page. Filters are applied in code after fetch (not as URL params — Shopify ignores client-side filter params like `rb_vendor` on the JSON API). The `sharedpour_reveries` site uses `url: "https://sharedpour.com"` (store root) with `titleContains: ["Reveries"]` filter because there is no dedicated collection.
-- `reveries_squarespace` — primary: fetches `[url]?format=json` (Squarespace JSON API) for clean product data with real stock status. Fallback: parses `<h4>` tags from HTML with `SKIP_STRINGS` filtering. Also detects page resets (Coming Soon / password wall) via HTTP errors, HTML signals (`sqs-pw-form`, "coming soon", etc.), or zero products when state had products — fires a one-time `site_reset` Discord alert and preserves previous state. Does NOT fire the reset alert again on subsequent checks while still in reset state.
+- `shopify_storefront` — queries the Shopify Storefront GraphQL API using a public access token and collection GID. Used for `reveries_official` because the Reveries shop embed on thereveries.co uses a Shopify Buy Button backed by a collection that is only published to the Buy Button channel (not Online Store), making the REST `/products.json` API return empty.
+- `reveries_squarespace` — registered but no currently active site uses it. Primary: fetches `[url]?format=json` (Squarespace JSON API). Fallback: parses `<h4>` tags from HTML. Also detects page resets via HTTP errors, HTML signals (`sqs-pw-form`, "coming soon"), or zero products when state had products.
+- `html_text_monitor` — generic SSR page monitor. Searches for `watchTexts` near an optional `anchorText` and alerts when the matched value changes. Only works on server-rendered pages.
+- `squarespace_json_monitor` — fingerprints Squarespace `?format=json` product data (SHA-256 of titles + variant fields) and fires a `site_changed` alert on any change.
 
-**State persistence**: `state.json` is committed back to the repo after every run by `beacon-bot` in the GitHub Actions workflow (`[skip ci]` prevents loops). The push step does `git push || (git pull --rebase && git push)` to handle race conditions between concurrent runs.
+**State persistence**: `worker.js` (Railway) pushes `state.json` to GitHub via the Contents API (`lib/github.js`) after each changed run. Uses the file's SHA for optimistic concurrency; retries once on 409 conflict. `checker.js` (GitHub Actions one-shot) writes `state.json` locally; the workflow commits and pushes it with `[skip ci]` to prevent loops.
 
 **Ignored products**: `ignored_products.json` — a flat object keyed by product handle (`{ "some-handle": true }`). `checker.js` loads this and filters matching products from alerts before Discord/history. Ignored products still exist in `state.json` so unignoring never triggers a false "new product" alert. The dashboard writes this file via the GitHub API.
 
-**Scheduling**: One GitHub Actions cron at `*/5 * * * *` (platform minimum). Each site has a `schedule` field — `checker.js` calls `getEffectiveInterval(site, schedules)` to determine whether enough time has elapsed. Fixed schedules (`"5"`, `"15"`, `"20"`, `"30"`, `"60"`) parse directly to minutes. Named schedules (e.g. `"working_hours_heavy"`) are resolved by looking up the key in `schedules.json` and evaluating the `rules` array in order (time windows checked against ET hour, last rule wins as default). Falls back to `intervalMinutes` if `schedule` is absent or unresolvable. `imminentIntervalMinutes` overrides everything when `imminent: true`.
+**Scheduling**: `worker.js` loops every ~60 s on Railway; `shouldCheck()` in `lib/schedule.js` gates whether a site is actually fetched. Fixed schedules (`"5"`, `"15"`, `"20"`, `"30"`, `"60"`) parse directly to minutes. Named schedules (e.g. `"working_hours_heavy"`) are resolved by looking up the key in `schedules.json` and evaluating the `rules` array in order (time windows checked against ET hour, first match wins, `defaultInterval` catches everything else). Time windows support midnight-crossing ranges — `{ fromHour: 22, toHour: 9 }` correctly matches 10 pm–9 am. Falls back to `intervalMinutes` if `schedule` is absent or unresolvable. `imminentIntervalMinutes` overrides everything when `imminent: true`.
 
-**Named schedule definitions** (`schedules.json`): A repo-level JSON file mapping schedule IDs to definitions. Each definition has a `label`, optional `builtin: true`, and a `rules` array. Rules are evaluated top-to-bottom; a rule is either a time window `{ fromHour, toHour, interval }` (ET, 24h) or a default `{ defaultInterval }`. The file is written by the dashboard via GitHub API and read by `checker.js` at startup. If absent, `checker.js` falls back to hardcoded logic for `working_hours_heavy`. Example:
+**Named schedule definitions** (`schedules.json`): A repo-level JSON file mapping schedule IDs to definitions. Each definition has a `label`, optional `builtin: true`, and a `rules` array. Rules are evaluated top-to-bottom; a rule is either a time window `{ fromHour, toHour, interval }` (ET, 24h, supports midnight-crossing) or a default `{ defaultInterval }`. Written by the dashboard via GitHub API; read fresh on every worker loop so schedule changes take effect within ~60 s without a redeploy. Example:
 ```json
 {
   "working_hours_heavy": {
     "label": "⏰ Working Hours Heavy",
     "builtin": true,
     "rules": [
-      { "fromHour": 9, "toHour": 18, "interval": 5 },
-      { "fromHour": 18, "toHour": 22, "interval": 20 },
+      { "fromHour": 9,  "toHour": 18, "interval": 5   },
+      { "fromHour": 18, "toHour": 22, "interval": 20  },
+      { "fromHour": 22, "toHour": 9,  "interval": 120 },
       { "defaultInterval": 300 }
     ]
   }
@@ -57,18 +61,23 @@ Requires `DISCORD_WEBHOOK_URL` env var to send alerts. Run without it to check s
 
 | ID | URL | Strategy | Schedule | Notes |
 |----|-----|----------|----------|-------|
-| `sharedpour_t8ke` | sharedpour.com/collections/t8ke | shopify_collection | 20 min | 37 products baselined |
-| `sharedpour_reveries` | sharedpour.com (filtered by title) | shopify_collection | 20 min | 1 product: THE DEEP (sold out) |
-| `fountain_inn_dc` | shop.fountaininndc.com (filtered by title) | shopify_collection | 30 min | titleContains: ["Reveries"]; The Deep + 8yr expected |
-| `bourbon_concierge` | thebourbonconcierge.com (filtered by title) | shopify_collection | 30 min | titleContains: ["Reveries"]; large catalog, Reveries only |
-| `reveries_official` | thereveries.co/shop | reveries_squarespace | 30 min | 3 real releases, all sold out |
+| `sharedpour_t8ke` | sharedpour.com/collections/t8ke | shopify_collection | 30 min | T8KE collection |
+| `sharedpour_reveries` | sharedpour.com (filtered by title) | shopify_collection | 30 min | titleContains: ["Reveries"] |
+| `fountain_inn_dc` | shop.fountaininndc.com (filtered by title) | shopify_collection | 30 min | titleContains: ["Reveries"] |
+| `bourbon_concierge` | thebourbonconcierge.com (filtered by title) | shopify_collection | 30 min | titleContains: ["Reveries"] |
+| `reveries_official` | thereveries.co/shop | shopify_storefront | 30 min | Storefront API via shared-pour.myshopify.com collection 367215214747 |
+
+Disabled (not running):
+| `wild_turkey_gold_foil` | wildturkeybourbon.com | html_text_monitor | 30 min | Awaiting SSR confirmation before enabling |
+| `reveries_official_monitor` | thereveries.co/shop | squarespace_json_monitor | — | Superseded by shopify_storefront; all alerts off |
 
 ## Infrastructure
 
-- **GitHub Actions**: `.github/workflows/check.yml` — cron + `workflow_dispatch`. Needs `permissions: contents: write` to commit state back. Commits `state.json`, `alert_history.json`, and `ignored_products.json`. (`schedules.json` is committed by the dashboard via GitHub API, not by the workflow.)
+- **Railway** (`worker.js`): primary runner. Loops every ~60 s, pushes state/history to GitHub via Contents API. Env vars: `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, `GH_REPO` (`shearmanb/beacon`). Configured via `railway.json` (`startCommand: node worker.js`). **Note**: `sites` is imported once at startup — changes to `config.js` (enabled/imminent/schedule fields) only take effect after Railway redeploys. `schedules.json` and `ignored_products.json` are fetched fresh each loop and pick up dashboard changes within ~60 s.
+- **GitHub Actions** (`.github/workflows/check.yml`): `workflow_dispatch` only — emergency backup. Use the ▶ Run Now button in the dashboard or trigger manually from the Actions tab. Commits `state.json`, `alert_history.json`, `ignored_products.json` back to `main` via git.
 - **GitHub Secret**: `DISCORD_WEBHOOK_URL` — the Discord channel webhook. Never put this in code.
 - **GitHub Pages**: served from `/docs`, password is `beam` (client-side gate, hardcoded in `docs/index.html`). Dashboard auto-refreshes every 2 min by fetching raw files from GitHub. `REPO_OWNER` and `REPO_NAME` constants are set at the top of `docs/index.html`.
-- **Default branch**: `main`. The cron fires on the default branch — if it ever runs on the wrong branch again, check repo Settings → Default branch.
+- **Default branch**: `main`.
 - **GitHub token**: A fine-grained PAT stored in browser localStorage (`beacon_gh_token`). Needs Contents + Actions read/write on the `beacon` repo. Required for dashboard write actions: Monitoring toggle, Imminent mode toggle, Schedule dropdown, Ignore/Unignore products, Schedule manager saves. Also used to authenticate the version-date fetch (avoids 60 req/hr unauthenticated rate limit). Tokens can be created at github.com → Settings → Developer settings → Fine-grained tokens. The dashboard warns if a saved value doesn't start with `ghp_` or `github_pat_`.
 
 ## Dashboard features (`docs/index.html`) — v0.4
