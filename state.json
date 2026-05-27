@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-27T09:40:51.140Z",
+    "lastChecked": "2026-05-27T11:41:53.100Z",
     "productCount": 44,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -307,27 +307,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1792a6ca-2f22-c9c9-4540-4f0971aa79d1.jpg?v=1774182274",
         "url": "https://sharedpour.com/products/jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3"
       },
-      "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-65-6": {
-        "handle": "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-65-6",
-        "title": "Jack Daniel's Single Barrel Barrel Proof Tennessee Whiskey \"T8ke x ENDALZ\" 65.6% #25-25235",
-        "vendor": "Jack Daniel's",
-        "productType": "Whiskey",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "jack-daniels",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke",
-          "whiskey"
-        ],
-        "minPrice": 89.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d552a818-8e9a-46b5-5ea5-aa0a8fe452d3.jpg?v=1774182164",
-        "url": "https://sharedpour.com/products/jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-65-6"
-      },
       "penelope-estate-10-year-21-rye-pen24-133-t8ke-102-4-proof-single-barrel-selection": {
         "handle": "penelope-estate-10-year-21-rye-pen24-133-t8ke-102-4-proof-single-barrel-selection",
         "title": "Penelope Estate 10 Year 21% Rye PEN24-133 T8KE 102.2 Proof Single Barrel Selection",
@@ -349,6 +328,27 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6ee3678b-8ecb-0e4b-5fa6-84e0a5223e49.jpg?v=1759677013",
         "url": "https://sharedpour.com/products/penelope-estate-10-year-21-rye-pen24-133-t8ke-102-4-proof-single-barrel-selection"
+      },
+      "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-65-6": {
+        "handle": "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-65-6",
+        "title": "Jack Daniel's Single Barrel Barrel Proof Tennessee Whiskey \"T8ke x ENDALZ\" 65.6% #25-25235",
+        "vendor": "Jack Daniel's",
+        "productType": "Whiskey",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "jack-daniels",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke",
+          "whiskey"
+        ],
+        "minPrice": 89.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d552a818-8e9a-46b5-5ea5-aa0a8fe452d3.jpg?v=1774182164",
+        "url": "https://sharedpour.com/products/jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-65-6"
       },
       "heaven-hill-bottled-in-bond-single-barrel": {
         "handle": "heaven-hill-bottled-in-bond-single-barrel",
@@ -417,6 +417,28 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
         "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-171214110"
       },
+      "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof": {
+        "handle": "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof",
+        "title": "Starlight Single Barrel Honey Cask Finished Rye T8KE Single Barrel Select #25-8344 112 Proof",
+        "vendor": "Starlight Distillery",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "starlight-distillery",
+          "t8ke"
+        ],
+        "minPrice": 79.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f3e23a9d-5762-1462-95c4-4ba4de8dc8c9.jpg?v=1777207304",
+        "url": "https://sharedpour.com/products/starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof"
+      },
       "el-jolgorio-mezcal-artesanal-tobala-edition-36": {
         "handle": "el-jolgorio-mezcal-artesanal-tobala-edition-36",
         "title": "El Jolgorio Mezcal Artesanal: Tobala Edition 36 T8KE Exclusive Batch Selection",
@@ -441,27 +463,28 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tobala_Edition_36_T8KE_Selection_Front.jpg?v=1757451768",
         "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tobala-edition-36"
       },
-      "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof": {
-        "handle": "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof",
-        "title": "Starlight Single Barrel Honey Cask Finished Rye T8KE Single Barrel Select #25-8344 112 Proof",
-        "vendor": "Starlight Distillery",
+      "green-river-single-barrel-2026": {
+        "handle": "green-river-single-barrel-2026",
+        "title": "Green River Single Barrel T8KE II.II Private Barrel Selection",
+        "vendor": "Green River",
         "productType": "Bourbon",
         "tags": [
           "50-100",
+          "American-Bourbon",
           "Barrel Pick",
           "barrel picks",
           "bourbon",
           "Bourbon Whiskey",
+          "green-river",
           "over-10",
           "Single Barrel",
           "single barrel selections",
-          "starlight-distillery",
           "t8ke"
         ],
-        "minPrice": 79.99,
+        "minPrice": 69.99,
         "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f3e23a9d-5762-1462-95c4-4ba4de8dc8c9.jpg?v=1777207304",
-        "url": "https://sharedpour.com/products/starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof"
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a0899ab2-3bfe-3e3b-a563-71cf4ead8e7d.jpg?v=1778418189",
+        "url": "https://sharedpour.com/products/green-river-single-barrel-2026"
       },
       "el-jolgorio-mezcal-artesanal-tepeztate-edition-39": {
         "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-39",
@@ -487,28 +510,27 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_39_T8KE_Selection_Front.jpg?v=1757451767",
         "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-39"
       },
-      "green-river-single-barrel-2026": {
-        "handle": "green-river-single-barrel-2026",
-        "title": "Green River Single Barrel T8KE II.II Private Barrel Selection",
-        "vendor": "Green River",
-        "productType": "Bourbon",
+      "penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection": {
+        "handle": "penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection",
+        "title": "Penelope Special Barrel “Project X” Maple Brulee Single Barrel Barrel Strength T8KE Private Selection",
+        "vendor": "Penelope",
+        "productType": "",
         "tags": [
           "50-100",
-          "American-Bourbon",
           "Barrel Pick",
           "barrel picks",
-          "bourbon",
           "Bourbon Whiskey",
-          "green-river",
+          "limited",
           "over-10",
+          "penelope",
           "Single Barrel",
           "single barrel selections",
           "t8ke"
         ],
-        "minPrice": 69.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a0899ab2-3bfe-3e3b-a563-71cf4ead8e7d.jpg?v=1778418189",
-        "url": "https://sharedpour.com/products/green-river-single-barrel-2026"
+        "minPrice": 79.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/B0000856.jpg?v=1762520718",
+        "url": "https://sharedpour.com/products/penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection"
       },
       "starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof": {
         "handle": "starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof",
@@ -531,28 +553,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/eca812b6-76d6-08eb-400b-649659f7be4b.jpg?v=1777207320",
         "url": "https://sharedpour.com/products/starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof"
-      },
-      "penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection": {
-        "handle": "penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection",
-        "title": "Penelope Special Barrel “Project X” Maple Brulee Single Barrel Barrel Strength T8KE Private Selection",
-        "vendor": "Penelope",
-        "productType": "",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "Bourbon Whiskey",
-          "limited",
-          "over-10",
-          "penelope",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 79.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/B0000856.jpg?v=1762520718",
-        "url": "https://sharedpour.com/products/penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection"
       },
       "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke": {
         "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke",
@@ -618,6 +618,28 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/03ce9659-bd5b-5778-5767-808e3427954d.jpg?v=1765038363",
         "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-double-oaked-bourbon-ky32"
       },
+      "peerless-single-barrel-rye-t8ke-2026": {
+        "handle": "peerless-single-barrel-rye-t8ke-2026",
+        "title": "Peerless Distilling Single Barrel Barrel Strength Rye T8KE r/Bourbon Private Select (2026)",
+        "vendor": "Kentucky Peerless",
+        "productType": "Rye Whiskey",
+        "tags": [
+          "100-200",
+          "Barrel Pick",
+          "barrel picks",
+          "Bourbon Whiskey",
+          "kentucky-peerless",
+          "over-10",
+          "rye-whiskey",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 119.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f6e1b297-b0dd-184a-39cc-a63f5c2b2ac0.jpg?v=1778418010",
+        "url": "https://sharedpour.com/products/peerless-single-barrel-rye-t8ke-2026"
+      },
       "starlight-single-barrel-px-sherry-finished-rye-t8ke-single-barrel-select-25-8426-114-proof": {
         "handle": "starlight-single-barrel-px-sherry-finished-rye-t8ke-single-barrel-select-25-8426-114-proof",
         "title": "Starlight Single Barrel PX Sherry Finished Rye T8KE Single Barrel Select #25-8426 114 Proof",
@@ -663,27 +685,49 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ea0cec6-1621-ee9c-d16f-368a769082f8.jpg?v=1764513403",
         "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45"
       },
-      "peerless-single-barrel-rye-t8ke-2026": {
-        "handle": "peerless-single-barrel-rye-t8ke-2026",
-        "title": "Peerless Distilling Single Barrel Barrel Strength Rye T8KE r/Bourbon Private Select (2026)",
-        "vendor": "Kentucky Peerless",
-        "productType": "Rye Whiskey",
+      "rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection": {
+        "handle": "rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection",
+        "title": "Rare Character x T8ke Single Barrel Bourbon Whiskey PLT-025 66.08% ABV Selection",
+        "vendor": "Rare Character",
+        "productType": "",
         "tags": [
           "100-200",
+          "American-Bourbon",
           "Barrel Pick",
           "barrel picks",
           "Bourbon Whiskey",
-          "kentucky-peerless",
           "over-10",
-          "rye-whiskey",
+          "rare-character",
           "Single Barrel",
           "single barrel selections",
           "t8ke"
         ],
-        "minPrice": 119.99,
+        "minPrice": 149.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/69ef617f-07f4-06f0-ac4b-c0bec34140fd.jpg?v=1768741942",
+        "url": "https://sharedpour.com/products/rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection"
+      },
+      "bardstown-single-barrel-bourbon-t8ke-2026": {
+        "handle": "bardstown-single-barrel-bourbon-t8ke-2026",
+        "title": "Bardstown Single Barrel Bourbon T8KE II.I 54.1% ABV",
+        "vendor": "Bardstown Bourbon Company",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 89.99,
         "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f6e1b297-b0dd-184a-39cc-a63f5c2b2ac0.jpg?v=1778418010",
-        "url": "https://sharedpour.com/products/peerless-single-barrel-rye-t8ke-2026"
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
+        "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026"
       },
       "agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez": {
         "handle": "agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez",
@@ -728,50 +772,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ebc5bcd8-007d-fa5f-a778-7281ac7bee6f.jpg?v=1775394802",
         "url": "https://sharedpour.com/products/pinhook-vertical-series-10yr-rye-whiskey-single-barrel-selected-by-t8ke"
-      },
-      "rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection": {
-        "handle": "rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection",
-        "title": "Rare Character x T8ke Single Barrel Bourbon Whiskey PLT-025 66.08% ABV Selection",
-        "vendor": "Rare Character",
-        "productType": "",
-        "tags": [
-          "100-200",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "Bourbon Whiskey",
-          "over-10",
-          "rare-character",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 149.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/69ef617f-07f4-06f0-ac4b-c0bec34140fd.jpg?v=1768741942",
-        "url": "https://sharedpour.com/products/rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection"
-      },
-      "bardstown-single-barrel-bourbon-t8ke-2026": {
-        "handle": "bardstown-single-barrel-bourbon-t8ke-2026",
-        "title": "Bardstown Single Barrel Bourbon T8KE II.I 54.1% ABV",
-        "vendor": "Bardstown Bourbon Company",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 89.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
-        "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026"
       },
       "nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky186": {
         "handle": "nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky186",
@@ -857,29 +857,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e8d4cd80-4ab8-077f-345b-74dd98f1f862.jpg?v=1773577422",
         "url": "https://sharedpour.com/products/westland-american-single-malt-cask-1757"
       },
-      "augusta-old-route-8-t8ke-single-barrel-select-24-6013-9-year-straight-bourbon": {
-        "handle": "augusta-old-route-8-t8ke-single-barrel-select-24-6013-9-year-straight-bourbon",
-        "title": "Augusta Old Route 8 T8KE Single Barrel Select #24-6013 9 Year Straight Bourbon",
-        "vendor": "Augusta Distillery",
-        "productType": "Bourbon",
-        "tags": [
-          "100-200",
-          "American-Bourbon",
-          "augusta-distillery",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 114.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/5c5f1df9-d04f-e799-2d2f-adbe2e1c1a25.jpg?v=1775395581",
-        "url": "https://sharedpour.com/products/augusta-old-route-8-t8ke-single-barrel-select-24-6013-9-year-straight-bourbon"
-      },
       "peerless-single-barrel-bourbon-t8ke-2026": {
         "handle": "peerless-single-barrel-bourbon-t8ke-2026",
         "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #190809107",
@@ -902,6 +879,29 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
         "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-2026"
+      },
+      "augusta-old-route-8-t8ke-single-barrel-select-24-6013-9-year-straight-bourbon": {
+        "handle": "augusta-old-route-8-t8ke-single-barrel-select-24-6013-9-year-straight-bourbon",
+        "title": "Augusta Old Route 8 T8KE Single Barrel Select #24-6013 9 Year Straight Bourbon",
+        "vendor": "Augusta Distillery",
+        "productType": "Bourbon",
+        "tags": [
+          "100-200",
+          "American-Bourbon",
+          "augusta-distillery",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 114.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/5c5f1df9-d04f-e799-2d2f-adbe2e1c1a25.jpg?v=1775395581",
+        "url": "https://sharedpour.com/products/augusta-old-route-8-t8ke-single-barrel-select-24-6013-9-year-straight-bourbon"
       },
       "aged-ore-4-bottle-caddy-t8ke-limited-release-branded-edition-v-2": {
         "handle": "aged-ore-4-bottle-caddy-t8ke-limited-release-branded-edition-v-2",
@@ -1162,7 +1162,7 @@
     }
   },
   "reveries_official": {
-    "lastChecked": "2026-05-27T11:20:03.805Z",
+    "lastChecked": "2026-05-27T11:50:53.705Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-only-all-the-time-barrel-strength-bourbon-t8ke-reserve-cask": {
