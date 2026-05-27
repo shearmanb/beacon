@@ -2440,5 +2440,32 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6ee3678b-8ecb-0e4b-5fa6-84e0a5223e49.jpg?v=1759677013",
       "url": "https://sharedpour.com/products/penelope-estate-10-year-21-rye-pen24-133-t8ke-102-4-proof-single-barrel-selection"
     }
+  },
+  {
+    "timestamp": "2026-05-27T19:04:24.340Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "sold_out",
+    "product": {
+      "handle": "george-dickel-single-barrel-15yr-bourbon",
+      "title": "George Dickel Single Barrel 15 Year T8KE for r/Bourbon Single Barrels",
+      "vendor": "George Dickel",
+      "productType": "American Whiskey",
+      "tags": [
+        "50-100",
+        "american-whiskey",
+        "Barrel Pick",
+        "barrel picks",
+        "george-dickel",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 89.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6d895bc4-bd75-fad6-ec34-33e9f01c7f8f.png?v=1763298402",
+      "url": "https://sharedpour.com/products/george-dickel-single-barrel-15yr-bourbon"
+    }
   }
 ]
