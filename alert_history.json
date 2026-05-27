@@ -2385,5 +2385,32 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/B0000856.jpg?v=1762520718",
       "url": "https://sharedpour.com/products/penelope-special-barrel-project-x-maple-brulee-single-barrel-barrel-strength-r-bourbon-private-selection"
     }
+  },
+  {
+    "timestamp": "2026-05-27T15:48:44.328Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "restock",
+    "product": {
+      "handle": "peerless-single-barrel-bourbon-t8ke-171214110",
+      "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #171214110",
+      "vendor": "Kentucky Peerless",
+      "productType": "Bourbon",
+      "tags": [
+        "100-200",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "kentucky-peerless",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 119.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
+      "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-171214110"
+    }
   }
 ]
