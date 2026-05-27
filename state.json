@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-27T13:33:21.011Z",
-    "productCount": 44,
+    "lastChecked": "2026-05-27T13:38:49.512Z",
+    "productCount": 42,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -286,27 +286,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f7f2a6fa-844a-bd29-8fa6-93a9a0be0341.jpg?v=1768742030",
         "url": "https://sharedpour.com/products/barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive"
       },
-      "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3": {
-        "handle": "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3",
-        "title": "Jack Daniel's Single Barrel Barrel Proof Tennessee Whiskey \"T8ke x ENDALZ\" 64.3% #25-25234",
-        "vendor": "Jack Daniel's",
-        "productType": "Whiskey",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "jack-daniels",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke",
-          "whiskey"
-        ],
-        "minPrice": 89.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1792a6ca-2f22-c9c9-4540-4f0971aa79d1.jpg?v=1774182274",
-        "url": "https://sharedpour.com/products/jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3"
-      },
       "penelope-estate-10-year-21-rye-pen24-133-t8ke-102-4-proof-single-barrel-selection": {
         "handle": "penelope-estate-10-year-21-rye-pen24-133-t8ke-102-4-proof-single-barrel-selection",
         "title": "Penelope Estate 10 Year 21% Rye PEN24-133 T8KE 102.2 Proof Single Barrel Selection",
@@ -328,27 +307,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6ee3678b-8ecb-0e4b-5fa6-84e0a5223e49.jpg?v=1759677013",
         "url": "https://sharedpour.com/products/penelope-estate-10-year-21-rye-pen24-133-t8ke-102-4-proof-single-barrel-selection"
-      },
-      "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-65-6": {
-        "handle": "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-65-6",
-        "title": "Jack Daniel's Single Barrel Barrel Proof Tennessee Whiskey \"T8ke x ENDALZ\" 65.6% #25-25235",
-        "vendor": "Jack Daniel's",
-        "productType": "Whiskey",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "jack-daniels",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke",
-          "whiskey"
-        ],
-        "minPrice": 89.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d552a818-8e9a-46b5-5ea5-aa0a8fe452d3.jpg?v=1774182164",
-        "url": "https://sharedpour.com/products/jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-65-6"
       },
       "heaven-hill-bottled-in-bond-single-barrel": {
         "handle": "heaven-hill-bottled-in-bond-single-barrel",
@@ -969,7 +927,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-27T13:33:26.215Z",
+    "lastChecked": "2026-05-27T13:38:54.449Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -998,7 +956,7 @@
     }
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-05-27T13:33:31.159Z",
+    "lastChecked": "2026-05-27T13:38:59.278Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1026,7 +984,7 @@
     }
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-05-27T13:33:39.593Z",
+    "lastChecked": "2026-05-27T13:39:10.767Z",
     "productCount": 8,
     "products": {
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
