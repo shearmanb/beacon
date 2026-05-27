@@ -2467,5 +2467,32 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6d895bc4-bd75-fad6-ec34-33e9f01c7f8f.png?v=1763298402",
       "url": "https://sharedpour.com/products/george-dickel-single-barrel-15yr-bourbon"
     }
+  },
+  {
+    "timestamp": "2026-05-27T21:13:55.881Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "sold_out",
+    "product": {
+      "handle": "peerless-single-barrel-bourbon-t8ke-171214110",
+      "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #171214110",
+      "vendor": "Kentucky Peerless",
+      "productType": "Bourbon",
+      "tags": [
+        "100-200",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "kentucky-peerless",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 119.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
+      "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-171214110"
+    }
   }
 ]
