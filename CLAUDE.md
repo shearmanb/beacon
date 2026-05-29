@@ -110,7 +110,7 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
 ## Adding a new site
 
 1. Add a strategy file in `sites/` exporting `checkSite(site, previousState)` returning `{ state, alerts }`.
-2. Register the strategy name in the `strategies` map in `checker.js`.
+2. Register the strategy name in the `strategies` map in `lib/strategies.js`.
 3. Add the site object to `config.js` — include a `schedule` field.
 4. Run once manually to establish the baseline before alerts go live.
 
@@ -146,12 +146,6 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
 ## Open features (backlog)
 
 - **⚠️ TODO (one-time setup): activate ignore→Discord notifications** — the dashboard now sends a Discord embed when a product is ignored/unignored, but the webhook URL must be saved in the browser first. Open the dashboard → click **Discord Webhook** in the header → paste in the Discord webhook URL (same one stored in the `DISCORD_WEBHOOK_URL` GitHub secret). Saved to `localStorage`; only needs to be done once per browser.
-
-- **Wild Turkey Gold Foil Edition monitor** — site entry already added to `config.js` (disabled) using the `html_text_monitor` strategy. Two things needed before enabling: (1) confirm the button text ("SEE DETAILS" → "ADD TO CART" etc.) appears in raw page source (View Source, not DevTools Elements) — if not, the page is JS-rendered and plain fetch won't see it; (2) if JS-rendered, open DevTools → Network, reload the page, and find the API call that returns product availability — use that URL as the `url` in config instead. The `monitor.watchTexts` and `monitor.alertValues` arrays in config.js are already set up; just flip `enabled: true` once the right URL is confirmed.
-
-- **Add site wizard (feature 3)** — modal form in the dashboard to add a new site to `config.js` via GitHub API. Fields: name, ID (auto-slugged from name), strategy dropdown, URL, schedule, filters. Tricky part: serializing a JS object back into `config.js` format cleanly. Deferred — for small numbers of new sites, direct edits to `config.js` are simpler.
-
-- **Move checker to persistent process (feature 4)** — GitHub Actions `*/5` cron is unreliable (15–80 min delays are common under load). True every-minute checking requires a persistent Node.js process running `setInterval(run, 60_000)` on an always-on host. **Fly.io free tier** is the recommended target: 3 shared-CPU VMs stay running (no sleep), `fly secrets set` for env vars, deploy via CLI. Render free tier sleeps after 15 min of inactivity (paid $7/mo needed). Changes required: add `fly.toml`, convert `checker.js` exit-after-one-run model to a loop, keep all GitHub state push logic as-is. The `imminentIntervalMinutes` field on each site is already wired for sub-5-min overrides and would activate automatically once the process runs on a tight loop.
 
 ## Known quirks
 

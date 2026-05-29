@@ -44,7 +44,7 @@ export async function checkSite(site, previousState) {
         if (signal) {
           resetReason = `Reset signal in HTML: "${signal}"`;
         } else {
-          productMap = parseHtmlProducts(html);
+          productMap = parseHtmlProducts(html, site.url);
         }
       } catch (htmlErr) {
         resetReason = htmlErr.message;
@@ -325,7 +325,7 @@ function extractProductInfo(content, soldOut, productMap, siteUrl, baseOrigin) {
 }
 
 // ── HTML fallback (when JSON API is completely unavailable) ───────────────────
-function parseHtmlProducts(html) {
+function parseHtmlProducts(html, siteUrl) {
   const matches = html.matchAll(/<h4[^>]*>([\s\S]*?)<\/h4>/gi);
   const seen = new Set();
   const titles = [];
@@ -352,7 +352,7 @@ function parseHtmlProducts(html) {
       minPrice: null,
       available: true, // HTML h4 fallback can't determine stock; assume listed = available
       image: null,
-      url: "https://www.thereveries.co/shop",
+      url: siteUrl,
     };
   }
   return map;

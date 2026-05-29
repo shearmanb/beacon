@@ -7,6 +7,7 @@ import { sites } from "./config.js";
 import { sendAlert as sendDiscordAlert } from "./notifiers/discord.js";
 import { readFile, writeFile } from "./lib/github.js";
 import { shouldCheck } from "./lib/schedule.js";
+import { loadStrategy } from "./lib/strategies.js";
 
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
 const LOOP_BASE_MS = 60_000;
@@ -23,25 +24,11 @@ function jitter(baseMs, spreadMs) {
   return Math.max(0, baseMs + (Math.random() * 2 - 1) * spreadMs);
 }
 
-// ── Strategy loader ───────────────────────────────────────────────────────────
-
-async function loadStrategy(name) {
-  const loaders = {
-    shopify_collection: () => import("./sites/shopify_collection.js"),
-    shopify_storefront: () => import("./sites/shopify_storefront.js"),
-    reveries_squarespace: () => import("./sites/reveries_squarespace.js"),
-    squarespace_json_monitor: () => import("./sites/squarespace_json_monitor.js"),
-    html_text_monitor: () => import("./sites/html_text_monitor.js"),
-  };
-  const loader = loaders[name];
-  if (!loader) throw new Error(`Unknown strategy: ${name}`);
-  return loader();
-}
-
 // ── In-memory state ───────────────────────────────────────────────────────────
 
 let globalState = {};
 let stateFileSha = null;
+let historyFileSha = null;
 
 async function loadStartupState() {
   console.log("[startup] Fetching state.json from GitHub...");
@@ -83,19 +70,31 @@ async function pushState() {
 }
 
 async function appendAndPushHistory(events) {
-  const res = await readFile("alert_history.json");
-  let history = [];
-  if (res.content) {
-    try { history = JSON.parse(res.content); } catch { /* start fresh */ }
+  // Always re-read on each call so we have the latest sha and don't lose
+  // entries pushed by a concurrent writer (e.g. a manual Run Now).
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await readFile("alert_history.json");
+    historyFileSha = res.sha;
+    let history = [];
+    if (res.content) {
+      try { history = JSON.parse(res.content); } catch { /* start fresh */ }
+    }
+    history.push(...events);
+    if (history.length > MAX_HISTORY) history = history.slice(history.length - MAX_HISTORY);
+    try {
+      const newSha = await writeFile(
+        "alert_history.json",
+        JSON.stringify(history, null, 2),
+        historyFileSha,
+        "chore: update history [skip ci]"
+      );
+      if (newSha) historyFileSha = newSha;
+      return;
+    } catch (err) {
+      if (err.message.includes("409") && attempt === 0) continue;
+      throw err;
+    }
   }
-  history.push(...events);
-  if (history.length > MAX_HISTORY) history = history.slice(history.length - MAX_HISTORY);
-  await writeFile(
-    "alert_history.json",
-    JSON.stringify(history, null, 2),
-    res.sha,
-    "chore: update history [skip ci]"
-  );
 }
 
 async function fetchIgnored() {
@@ -145,7 +144,8 @@ async function run() {
       const strategy = await loadStrategy(site.strategy);
       const { state, alerts } = await strategy.checkSite(site, siteState);
 
-      globalState[site.id] = state;
+      // Clear any prior error tracking on a successful check
+      globalState[site.id] = { ...state, consecutiveErrors: 0 };
       stateChanged = true;
 
       const filteredAlerts = alerts.filter((a) => !ignored[a.product?.handle]);
@@ -175,6 +175,14 @@ async function run() {
       }
     } catch (err) {
       console.error(`[${site.name}] Error: ${err.message}`);
+      const prev = globalState[site.id] ?? {};
+      globalState[site.id] = {
+        ...prev,
+        consecutiveErrors: (prev.consecutiveErrors ?? 0) + 1,
+        lastError: err.message,
+        lastErrorAt: new Date().toISOString(),
+      };
+      stateChanged = true;
     }
 
     // Inter-site gap: 500–1500 ms between sites within a single run.

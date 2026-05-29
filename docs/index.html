@@ -105,6 +105,8 @@
     .site-card.disabled { opacity: 0.45; }
     .site-card.site-in-reset { border-color: rgba(241,196,15,.5); border-top: 3px solid var(--yellow); }
     .site-reset-banner { background: rgba(241,196,15,.1); border-bottom: 1px solid rgba(241,196,15,.25); color: var(--yellow); font-size: .75rem; font-weight: 600; padding: .5rem .75rem; margin: -1rem -1rem .75rem; line-height: 1.4; }
+    .site-error-banner { background: rgba(231,76,60,.1); border-bottom: 1px solid rgba(231,76,60,.3); color: var(--red); font-size: .75rem; font-weight: 600; padding: .5rem .75rem; margin: -1rem -1rem .75rem; line-height: 1.4; }
+    .site-error-banner .err-detail { display: block; font-weight: 400; opacity: .85; font-size: .7rem; margin-top: .15rem; word-break: break-word; }
     .site-card.wave-reset { border-color: rgba(230,126,34,.6); border-top: 3px solid var(--orange); animation: wave-reset-pulse 2.5s ease-in-out infinite; }
     @keyframes wave-reset-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(230,126,34,0); } 50% { box-shadow: 0 0 10px 3px rgba(230,126,34,.2); } }
     .site-reset-banner.wave-reset { background: rgba(230,126,34,.12); border-bottom-color: rgba(230,126,34,.3); color: var(--orange); }
@@ -973,6 +975,11 @@
           : `<div class="site-reset-banner">⚠️ Site reset — Coming Soon / password wall detected<br><span style="font-weight:400;opacity:.8">${esc(s.resetReason)}</span></div>`
         : '';
 
+      const errCount = s.consecutiveErrors ?? 0;
+      const errorBanner = (isEnabled && errCount > 0 && !isReset)
+        ? `<div class="site-error-banner">⚠️ Check failing — ${errCount} consecutive error${errCount === 1 ? '' : 's'}<span class="err-detail">${esc(s.lastError ?? '')}</span></div>`
+        : '';
+
       const refreshingBar = isRefreshing
         ? `<div class="site-refreshing-bar">↻ Refreshing…</div>`
         : '';
@@ -981,7 +988,7 @@
         ? `<a href="${esc(siteUrl)}" target="_blank" rel="noopener noreferrer">${esc(site.name)}</a>`
         : esc(site.name);
       return `<div class="site-card${isEnabled ? '' : ' disabled'}${isWaveReset ? ' wave-reset' : isReset ? ' site-in-reset' : ''}">
-        ${refreshingBar}${resetBanner}
+        ${refreshingBar}${resetBanner}${errorBanner}
         <div class="site-card-header">
           <h3>${siteTitleHtml}</h3>
           ${siteChipHtml(site, s)}

@@ -35,6 +35,9 @@
         "fromHour": 20,
         "toHour": 14,
         "interval": 20
+      },
+      {
+        "defaultInterval": 20
       }
     ]
   },

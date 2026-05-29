@@ -4,6 +4,7 @@ import { sites } from "./config.js";
 import { appendHistory } from "./lib/history.js";
 import { sendAlert as sendDiscordAlert } from "./notifiers/discord.js";
 import { getEffectiveInterval, shouldCheck } from "./lib/schedule.js";
+import { loadStrategy } from "./lib/strategies.js";
 
 const STATE_FILE = resolve("state.json");
 const IGNORED_FILE = resolve("ignored_products.json");
@@ -43,19 +44,6 @@ function saveState(state) {
   writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
 }
 
-async function loadStrategy(strategyName) {
-  const strategies = {
-    shopify_collection: () => import("./sites/shopify_collection.js"),
-    shopify_storefront: () => import("./sites/shopify_storefront.js"),
-    reveries_squarespace: () => import("./sites/reveries_squarespace.js"),
-    squarespace_json_monitor: () => import("./sites/squarespace_json_monitor.js"),
-    html_text_monitor: () => import("./sites/html_text_monitor.js"),
-  };
-  const loader = strategies[strategyName];
-  if (!loader) throw new Error(`Unknown strategy: ${strategyName}`);
-  return loader();
-}
-
 async function run() {
   const globalState = loadState();
   const ignored = loadIgnored();
@@ -78,7 +66,7 @@ async function run() {
       const strategy = await loadStrategy(site.strategy);
       const { state, alerts } = await strategy.checkSite(site, siteState);
 
-      globalState[site.id] = state;
+      globalState[site.id] = { ...state, consecutiveErrors: 0 };
       stateChanged = true;
 
       const filteredAlerts = alerts.filter((a) => !ignored[a.product?.handle]);
@@ -105,6 +93,14 @@ async function run() {
       }
     } catch (err) {
       console.error(`[${site.name}] Error: ${err.message}`);
+      const prev = globalState[site.id] ?? {};
+      globalState[site.id] = {
+        ...prev,
+        consecutiveErrors: (prev.consecutiveErrors ?? 0) + 1,
+        lastError: err.message,
+        lastErrorAt: new Date().toISOString(),
+      };
+      stateChanged = true;
     }
   }
 
