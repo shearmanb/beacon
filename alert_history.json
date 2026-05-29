@@ -2547,5 +2547,57 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d6517fc0-0243-759a-7624-31a598697288_1.jpg?v=1765717859",
       "url": "https://sharedpour.com/products/penelope-estate-10-year-21-rye-pen25-405"
     }
+  },
+  {
+    "timestamp": "2026-05-29T16:03:00.676Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "sold_out",
+    "product": {
+      "handle": "bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases",
+      "title": "Bulleit Bourbon Single Barrel: Bulleit x T8KE - \"The Armory\" 17 Year Releases",
+      "vendor": "T8KE",
+      "productType": "Bourbon",
+      "tags": [
+        "50-100",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 99.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/5f511991-e28c-9833-4105-a83d6b28beb5.jpg?v=1760895187",
+      "url": "https://sharedpour.com/products/bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T16:03:01.009Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-proof",
+      "title": "Augusta Distillery Buckner's 13 Year Single Barrel Barrel Proof Bourbon T8KE Hazmat Selection - 141 Proof",
+      "vendor": "Augusta Distillery",
+      "productType": "",
+      "tags": [
+        "200-300",
+        "American-Bourbon",
+        "augusta-distillery",
+        "Bourbon Whiskey",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 249.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-11-09at09.46.25.png?v=1762699591",
+      "url": "https://sharedpour.com/products/augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-proof"
+    }
   }
 ]
