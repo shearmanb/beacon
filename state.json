@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-29T15:52:31.868Z",
-    "productCount": 43,
+    "lastChecked": "2026-05-29T15:57:42.567Z",
+    "productCount": 44,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -835,6 +835,27 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e8d4cd80-4ab8-077f-345b-74dd98f1f862.jpg?v=1773577422",
         "url": "https://sharedpour.com/products/westland-american-single-malt-cask-1757"
       },
+      "penelope-estate-10-year-21-rye-pen25-405": {
+        "handle": "penelope-estate-10-year-21-rye-pen25-405",
+        "title": "Penelope Bourbon ‘T8KE’ Estate Collection 10 Year Single Barrel PEN25-405 21% Rye 132.6 Proof",
+        "vendor": "Penelope",
+        "productType": "",
+        "tags": [
+          "100-200",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 169.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d6517fc0-0243-759a-7624-31a598697288_1.jpg?v=1765717859",
+        "url": "https://sharedpour.com/products/penelope-estate-10-year-21-rye-pen25-405"
+      },
       "peerless-single-barrel-bourbon-t8ke-2026": {
         "handle": "peerless-single-barrel-bourbon-t8ke-2026",
         "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #190809107",
@@ -947,7 +968,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-29T15:52:36.197Z",
+    "lastChecked": "2026-05-29T15:57:47.376Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
