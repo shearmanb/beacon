@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-29T15:57:42.567Z",
-    "productCount": 44,
+    "lastChecked": "2026-05-29T16:03:00.676Z",
+    "productCount": 45,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -85,7 +85,7 @@
           "t8ke"
         ],
         "minPrice": 99.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/5f511991-e28c-9833-4105-a83d6b28beb5.jpg?v=1760895187",
         "url": "https://sharedpour.com/products/bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases"
       },
@@ -106,7 +106,7 @@
           "t8ke"
         ],
         "minPrice": 89.99,
-        "available": false,
+        "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6d895bc4-bd75-fad6-ec34-33e9f01c7f8f.png?v=1763298402",
         "url": "https://sharedpour.com/products/george-dickel-single-barrel-15yr-bourbon"
       },
@@ -394,6 +394,26 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/b3623675-71f3-657d-4d4a-f64e34eb5d2a.jpg?v=1775395761",
         "url": "https://sharedpour.com/products/augusta-wheated-bourbon-t8ke-single-barrel-26-1761-straight-bourbon"
+      },
+      "augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-proof": {
+        "handle": "augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-proof",
+        "title": "Augusta Distillery Buckner's 13 Year Single Barrel Barrel Proof Bourbon T8KE Hazmat Selection - 141 Proof",
+        "vendor": "Augusta Distillery",
+        "productType": "",
+        "tags": [
+          "200-300",
+          "American-Bourbon",
+          "augusta-distillery",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 249.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-11-09at09.46.25.png?v=1762699591",
+        "url": "https://sharedpour.com/products/augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-proof"
       },
       "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof": {
         "handle": "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof",
@@ -968,7 +988,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-29T15:57:47.376Z",
+    "lastChecked": "2026-05-29T16:03:03.937Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -997,7 +1017,7 @@
     }
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-05-29T15:42:47.838Z",
+    "lastChecked": "2026-05-29T16:03:08.712Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-the-fountain-inn": {
