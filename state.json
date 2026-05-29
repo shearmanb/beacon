@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-29T15:47:07.924Z",
-    "productCount": 42,
+    "lastChecked": "2026-05-29T15:52:31.868Z",
+    "productCount": 43,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -68,6 +68,26 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-16at07.12.45.png?v=1760613170",
         "url": "https://sharedpour.com/products/bardstown-bourbon-co-single-barrel-t8ke"
+      },
+      "bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases": {
+        "handle": "bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases",
+        "title": "Bulleit Bourbon Single Barrel: Bulleit x T8KE - \"The Armory\" 17 Year Releases",
+        "vendor": "T8KE",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 99.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/5f511991-e28c-9833-4105-a83d6b28beb5.jpg?v=1760895187",
+        "url": "https://sharedpour.com/products/bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases"
       },
       "george-dickel-single-barrel-15yr-bourbon": {
         "handle": "george-dickel-single-barrel-15yr-bourbon",
@@ -927,7 +947,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-29T15:47:11.214Z",
+    "lastChecked": "2026-05-29T15:52:36.197Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
