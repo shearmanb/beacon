@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-29T20:29:59.190Z",
+    "lastChecked": "2026-05-29T20:30:09.012Z",
     "productCount": 46,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -1006,10 +1006,11 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/B0000868.jpg?v=1762912067",
         "url": "https://sharedpour.com/products/the-2025-t8ke-exclusive-collection-4x750ml"
       }
-    }
+    },
+    "consecutiveErrors": 0
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-29T20:30:02.990Z",
+    "lastChecked": "2026-05-29T20:30:14.003Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1035,7 +1036,8 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/682b836b-767b-b783-9747-e6e41a4c8f2a.jpg?v=1776644376",
         "url": "https://sharedpour.com/products/the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1"
       }
-    }
+    },
+    "consecutiveErrors": 0
   },
   "fountain_inn_dc": {
     "lastChecked": "2026-05-29T20:27:55.452Z",
@@ -1066,7 +1068,7 @@
     }
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-05-29T20:30:11.527Z",
+    "lastChecked": "2026-05-29T20:30:21.586Z",
     "productCount": 8,
     "products": {
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
@@ -1199,7 +1201,8 @@
         "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/20251120_163648.jpg?v=1763674963",
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
-    }
+    },
+    "consecutiveErrors": 0
   },
   "reveries_official": {
     "lastChecked": "2026-05-29T20:20:17.652Z",
