@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-29T18:57:12.734Z",
+    "lastChecked": "2026-05-29T19:02:45.703Z",
     "productCount": 46,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -255,7 +255,7 @@
           "traverse-city-whiskey-co"
         ],
         "minPrice": 89.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00579.jpg?v=1772282441",
         "url": "https://sharedpour.com/products/traverse-city-whiskey-company-x-t8ke-barrel-proof-cherry-single-barrel-bourbon-18-1854"
       },
@@ -1009,7 +1009,7 @@
     }
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-29T18:57:18.368Z",
+    "lastChecked": "2026-05-29T19:02:50.176Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1066,7 +1066,7 @@
     }
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-05-29T18:57:28.397Z",
+    "lastChecked": "2026-05-29T19:02:59.227Z",
     "productCount": 8,
     "products": {
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
