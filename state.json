@@ -1040,7 +1040,7 @@
     "consecutiveErrors": 0
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-05-29T20:27:55.452Z",
+    "lastChecked": "2026-05-29T20:33:22.794Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1065,7 +1065,8 @@
         "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5590.heic?v=1778098989",
         "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
       }
-    }
+    },
+    "consecutiveErrors": 0
   },
   "bourbon_concierge": {
     "lastChecked": "2026-05-29T20:30:21.586Z",
