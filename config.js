@@ -136,7 +136,7 @@ export const sites = [
     storefrontAccessToken: "9238d5183f01462f5ba642447811ebb8",
     storefrontCollectionId: "367215214747",
     intervalMinutes: 30,
-    schedule: "30",
+    schedule: "weekend_light_20_mins",
     imminentIntervalMinutes: 2,
     imminent: false,
     alertOnNewProduct: true,
