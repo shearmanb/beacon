@@ -2652,5 +2652,34 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/aa853886-3923-811a-65c2-3a27041a2872.jpg?v=1744028681",
       "url": "https://sharedpour.com/products/whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection"
     }
+  },
+  {
+    "timestamp": "2026-05-30T00:01:42.260Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "sold_out",
+    "product": {
+      "handle": "nulu-x-t8ke-single-barrel-double-oaked-bourbon-ky32",
+      "title": "NULU x T8KE Single Barrel Double Oaked Bourbon KY32",
+      "vendor": "Nulu",
+      "productType": "",
+      "tags": [
+        "50-100",
+        "American-Bourbon",
+        "Barrel Pick",
+        "barrel picks",
+        "Bourbon Whiskey",
+        "nulu",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke",
+        "xmas-2025"
+      ],
+      "minPrice": 89.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/03ce9659-bd5b-5778-5767-808e3427954d.jpg?v=1765038363",
+      "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-double-oaked-bourbon-ky32"
+    }
   }
 ]
