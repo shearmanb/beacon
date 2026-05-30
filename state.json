@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-30T07:44:40.807Z",
+    "lastChecked": "2026-05-30T09:45:33.253Z",
     "productCount": 46,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -457,7 +457,7 @@
           "t8ke"
         ],
         "minPrice": 139.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tobala_Edition_36_T8KE_Selection_Front.jpg?v=1757451768",
         "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tobala-edition-36"
       },
@@ -1010,7 +1010,7 @@
     "consecutiveErrors": 0
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-30T07:44:43.990Z",
+    "lastChecked": "2026-05-30T09:45:37.815Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
