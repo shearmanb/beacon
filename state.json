@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-05-31T11:02:18.614Z",
+    "lastChecked": "2026-05-31T11:23:20.012Z",
     "productCount": 45,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -437,6 +437,29 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f3e23a9d-5762-1462-95c4-4ba4de8dc8c9.jpg?v=1777207304",
         "url": "https://sharedpour.com/products/starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof"
       },
+      "green-river-single-barrel-2026": {
+        "handle": "green-river-single-barrel-2026",
+        "title": "Green River Single Barrel T8KE II.II Private Barrel Selection",
+        "vendor": "Green River",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "green-river",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 69.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a0899ab2-3bfe-3e3b-a563-71cf4ead8e7d.jpg?v=1778418189",
+        "url": "https://sharedpour.com/products/green-river-single-barrel-2026"
+      },
       "el-jolgorio-mezcal-artesanal-tobala-edition-36": {
         "handle": "el-jolgorio-mezcal-artesanal-tobala-edition-36",
         "title": "El Jolgorio Mezcal Artesanal: Tobala Edition 36 T8KE Exclusive Batch Selection",
@@ -460,29 +483,6 @@
         "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tobala_Edition_36_T8KE_Selection_Front.jpg?v=1757451768",
         "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tobala-edition-36"
-      },
-      "green-river-single-barrel-2026": {
-        "handle": "green-river-single-barrel-2026",
-        "title": "Green River Single Barrel T8KE II.II Private Barrel Selection",
-        "vendor": "Green River",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "green-river",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 69.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a0899ab2-3bfe-3e3b-a563-71cf4ead8e7d.jpg?v=1778418189",
-        "url": "https://sharedpour.com/products/green-river-single-barrel-2026"
       },
       "el-jolgorio-mezcal-artesanal-tepeztate-edition-39": {
         "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-39",
@@ -987,7 +987,7 @@
     "consecutiveErrors": 0
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-05-31T11:02:24.499Z",
+    "lastChecked": "2026-05-31T11:23:23.520Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
