@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-01T18:40:26.477Z",
-    "productCount": 39,
+    "lastChecked": "2026-06-01T18:45:52.409Z",
+    "productCount": 43,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -68,6 +68,26 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-16at07.12.45.png?v=1760613170",
         "url": "https://sharedpour.com/products/bardstown-bourbon-co-single-barrel-t8ke"
+      },
+      "bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases": {
+        "handle": "bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases",
+        "title": "Bulleit Bourbon Single Barrel: Bulleit x T8KE - \"The Armory\" 17 Year Releases",
+        "vendor": "T8KE",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 99.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/5f511991-e28c-9833-4105-a83d6b28beb5.jpg?v=1760895187",
+        "url": "https://sharedpour.com/products/bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases"
       },
       "george-dickel-single-barrel-15yr-bourbon": {
         "handle": "george-dickel-single-barrel-15yr-bourbon",
@@ -288,6 +308,29 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/73c57145-5074-ea67-92ef-32d2cb39cf79.jpg?v=1776644198",
         "url": "https://sharedpour.com/products/heaven-hill-bottled-in-bond-single-barrel"
+      },
+      "nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection": {
+        "handle": "nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection",
+        "title": "NULU Single Barrel Maple Brulee Bourbon by T8KE Single Barrel Selection B928",
+        "vendor": "Nulu",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "nulu",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 89.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-27at10.22.09.png?v=1761560538",
+        "url": "https://sharedpour.com/products/nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection"
       },
       "jack-daniels-x-t8ke-rye-whiskey": {
         "handle": "jack-daniels-x-t8ke-rye-whiskey",
@@ -683,6 +726,50 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e8d4cd80-4ab8-077f-345b-74dd98f1f862.jpg?v=1773577422",
         "url": "https://sharedpour.com/products/westland-american-single-malt-cask-1757"
       },
+      "t8ke-x-backbone-single-barrel-barrel-strength-malt-whiskey-s511": {
+        "handle": "t8ke-x-backbone-single-barrel-barrel-strength-malt-whiskey-s511",
+        "title": "T8KE x Backbone Single Barrel Hazmat Barrel Strength Malt Whiskey S511",
+        "vendor": "Backbone Bourbon Company",
+        "productType": "",
+        "tags": [
+          "50-100",
+          "backbone-bourbon-company",
+          "Barrel Pick",
+          "barrel picks",
+          "Blended Whiskey",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 99.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a1506e96-f850-3dfb-4c32-6b7824ea2510.jpg?v=1765717492",
+        "url": "https://sharedpour.com/products/t8ke-x-backbone-single-barrel-barrel-strength-malt-whiskey-s511"
+      },
+      "augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof": {
+        "handle": "augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof",
+        "title": "Augusta Distillery Buckner's 13 Year Single Barrel Barrel Proof Bourbon T8KE Hazmat Selection - 141.4 Proof",
+        "vendor": "Augusta Distillery",
+        "productType": "",
+        "tags": [
+          "200-300",
+          "American-Bourbon",
+          "augusta-distillery",
+          "Barrel Pick",
+          "barrel picks",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 249.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-11-09at09.47.03.png?v=1762699630",
+        "url": "https://sharedpour.com/products/augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof"
+      },
       "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select": {
         "handle": "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select",
         "title": "Blackwood Bourbon Single Barrel Barrel Proof T8KE Select",
@@ -861,7 +948,7 @@
     "consecutiveErrors": 0
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-01T18:40:32.135Z",
+    "lastChecked": "2026-06-01T18:45:56.656Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
