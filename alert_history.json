@@ -2874,5 +2874,33 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-11-09at09.47.03.png?v=1762699630",
       "url": "https://sharedpour.com/products/augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof"
     }
+  },
+  {
+    "timestamp": "2026-06-01T18:51:11.801Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "sold_out",
+    "product": {
+      "handle": "augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof",
+      "title": "Augusta Distillery Buckner's 13 Year Single Barrel Barrel Proof Bourbon T8KE Hazmat Selection - 141.4 Proof",
+      "vendor": "Augusta Distillery",
+      "productType": "",
+      "tags": [
+        "200-300",
+        "American-Bourbon",
+        "augusta-distillery",
+        "Barrel Pick",
+        "barrel picks",
+        "Bourbon Whiskey",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 249.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-11-09at09.47.03.png?v=1762699630",
+      "url": "https://sharedpour.com/products/augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof"
+    }
   }
 ]
