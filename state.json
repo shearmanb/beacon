@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-01T18:45:52.409Z",
+    "lastChecked": "2026-06-01T18:51:11.801Z",
     "productCount": 43,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -766,7 +766,7 @@
           "t8ke"
         ],
         "minPrice": 249.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-11-09at09.47.03.png?v=1762699630",
         "url": "https://sharedpour.com/products/augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof"
       },
@@ -948,7 +948,7 @@
     "consecutiveErrors": 0
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-01T18:45:56.656Z",
+    "lastChecked": "2026-06-01T18:51:17.464Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
