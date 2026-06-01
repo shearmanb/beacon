@@ -2763,5 +2763,116 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/78559c51-a67c-2e35-a40c-395c1299331e.jpg?v=1762088105",
       "url": "https://sharedpour.com/products/jack-daniels-x-t8ke-rye-whiskey"
     }
+  },
+  {
+    "timestamp": "2026-06-01T18:45:52.409Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases",
+      "title": "Bulleit Bourbon Single Barrel: Bulleit x T8KE - \"The Armory\" 17 Year Releases",
+      "vendor": "T8KE",
+      "productType": "Bourbon",
+      "tags": [
+        "50-100",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 99.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/5f511991-e28c-9833-4105-a83d6b28beb5.jpg?v=1760895187",
+      "url": "https://sharedpour.com/products/bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases"
+    }
+  },
+  {
+    "timestamp": "2026-06-01T18:45:52.553Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection",
+      "title": "NULU Single Barrel Maple Brulee Bourbon by T8KE Single Barrel Selection B928",
+      "vendor": "Nulu",
+      "productType": "Bourbon",
+      "tags": [
+        "50-100",
+        "American-Bourbon",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "Bourbon Whiskey",
+        "nulu",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 89.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-27at10.22.09.png?v=1761560538",
+      "url": "https://sharedpour.com/products/nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection"
+    }
+  },
+  {
+    "timestamp": "2026-06-01T18:45:52.886Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "t8ke-x-backbone-single-barrel-barrel-strength-malt-whiskey-s511",
+      "title": "T8KE x Backbone Single Barrel Hazmat Barrel Strength Malt Whiskey S511",
+      "vendor": "Backbone Bourbon Company",
+      "productType": "",
+      "tags": [
+        "50-100",
+        "backbone-bourbon-company",
+        "Barrel Pick",
+        "barrel picks",
+        "Blended Whiskey",
+        "Bourbon Whiskey",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 99.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a1506e96-f850-3dfb-4c32-6b7824ea2510.jpg?v=1765717492",
+      "url": "https://sharedpour.com/products/t8ke-x-backbone-single-barrel-barrel-strength-malt-whiskey-s511"
+    }
+  },
+  {
+    "timestamp": "2026-06-01T18:45:53.083Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof",
+      "title": "Augusta Distillery Buckner's 13 Year Single Barrel Barrel Proof Bourbon T8KE Hazmat Selection - 141.4 Proof",
+      "vendor": "Augusta Distillery",
+      "productType": "",
+      "tags": [
+        "200-300",
+        "American-Bourbon",
+        "augusta-distillery",
+        "Barrel Pick",
+        "barrel picks",
+        "Bourbon Whiskey",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 249.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-11-09at09.47.03.png?v=1762699630",
+      "url": "https://sharedpour.com/products/augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof"
+    }
   }
 ]
