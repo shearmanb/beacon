@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-01T18:51:11.801Z",
+    "lastChecked": "2026-06-01T18:56:38.000Z",
     "productCount": 43,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -482,7 +482,7 @@
           "t8ke",
           "xmas-2025"
         ],
-        "minPrice": 139.99,
+        "minPrice": 119.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_40_T8KE_Selection_Front.jpg?v=1757451767",
         "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke"
@@ -549,7 +549,7 @@
           "t8ke",
           "xmas-2025"
         ],
-        "minPrice": 199.99,
+        "minPrice": 179.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ea0cec6-1621-ee9c-d16f-368a769082f8.jpg?v=1764513403",
         "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45"
@@ -660,7 +660,7 @@
           "t8ke",
           "xmas-2025"
         ],
-        "minPrice": 199.99,
+        "minPrice": 179.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/54355f83-7483-3e73-de49-04c3ec0d4424.jpg?v=1764513339",
         "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky186"
@@ -948,7 +948,7 @@
     "consecutiveErrors": 0
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-01T18:51:17.464Z",
+    "lastChecked": "2026-06-01T18:56:42.402Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
