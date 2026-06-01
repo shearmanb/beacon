@@ -2737,5 +2737,31 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/unnamed_2.jpg?v=1779640400",
       "url": "https://sharedpour.com/products/blackwood-bourbon-single-barrel-barrel-proof-t8ke-select"
     }
+  },
+  {
+    "timestamp": "2026-06-01T18:40:26.477Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "jack-daniels-x-t8ke-rye-whiskey",
+      "title": "Jack Daniel’s Single Barrel Barrel Proof Rye Whiskey “T8KE\" Single Barrel Selection 66.3% ABV",
+      "vendor": "Jack Daniel's",
+      "productType": "",
+      "tags": [
+        "50-100",
+        "Brands: Jack Daniels",
+        "jack-daniels",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke",
+        "Tennessee"
+      ],
+      "minPrice": 89.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/78559c51-a67c-2e35-a40c-395c1299331e.jpg?v=1762088105",
+      "url": "https://sharedpour.com/products/jack-daniels-x-t8ke-rye-whiskey"
+    }
   }
 ]
