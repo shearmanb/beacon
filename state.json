@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-01T19:34:58.957Z",
+    "lastChecked": "2026-06-01T19:40:25.439Z",
     "productCount": 43,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -85,7 +85,7 @@
           "t8ke"
         ],
         "minPrice": 99.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/5f511991-e28c-9833-4105-a83d6b28beb5.jpg?v=1760895187",
         "url": "https://sharedpour.com/products/bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases"
       },
@@ -948,7 +948,7 @@
     "consecutiveErrors": 0
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-01T19:35:02.963Z",
+    "lastChecked": "2026-06-01T19:40:30.000Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
