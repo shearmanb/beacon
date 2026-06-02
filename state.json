@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-02T21:15:06.757Z",
+    "lastChecked": "2026-06-02T21:35:56.894Z",
     "productCount": 46,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -1043,9 +1043,20 @@
     "errorAlertSent": false
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-02T21:15:10.210Z",
-    "productCount": 2,
+    "lastChecked": "2026-06-02T21:36:02.481Z",
+    "productCount": 3,
     "products": {
+      "reveries-the-raven-batch-v": {
+        "handle": "reveries-the-raven-batch-v",
+        "title": "Reveries: The Raven Batch V",
+        "vendor": "Bottle Shop at The Fountain Inn",
+        "productType": "",
+        "tags": [],
+        "minPrice": 170,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5766.heic?v=1780435180",
+        "url": "https://shop.fountaininndc.com/products/reveries-the-raven-batch-v"
+      },
       "the-reveries-8-year-single-barrel-the-fountain-inn": {
         "handle": "the-reveries-8-year-single-barrel-the-fountain-inn",
         "title": "The Reveries: 8 Year Single Barrel: The Fountain Inn",
