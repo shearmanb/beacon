@@ -3066,5 +3066,22 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DriftlessGlenn_Apple_Berry_Fritter_1.jpg?v=1770378586",
       "url": "https://sharedpour.com/products/driftless-glen-4625-mash-journey-single-barrel-bourbon-select-copy"
     }
+  },
+  {
+    "timestamp": "2026-06-02T21:36:02.482Z",
+    "siteId": "fountain_inn_dc",
+    "siteName": "Fountain Inn DC",
+    "type": "new_product",
+    "product": {
+      "handle": "reveries-the-raven-batch-v",
+      "title": "Reveries: The Raven Batch V",
+      "vendor": "Bottle Shop at The Fountain Inn",
+      "productType": "",
+      "tags": [],
+      "minPrice": 170,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5766.heic?v=1780435180",
+      "url": "https://shop.fountaininndc.com/products/reveries-the-raven-batch-v"
+    }
   }
 ]
