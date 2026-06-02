@@ -2984,5 +2984,33 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-27at10.22.09.png?v=1761560538",
       "url": "https://sharedpour.com/products/nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection"
     }
+  },
+  {
+    "timestamp": "2026-06-02T03:42:55.529Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "sold_out",
+    "product": {
+      "handle": "t8ke-x-backbone-single-barrel-barrel-strength-malt-whiskey-s511",
+      "title": "T8KE x Backbone Single Barrel Hazmat Barrel Strength Malt Whiskey S511",
+      "vendor": "Backbone Bourbon Company",
+      "productType": "",
+      "tags": [
+        "50-100",
+        "backbone-bourbon-company",
+        "Barrel Pick",
+        "barrel picks",
+        "Blended Whiskey",
+        "Bourbon Whiskey",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 99.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a1506e96-f850-3dfb-4c32-6b7824ea2510.jpg?v=1765717492",
+      "url": "https://sharedpour.com/products/t8ke-x-backbone-single-barrel-barrel-strength-malt-whiskey-s511"
+    }
   }
 ]
