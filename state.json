@@ -1071,7 +1071,7 @@
     "consecutiveErrors": 0
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-02T20:33:13.193Z",
+    "lastChecked": "2026-06-02T20:53:28.821Z",
     "productCount": 8,
     "products": {
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
@@ -1205,7 +1205,8 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 0
+    "consecutiveErrors": 0,
+    "errorAlertSent": false
   },
   "reveries_official": {
     "lastChecked": "2026-06-02T20:49:11.221Z",
