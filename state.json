@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-02T16:21:08.266Z",
-    "productCount": 43,
+    "lastChecked": "2026-06-02T16:26:40.711Z",
+    "productCount": 44,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -196,6 +196,26 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f96d2467-738c-b849-927c-03416b9f11ff.jpg?v=1771159501",
         "url": "https://sharedpour.com/products/pm-spirits-project-t8ke-armagnac-bourbon-concierge-105-8-prf"
+      },
+      "t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection": {
+        "handle": "t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection",
+        "title": "Clear Creek Distillery x T8KE 15 Year Single Barrel Barrel Strength American Apple Brandy",
+        "vendor": "Hood River Distillers",
+        "productType": "",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "hood-river-distillers",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 99.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/860a314f-46ee-86f7-d387-ed8ed5246818.jpg?v=1765717125",
+        "url": "https://sharedpour.com/products/t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection"
       },
       "t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml": {
         "handle": "t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml",
@@ -948,7 +968,7 @@
     "consecutiveErrors": 0
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-02T16:21:12.318Z",
+    "lastChecked": "2026-06-02T16:26:46.759Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1007,7 +1027,7 @@
     "consecutiveErrors": 0
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-02T16:21:22.877Z",
+    "lastChecked": "2026-06-02T16:26:55.298Z",
     "productCount": 8,
     "products": {
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
