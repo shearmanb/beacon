@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-02T16:37:17.438Z",
-    "productCount": 45,
+    "lastChecked": "2026-06-02T16:39:22.092Z",
+    "productCount": 46,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -305,6 +305,27 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/8df56ab5-9e80-33a1-40aa-aecb2b7f8747.jpg?v=1775394875",
         "url": "https://sharedpour.com/products/pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke"
+      },
+      "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3": {
+        "handle": "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3",
+        "title": "Jack Daniel's Single Barrel Barrel Proof Tennessee Whiskey \"T8ke x ENDALZ\" 64.3% #25-25234",
+        "vendor": "Jack Daniel's",
+        "productType": "Whiskey",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "jack-daniels",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke",
+          "whiskey"
+        ],
+        "minPrice": 89.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1792a6ca-2f22-c9c9-4540-4f0971aa79d1.jpg?v=1774182274",
+        "url": "https://sharedpour.com/products/jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3"
       },
       "heaven-hill-bottled-in-bond-single-barrel": {
         "handle": "heaven-hill-bottled-in-bond-single-barrel",
