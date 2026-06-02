@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-02T20:34:18.810Z",
+    "lastChecked": "2026-06-02T20:54:38.330Z",
     "productCount": 46,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -1008,7 +1008,8 @@
         "url": "https://sharedpour.com/products/the-2025-t8ke-exclusive-collection-4x750ml"
       }
     },
-    "consecutiveErrors": 0
+    "consecutiveErrors": 0,
+    "errorAlertSent": false
   },
   "sharedpour_reveries": {
     "lastChecked": "2026-06-02T20:52:19.066Z",
@@ -1042,7 +1043,7 @@
     "errorAlertSent": false
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-02T20:34:24.868Z",
+    "lastChecked": "2026-06-02T20:54:42.967Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1068,7 +1069,8 @@
         "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
       }
     },
-    "consecutiveErrors": 0
+    "consecutiveErrors": 0,
+    "errorAlertSent": false
   },
   "bourbon_concierge": {
     "lastChecked": "2026-06-02T20:53:28.821Z",
