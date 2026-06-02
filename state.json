@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-02T16:26:40.711Z",
-    "productCount": 44,
+    "lastChecked": "2026-06-02T16:31:53.995Z",
+    "productCount": 45,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -394,6 +394,28 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/78559c51-a67c-2e35-a40c-395c1299331e.jpg?v=1762088105",
         "url": "https://sharedpour.com/products/jack-daniels-x-t8ke-rye-whiskey"
+      },
+      "driftless-glen-4625-mash-journey-single-barrel-bourbon-select-copy": {
+        "handle": "driftless-glen-4625-mash-journey-single-barrel-bourbon-select-copy",
+        "title": "Driftless Glen #4625 Mash & Journey Single Barrel Bourbon Select \"Apple Berry Fritter\"",
+        "vendor": "Driftless Glen",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 74.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DriftlessGlenn_Apple_Berry_Fritter_1.jpg?v=1770378586",
+        "url": "https://sharedpour.com/products/driftless-glen-4625-mash-journey-single-barrel-bourbon-select-copy"
       },
       "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof": {
         "handle": "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof",
@@ -968,7 +990,7 @@
     "consecutiveErrors": 0
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-02T16:26:46.759Z",
+    "lastChecked": "2026-06-02T16:31:59.288Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1027,7 +1049,7 @@
     "consecutiveErrors": 0
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-02T16:26:55.298Z",
+    "lastChecked": "2026-06-02T16:32:07.256Z",
     "productCount": 8,
     "products": {
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
