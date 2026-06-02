@@ -3,11 +3,13 @@ import { URL } from "node:url";
 import { sleep } from "../lib/utils.js";
 
 const COLORS = {
-  new_product: 0x3498db,  // blue
-  restock: 0x2ecc71,      // green
-  sold_out: 0xe74c3c,     // red
-  site_reset: 0xf39c12,   // orange
-  site_changed: 0x9b59b6, // purple
+  new_product: 0x3498db,    // blue
+  restock: 0x2ecc71,        // green
+  sold_out: 0xe74c3c,       // red
+  site_reset: 0xf39c12,     // orange
+  site_changed: 0x9b59b6,   // purple
+  site_error: 0xe67e22,     // dark orange
+  site_recovered: 0x16a085, // teal
 };
 
 const LABELS = {
@@ -16,6 +18,8 @@ const LABELS = {
   sold_out: "Sold Out",
   site_reset: "🌊 Wave Reset",
   site_changed: "🔔 Store Changed",
+  site_error: "🚨 Site Down",
+  site_recovered: "✅ Site Recovered",
 };
 
 export async function sendAlert(webhookUrl, siteName, alert) {
@@ -25,11 +29,14 @@ export async function sendAlert(webhookUrl, siteName, alert) {
 
   let embed;
 
-  if (type === "site_reset" || type === "site_changed") {
-    const defaultDesc =
-      type === "site_reset"
-        ? "Coming Soon page detected — shop has reset between waves."
-        : "Something changed on the store page.";
+  const SITE_LEVEL = new Set(["site_reset", "site_changed", "site_error", "site_recovered"]);
+  if (SITE_LEVEL.has(type)) {
+    const defaults = {
+      site_reset: "Coming Soon page detected — shop has reset between waves.",
+      site_changed: "Something changed on the store page.",
+      site_error: "Repeated check failures — investigate.",
+      site_recovered: "Checks are succeeding again.",
+    };
     const extraFields =
       type === "site_reset"
         ? [{ name: "Expected", value: "New bottles in 2–14 days", inline: true }]
@@ -37,7 +44,7 @@ export async function sendAlert(webhookUrl, siteName, alert) {
     embed = {
       title: `${label} — ${siteName}`,
       color,
-      description: product.note ?? defaultDesc,
+      description: product.note ?? defaults[type] ?? "",
       fields: extraFields,
       url: product.url,
       timestamp: new Date().toISOString(),
@@ -77,7 +84,7 @@ export async function sendAlert(webhookUrl, siteName, alert) {
           {
             type: 2,
             style: 5,
-            label: type === "site_reset" ? "View Site" : "View Product",
+            label: SITE_LEVEL.has(type) ? "View Site" : "View Product",
             url: product.url,
           },
         ],

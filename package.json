@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "Personal stock-monitoring bot for whiskey/spirits product pages",
   "type": "module",
-  "main": "checker.js",
+  "main": "worker.js",
   "scripts": {
     "start": "node worker.js",
-    "worker": "node worker.js",
-    "check": "node checker.js"
+    "worker": "node worker.js"
   },
   "engines": {
     "node": ">=18"

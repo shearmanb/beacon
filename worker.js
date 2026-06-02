@@ -1,9 +1,7 @@
-// Persistent Railway worker — replaces the one-shot checker.js GitHub Actions model.
-// Loops every ~60 s; per-site shouldCheck() gates actual fetches.
-// State is kept in memory and pushed to GitHub after each changed run so the
-// dashboard continues to read from raw GitHub URLs as before.
+// Persistent Railway worker. Loops every ~60 s; per-site shouldCheck() gates
+// actual fetches. State is kept in memory and pushed to GitHub after each
+// changed run so the dashboard continues to read from raw GitHub URLs.
 
-import { sites } from "./config.js";
 import { sendAlert as sendDiscordAlert } from "./notifiers/discord.js";
 import { readFile, writeFile } from "./lib/github.js";
 import { shouldCheck } from "./lib/schedule.js";
@@ -12,7 +10,8 @@ import { sleep, jitter } from "./lib/utils.js";
 
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
 const LOOP_BASE_MS = 60_000;
-const MAX_HISTORY = 200;
+const MAX_HISTORY = 250;
+const ERROR_ALERT_THRESHOLD = 5; // consecutive failures before paging Discord
 
 // ── In-memory state ───────────────────────────────────────────────────────────
 
@@ -35,33 +34,39 @@ async function loadStartupState() {
   console.log(`[startup] Ready. ${Object.keys(globalState).length} sites in state.`);
 }
 
-async function pushState() {
-  const content = JSON.stringify(globalState, null, 2);
-  // Retry once on SHA conflict (e.g. a manual workflow_dispatch ran concurrently).
+// On 409 conflict we re-fetch the latest remote state and merge: for sites
+// this loop touched, our in-memory data wins (it's fresher); for everything
+// else, the remote wins (we'd be discarding a concurrent writer's entry).
+async function pushState(touchedSiteIds) {
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const newSha = await writeFile(
         "state.json",
-        content,
+        JSON.stringify(globalState, null, 2),
         stateFileSha,
         "chore: update state [skip ci]"
       );
       if (newSha) stateFileSha = newSha;
       return;
     } catch (err) {
-      if (err.message.includes("409") && attempt === 0) {
-        const res = await readFile("state.json");
-        stateFileSha = res.sha;
-      } else {
-        throw err;
+      if (!err.message.includes("409") || attempt !== 0) throw err;
+      console.warn("[pushState] 409 conflict — merging with remote state");
+      const res = await readFile("state.json");
+      stateFileSha = res.sha;
+      let remote = {};
+      try { remote = JSON.parse(res.content ?? "{}"); } catch { remote = {}; }
+      const merged = { ...remote };
+      for (const id of touchedSiteIds) {
+        if (globalState[id] !== undefined) merged[id] = globalState[id];
       }
+      globalState = merged;
     }
   }
 }
 
 async function appendAndPushHistory(events) {
   // Always re-read on each call so we have the latest sha and don't lose
-  // entries pushed by a concurrent writer (e.g. a manual Run Now).
+  // entries pushed by a concurrent writer.
   for (let attempt = 0; attempt < 2; attempt++) {
     const res = await readFile("alert_history.json");
     historyFileSha = res.sha;
@@ -87,35 +92,42 @@ async function appendAndPushHistory(events) {
   }
 }
 
-async function fetchIgnored() {
-  const res = await readFile("ignored_products.json");
-  if (!res.content) return {};
-  try { return JSON.parse(res.content); } catch { return {}; }
-}
-
-async function fetchSchedules() {
-  const res = await readFile("schedules.json");
-  if (!res.content) return {};
-  try { return JSON.parse(res.content); } catch { return {}; }
+async function fetchJsonFile(path) {
+  const res = await readFile(path);
+  if (!res.content) return null;
+  try { return JSON.parse(res.content); } catch { return null; }
 }
 
 // ── Main run ──────────────────────────────────────────────────────────────────
 
 async function run() {
-  // Fetch ignored and schedules fresh each loop so dashboard changes take effect
-  // without a redeploy.
+  // Fetch config, ignored, and schedules fresh each loop so dashboard changes
+  // take effect without a redeploy.
+  let config = null;
   let ignored = {};
   let schedules = {};
   try {
-    [ignored, schedules] = await Promise.all([fetchIgnored(), fetchSchedules()]);
+    const [c, i, s] = await Promise.all([
+      fetchJsonFile("config.json"),
+      fetchJsonFile("ignored_products.json"),
+      fetchJsonFile("schedules.json"),
+    ]);
+    config = c;
+    ignored = i ?? {};
+    schedules = s ?? {};
   } catch (err) {
-    console.error("[run] Failed to fetch ignored/schedules:", err.message);
+    console.error("[run] Failed to fetch config/ignored/schedules:", err.message);
+  }
+  if (!config?.sites?.length) {
+    console.error("[run] No sites in config.json — skipping run.");
+    return;
   }
 
   const newHistory = [];
+  const touchedSiteIds = [];
   let stateChanged = false;
 
-  for (const site of sites) {
+  for (const site of config.sites) {
     if (!site.enabled) continue;
 
     const siteState = globalState[site.id];
@@ -124,19 +136,36 @@ async function run() {
       continue;
     }
 
-    // Pre-site jitter: 2–5 s random delay before each fetch to avoid
-    // hitting sites at predictable clock times.
+    // Pre-site jitter: 2–5 s random delay before each fetch so we don't
+    // hit servers at predictable clock-aligned times.
     await sleep(jitter(3500, 1500));
 
     console.log(`[${site.name}] Checking...`);
+    touchedSiteIds.push(site.id);
 
     try {
       const strategy = await loadStrategy(site.strategy);
       const { state, alerts } = await strategy.checkSite(site, siteState);
 
-      // Clear any prior error tracking on a successful check
-      globalState[site.id] = { ...state, consecutiveErrors: 0 };
+      // Recovery alert: if we had an open error page, close it.
+      const wasInErrorAlert = siteState?.errorAlertSent === true;
+      globalState[site.id] = { ...state, consecutiveErrors: 0, errorAlertSent: false };
       stateChanged = true;
+
+      if (wasInErrorAlert) {
+        const recoveryEvent = {
+          timestamp: new Date().toISOString(),
+          siteId: site.id,
+          siteName: site.name,
+          type: "site_recovered",
+          product: { title: site.name, url: site.url, note: "Checks are succeeding again." },
+        };
+        newHistory.push(recoveryEvent);
+        if (DISCORD_WEBHOOK) {
+          try { await sendDiscordAlert(DISCORD_WEBHOOK, site.name, recoveryEvent); }
+          catch (err) { console.error(`  Discord recovery error: ${err.message}`); }
+        }
+      }
 
       const filteredAlerts = alerts.filter((a) => !ignored[a.product?.handle]);
       console.log(
@@ -156,23 +185,44 @@ async function run() {
         });
 
         if (DISCORD_WEBHOOK) {
-          try {
-            await sendDiscordAlert(DISCORD_WEBHOOK, site.name, alert);
-          } catch (err) {
-            console.error(`  Discord error: ${err.message}`);
-          }
+          try { await sendDiscordAlert(DISCORD_WEBHOOK, site.name, alert); }
+          catch (err) { console.error(`  Discord error: ${err.message}`); }
         }
       }
     } catch (err) {
       console.error(`[${site.name}] Error: ${err.message}`);
       const prev = globalState[site.id] ?? {};
+      const consecutiveErrors = (prev.consecutiveErrors ?? 0) + 1;
+      const alreadyAlerted = prev.errorAlertSent === true;
+      const shouldAlert = consecutiveErrors >= ERROR_ALERT_THRESHOLD && !alreadyAlerted;
+
       globalState[site.id] = {
         ...prev,
-        consecutiveErrors: (prev.consecutiveErrors ?? 0) + 1,
+        consecutiveErrors,
         lastError: err.message,
         lastErrorAt: new Date().toISOString(),
+        errorAlertSent: alreadyAlerted || shouldAlert,
       };
       stateChanged = true;
+
+      if (shouldAlert) {
+        const errEvent = {
+          timestamp: new Date().toISOString(),
+          siteId: site.id,
+          siteName: site.name,
+          type: "site_error",
+          product: {
+            title: site.name,
+            url: site.url,
+            note: `${consecutiveErrors} consecutive failures. Last error: ${err.message}`,
+          },
+        };
+        newHistory.push(errEvent);
+        if (DISCORD_WEBHOOK) {
+          try { await sendDiscordAlert(DISCORD_WEBHOOK, site.name, errEvent); }
+          catch (e) { console.error(`  Discord site_error post failed: ${e.message}`); }
+        }
+      }
     }
 
     // Inter-site gap: 500–1500 ms between sites within a single run.
@@ -181,7 +231,7 @@ async function run() {
 
   if (stateChanged) {
     try {
-      await pushState();
+      await pushState(touchedSiteIds);
       console.log("[run] State pushed to GitHub.");
     } catch (err) {
       console.error("[run] Failed to push state:", err.message);

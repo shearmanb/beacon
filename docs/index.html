@@ -325,7 +325,7 @@
             <input class="sched-text-input" id="sched-edit-label" type="text" placeholder="e.g. Working Hours Heavy" oninput="autoSlugEditId()" />
           </div>
           <div>
-            <label class="sched-field-label">ID <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(schedule value stored in config.js)</span></label>
+            <label class="sched-field-label">ID <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(schedule value stored in config.json)</span></label>
             <input class="sched-text-input" id="sched-edit-id" type="text" placeholder="e.g. working_hours_heavy" />
           </div>
           <div>
@@ -779,14 +779,14 @@
     const [stateText, historyText, configText, ignoredText, schedulesText] = await Promise.all([
       fetchRaw('state.json').catch(e => { errors.push(`state: ${e.message}`); return null; }),
       fetchRaw('alert_history.json').catch(e => { errors.push(`history: ${e.message}`); return null; }),
-      fetchRaw('config.js').catch(e => { errors.push(`config: ${e.message}`); return null; }),
+      fetchRaw('config.json').catch(e => { errors.push(`config: ${e.message}`); return null; }),
       fetchRaw('ignored_products.json').catch(() => '{}'),
       fetchRaw('schedules.json').catch(() => null),
     ]);
 
     if (stateText)     state        = JSON.parse(stateText);
     if (historyText)   history      = JSON.parse(historyText);
-    if (configText)    config.sites = parseConfigSites(configText);
+    if (configText)    config.sites = (JSON.parse(configText).sites ?? []);
     if (schedulesText) schedules    = JSON.parse(schedulesText);
     ignored = JSON.parse(ignoredText);
 
@@ -806,30 +806,10 @@
     return res.text();
   }
 
-  function parseConfigSites(js) {
-    // Extract site objects via a simple regex for display purposes.
-    // Full execution not used — we only need name, id, imminent, intervalMinutes.
-    const sites = [];
-    const blocks = js.matchAll(/\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/gs);
-    for (const block of blocks) {
-      const b = block[1];
-      const name = (b.match(/name:\s*["']([^"']+)["']/) || [])[1];
-      const id   = (b.match(/id:\s*["']([^"']+)["']/) || [])[1];
-      const imminent = /imminent:\s*true/.test(b);
-      const enabled = !/enabled:\s*false/.test(b);
-      const interval  = parseInt((b.match(/intervalMinutes:\s*(\d+)/) || [])[1] ?? '0');
-      const schedule  = (b.match(/schedule:\s*["']([^"']+)["']/) || [])[1] ?? null;
-      const url = (b.match(/url:\s*["']([^"']+)["']/) || [])[1] ?? null;
-      const tcMatch = b.match(/titleContains:\s*\[([^\]]*)\]/);
-      const titleContains = tcMatch ? [...tcMatch[1].matchAll(/["']([^"']+)["']/g)].map(m => m[1]) : [];
-      if (name && id) sites.push({ name, id, imminent, enabled, intervalMinutes: interval, schedule, url, titleContains });
-    }
-    return sites;
-  }
-
   function getSiteUrl(site) {
     if (!site.url) return null;
-    if (site.titleContains?.length) return site.url + '/search?q=' + encodeURIComponent(site.titleContains[0]);
+    const titleContains = site.filters?.titleContains ?? site.titleContains ?? [];
+    if (titleContains.length) return site.url + '/search?q=' + encodeURIComponent(titleContains[0]);
     return site.url;
   }
 
@@ -874,7 +854,6 @@
     const okCount       = healths.filter(h => h?.level === 'ok').length;
     const criticalCount = healths.filter(h => h?.level === 'critical').length;
     const total = enabledSites.length;
-    const token = localStorage.getItem(TOKEN_KEY);
 
     let level, icon, label;
     if (criticalCount === total) {
@@ -885,58 +864,8 @@
       level = 'warn'; icon = '🟡'; label = `${okCount}/${total} ok`;
     }
 
-    const btn = (level === 'critical' && token)
-      ? `<button class="chip-btn" onclick="event.stopPropagation();reenableGHActions()">Re-enable Actions</button>`
-      : '';
     chip.className = `worker-chip ${level}`;
-    chip.innerHTML = `${icon} ${esc(label)}${btn}`;
-  }
-
-  async function reenableGHActions() {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) { alert('Add a GitHub token first.'); return; }
-
-    const confirmed = confirm(
-      'This will re-add the GitHub Actions cron schedule to check.yml as an emergency backup.\n\n' +
-      'Both Railway and GitHub Actions will run simultaneously until you manually remove the cron again. Continue?'
-    );
-    if (!confirmed) return;
-
-    try {
-      // Fetch current check.yml
-      const res = await fetch(`${API_BASE}/contents/.github/workflows/check.yml`, {
-        headers: { Authorization: `token ${token}` },
-      });
-      if (!res.ok) throw new Error(`Failed to fetch check.yml: ${res.status}`);
-      const data = await res.json();
-      const current = atob(data.content.replace(/\n/g, ''));
-
-      // Inject cron back in — replace the single workflow_dispatch-only line
-      const updated = current.replace(
-        /on:\s*\n\s*workflow_dispatch:.*\n/,
-        'on:\n  schedule:\n    - cron: "3,8,13,18,23,28,33,38,43,48,53,58 * * * *"\n  workflow_dispatch:\n'
-      );
-
-      if (updated === current) {
-        alert('Could not find the expected pattern in check.yml — edit it manually.');
-        return;
-      }
-
-      const putRes = await fetch(`${API_BASE}/contents/.github/workflows/check.yml`, {
-        method: 'PUT',
-        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: 'fix: re-enable GitHub Actions cron as emergency backup [skip ci]',
-          content: btoa(updated),
-          sha: data.sha,
-          branch: 'main',
-        }),
-      });
-      if (!putRes.ok) throw new Error(`Failed to update check.yml: ${putRes.status}`);
-      alert('Done — GitHub Actions cron re-enabled. It will fire within 5 minutes. Remember to disable it again once Railway is healthy.');
-    } catch (err) {
-      alert(`Error: ${err.message}`);
-    }
+    chip.innerHTML = `${icon} ${esc(label)}`;
   }
 
   function renderSiteCards() {
@@ -1225,41 +1154,36 @@
     } catch { /* non-fatal */ }
   }
 
+  // Clear lastChecked from state.json so the Railway worker re-checks every
+  // site on its next loop (within ~60s). No more workflow_dispatch — the
+  // GitHub Actions backup was removed in favor of a hot-reloading worker.
   async function triggerRun() {
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) { alert('Add a GitHub token first.'); return; }
     const btn = document.getElementById('run-now-btn');
     btn.disabled = true;
     try {
-      // Clear lastChecked so all sites are checked regardless of schedule
       const stateRes = await fetch(`${API_BASE}/contents/state.json`, {
         headers: { Authorization: `token ${token}` },
       });
-      if (stateRes.ok) {
-        const stateData = await stateRes.json();
-        const stateObj = JSON.parse(atob(stateData.content.replace(/\n/g, '')));
-        for (const key of Object.keys(stateObj)) {
-          delete stateObj[key].lastChecked;
-        }
-        await fetch(`${API_BASE}/contents/state.json`, {
-          method: 'PUT',
-          headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: 'chore: clear lastChecked for forced run [skip ci]',
-            content: btoa(JSON.stringify(stateObj, null, 2)),
-            sha: stateData.sha,
-            branch: 'main',
-          }),
-        });
-      }
-
-      const res = await fetch(`${API_BASE}/actions/workflows/check.yml/dispatches`, {
-        method: 'POST',
+      if (!stateRes.ok) { alert(`Could not fetch state.json (${stateRes.status})`); return; }
+      const stateData = await stateRes.json();
+      const stateObj = JSON.parse(atob(stateData.content.replace(/\n/g, '')));
+      for (const key of Object.keys(stateObj)) delete stateObj[key].lastChecked;
+      const putRes = await fetch(`${API_BASE}/contents/state.json`, {
+        method: 'PUT',
         headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ref: 'main' }),
+        body: JSON.stringify({
+          message: 'chore: clear lastChecked for forced run [skip ci]',
+          content: safeBtoa(JSON.stringify(stateObj, null, 2)),
+          sha: stateData.sha,
+          branch: 'main',
+        }),
       });
-      if (res.ok || res.status === 204) { alert('Run triggered — all sites will be checked now. Check Actions tab in ~30s.'); }
-      else { alert(`Failed: ${res.status}`); }
+      if (putRes.ok) alert('All sites queued — Railway worker will re-check within ~60s.');
+      else alert(`Failed: ${putRes.status}`);
+    } catch (err) {
+      alert(`Error: ${err.message}`);
     } finally {
       btn.disabled = false;
     }
@@ -1312,186 +1236,77 @@
     }
   }
 
-  async function toggleEnabled(siteId, value, el) {
+  // Single source of truth for site field edits. Fetches config.json, mutates
+  // the targeted field, PUTs back, and only updates the local UI after the
+  // write succeeds — so a failed write can't leave the dashboard showing
+  // a value that isn't actually saved.
+  async function updateSiteField(siteId, field, value, commitMessage) {
     const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) { alert('Add a GitHub token to toggle monitoring.'); renderSiteCards(); return; }
-
-    if (el) el.disabled = true;
+    if (!token) { alert('Add a GitHub token to edit config.'); renderSiteCards(); return false; }
     try {
-      const res = await fetch(`${API_BASE}/contents/config.js`, {
+      const res = await fetch(`${API_BASE}/contents/config.json`, {
         headers: { Authorization: `token ${token}` },
       });
-      if (!res.ok) { alert('Could not fetch config.js'); renderSiteCards(); return; }
-
+      if (!res.ok) { alert(`Could not fetch config.json (${res.status})`); renderSiteCards(); return false; }
       const data = await res.json();
-      const content = atob(data.content.replace(/\n/g, ''));
+      const parsed = JSON.parse(atob(data.content.replace(/\n/g, '')));
+      const site = parsed.sites?.find(s => s.id === siteId);
+      if (!site) { alert(`Site ${siteId} not in config.json.`); renderSiteCards(); return false; }
+      if (site[field] === value) return true; // no-op
+      site[field] = value;
 
-      const updated = flipEnabled(content, siteId, value);
-      if (updated === null) { alert('Could not find site in config to update.'); return; }
-      if (updated === content) { return; }
-
-      const putRes = await fetch(`${API_BASE}/contents/config.js`, {
+      const putRes = await fetch(`${API_BASE}/contents/config.json`, {
         method: 'PUT',
         headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: `chore: ${value ? 'enable' : 'disable'} monitoring for ${siteId} [skip ci]`,
-          content: btoa(updated),
+          message: commitMessage,
+          content: safeBtoa(JSON.stringify(parsed, null, 2) + '\n'),
           sha: data.sha,
           branch: 'main',
         }),
       });
-
-      if (putRes.ok || putRes.status === 200) {
-        const site = config.sites.find(s => s.id === siteId);
-        if (site) site.enabled = value;
-        renderSiteCards();
-      } else {
+      if (!putRes.ok) {
         alert(`Failed to update config: ${putRes.status}`);
         renderSiteCards();
+        return false;
       }
+
+      // Only NOW update local model — write confirmed.
+      const localSite = config.sites.find(s => s.id === siteId);
+      if (localSite) localSite[field] = value;
+      renderSiteCards();
+      return true;
     } catch (err) {
       alert(`Error: ${err.message}`);
       renderSiteCards();
-    } finally {
-      if (el) el.disabled = false;
+      return false;
     }
+  }
+
+  async function toggleEnabled(siteId, value, el) {
+    if (el) el.disabled = true;
+    try {
+      await updateSiteField(siteId, 'enabled', value,
+        `chore: ${value ? 'enable' : 'disable'} monitoring for ${siteId} [skip ci]`);
+    } finally { if (el) el.disabled = false; }
   }
 
   async function toggleImminent(siteId, value, el) {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) { alert('Add a GitHub token to toggle imminent mode.'); renderSiteCards(); return; }
-
     if (el) el.disabled = true;
     try {
-      const res = await fetch(`${API_BASE}/contents/config.js`, {
-        headers: { Authorization: `token ${token}` },
-      });
-      if (!res.ok) { alert('Could not fetch config.js'); renderSiteCards(); return; }
-
-      const data = await res.json();
-      const content = atob(data.content.replace(/\n/g, ''));
-
-      const updated = flipImminent(content, siteId, value);
-      if (updated === null) { alert('Could not find site in config to update.'); return; }
-      if (updated === content) { return; }
-
-      const putRes = await fetch(`${API_BASE}/contents/config.js`, {
-        method: 'PUT',
-        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `chore: ${value ? 'enable' : 'disable'} imminent mode for ${siteId} [skip ci]`,
-          content: btoa(updated),
-          sha: data.sha,
-          branch: 'main',
-        }),
-      });
-
-      if (putRes.ok || putRes.status === 200) {
-        const site = config.sites.find(s => s.id === siteId);
-        if (site) site.imminent = value;
-        renderSiteCards();
-      } else {
-        alert(`Failed to update config: ${putRes.status}`);
-        renderSiteCards();
-      }
-    } catch (err) {
-      alert(`Error: ${err.message}`);
-      renderSiteCards();
-    } finally {
-      if (el) el.disabled = false;
-    }
-  }
-
-  function escapeRegex(s) {
-    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-
-  function flipSchedule(js, siteId, value) {
-    const idPattern = new RegExp(`id:\\s*["']${escapeRegex(siteId)}["']`);
-    const lines = js.split('\n');
-    let depth = 0;
-    let inTarget = false;
-    const result = [...lines];
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      for (const ch of line) {
-        if (ch === '{') depth++;
-        if (ch === '}') { if (depth === 2 && inTarget) inTarget = false; depth--; }
-      }
-      if (idPattern.test(line)) inTarget = true;
-      if (inTarget && /schedule:\s*["'][^"']*["']/.test(line)) {
-        result[i] = line.replace(/schedule:\s*["'][^"']*["']/, `schedule: "${value}"`);
-        return result.join('\n');
-      }
-    }
-    return null;
+      await updateSiteField(siteId, 'imminent', value,
+        `chore: ${value ? 'enable' : 'disable'} imminent mode for ${siteId} [skip ci]`);
+    } finally { if (el) el.disabled = false; }
   }
 
   async function setSchedule(siteId, value, el) {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) { alert('Add a GitHub token to change the schedule.'); renderSiteCards(); return; }
-
     if (el) el.disabled = true;
     try {
-      const res = await fetch(`${API_BASE}/contents/config.js`, {
-        headers: { Authorization: `token ${token}` },
-      });
-      if (!res.ok) { alert('Could not fetch config.js'); renderSiteCards(); return; }
-
-      const data = await res.json();
-      const content = atob(data.content.replace(/\n/g, ''));
-      const updated = flipSchedule(content, siteId, value);
-      if (updated === null) { alert('Could not find schedule field in config to update.'); return; }
-      if (updated === content) { return; }
-
-      const putRes = await fetch(`${API_BASE}/contents/config.js`, {
-        method: 'PUT',
-        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `chore: set schedule for ${siteId} to ${value} [skip ci]`,
-          content: btoa(updated),
-          sha: data.sha,
-          branch: 'main',
-        }),
-      });
-
-      if (putRes.ok || putRes.status === 200) {
-        const site = config.sites.find(s => s.id === siteId);
-        if (site) site.schedule = value;
-        renderSiteCards();
-      } else {
-        alert(`Failed to update config: ${putRes.status}`);
-        renderSiteCards();
-      }
-    } catch (err) {
-      alert(`Error: ${err.message}`);
-      renderSiteCards();
+      await updateSiteField(siteId, 'schedule', value,
+        `chore: set schedule for ${siteId} to ${value} [skip ci]`);
     } finally {
       if (el) el.disabled = false;
     }
-  }
-
-  // Returns updated JS string, or null if the site/field was not found.
-  function flipEnabled(js, siteId, value) {
-    const idPattern = new RegExp(`id:\\s*["']${escapeRegex(siteId)}["']`);
-    const lines = js.split('\n');
-    let depth = 0;
-    let inTarget = false;
-    const result = [...lines];
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      for (const ch of line) {
-        if (ch === '{') depth++;
-        if (ch === '}') { if (depth === 2 && inTarget) inTarget = false; depth--; }
-      }
-      if (idPattern.test(line)) inTarget = true;
-      if (inTarget && /enabled:\s*(true|false)/.test(line)) {
-        result[i] = line.replace(/enabled:\s*(true|false)/, `enabled: ${value}`);
-        return result.join('\n');
-      }
-    }
-    return null;
   }
 
   // ── Section collapse ─────────────────────────────────────────────────────────
@@ -1656,28 +1471,6 @@
     document.getElementById('sandbox-clear-btn').style.display = 'none';
   }
 
-  // Returns updated JS string, or null if the site/field was not found.
-  function flipImminent(js, siteId, value) {
-    const idPattern = new RegExp(`id:\\s*["']${escapeRegex(siteId)}["']`);
-    const lines = js.split('\n');
-    let depth = 0;
-    let inTarget = false;
-    const result = [...lines];
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      for (const ch of line) {
-        if (ch === '{') depth++;
-        if (ch === '}') { if (depth === 2 && inTarget) inTarget = false; depth--; }
-      }
-      if (idPattern.test(line)) inTarget = true;
-      if (inTarget && /imminent:\s*(true|false)/.test(line) && !/imminentInterval/.test(line)) {
-        result[i] = line.replace(/imminent:\s*(true|false)/, `imminent: ${value}`);
-        return result.join('\n');
-      }
-    }
-    return null;
-  }
 </script>
 </body>
 </html>
