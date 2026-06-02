@@ -8,21 +8,11 @@ import { sendAlert as sendDiscordAlert } from "./notifiers/discord.js";
 import { readFile, writeFile } from "./lib/github.js";
 import { shouldCheck } from "./lib/schedule.js";
 import { loadStrategy } from "./lib/strategies.js";
+import { sleep, jitter } from "./lib/utils.js";
 
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
 const LOOP_BASE_MS = 60_000;
 const MAX_HISTORY = 200;
-
-// ── Utilities ─────────────────────────────────────────────────────────────────
-
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
-}
-
-// Returns a duration in ms: base ± up to spread ms.
-function jitter(baseMs, spreadMs) {
-  return Math.max(0, baseMs + (Math.random() * 2 - 1) * spreadMs);
-}
 
 // ── In-memory state ───────────────────────────────────────────────────────────
 

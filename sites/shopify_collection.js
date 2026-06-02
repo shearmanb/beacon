@@ -1,9 +1,6 @@
 import { https } from "../lib/fetch.js";
 import { diff } from "../lib/diff.js";
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import { sleep } from "../lib/utils.js";
 
 function getMinPrice(variants) {
   if (!variants?.length) return null;

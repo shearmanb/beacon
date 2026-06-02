@@ -1,5 +1,6 @@
 import { request } from "node:https";
 import { URL } from "node:url";
+import { sleep } from "../lib/utils.js";
 
 const COLORS = {
   new_product: 0x3498db,  // blue
@@ -85,10 +86,6 @@ export async function sendAlert(webhookUrl, siteName, alert) {
   });
 
   return postWebhook(webhookUrl, payload);
-}
-
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
 }
 
 async function postWebhook(webhookUrl, payload, attempt = 0) {
