@@ -2955,5 +2955,34 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d6517fc0-0243-759a-7624-31a598697288_1.jpg?v=1765717859",
       "url": "https://sharedpour.com/products/penelope-estate-10-year-21-rye-pen25-405"
     }
+  },
+  {
+    "timestamp": "2026-06-02T01:22:14.643Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour – T8KE",
+    "type": "sold_out",
+    "product": {
+      "handle": "nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection",
+      "title": "NULU Single Barrel Maple Brulee Bourbon by T8KE Single Barrel Selection B928",
+      "vendor": "Nulu",
+      "productType": "Bourbon",
+      "tags": [
+        "50-100",
+        "American-Bourbon",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "Bourbon Whiskey",
+        "nulu",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 89.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-27at10.22.09.png?v=1761560538",
+      "url": "https://sharedpour.com/products/nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection"
+    }
   }
 ]
