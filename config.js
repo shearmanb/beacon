@@ -11,7 +11,7 @@ export const sites = [
     intervalMinutes: 20,
     schedule: "working_hours_heavy",
     imminentIntervalMinutes: 2,
-    imminent: false,
+    imminent: true,
     alertOnNewProduct: true,
     alertOnRestock: true,
     alertOnSoldOut: true,
