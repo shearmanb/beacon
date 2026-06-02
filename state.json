@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-02T21:35:56.894Z",
+    "lastChecked": "2026-06-02T21:56:46.689Z",
     "productCount": 46,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -1043,7 +1043,7 @@
     "errorAlertSent": false
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-02T21:36:02.481Z",
+    "lastChecked": "2026-06-02T21:56:49.950Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1053,7 +1053,7 @@
         "productType": "",
         "tags": [],
         "minPrice": 170,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5766.heic?v=1780435180",
         "url": "https://shop.fountaininndc.com/products/reveries-the-raven-batch-v"
       },
