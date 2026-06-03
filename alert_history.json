@@ -3126,5 +3126,16 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/78559c51-a67c-2e35-a40c-395c1299331e.jpg?v=1762088105",
       "url": "https://sharedpour.com/products/jack-daniels-x-t8ke-rye-whiskey"
     }
+  },
+  {
+    "timestamp": "2026-06-03T13:26:51.233Z",
+    "siteId": "sharedpour_reveries",
+    "siteName": "SharedPour – The Reveries",
+    "type": "site_error",
+    "product": {
+      "title": "SharedPour – The Reveries",
+      "url": "https://sharedpour.com",
+      "note": "5 consecutive failures. Last error: Socket idle timeout fetching https://sharedpour.com/products.json?limit=250&page=1"
+    }
   }
 ]
