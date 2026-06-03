@@ -131,12 +131,102 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
 
 `schedule` accepts `"5"|"15"|"20"|"30"|"60"` or any key in `schedules.json`. `intervalMinutes` is the fallback when `schedule` is missing or unresolvable. `imminentIntervalMinutes` overrides everything when `imminent: true`.
 
-## Open features (backlog)
-- **Surface `consecutiveErrors` / `lastError` on dashboard site cards** — both fields are already in `state.json`; just need to render them.
-- **Cloudflare Access for dashboard auth** — replace the hardcoded `DASH_PASSWORD = 'beam'` with Google-login-gated access via Cloudflare. Free for personal use.
-- **Move primary state off GitHub** — research Railway volume / Railway Postgres as source-of-truth; periodically sync read-only state.json to GitHub for dashboard. Reduces 409s and write churn.
-- **Alert history archiving** — current cap is 250; older entries are evicted. Consider appending evicted entries to a never-trimmed `alert_history_archive.json`.
-- **Activate ignore→Discord notifications** — the dashboard sends a Discord embed when a product is ignored/unignored, but the webhook URL must be saved in the browser first (Discord Webhook button in header).
+## Feature backlog & to-do list
+
+Items are grouped by effort/type. "Done" section captures what was completed so context isn't lost across sessions.
+
+---
+
+### Quick wins (low effort, high value)
+
+**Activate ignore→Discord notifications** *(one-time browser setup)*
+The dashboard already sends a Discord embed when a product is ignored or unignored, but it reads the webhook URL from `localStorage` — not from an env var. Nothing happens until you do the setup.
+- Open dashboard → click **Discord Webhook** in the header → paste the same URL that's in the `DISCORD_WEBHOOK_URL` Railway env var → Save
+- One-time per browser. That's it.
+
+**Alert history archiving**
+History is hard-capped at 250 entries in `alert_history.json`. When entry 251 arrives, entry 1 is permanently gone. Fix: when trimming, append the evicted entries to `alert_history_archive.json` (separate file, never trimmed, dashboard ignores it).
+- Effort: ~30 min (small change in `appendAndPushHistory()` in `worker.js`)
+- Risk: none — additive change, archive file starts empty
+
+---
+
+### Features (new capability)
+
+**Dashboard: Railway health indicator**
+There is no GitHub Actions fallback anymore. If Railway dies, nothing checks until it recovers. The site cards go red after 4× their interval, but there's no single header-level "is the worker alive?" signal.
+- Add a "Last run: X min ago" line to the header, derived from the most-recent `lastChecked` timestamp across all enabled sites in `state.json`
+- Color it yellow after 10 min, red after 20 min — independent of any per-site schedule
+- Effort: ~1 hr (dashboard-only change, no worker changes)
+- Risk: none — read-only display
+
+**Imminent mode: sub-60s floor**
+`imminentIntervalMinutes: 2` is currently floored at ~60s by the worker loop. During a drop you want to check every 2 minutes, not every 60s. Two options:
+- *Option A (simple)*: when any enabled site has `imminent: true`, reduce the loop sleep from ~60s to ~10s. All sites still respect `shouldCheck()` so non-imminent sites don't over-check.
+- *Option B (precise)*: inner fast-loop that only runs imminent sites; outer loop handles everything else. More code, more precise.
+- Recommendation: Option A first — it's one line change in `startLoop()` and gets you to ~10s effective floor with no new complexity.
+- Risk: low. The 10s floor only applies when at least one site is in imminent mode.
+
+---
+
+### Infrastructure / security
+
+**Dashboard auth: Cloudflare Access (replace hardcoded password)**
+`DASH_PASSWORD = 'beam'` is hardcoded in the public GitHub Pages HTML. Anyone who can read the HTML source has the password. The real risk is the GitHub PAT stored in `localStorage` — accessible to anyone with DevTools access on a shared machine.
+- Best option: Cloudflare Access (free for personal use) with Google login. Put the dashboard behind a Cloudflare proxy or move it to Cloudflare Pages. 5-minute setup once Cloudflare is wired up.
+- Alternative: move dashboard to own webspace with HTTP basic auth
+- Alternative (minimal): stop storing the PAT in localStorage; require it to be pasted each session — eliminates the main risk with zero infra change
+- Note: Brian's own webspace and Google Workspace are available if hosting needs to move
+
+**Move primary state off GitHub**
+`state.json` is written to GitHub ~every 60s by the worker (one commit per loop when anything ran). This pollutes commit history, creates 409 conflict risk when the dashboard also writes, and adds ~200–300ms GitHub API latency to every loop.
+- *Option A (simplest)*: Railway Volume — SQLite or a JSON file on persistent disk. Worker reads/writes directly. Syncs a read-only copy to GitHub every N loops (e.g. every 5 min) for the dashboard. No new services.
+- *Option B*: Railway Postgres (free tier) — proper relational storage. More setup but enables future features like query-based history.
+- *Option C*: Upstash Redis (free tier) — key-value, very fast, no Railway dependency for storage.
+- Recommendation: evaluate Option A first — Railway Volume is already available, no new account/service needed.
+- Dashboard impact: dashboard still reads from GitHub raw URLs (the synced copy). No dashboard changes needed.
+- Risk: medium complexity. Don't do until Railway is confirmed stable.
+
+---
+
+### Nice-to-have / future research
+
+**Alert history cap increase**
+Current cap is 250. Raising to 500 costs nothing — each entry is ~300 bytes, total file stays under 200 KB. Do at the same time as the archiving feature above.
+
+**Google Workspace / webspace integration**
+- Own webspace could host the dashboard with proper server-side auth (nginx basic auth, or behind Cloudflare)
+- Google Workspace email as a secondary alert channel alongside Discord (useful if Discord is down during a drop)
+- Neither is urgent — Discord has been reliable
+
+**Dashboard sandbox mode**
+The dashboard already has a Sandbox section for testing site checkers (Shopify/Squarespace). This could be expanded to: (a) preview what a new site config would return before adding it to `config.json`, or (b) test schedule rule sets against the current ET time before saving.
+
+---
+
+### Completed (session log — do not re-implement)
+
+These were completed during the Phase 1 / Phase 2 sessions. Listed so future Claude sessions don't suggest them as improvements.
+
+| Done | What |
+|------|------|
+| ✅ | `lib/utils.js` — centralized `sleep`, `jitter`, `randomFrom` |
+| ✅ | `lib/fetch.js` — 30s wall-clock deadline (guarded mid-body stalls) |
+| ✅ | `config.js` → `config.json` migration |
+| ✅ | Worker hot-reloads `config.json` every loop (no Railway redeploy needed for site changes) |
+| ✅ | State push merge on 409 conflict (worker's touched sites win; remote wins for everything else) |
+| ✅ | Consecutive-error Discord alerts: `site_error` (orange) after 5 failures, `site_recovered` (teal) on first success |
+| ✅ | Dashboard `updateSiteField()` — write-confirmed config edits (UI only updates after GitHub PUT succeeds) |
+| ✅ | `consecutiveErrors` / `lastError` surfaced on site cards (red error banner) |
+| ✅ | Alert history cap 200 → 250 |
+| ✅ | Deleted `checker.js` and GitHub Actions workflow (Railway is sole runner) |
+| ✅ | Deleted `notifiers/ntfy.js` |
+| ✅ | Deleted dead strategy files: `reveries_squarespace`, `squarespace_json_monitor`, `html_text_monitor` |
+| ✅ | Deleted `wild_turkey_gold_foil` and `reveries_official_monitor` from config |
+| ✅ | Fixed Fountain Inn DC schedule: `weekend_light_20_mins` → `bar_schedule_fi` |
+| ✅ | New `site_status_monitor` strategy — detects COMING SOON / password wall at thereveries.co/shop |
+| ✅ | New `reveries_site_status` site entry using `site_status_monitor` |
+
 
 ## Known quirks
 
