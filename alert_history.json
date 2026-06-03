@@ -3137,5 +3137,38 @@
       "url": "https://sharedpour.com",
       "note": "5 consecutive failures. Last error: Socket idle timeout fetching https://sharedpour.com/products.json?limit=250&page=1"
     }
+  },
+  {
+    "timestamp": "2026-06-03T13:28:06.231Z",
+    "siteId": "sharedpour_reveries",
+    "siteName": "SharedPour – The Reveries",
+    "type": "site_recovered",
+    "product": {
+      "title": "SharedPour – The Reveries",
+      "url": "https://sharedpour.com",
+      "note": "Checks are succeeding again."
+    }
+  },
+  {
+    "timestamp": "2026-06-03T13:28:12.089Z",
+    "siteId": "fountain_inn_dc",
+    "siteName": "Fountain Inn DC",
+    "type": "site_error",
+    "product": {
+      "title": "Fountain Inn DC",
+      "url": "https://shop.fountaininndc.com",
+      "note": "5 consecutive failures. Last error: HTTP 404 for https://shop.fountaininndc.com/products.json?limit=250&page=1"
+    }
+  },
+  {
+    "timestamp": "2026-06-03T13:28:15.847Z",
+    "siteId": "bourbon_concierge",
+    "siteName": "Bourbon Concierge",
+    "type": "site_error",
+    "product": {
+      "title": "Bourbon Concierge",
+      "url": "https://thebourbonconcierge.com",
+      "note": "5 consecutive failures. Last error: HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=1"
+    }
   }
 ]
