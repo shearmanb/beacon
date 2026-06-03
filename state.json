@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-03T13:23:40.396Z",
+    "lastChecked": "2026-06-03T13:46:31.090Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -812,10 +812,8 @@
         "url": "https://sharedpour.com/products/the-2025-t8ke-exclusive-collection-4x750ml"
       }
     },
-    "consecutiveErrors": 2,
-    "errorAlertSent": false,
-    "lastError": "HTTP 404 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-03T13:45:07.833Z"
+    "consecutiveErrors": 0,
+    "errorAlertSent": false
   },
   "sharedpour_reveries": {
     "lastChecked": "2026-06-03T13:28:06.231Z",
@@ -1024,13 +1022,13 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 19,
+    "consecutiveErrors": 20,
     "errorAlertSent": true,
-    "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
-    "lastErrorAt": "2026-06-03T13:45:14.287Z"
+    "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=4",
+    "lastErrorAt": "2026-06-03T13:46:38.374Z"
   },
   "reveries_official": {
-    "lastChecked": "2026-06-03T13:24:07.886Z",
+    "lastChecked": "2026-06-03T13:46:44.356Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-only-all-the-time-barrel-strength-bourbon-t8ke-reserve-cask": {
@@ -1058,10 +1056,8 @@
     },
     "collectionEmpty": false,
     "pageReset": false,
-    "consecutiveErrors": 1,
-    "errorAlertSent": false,
-    "lastError": "HTTP 404",
-    "lastErrorAt": "2026-06-03T13:45:20.310Z"
+    "consecutiveErrors": 0,
+    "errorAlertSent": false
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-03T13:32:12.420Z",
