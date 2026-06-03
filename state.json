@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-03T13:46:31.090Z",
+    "lastChecked": "2026-06-03T15:36:48.428Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -172,7 +172,7 @@
           "t8ke"
         ],
         "minPrice": 99.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/860a314f-46ee-86f7-d387-ed8ed5246818.jpg?v=1765717125",
         "url": "https://sharedpour.com/products/t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection"
       },
@@ -816,7 +816,7 @@
     "errorAlertSent": false
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-03T13:50:21.879Z",
+    "lastChecked": "2026-06-03T15:36:53.421Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
