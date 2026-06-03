@@ -55,7 +55,7 @@
       "strategy": "shopify_collection",
       "url": "https://shop.fountaininndc.com",
       "intervalMinutes": 30,
-      "schedule": "weekend_light_20_mins",
+      "schedule": "bar_schedule_fi",
       "imminentIntervalMinutes": 2,
       "imminent": false,
       "alertOnNewProduct": true,
@@ -112,21 +112,6 @@
       "alertOnNewProduct": true,
       "alertOnRestock": true,
       "alertOnSoldOut": true,
-      "filters": {}
-    },
-    {
-      "name": "The Reveries – Change Monitor",
-      "id": "reveries_official_monitor",
-      "enabled": false,
-      "strategy": "squarespace_json_monitor",
-      "url": "https://www.thereveries.co/shop",
-      "intervalMinutes": 30,
-      "schedule": "5",
-      "imminentIntervalMinutes": 2,
-      "imminent": false,
-      "alertOnNewProduct": false,
-      "alertOnRestock": false,
-      "alertOnSoldOut": false,
       "filters": {}
     }
   ]
