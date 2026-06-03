@@ -3259,5 +3259,16 @@
       "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/66b414b6-1076-7b4d-7397-f80716e35853.jpg?v=1780412954",
       "url": "https://thebourbonconcierge.com/products/the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release"
     }
+  },
+  {
+    "timestamp": "2026-06-03T18:37:37.210Z",
+    "siteId": "fountain_inn_dc",
+    "siteName": "Fountain Inn DC",
+    "type": "site_recovered",
+    "product": {
+      "title": "Fountain Inn DC",
+      "url": "https://shop.fountaininndc.com",
+      "note": "Checks are succeeding again."
+    }
   }
 ]
