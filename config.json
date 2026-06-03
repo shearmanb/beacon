@@ -1,7 +1,7 @@
 {
   "sites": [
     {
-      "name": "SharedPour â T8KE",
+      "name": "SharedPour Ã¢ÂÂ T8KE",
       "id": "sharedpour_t8ke",
       "enabled": true,
       "strategy": "shopify_collection",
@@ -25,9 +25,9 @@
       }
     },
     {
-      "name": "SharedPour â The Reveries",
+      "name": "SharedPour Ã¢ÂÂ The Reveries",
       "id": "sharedpour_reveries",
-      "enabled": true,
+      "enabled": false,
       "strategy": "shopify_collection",
       "url": "https://sharedpour.com",
       "intervalMinutes": 20,
@@ -103,7 +103,7 @@
       }
     },
     {
-      "name": "The Reveries â Site Status",
+      "name": "The Reveries Ã¢ÂÂ Site Status",
       "id": "reveries_site_status",
       "enabled": true,
       "strategy": "site_status_monitor",
@@ -118,7 +118,7 @@
       "filters": {}
     },
     {
-      "name": "The Reveries â Official Shop",
+      "name": "The Reveries Ã¢ÂÂ Official Shop",
       "id": "reveries_official",
       "enabled": true,
       "strategy": "shopify_storefront",
