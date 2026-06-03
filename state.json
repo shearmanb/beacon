@@ -1058,9 +1058,12 @@
     "errorAlertSent": false
   },
   "reveries_site_status": {
-    "consecutiveErrors": 1,
-    "lastError": "Unknown strategy: site_status_monitor",
-    "lastErrorAt": "2026-06-03T02:54:29.520Z",
+    "lastChecked": "2026-06-03T02:54:33.254Z",
+    "products": {},
+    "pageReset": false,
+    "resetAlertSent": false,
+    "resetReason": null,
+    "consecutiveErrors": 0,
     "errorAlertSent": false
   }
 }
