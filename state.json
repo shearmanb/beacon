@@ -816,7 +816,7 @@
     "errorAlertSent": false
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-03T13:28:06.231Z",
+    "lastChecked": "2026-06-03T13:50:21.879Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -843,10 +843,8 @@
         "url": "https://sharedpour.com/products/the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1"
       }
     },
-    "consecutiveErrors": 1,
-    "errorAlertSent": false,
-    "lastError": "HTTP 404 for https://sharedpour.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-03T13:49:04.729Z"
+    "consecutiveErrors": 0,
+    "errorAlertSent": false
   },
   "fountain_inn_dc": {
     "lastChecked": "2026-06-03T13:34:31.911Z",
@@ -1024,10 +1022,10 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 22,
+    "consecutiveErrors": 23,
     "errorAlertSent": true,
-    "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
-    "lastErrorAt": "2026-06-03T13:49:14.685Z"
+    "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-03T13:50:32.411Z"
   },
   "reveries_official": {
     "lastChecked": "2026-06-03T13:46:44.356Z",
