@@ -887,8 +887,33 @@
     "lastErrorAt": "2026-06-03T14:00:03.350Z"
   },
   "bourbon_concierge": {
-    "productCount": 8,
+    "lastChecked": "2026-06-03T15:38:09.581Z",
+    "productCount": 9,
     "products": {
+      "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
+        "handle": "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release",
+        "title": "THE REVERIES \"RAVEN\" Rare Release Batch V Barrel Strength Bourbon (2026 Release)",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "100-200",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "bis-paused",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "presale",
+          "Single Barrel",
+          "single barrel selections",
+          "the-reveries"
+        ],
+        "minPrice": 159.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/66b414b6-1076-7b4d-7397-f80716e35853.jpg?v=1780412954",
+        "url": "https://thebourbonconcierge.com/products/the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release"
+      },
       "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
         "handle": "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711",
         "title": "THE REVERIES: Behemoth 14 Year Single Barrel Kentucky Straight Bourbon (#25711)",
