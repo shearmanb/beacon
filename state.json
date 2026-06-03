@@ -1056,5 +1056,11 @@
     "pageReset": false,
     "consecutiveErrors": 0,
     "errorAlertSent": false
+  },
+  "reveries_site_status": {
+    "consecutiveErrors": 1,
+    "lastError": "Unknown strategy: site_status_monitor",
+    "lastErrorAt": "2026-06-03T02:54:29.520Z",
+    "errorAlertSent": false
   }
 }
