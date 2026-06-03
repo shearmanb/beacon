@@ -843,8 +843,10 @@
         "url": "https://sharedpour.com/products/the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1"
       }
     },
-    "consecutiveErrors": 0,
-    "errorAlertSent": false
+    "consecutiveErrors": 1,
+    "errorAlertSent": false,
+    "lastError": "HTTP 404 for https://sharedpour.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-03T13:20:41.099Z"
   },
   "fountain_inn_dc": {
     "lastChecked": "2026-06-03T13:01:54.111Z",
@@ -1054,10 +1056,10 @@
     },
     "collectionEmpty": false,
     "pageReset": false,
-    "consecutiveErrors": 2,
+    "consecutiveErrors": 3,
     "errorAlertSent": false,
     "lastError": "HTTP 404",
-    "lastErrorAt": "2026-06-03T13:19:25.734Z"
+    "lastErrorAt": "2026-06-03T13:20:47.075Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-03T13:11:19.523Z",
