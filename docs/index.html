@@ -461,6 +461,9 @@
   function safeBtoa(str) {
     return btoa(unescape(encodeURIComponent(str)));
   }
+  function safeAtob(str) {
+    return decodeURIComponent(escape(atob(str)));
+  }
 
   function openScheduleModal() {
     showSchedListView();
@@ -1168,7 +1171,7 @@
       });
       if (!stateRes.ok) { alert(`Could not fetch state.json (${stateRes.status})`); return; }
       const stateData = await stateRes.json();
-      const stateObj = JSON.parse(atob(stateData.content.replace(/\n/g, '')));
+      const stateObj = JSON.parse(safeAtob(stateData.content.replace(/\n/g, '')));
       for (const key of Object.keys(stateObj)) delete stateObj[key].lastChecked;
       const putRes = await fetch(`${API_BASE}/contents/state.json`, {
         method: 'PUT',
@@ -1204,7 +1207,7 @@
     if (res.ok) {
       const data = await res.json();
       sha = data.sha;
-      current = JSON.parse(atob(data.content.replace(/\n/g, '')));
+      current = JSON.parse(safeAtob(data.content.replace(/\n/g, '')));
     }
 
     if (shouldIgnore) current[handle] = true;
@@ -1212,7 +1215,7 @@
 
     const body = {
       message: `chore: ${shouldIgnore ? 'ignore' : 'unignore'} ${handle} [skip ci]`,
-      content: btoa(JSON.stringify(current, null, 2)),
+      content: safeBtoa(JSON.stringify(current, null, 2)),
       branch: 'main',
     };
     if (sha) body.sha = sha;
@@ -1249,7 +1252,7 @@
       });
       if (!res.ok) { alert(`Could not fetch config.json (${res.status})`); renderSiteCards(); return false; }
       const data = await res.json();
-      const parsed = JSON.parse(atob(data.content.replace(/\n/g, '')));
+      const parsed = JSON.parse(safeAtob(data.content.replace(/\n/g, '')));
       const site = parsed.sites?.find(s => s.id === siteId);
       if (!site) { alert(`Site ${siteId} not in config.json.`); renderSiteCards(); return false; }
       if (site[field] === value) return true; // no-op
@@ -1299,7 +1302,7 @@
             });
             if (res.ok) {
               const data = await res.json();
-              const stateObj = JSON.parse(atob(data.content.replace(/\n/g, '')));
+              const stateObj = JSON.parse(safeAtob(data.content.replace(/\n/g, '')));
               if (stateObj[siteId]) delete stateObj[siteId].lastChecked;
               await fetch(`${API_BASE}/contents/state.json`, {
                 method: 'PUT',
