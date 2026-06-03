@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-03T21:03:55.935Z",
+    "lastChecked": "2026-06-03T21:09:15.775Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -816,7 +816,7 @@
     "errorAlertSent": false
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-03T21:04:01.095Z",
+    "lastChecked": "2026-06-03T21:09:20.457Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -847,7 +847,7 @@
     "errorAlertSent": false
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-03T21:04:07.111Z",
+    "lastChecked": "2026-06-03T21:09:25.822Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -857,7 +857,7 @@
         "productType": "",
         "tags": [],
         "minPrice": 170,
-        "available": false,
+        "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5766.heic?v=1780435180",
         "url": "https://shop.fountaininndc.com/products/reveries-the-raven-batch-v"
       },
