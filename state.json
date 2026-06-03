@@ -812,8 +812,10 @@
         "url": "https://sharedpour.com/products/the-2025-t8ke-exclusive-collection-4x750ml"
       }
     },
-    "consecutiveErrors": 0,
-    "errorAlertSent": false
+    "consecutiveErrors": 1,
+    "errorAlertSent": false,
+    "lastError": "HTTP 404 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-03T13:43:58.226Z"
   },
   "sharedpour_reveries": {
     "lastChecked": "2026-06-03T13:28:06.231Z",
@@ -1022,10 +1024,10 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 17,
+    "consecutiveErrors": 18,
     "errorAlertSent": true,
     "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
-    "lastErrorAt": "2026-06-03T13:42:52.567Z"
+    "lastErrorAt": "2026-06-03T13:44:04.847Z"
   },
   "reveries_official": {
     "lastChecked": "2026-06-03T13:24:07.886Z",
