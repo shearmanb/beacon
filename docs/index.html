@@ -1286,8 +1286,35 @@
   async function toggleEnabled(siteId, value, el) {
     if (el) el.disabled = true;
     try {
-      await updateSiteField(siteId, 'enabled', value,
+      const ok = await updateSiteField(siteId, 'enabled', value,
         `chore: ${value ? 'enable' : 'disable'} monitoring for ${siteId} [skip ci]`);
+      // When re-enabling, clear lastChecked so the worker checks immediately
+      // rather than waiting out the remainder of the previous interval.
+      if (ok && value) {
+        const token = localStorage.getItem(TOKEN_KEY);
+        if (token) {
+          try {
+            const res = await fetch(`${API_BASE}/contents/state.json`, {
+              headers: { Authorization: `token ${token}` },
+            });
+            if (res.ok) {
+              const data = await res.json();
+              const stateObj = JSON.parse(atob(data.content.replace(/\n/g, '')));
+              if (stateObj[siteId]) delete stateObj[siteId].lastChecked;
+              await fetch(`${API_BASE}/contents/state.json`, {
+                method: 'PUT',
+                headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  message: `chore: clear lastChecked for ${siteId} on re-enable [skip ci]`,
+                  content: safeBtoa(JSON.stringify(stateObj, null, 2)),
+                  sha: data.sha,
+                  branch: 'main',
+                }),
+              });
+            }
+          } catch { /* non-fatal — worker will eventually check after interval elapses */ }
+        }
+      }
     } finally { if (el) el.disabled = false; }
   }
 
