@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f .claude/review-notes.md ] && echo '=== LATEST AUTOMATED REVIEW NOTES ===' && cat .claude/review-notes.md && echo '=== END REVIEW NOTES ===' || true"
+          }
+        ]
+      }
+    ]
+  }
+}
