@@ -3229,5 +3229,35 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/860a314f-46ee-86f7-d387-ed8ed5246818.jpg?v=1765717125",
       "url": "https://sharedpour.com/products/t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection"
     }
+  },
+  {
+    "timestamp": "2026-06-03T15:38:09.581Z",
+    "siteId": "bourbon_concierge",
+    "siteName": "Bourbon Concierge",
+    "type": "new_product",
+    "product": {
+      "handle": "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release",
+      "title": "THE REVERIES \"RAVEN\" Rare Release Batch V Barrel Strength Bourbon (2026 Release)",
+      "vendor": "The Reveries",
+      "productType": "Bourbon",
+      "tags": [
+        "100-200",
+        "American-Bourbon",
+        "Barrel Pick",
+        "barrel picks",
+        "bis-paused",
+        "bourbon",
+        "Bourbon Whiskey",
+        "over-10",
+        "presale",
+        "Single Barrel",
+        "single barrel selections",
+        "the-reveries"
+      ],
+      "minPrice": 159.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/66b414b6-1076-7b4d-7397-f80716e35853.jpg?v=1780412954",
+      "url": "https://thebourbonconcierge.com/products/the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release"
+    }
   }
 ]
