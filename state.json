@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-03T00:20:12.774Z",
-    "productCount": 46,
+    "lastChecked": "2026-06-03T00:40:51.646Z",
+    "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -68,47 +68,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-16at07.12.45.png?v=1760613170",
         "url": "https://sharedpour.com/products/bardstown-bourbon-co-single-barrel-t8ke"
-      },
-      "bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases": {
-        "handle": "bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases",
-        "title": "Bulleit Bourbon Single Barrel: Bulleit x T8KE - \"The Armory\" 17 Year Releases",
-        "vendor": "T8KE",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 99.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/5f511991-e28c-9833-4105-a83d6b28beb5.jpg?v=1760895187",
-        "url": "https://sharedpour.com/products/bulleit-bourbon-single-barrel-bulleit-x-t8ke-the-armory-17-year-releases"
-      },
-      "george-dickel-single-barrel-15yr-bourbon": {
-        "handle": "george-dickel-single-barrel-15yr-bourbon",
-        "title": "George Dickel Single Barrel 15 Year T8KE for r/Bourbon Single Barrels",
-        "vendor": "George Dickel",
-        "productType": "American Whiskey",
-        "tags": [
-          "50-100",
-          "american-whiskey",
-          "Barrel Pick",
-          "barrel picks",
-          "george-dickel",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 89.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6d895bc4-bd75-fad6-ec34-33e9f01c7f8f.png?v=1763298402",
-        "url": "https://sharedpour.com/products/george-dickel-single-barrel-15yr-bourbon"
       },
       "barrell-craft-spirits-x-t8ke-synthesis-i": {
         "handle": "barrell-craft-spirits-x-t8ke-synthesis-i",
@@ -350,29 +309,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/73c57145-5074-ea67-92ef-32d2cb39cf79.jpg?v=1776644198",
         "url": "https://sharedpour.com/products/heaven-hill-bottled-in-bond-single-barrel"
       },
-      "nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection": {
-        "handle": "nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection",
-        "title": "NULU Single Barrel Maple Brulee Bourbon by T8KE Single Barrel Selection B928",
-        "vendor": "Nulu",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "nulu",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 89.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-27at10.22.09.png?v=1761560538",
-        "url": "https://sharedpour.com/products/nulu-single-barrel-barrel-proof-maple-brulee-bourbon-r-bourbon-by-t8ke-single-barrel-selection"
-      },
       "augusta-wheated-bourbon-t8ke-single-barrel-26-1761-straight-bourbon": {
         "handle": "augusta-wheated-bourbon-t8ke-single-barrel-26-1761-straight-bourbon",
         "title": "Augusta Wheated Bourbon T8KE Single Barrel #26-21 Straight Bourbon",
@@ -482,28 +418,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a0899ab2-3bfe-3e3b-a563-71cf4ead8e7d.jpg?v=1778418189",
         "url": "https://sharedpour.com/products/green-river-single-barrel-2026"
-      },
-      "starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof": {
-        "handle": "starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof",
-        "title": "Starlight Single Barrel Rose Champagne Finished Bourbon T8KE Single Barrel Select #25-8257 116.4 Proof",
-        "vendor": "Starlight Distillery",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "starlight-distillery",
-          "t8ke"
-        ],
-        "minPrice": 69.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/eca812b6-76d6-08eb-400b-649659f7be4b.jpg?v=1777207320",
-        "url": "https://sharedpour.com/products/starlight-single-barrel-rose-champagne-finished-bourbon-t8ke-single-barrel-select-25-8257-116-4-proof"
       },
       "el-jolgorio-mezcal-artesanal-tepeztate-edition-39": {
         "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-39",
@@ -616,28 +530,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ea0cec6-1621-ee9c-d16f-368a769082f8.jpg?v=1764513403",
         "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45"
-      },
-      "rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection": {
-        "handle": "rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection",
-        "title": "Rare Character x T8ke Single Barrel Bourbon Whiskey PLT-025 66.08% ABV Selection",
-        "vendor": "Rare Character",
-        "productType": "",
-        "tags": [
-          "100-200",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "Bourbon Whiskey",
-          "over-10",
-          "rare-character",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 149.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/69ef617f-07f4-06f0-ac4b-c0bec34140fd.jpg?v=1768741942",
-        "url": "https://sharedpour.com/products/rare-character-x-t8ke-single-barrel-bourbon-whiskey-plt-025-66-08-abv-selection"
       },
       "bardstown-single-barrel-bourbon-t8ke-2026": {
         "handle": "bardstown-single-barrel-bourbon-t8ke-2026",
@@ -789,50 +681,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e8d4cd80-4ab8-077f-345b-74dd98f1f862.jpg?v=1773577422",
         "url": "https://sharedpour.com/products/westland-american-single-malt-cask-1757"
       },
-      "t8ke-x-backbone-single-barrel-barrel-strength-malt-whiskey-s511": {
-        "handle": "t8ke-x-backbone-single-barrel-barrel-strength-malt-whiskey-s511",
-        "title": "T8KE x Backbone Single Barrel Hazmat Barrel Strength Malt Whiskey S511",
-        "vendor": "Backbone Bourbon Company",
-        "productType": "",
-        "tags": [
-          "50-100",
-          "backbone-bourbon-company",
-          "Barrel Pick",
-          "barrel picks",
-          "Blended Whiskey",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 99.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a1506e96-f850-3dfb-4c32-6b7824ea2510.jpg?v=1765717492",
-        "url": "https://sharedpour.com/products/t8ke-x-backbone-single-barrel-barrel-strength-malt-whiskey-s511"
-      },
-      "augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof": {
-        "handle": "augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof",
-        "title": "Augusta Distillery Buckner's 13 Year Single Barrel Barrel Proof Bourbon T8KE Hazmat Selection - 141.4 Proof",
-        "vendor": "Augusta Distillery",
-        "productType": "",
-        "tags": [
-          "200-300",
-          "American-Bourbon",
-          "augusta-distillery",
-          "Barrel Pick",
-          "barrel picks",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 249.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-11-09at09.47.03.png?v=1762699630",
-        "url": "https://sharedpour.com/products/augusta-distillery-buckners-13-year-single-barrel-barrel-proof-bourbon-t8ke-hazmat-selection-141-4-proof"
-      },
       "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select": {
         "handle": "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select",
         "title": "Blackwood Bourbon Single Barrel Barrel Proof T8KE Select",
@@ -855,27 +703,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/unnamed_2.jpg?v=1779640400",
         "url": "https://sharedpour.com/products/blackwood-bourbon-single-barrel-barrel-proof-t8ke-select"
-      },
-      "penelope-estate-10-year-21-rye-pen25-405": {
-        "handle": "penelope-estate-10-year-21-rye-pen25-405",
-        "title": "Penelope Bourbon ‘T8KE’ Estate Collection 10 Year Single Barrel PEN25-405 21% Rye 132.6 Proof",
-        "vendor": "Penelope",
-        "productType": "",
-        "tags": [
-          "100-200",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 169.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d6517fc0-0243-759a-7624-31a598697288_1.jpg?v=1765717859",
-        "url": "https://sharedpour.com/products/penelope-estate-10-year-21-rye-pen25-405"
       },
       "whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection": {
         "handle": "whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection",
@@ -959,29 +786,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-12-05at07.43.56.png?v=1764938643",
         "url": "https://sharedpour.com/products/aged-ore-4-bottle-caddy-t8ke-limited-release-branded-edition-v-2"
       },
-      "starlight-x-t8ke-spring-bundle-3x-750ml-bottle": {
-        "handle": "starlight-x-t8ke-spring-bundle-3x-750ml-bottle",
-        "title": "Starlight x T8KE Spring Bundle (3x 750ml Bottle)",
-        "vendor": "Starlight Distillery",
-        "productType": "Bourbon",
-        "tags": [
-          "200-300",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "starlight-distillery",
-          "t8ke"
-        ],
-        "minPrice": 209.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/StarlightBundle.png?v=1777207488",
-        "url": "https://sharedpour.com/products/starlight-x-t8ke-spring-bundle-3x-750ml-bottle"
-      },
       "the-2025-t8ke-exclusive-collection-4x750ml": {
         "handle": "the-2025-t8ke-exclusive-collection-4x750ml",
         "title": "The 2025 T8KE Exclusive Collection (4x750ml)",
@@ -1043,7 +847,7 @@
     "errorAlertSent": false
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-03T00:20:18.675Z",
+    "lastChecked": "2026-06-03T00:40:57.033Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
