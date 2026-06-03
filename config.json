@@ -1,7 +1,7 @@
 {
   "sites": [
     {
-      "name": "SharedPour ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ T8KE",
+      "name": "SharedPour ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ T8KE",
       "id": "sharedpour_t8ke",
       "enabled": false,
       "strategy": "shopify_collection",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "name": "SharedPour ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ The Reveries",
+      "name": "SharedPour ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ The Reveries",
       "id": "sharedpour_reveries",
       "enabled": false,
       "strategy": "shopify_collection",
@@ -103,9 +103,9 @@
       }
     },
     {
-      "name": "The Reveries ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Site Status",
+      "name": "The Reveries ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Site Status",
       "id": "reveries_site_status",
-      "enabled": true,
+      "enabled": false,
       "strategy": "site_status_monitor",
       "url": "https://www.thereveries.co/shop",
       "intervalMinutes": 30,
@@ -118,7 +118,7 @@
       "filters": {}
     },
     {
-      "name": "The Reveries ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Official Shop",
+      "name": "The Reveries ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Official Shop",
       "id": "reveries_official",
       "enabled": true,
       "strategy": "shopify_storefront",
