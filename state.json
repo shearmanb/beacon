@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-03T13:01:50.927Z",
+    "lastChecked": "2026-06-03T13:23:40.396Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -812,10 +812,8 @@
         "url": "https://sharedpour.com/products/the-2025-t8ke-exclusive-collection-4x750ml"
       }
     },
-    "consecutiveErrors": 1,
-    "errorAlertSent": false,
-    "lastError": "HTTP 404 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-03T13:21:56.123Z"
+    "consecutiveErrors": 0,
+    "errorAlertSent": false
   },
   "sharedpour_reveries": {
     "lastChecked": "2026-06-03T12:59:29.786Z",
@@ -845,10 +843,10 @@
         "url": "https://sharedpour.com/products/the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1"
       }
     },
-    "consecutiveErrors": 2,
+    "consecutiveErrors": 3,
     "errorAlertSent": false,
     "lastError": "HTTP 404 for https://sharedpour.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-03T13:22:00.824Z"
+    "lastErrorAt": "2026-06-03T13:23:45.863Z"
   },
   "fountain_inn_dc": {
     "lastChecked": "2026-06-03T13:01:54.111Z",
@@ -888,10 +886,10 @@
         "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
       }
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 2,
     "errorAlertSent": false,
     "lastError": "HTTP 404 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-03T13:22:11.204Z"
+    "lastErrorAt": "2026-06-03T13:23:54.598Z"
   },
   "bourbon_concierge": {
     "lastChecked": "2026-06-03T13:00:44.995Z",
@@ -1028,13 +1026,13 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 2,
     "errorAlertSent": false,
-    "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=3",
-    "lastErrorAt": "2026-06-03T13:22:25.705Z"
+    "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-03T13:24:03.943Z"
   },
   "reveries_official": {
-    "lastChecked": "2026-06-03T12:57:17.701Z",
+    "lastChecked": "2026-06-03T13:24:07.886Z",
     "productCount": 2,
     "products": {
       "the-reveries-8-year-single-barrel-only-all-the-time-barrel-strength-bourbon-t8ke-reserve-cask": {
@@ -1062,10 +1060,8 @@
     },
     "collectionEmpty": false,
     "pageReset": false,
-    "consecutiveErrors": 4,
-    "errorAlertSent": false,
-    "lastError": "HTTP 404",
-    "lastErrorAt": "2026-06-03T13:22:35.265Z"
+    "consecutiveErrors": 0,
+    "errorAlertSent": false
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-03T13:11:19.523Z",
