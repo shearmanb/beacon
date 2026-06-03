@@ -884,10 +884,10 @@
         "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
       }
     },
-    "consecutiveErrors": 4,
-    "errorAlertSent": false,
+    "consecutiveErrors": 5,
+    "errorAlertSent": true,
     "lastError": "HTTP 404 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-03T13:59:00.141Z"
+    "lastErrorAt": "2026-06-03T14:00:03.350Z"
   },
   "bourbon_concierge": {
     "lastChecked": "2026-06-03T13:57:54.276Z",
