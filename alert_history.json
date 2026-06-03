@@ -3203,5 +3203,31 @@
       "url": "https://shop.fountaininndc.com",
       "note": "5 consecutive failures. Last error: HTTP 404 for https://shop.fountaininndc.com/products.json?limit=250&page=1"
     }
+  },
+  {
+    "timestamp": "2026-06-03T15:36:48.428Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ T8KE",
+    "type": "sold_out",
+    "product": {
+      "handle": "t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection",
+      "title": "Clear Creek Distillery x T8KE 15 Year Single Barrel Barrel Strength American Apple Brandy",
+      "vendor": "Hood River Distillers",
+      "productType": "",
+      "tags": [
+        "50-100",
+        "Barrel Pick",
+        "barrel picks",
+        "hood-river-distillers",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 99.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/860a314f-46ee-86f7-d387-ed8ed5246818.jpg?v=1765717125",
+      "url": "https://sharedpour.com/products/t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection"
+    }
   }
 ]
