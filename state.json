@@ -847,7 +847,7 @@
     "errorAlertSent": false
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-03T13:01:54.111Z",
+    "lastChecked": "2026-06-03T13:34:31.911Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -884,10 +884,8 @@
         "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
       }
     },
-    "consecutiveErrors": 9,
-    "errorAlertSent": true,
-    "lastError": "HTTP 404 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-03T13:33:23.482Z"
+    "consecutiveErrors": 0,
+    "errorAlertSent": false
   },
   "bourbon_concierge": {
     "lastChecked": "2026-06-03T13:00:44.995Z",
@@ -1024,10 +1022,10 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 9,
+    "consecutiveErrors": 10,
     "errorAlertSent": true,
     "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-03T13:33:27.749Z"
+    "lastErrorAt": "2026-06-03T13:34:36.847Z"
   },
   "reveries_official": {
     "lastChecked": "2026-06-03T13:24:07.886Z",
