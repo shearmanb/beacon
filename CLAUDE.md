@@ -233,3 +233,39 @@ These were completed during the Phase 1 / Phase 2 sessions. Listed so future Cla
 - Filters in `shopify_collection.js` are applied **after** fetching all pages. A store with thousands of products and a narrow filter will still paginate the full catalog.
 - On thereveries.co, the Reveries products on SharedPour (`sharedpour_reveries`) may have a vendor of "SharedPour" rather than "The Reveries". The dashboard handles this by flagging "reveries" in the title OR matching the siteId — not by vendor field.
 - If `state.json` is corrupted on GitHub, the worker logs a parse error at startup and runs with empty state — which would re-alert on all existing products. Fix: hand-repair state.json in the repo.
+
+---
+
+## Risk register (biggest fragile points)
+
+**R1 — State corruption → mass false alert flood (highest operational risk)**
+If `state.json` is corrupt or missing at startup, the worker runs with empty state and re-alerts every known product as "new." 37+ T8KE products alone = 37 Discord alerts in seconds. Fix: startup quiet mode — skip alert generation on first run per site when state was empty at load time. Not yet implemented.
+
+**R2 — Reveries collection ID changes silently after one alert**
+`storefrontCollectionId: "367215214747"` in `config.json` is hardcoded. If thereveries.co updates their Shopify Buy Button to a new collection, the strategy returns 0 products, fires one `site_reset` alert, then goes permanently silent. You'd miss a drop. No automatic recovery. Manual fix: find new collection ID in page source and update config.json.
+
+**R3 — Railway down = complete monitoring blackout**
+No backup runner. If Railway crashes and `restartPolicyMaxRetries: 10` is exhausted, all checks stop silently. First Discord alert comes after 5 consecutive failures per site (~100 min on a 20-min schedule). During a Reveries drop this is catastrophic.
+
+**R4 — GH_TOKEN expiration = silent total failure**
+If the fine-grained PAT expires, every `readFile`/`writeFile` call throws. The worker increments `consecutiveErrors` per site and eventually fires `site_error` alerts — but those alerts can't update state either. Worker continues running but is fully broken. No specific token-expiry detection. Check token expiry proactively.
+
+**R5 — No timeout on Discord webhook POST**
+`notifiers/discord.js` `postWebhook()` has no `req.setTimeout()`. If Discord's endpoint stalls, the worker loop hangs indefinitely at that point. All other HTTP code in the project has timeouts. Easy fix: add `req.setTimeout(10000, ...)`.
+
+---
+
+## Code debt & small fixes (identified 2026-06-03)
+
+These are not in the main backlog but should be done. Safe to batch into one commit.
+
+| Item | File | What | Risk |
+|------|------|------|------|
+| D1 | `docs/index.html:374` | Remove dead `reveries_squarespace` sandbox option — strategy was deleted | None |
+| D2 | `schedules.json` | `weekend_light_20_mins` is a named schedule whose only rule is `defaultInterval: 20` — identical to the fixed `"20"` preset. Replace with `"schedule": "20"` on the 4 sites that use it, delete the entry. | None |
+| D3 | `schedules.json` | `bar_schedule_fi` has an unreachable `defaultInterval` rule — the midnight-crossing window above it matches all remaining hours. Remove the dead rule. | None |
+| D4 | `lib/schedule.js:1` | Stale comment references deleted `checker.js` | None |
+| D5 | `worker.js:21` | Module-level `historyFileSha` is dead state — `appendAndPushHistory` always re-fetches fresh SHA and never reads this var. Remove it. | None |
+| D6 | `notifiers/discord.js` | Add `req.setTimeout(10000, ...)` to `postWebhook` — only HTTP path in the project without a timeout | None |
+| D7 | `shopify_storefront.js:4` | Shopify API version is `2024-01` — aging. Bump to `2025-01` and verify response shape unchanged. | Low |
+| D8 | `state.json` / `shopify_collection.js` | Product `tags` arrays stored in state add ~30% file size but are never used post-storage (filters run pre-state). Consider stripping tags from the product map before storing. Verify dashboard doesn't display tags before doing this. | Low |
