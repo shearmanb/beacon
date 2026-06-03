@@ -884,8 +884,10 @@
         "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
       }
     },
-    "consecutiveErrors": 0,
-    "errorAlertSent": false
+    "consecutiveErrors": 1,
+    "errorAlertSent": false,
+    "lastError": "HTTP 404 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-03T13:55:00.977Z"
   },
   "bourbon_concierge": {
     "lastChecked": "2026-06-03T13:00:44.995Z",
@@ -1022,10 +1024,10 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 26,
+    "consecutiveErrors": 27,
     "errorAlertSent": true,
-    "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=5",
-    "lastErrorAt": "2026-06-03T13:53:55.498Z"
+    "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-03T13:55:06.411Z"
   },
   "reveries_official": {
     "lastChecked": "2026-06-03T13:46:44.356Z",
