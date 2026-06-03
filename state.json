@@ -812,8 +812,10 @@
         "url": "https://sharedpour.com/products/the-2025-t8ke-exclusive-collection-4x750ml"
       }
     },
-    "consecutiveErrors": 0,
-    "errorAlertSent": false
+    "consecutiveErrors": 1,
+    "errorAlertSent": false,
+    "lastError": "HTTP 404 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-03T13:21:56.123Z"
   },
   "sharedpour_reveries": {
     "lastChecked": "2026-06-03T12:59:29.786Z",
@@ -843,10 +845,10 @@
         "url": "https://sharedpour.com/products/the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1"
       }
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 2,
     "errorAlertSent": false,
     "lastError": "HTTP 404 for https://sharedpour.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-03T13:20:41.099Z"
+    "lastErrorAt": "2026-06-03T13:22:00.824Z"
   },
   "fountain_inn_dc": {
     "lastChecked": "2026-06-03T13:01:54.111Z",
@@ -886,8 +888,10 @@
         "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
       }
     },
-    "consecutiveErrors": 0,
-    "errorAlertSent": false
+    "consecutiveErrors": 1,
+    "errorAlertSent": false,
+    "lastError": "HTTP 404 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-03T13:22:11.204Z"
   },
   "bourbon_concierge": {
     "lastChecked": "2026-06-03T13:00:44.995Z",
@@ -1024,8 +1028,10 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 0,
-    "errorAlertSent": false
+    "consecutiveErrors": 1,
+    "errorAlertSent": false,
+    "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=3",
+    "lastErrorAt": "2026-06-03T13:22:25.705Z"
   },
   "reveries_official": {
     "lastChecked": "2026-06-03T12:57:17.701Z",
@@ -1056,10 +1062,10 @@
     },
     "collectionEmpty": false,
     "pageReset": false,
-    "consecutiveErrors": 3,
+    "consecutiveErrors": 4,
     "errorAlertSent": false,
     "lastError": "HTTP 404",
-    "lastErrorAt": "2026-06-03T13:20:47.075Z"
+    "lastErrorAt": "2026-06-03T13:22:35.265Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-03T13:11:19.523Z",
