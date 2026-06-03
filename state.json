@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-03T20:42:32.391Z",
+    "lastChecked": "2026-06-03T20:47:54.033Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -370,7 +370,7 @@
           "t8ke"
         ],
         "minPrice": 74.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DriftlessGlenn_Apple_Berry_Fritter_1.jpg?v=1770378586",
         "url": "https://sharedpour.com/products/driftless-glen-4625-mash-journey-single-barrel-bourbon-select-copy"
       },
@@ -816,7 +816,7 @@
     "errorAlertSent": false
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-03T20:42:38.686Z",
+    "lastChecked": "2026-06-03T20:48:00.038Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -847,7 +847,7 @@
     "errorAlertSent": false
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-03T20:42:43.460Z",
+    "lastChecked": "2026-06-03T20:48:03.573Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
