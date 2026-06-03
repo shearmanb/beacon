@@ -1022,10 +1022,10 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 10,
+    "consecutiveErrors": 11,
     "errorAlertSent": true,
     "lastError": "HTTP 404 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-03T13:34:36.847Z"
+    "lastErrorAt": "2026-06-03T13:35:42.910Z"
   },
   "reveries_official": {
     "lastChecked": "2026-06-03T13:24:07.886Z",
