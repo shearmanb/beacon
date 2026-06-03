@@ -847,7 +847,7 @@
     "errorAlertSent": false
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-03T22:08:20.958Z",
+    "lastChecked": "2026-06-03T22:14:21.908Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -857,7 +857,7 @@
         "productType": "",
         "tags": [],
         "minPrice": 170,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5766.heic?v=1780435180",
         "url": "https://shop.fountaininndc.com/products/reveries-the-raven-batch-v"
       },
