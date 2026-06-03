@@ -1054,8 +1054,10 @@
     },
     "collectionEmpty": false,
     "pageReset": false,
-    "consecutiveErrors": 0,
-    "errorAlertSent": false
+    "consecutiveErrors": 1,
+    "errorAlertSent": false,
+    "lastError": "HTTP 404",
+    "lastErrorAt": "2026-06-03T13:18:17.587Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-03T13:11:19.523Z",
