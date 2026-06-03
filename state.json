@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-03T02:44:17.126Z",
+    "lastChecked": "2026-06-03T03:05:04.774Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -348,7 +348,7 @@
           "Tennessee"
         ],
         "minPrice": 89.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/78559c51-a67c-2e35-a40c-395c1299331e.jpg?v=1762088105",
         "url": "https://sharedpour.com/products/jack-daniels-x-t8ke-rye-whiskey"
       },
@@ -847,7 +847,7 @@
     "errorAlertSent": false
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-03T02:44:20.757Z",
+    "lastChecked": "2026-06-03T03:05:09.670Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
