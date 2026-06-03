@@ -3192,5 +3192,16 @@
       "url": "https://thebourbonconcierge.com",
       "note": "Checks are succeeding again."
     }
+  },
+  {
+    "timestamp": "2026-06-03T14:00:03.350Z",
+    "siteId": "fountain_inn_dc",
+    "siteName": "Fountain Inn DC",
+    "type": "site_error",
+    "product": {
+      "title": "Fountain Inn DC",
+      "url": "https://shop.fountaininndc.com",
+      "note": "5 consecutive failures. Last error: HTTP 404 for https://shop.fountaininndc.com/products.json?limit=250&page=1"
+    }
   }
 ]
