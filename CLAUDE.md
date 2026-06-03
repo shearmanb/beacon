@@ -28,12 +28,10 @@ Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. The worker l
 
 **Strategy pattern**: Each site declares a `strategy` field. `worker.js` dynamically imports `sites/<strategy>.js` and calls `checkSite(site, previousState)`. All strategies return `{ state, alerts }` where `state` replaces the previous entry in `state.json`. Shared logic lives in `lib/schedule.js` (interval resolution, `shouldCheck`) and `lib/diff.js` (new/restock/sold-out diff). Shared utilities (`sleep`, `jitter`, `randomFrom`) live in `lib/utils.js`.
 
-**Five registered strategies**:
+**Three registered strategies**:
 - `shopify_collection` — hits `[url]/products.json?limit=250&page=N`, paginates until a short page. Filters are applied in code after fetch (not as URL params — Shopify ignores client-side filter params like `rb_vendor` on the JSON API). The `sharedpour_reveries` site uses `url: "https://sharedpour.com"` (store root) with `titleContains: ["Reveries"]` filter because there is no dedicated collection.
 - `shopify_storefront` — queries the Shopify Storefront GraphQL API using a public access token and collection GID. Used for `reveries_official` because the Reveries shop embed on thereveries.co uses a Shopify Buy Button backed by a collection that is only published to the Buy Button channel (not Online Store), making the REST `/products.json` API return empty.
-- `reveries_squarespace` — registered but not currently used by any active site. Primary: fetches `[url]?format=json`. Fallback: parses `<h4>` tags from HTML. Detects page resets via HTTP errors, HTML signals (`sqs-pw-form`, "coming soon"), or zero products when state had products.
-- `html_text_monitor` — generic SSR page monitor. Searches for `watchTexts` near an optional `anchorText`.
-- `squarespace_json_monitor` — fingerprints Squarespace `?format=json` product data (SHA-256 of titles + variant fields) and fires a `site_changed` alert on any change.
+- `site_status_monitor` — lightweight Squarespace frontend monitor. Fetches the page HTML and checks for reset signals (`sqs-pw-form`, "coming soon", "enter password", HTTP 401/403). Fires `site_reset` once when transitioning open → blocked; clears silently when the page comes back. Intentionally decoupled from inventory tracking — used alongside `shopify_storefront` for `reveries_official` so both the Shopify backend and the Squarespace frontend are watched independently.
 
 **State persistence**: `worker.js` pushes `state.json` to GitHub via the Contents API (`lib/github.js`) after each changed run. Uses the file's SHA for optimistic concurrency. On 409 conflict it re-fetches the remote state and **merges** — entries the worker touched this loop keep the worker's value (fresher), entries it didn't touch keep the remote value (so a concurrent writer is not silently overwritten).
 
@@ -69,10 +67,8 @@ Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. The worker l
 | `sharedpour_reveries` | sharedpour.com (filtered by title) | shopify_collection | titleContains: ["Reveries"] |
 | `fountain_inn_dc` | shop.fountaininndc.com (filtered by title) | shopify_collection | titleContains: ["Reveries"] |
 | `bourbon_concierge` | thebourbonconcierge.com (filtered by title) | shopify_collection | titleContains: ["Reveries"] |
+| `reveries_site_status` | thereveries.co/shop | site_status_monitor | Squarespace frontend status — fires site_reset if COMING SOON / password wall detected |
 | `reveries_official` | thereveries.co/shop | shopify_storefront | Storefront API via shared-pour.myshopify.com collection 367215214747 |
-
-Disabled (not running):
-| `reveries_official_monitor` | thereveries.co/shop | squarespace_json_monitor | Superseded by shopify_storefront; all alerts off |
 
 ## Infrastructure
 
@@ -136,8 +132,6 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
 `schedule` accepts `"5"|"15"|"20"|"30"|"60"` or any key in `schedules.json`. `intervalMinutes` is the fallback when `schedule` is missing or unresolvable. `imminentIntervalMinutes` overrides everything when `imminent: true`.
 
 ## Open features (backlog)
-
-- **Site reset detector for thereveries.co** — `reveries_official` (shopify_storefront) detects when the Shopify collection goes empty but does NOT detect when the Squarespace frontend at thereveries.co/shop shows a "COMING SOON" / password-protected page. Need a new lightweight `site_status_monitor` strategy that fetches the HTML and flags `sqs-pw-form`, "coming soon", 401, or password indicators.
 - **Surface `consecutiveErrors` / `lastError` on dashboard site cards** — both fields are already in `state.json`; just need to render them.
 - **Cloudflare Access for dashboard auth** — replace the hardcoded `DASH_PASSWORD = 'beam'` with Google-login-gated access via Cloudflare. Free for personal use.
 - **Move primary state off GitHub** — research Railway volume / Railway Postgres as source-of-truth; periodically sync read-only state.json to GitHub for dashboard. Reduces 409s and write churn.

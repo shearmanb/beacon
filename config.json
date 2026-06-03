@@ -97,6 +97,21 @@
       }
     },
     {
+      "name": "The Reveries – Site Status",
+      "id": "reveries_site_status",
+      "enabled": true,
+      "strategy": "site_status_monitor",
+      "url": "https://www.thereveries.co/shop",
+      "intervalMinutes": 30,
+      "schedule": "weekend_light_20_mins",
+      "imminentIntervalMinutes": 5,
+      "imminent": false,
+      "alertOnNewProduct": false,
+      "alertOnRestock": false,
+      "alertOnSoldOut": false,
+      "filters": {}
+    },
+    {
       "name": "The Reveries – Official Shop",
       "id": "reveries_official",
       "enabled": true,
