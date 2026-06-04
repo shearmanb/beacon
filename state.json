@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-04T01:24:18.635Z",
+    "lastChecked": "2026-06-04T01:44:28.533Z",
     "productCount": 37,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -282,7 +282,7 @@
           "whiskey"
         ],
         "minPrice": 89.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1792a6ca-2f22-c9c9-4540-4f0971aa79d1.jpg?v=1774182274",
         "url": "https://sharedpour.com/products/jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3"
       },
@@ -816,7 +816,7 @@
     "errorAlertSent": false
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-04T01:24:24.447Z",
+    "lastChecked": "2026-06-04T01:44:32.636Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
