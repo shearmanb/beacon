@@ -3400,5 +3400,32 @@
       "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5766.heic?v=1780435180",
       "url": "https://shop.fountaininndc.com/products/reveries-the-raven-batch-v"
     }
+  },
+  {
+    "timestamp": "2026-06-04T13:00:41.987Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch",
+      "title": "T8KE x Hazelbaker 7 Year Double Oaked Bottled In Bond T8ke x Hazelbaker Exclusive Batch",
+      "vendor": "Nulu",
+      "productType": "Bourbon",
+      "tags": [
+        "50-100",
+        "Barrel Pick",
+        "barrel picks",
+        "bourbon",
+        "nulu",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 69.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00904.jpg?v=1780229762",
+      "url": "https://sharedpour.com/products/t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch"
+    }
   }
 ]
