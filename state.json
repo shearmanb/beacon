@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-04T17:15:25.387Z",
+    "lastChecked": "2026-06-04T17:20:54.227Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -107,7 +107,7 @@
           "t8ke",
           "xmas-2025"
         ],
-        "minPrice": 54.99,
+        "minPrice": 29.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/3ebbf4d6-6421-013c-024a-aa81f3982093.png?v=1730640814",
         "url": "https://sharedpour.com/products/100-mill-street-gin"
@@ -943,11 +943,15 @@
       {
         "ts": "2026-06-04T17:15:25.387Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T17:20:54.227Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-04T17:15:30.448Z",
+    "lastChecked": "2026-06-04T17:21:00.553Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1084,6 +1088,10 @@
       {
         "ts": "2026-06-04T17:15:30.448Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T17:21:00.553Z",
+        "ok": true
       }
     ]
   },
@@ -1159,7 +1167,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-04T17:15:38.152Z",
+    "lastChecked": "2026-06-04T17:21:09.310Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -1426,6 +1434,10 @@
       },
       {
         "ts": "2026-06-04T17:15:38.153Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-04T17:21:09.310Z",
         "ok": true
       }
     ]
