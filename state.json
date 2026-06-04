@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-04T11:48:24.783Z",
-    "productCount": 37,
+    "lastChecked": "2026-06-04T13:00:41.986Z",
+    "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -553,6 +553,27 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
         "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026"
       },
+      "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch": {
+        "handle": "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch",
+        "title": "T8KE x Hazelbaker 7 Year Double Oaked Bottled In Bond T8ke x Hazelbaker Exclusive Batch",
+        "vendor": "Nulu",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "nulu",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 69.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00904.jpg?v=1780229762",
+        "url": "https://sharedpour.com/products/t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch"
+      },
       "agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez": {
         "handle": "agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez",
         "title": "NETA Bicuixe & Jabalin Wilfrido Garcia Sanchez Ensamble Aficionados x T8KE Exclusive Selection",
@@ -816,7 +837,7 @@
     "errorAlertSent": false
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-04T11:48:29.815Z",
+    "lastChecked": "2026-06-04T13:00:46.073Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -888,7 +909,7 @@
     "errorAlertSent": false
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-04T11:47:15.215Z",
+    "lastChecked": "2026-06-04T13:00:54.499Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
