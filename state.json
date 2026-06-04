@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-04T16:04:15.970Z",
+    "lastChecked": "2026-06-04T16:09:41.250Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -891,11 +891,15 @@
       {
         "ts": "2026-06-04T16:04:15.970Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T16:09:41.250Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-04T16:04:18.948Z",
+    "lastChecked": "2026-06-04T16:09:45.592Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -980,11 +984,15 @@
       {
         "ts": "2026-06-04T16:04:18.948Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T16:09:45.592Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-04T15:49:33.230Z",
+    "lastChecked": "2026-06-04T16:09:52.124Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1035,11 +1043,15 @@
       {
         "ts": "2026-06-04T15:49:33.230Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T16:09:52.124Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-04T16:04:28.172Z",
+    "lastChecked": "2026-06-04T16:09:59.956Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -1255,6 +1267,10 @@
       {
         "ts": "2026-06-04T16:04:28.172Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T16:09:59.956Z",
+        "ok": true
       }
     ]
   },
@@ -1353,7 +1369,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-04T15:49:39.459Z",
+    "lastChecked": "2026-06-04T16:10:04.265Z",
     "products": {},
     "pageReset": true,
     "resetAlertSent": true,
@@ -1371,6 +1387,10 @@
       },
       {
         "ts": "2026-06-04T15:49:39.459Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-04T16:10:04.265Z",
         "ok": true
       }
     ]
