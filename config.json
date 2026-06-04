@@ -105,7 +105,7 @@
     {
       "name": "The Reveries Site Status",
       "id": "reveries_site_status",
-      "enabled": false,
+      "enabled": true,
       "strategy": "site_status_monitor",
       "url": "https://www.thereveries.co/shop",
       "intervalMinutes": 30,
