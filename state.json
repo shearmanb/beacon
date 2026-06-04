@@ -1448,7 +1448,7 @@
     "pageReset": false,
     "consecutiveErrors": 0,
     "errorAlertSent": false,
-    "lastChecked": "2026-06-04T17:08:44.630Z",
+    "lastChecked": "2026-06-04T17:14:25.741Z",
     "checkHistory": [
       {
         "ts": "2026-06-04T14:51:10.466Z",
@@ -1552,6 +1552,10 @@
       },
       {
         "ts": "2026-06-04T17:08:44.630Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-04T17:14:25.741Z",
         "ok": true
       }
     ]
