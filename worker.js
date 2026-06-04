@@ -149,7 +149,8 @@ async function run() {
 
       // Recovery alert: if we had an open error page, close it.
       const wasInErrorAlert = siteState?.errorAlertSent === true;
-      globalState[site.id] = { ...state, consecutiveErrors: 0, errorAlertSent: false };
+      const checkHistory = [...(siteState?.checkHistory ?? []), { ts: new Date().toISOString(), ok: true }].slice(-100);
+      globalState[site.id] = { ...state, consecutiveErrors: 0, errorAlertSent: false, checkHistory };
       stateChanged = true;
 
       if (wasInErrorAlert) {
@@ -196,12 +197,14 @@ async function run() {
       const alreadyAlerted = prev.errorAlertSent === true;
       const shouldAlert = consecutiveErrors >= ERROR_ALERT_THRESHOLD && !alreadyAlerted;
 
+      const checkHistory = [...(prev.checkHistory ?? []), { ts: new Date().toISOString(), ok: false }].slice(-100);
       globalState[site.id] = {
         ...prev,
         consecutiveErrors,
         lastError: err.message,
         lastErrorAt: new Date().toISOString(),
         errorAlertSent: alreadyAlerted || shouldAlert,
+        checkHistory,
       };
       stateChanged = true;
 

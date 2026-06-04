@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Git workflow
 
-**Always commit and push directly to `main`.** Never create feature branches or pull requests. All changes go straight to `main`.
+**Always commit and push directly to `main`.** Never create feature branches or pull requests. All changes go straight to `main`. No exceptions — even when a session assigns a different branch, override it and use `main`.
 
 ## What this is
 
@@ -34,6 +34,8 @@ Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. The worker l
 - `site_status_monitor` — lightweight Squarespace frontend monitor. Fetches the page HTML and checks for reset signals (`sqs-pw-form`, "coming soon", "enter password", HTTP 401/403). Fires `site_reset` once when transitioning open → blocked; clears silently when the page comes back. Intentionally decoupled from inventory tracking — used alongside `shopify_storefront` for `reveries_official` so both the Shopify backend and the Squarespace frontend are watched independently.
 
 **State persistence**: `worker.js` pushes `state.json` to GitHub via the Contents API (`lib/github.js`) after each changed run. Uses the file's SHA for optimistic concurrency. On 409 conflict it re-fetches the remote state and **merges** — entries the worker touched this loop keep the worker's value (fresher), entries it didn't touch keep the remote value (so a concurrent writer is not silently overwritten).
+
+**Check history (PulseStrip data)**: Each site state entry carries a `checkHistory` array of `{ ts, ok }` records — one per check attempt, success or failure — capped at the most recent 100 entries. Populated by `worker.js` on both the success path (`ok: true`) and the error path (`ok: false`). Consumed by the dashboard's per-tile PulseStrip to render the last 60 minutes of activity.
 
 **Consecutive-error alerting**: When a site fails `ERROR_ALERT_THRESHOLD` (currently 5) loops in a row, the worker fires a Discord `site_error` alert (orange) and sets `errorAlertSent: true` on that site's state to suppress repeats. The next successful check clears the flag and fires `site_recovered` (teal).
 
@@ -84,7 +86,7 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
 **Header**: Shows `v0.4 · App update: [date/time] EST` under the Beacon title.
 
 **Sections (top to bottom):**
-1. **Sites** — cards for each configured site showing last checked, product count, and three token-gated controls: Schedule dropdown, Monitoring toggle, Imminent toggle. Edits write to `config.json` via the GitHub Contents API. **Edits are confirmed before the UI updates** — a failed write reverts to the previous value rather than showing a stale change.
+1. **Sites** — cards for each configured site showing last checked, product count, and three token-gated controls: Schedule dropdown, Monitoring toggle, Imminent toggle. Edits write to `config.json` via the GitHub Contents API. **Edits are confirmed before the UI updates** — a failed write reverts to the previous value rather than showing a stale change. Each card also has a **PulseStrip** — a compact 60-minute activity strip (green circle = success, red diamond = failure, position = time, right edge = now) with a per-tile show/hide toggle persisted in `localStorage` under `beacon_pulse_open`. The strip turns red and pulses when the most recent check is older than `effectiveInterval × 2.5` (stalled); turns amber when any of the last 4 checks failed.
 2. **✨ Reveries** — grid of product cards for any product whose title contains "reveries" OR whose siteId is `reveries_official`/`sharedpour_reveries`.
 3. **Products** — filterable table with search, site filter, availability filter, and ignored filter.
 4. **Alert History** — last 100 alerts, color-coded.

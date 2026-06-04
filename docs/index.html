@@ -175,6 +175,35 @@
     .sandbox-summary { font-size: .85rem; color: var(--muted); margin: .75rem 0 .5rem; padding: .4rem .6rem; background: var(--surface); border-radius: 6px; }
     .sandbox-error { color: var(--red); font-size: .875rem; padding: .5rem 0; }
     .sandbox-loading { color: var(--muted); font-size: .875rem; padding: .75rem 0; }
+    /* ── PulseStrip (per-tile 60-min check activity) ── */
+    .pulse-wrap { margin-top: .55rem; }
+    .pulse-toggle { background: none; border: none; padding: 0; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: .25rem; line-height: 1; }
+    .pulse-toggle:hover { color: var(--text); }
+    .pulse-toggle .pulse-chev { transition: transform .15s; display: inline-block; font-size: 11px; }
+    .pulse-wrap.pulse-closed .pulse-toggle .pulse-chev { transform: rotate(-90deg); }
+    .pulse-wrap.pulse-failing .pulse-toggle { color: var(--orange); }
+    .pulse-wrap.pulse-stalled .pulse-toggle { color: var(--red); }
+    .pulse-wrap.pulse-closed .pulse-body { display: none; }
+    .pulse-body { margin-top: .3rem; }
+    .pulse-strip { position: relative; height: 22px; width: 100%; }
+    .pulse-track { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--border); transform: translateY(-.5px); }
+    .pulse-gap { position: absolute; top: 0; bottom: 0; right: 0; background: linear-gradient(to right, transparent, rgba(231,76,60,.25)); pointer-events: none; }
+    .pulse-now { position: absolute; right: 0; top: 3px; bottom: 3px; width: 1.5px; background: var(--muted); border-radius: 1px; }
+    .pulse-wrap.pulse-stalled .pulse-now { width: 3px; background: var(--red); animation: stall-pulse 1.8s ease-in-out infinite; }
+    .pulse-mark { position: absolute; top: 50%; transform: translate(-50%, -50%); transition: transform .12s, box-shadow .12s; cursor: default; }
+    .pulse-mark.ok { width: 6px; height: 6px; border-radius: 50%; background: rgba(46,204,113,.65); }
+    .pulse-mark.fail { width: 5px; height: 5px; background: rgba(231,76,60,.7); transform: translate(-50%, -50%) rotate(45deg); }
+    .pulse-mark.ok:hover { background: var(--green); transform: translate(-50%, -50%) scale(1.75); box-shadow: 0 0 9px var(--green); z-index: 2; }
+    .pulse-mark.fail:hover { background: var(--red); transform: translate(-50%, -50%) rotate(45deg) scale(1.75); box-shadow: 0 0 9px var(--red); z-index: 2; }
+    .pulse-legend { display: flex; justify-content: space-between; margin-top: .15rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; color: var(--muted); letter-spacing: .04em; }
+    .pulse-wrap.pulse-stalled .pulse-legend .pulse-now-lbl { color: var(--red); }
+    .pulse-empty { font-size: .72rem; color: var(--muted); padding: .25rem 0; font-style: italic; }
+    .pulse-tooltip { position: fixed; z-index: 50; background: #0b0d13; border: 1px solid var(--border); color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; padding: .3rem .5rem; border-radius: 6px; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,.4); display: none; }
+    .pulse-tooltip.show { display: block; }
+    .pulse-tooltip .pt-ok { color: var(--green); font-weight: 700; }
+    .pulse-tooltip .pt-fail { color: var(--red); font-weight: 700; }
+    .pulse-tooltip::after { content: ""; position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--border); }
+    @keyframes stall-pulse { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.15; } }
   </style>
 </head>
 <body>
@@ -700,6 +729,111 @@
     }
     return site.intervalMinutes;
   }
+
+  // ── PulseStrip: per-tile 60-min check activity ──────────────────────────
+  const PULSE_KEY = 'beacon_pulse_open';
+  const PULSE_WINDOW_MIN = 60;
+  function getPulsePrefs() {
+    try { return JSON.parse(localStorage.getItem(PULSE_KEY) || '{}'); } catch { return {}; }
+  }
+  function isPulseOpen(siteId) {
+    return getPulsePrefs()[siteId] !== false;
+  }
+  function togglePulse(siteId) {
+    const prefs = getPulsePrefs();
+    const open = isPulseOpen(siteId);
+    if (open) prefs[siteId] = false; else delete prefs[siteId];
+    localStorage.setItem(PULSE_KEY, JSON.stringify(prefs));
+    const wrap = document.querySelector(`.pulse-wrap[data-siteid="${siteId}"]`);
+    if (wrap) wrap.classList.toggle('pulse-closed', !isPulseOpen(siteId));
+  }
+  function renderPulseStrip(siteId, history, intervalMinutes) {
+    const now = Date.now();
+    const start = now - PULSE_WINDOW_MIN * 60_000;
+    const recent = (history || []).filter(h => h && h.ts && new Date(h.ts).getTime() >= start);
+    const last = recent.length ? recent[recent.length - 1] : null;
+    const lastMs = last ? new Date(last.ts).getTime() : null;
+    const stallMs = Math.max(1, intervalMinutes || 1) * 2.5 * 60_000;
+    const isStalled = recent.length > 0 && lastMs != null && (now - lastMs) > stallMs;
+    const lastFour = recent.slice(-4);
+    const isFailing = !isStalled && lastFour.some(h => h.ok === false);
+    const isEmpty = recent.length === 0;
+
+    const open = isPulseOpen(siteId);
+    const cls = ['pulse-wrap'];
+    if (!open) cls.push('pulse-closed');
+    if (isStalled) cls.push('pulse-stalled');
+    else if (isFailing) cls.push('pulse-failing');
+
+    const labelText = isStalled ? '⚠ ACTIVITY' : 'ACTIVITY';
+    const nowLabel = isStalled ? '⚠ now' : 'now';
+
+    let body;
+    if (isEmpty) {
+      body = `<div class="pulse-body"><div class="pulse-empty">No history yet</div></div>`;
+    } else {
+      const marks = recent.map(h => {
+        const ms = new Date(h.ts).getTime();
+        const pct = Math.max(0, Math.min(100, ((ms - start) / (now - start)) * 100));
+        const okCls = h.ok === false ? 'fail' : 'ok';
+        return `<span class="pulse-mark ${okCls}" style="left:${pct.toFixed(2)}%" data-ts="${esc(h.ts)}" data-ok="${h.ok === false ? '0' : '1'}"></span>`;
+      }).join('');
+      let gap = '';
+      if (isStalled && lastMs != null) {
+        const lastPct = Math.max(0, Math.min(100, ((lastMs - start) / (now - start)) * 100));
+        gap = `<div class="pulse-gap" style="left:${lastPct.toFixed(2)}%"></div>`;
+      }
+      body = `<div class="pulse-body">
+        <div class="pulse-strip">
+          <div class="pulse-track"></div>
+          ${gap}
+          ${marks}
+          <div class="pulse-now"></div>
+        </div>
+        <div class="pulse-legend"><span>1h ago</span><span class="pulse-now-lbl">${nowLabel}</span></div>
+      </div>`;
+    }
+
+    return `<div class="${cls.join(' ')}" data-siteid="${esc(siteId)}">
+      <button type="button" class="pulse-toggle" onclick="togglePulse('${esc(siteId)}')">${labelText} <span class="pulse-chev">▾</span></button>
+      ${body}
+    </div>`;
+  }
+  // Delegated tooltip for pulse marks
+  (function initPulseTooltip() {
+    let tip;
+    function ensureTip() {
+      if (!tip) {
+        tip = document.createElement('div');
+        tip.className = 'pulse-tooltip';
+        document.body.appendChild(tip);
+      }
+      return tip;
+    }
+    document.addEventListener('mouseover', e => {
+      const m = e.target.closest && e.target.closest('.pulse-mark');
+      if (!m) return;
+      const ts = m.getAttribute('data-ts');
+      const ok = m.getAttribute('data-ok') === '1';
+      if (!ts) return;
+      const d = new Date(ts);
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      const ss = String(d.getSeconds()).padStart(2, '0');
+      const t = ensureTip();
+      t.innerHTML = `${hh}:${mm}:${ss} <span class="${ok ? 'pt-ok' : 'pt-fail'}">${ok ? '✓' : '✗'}</span>`;
+      const r = m.getBoundingClientRect();
+      t.classList.add('show');
+      const tw = t.offsetWidth, th = t.offsetHeight;
+      t.style.left = Math.max(4, Math.min(window.innerWidth - tw - 4, r.left + r.width / 2 - tw / 2)) + 'px';
+      t.style.top = Math.max(4, r.top - th - 8) + 'px';
+    });
+    document.addEventListener('mouseout', e => {
+      const m = e.target.closest && e.target.closest('.pulse-mark');
+      if (m && tip) tip.classList.remove('show');
+    });
+  })();
+
   const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main`;
   const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
   const TOKEN_KEY   = 'beacon_gh_token';
@@ -930,6 +1064,7 @@
           ${nextRefreshText ? `<span${checkedClass === 'meta-overdue' ? ' class="meta-overdue"' : checkedClass === 'meta-stale' ? ' class="meta-stale"' : ''}>Next refresh: ${nextRefreshText}</span>` : ''}
           <span>${total} products &mdash; ${inStock} in stock</span>
         </div>
+        ${renderPulseStrip(site.id, s.checkHistory, effInterval)}
         ${(() => {
           const schedDef = getNamedSchedules()[site.schedule];
           const breakdown = schedDef?.rules?.length ? formatScheduleRules(schedDef.rules) : null;
