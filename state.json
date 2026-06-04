@@ -1100,7 +1100,13 @@
     "pageReset": false,
     "consecutiveErrors": 0,
     "errorAlertSent": false,
-    "lastChecked": "2026-06-04T14:45:29.014Z"
+    "lastChecked": "2026-06-04T14:51:10.466Z",
+    "checkHistory": [
+      {
+        "ts": "2026-06-04T14:51:10.466Z",
+        "ok": true
+      }
+    ]
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-04T14:46:58.805Z",
