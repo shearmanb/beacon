@@ -3427,5 +3427,31 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00904.jpg?v=1780229762",
       "url": "https://sharedpour.com/products/t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch"
     }
+  },
+  {
+    "timestamp": "2026-06-04T13:23:46.345Z",
+    "siteId": "reveries_site_status",
+    "siteName": "The Reveries Site Status",
+    "type": "site_reset",
+    "product": {
+      "title": "The Reveries Site Status",
+      "url": "https://www.thereveries.co/shop",
+      "note": "Coming Soon / password wall detected at https://www.thereveries.co/shop (HTTP 401/403)\nNew wave likely 2–14 days away."
+    }
+  },
+  {
+    "timestamp": "2026-06-04T13:23:50.338Z",
+    "siteId": "reveries_official",
+    "siteName": "The Reveries Official Shop",
+    "type": "site_reset",
+    "product": {
+      "title": "The Reveries Official Shop",
+      "url": "https://www.thereveries.co/shop",
+      "vendor": null,
+      "minPrice": null,
+      "available": false,
+      "image": null,
+      "note": "Storefront API returned 0 products. The shop embed may have switched to a new Shopify collection ID.\n_Check View Source on https://www.thereveries.co/shop for the new id: value in ShopifyBuyInit._"
+    }
   }
 ]
