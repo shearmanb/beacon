@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-04T19:01:33.137Z",
+    "lastChecked": "2026-06-04T19:07:03.499Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -101,10 +101,10 @@
         "productType": "Gin",
         "tags": [
           "100-mill-street",
-          "50-100",
           "gin",
           "over-10",
           "t8ke",
+          "under-50",
           "xmas-2025"
         ],
         "minPrice": 29.99,
@@ -182,7 +182,6 @@
         "vendor": "Barrell Craft Spirits",
         "productType": "Whiskey",
         "tags": [
-          "50-100",
           "Barrel Pick",
           "barrel picks",
           "barrell-craft-spirits",
@@ -190,6 +189,7 @@
           "Single Barrel",
           "single barrel selections",
           "t8ke",
+          "under-50",
           "whiskey"
         ],
         "minPrice": 30,
@@ -1019,11 +1019,15 @@
       {
         "ts": "2026-06-04T19:01:33.137Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T19:07:03.499Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-04T19:01:39.103Z",
+    "lastChecked": "2026-06-04T19:07:08.343Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1236,6 +1240,10 @@
       {
         "ts": "2026-06-04T19:01:39.103Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T19:07:08.343Z",
+        "ok": true
       }
     ]
   },
@@ -1367,7 +1375,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-04T19:01:46.303Z",
+    "lastChecked": "2026-06-04T19:07:17.777Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -1710,6 +1718,10 @@
       },
       {
         "ts": "2026-06-04T19:01:46.303Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-04T19:07:17.777Z",
         "ok": true
       }
     ]
