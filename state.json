@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-04T15:25:16.196Z",
+    "lastChecked": "2026-06-04T15:30:48.458Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -438,7 +438,7 @@
           "single barrel selections",
           "t8ke"
         ],
-        "minPrice": 139.99,
+        "minPrice": 99.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_39_T8KE_Selection_Front.jpg?v=1757451767",
         "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-39"
@@ -459,7 +459,7 @@
           "t8ke",
           "xmas-2025"
         ],
-        "minPrice": 119.99,
+        "minPrice": 99.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_40_T8KE_Selection_Front.jpg?v=1757451767",
         "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke"
@@ -590,7 +590,7 @@
           "t8ke",
           "xmas-2025"
         ],
-        "minPrice": 169.99,
+        "minPrice": 159.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/NETA_Bicuixe_Jabali_Aficionados_x_T8KE.jpg?v=1757451767",
         "url": "https://sharedpour.com/products/agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez"
@@ -675,7 +675,7 @@
           "over-10",
           "t8ke"
         ],
-        "minPrice": 169.99,
+        "minPrice": 159.99,
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/950cd61e-e15d-ef92-aefd-822609967742.jpg?v=1761561000",
         "url": "https://sharedpour.com/products/agave-spirits-neta-barril-by-nicolas-garcia-vasquez-and-miguel-garcia-ortiz"
@@ -863,11 +863,15 @@
       {
         "ts": "2026-06-04T15:25:16.196Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T15:30:48.459Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-04T15:25:20.266Z",
+    "lastChecked": "2026-06-04T15:30:54.305Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -924,6 +928,10 @@
       {
         "ts": "2026-06-04T15:25:20.266Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T15:30:54.305Z",
+        "ok": true
       }
     ]
   },
@@ -979,7 +987,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-04T15:25:30.529Z",
+    "lastChecked": "2026-06-04T15:31:02.454Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -1166,6 +1174,10 @@
       },
       {
         "ts": "2026-06-04T15:25:30.529Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-04T15:31:02.454Z",
         "ok": true
       }
     ]
