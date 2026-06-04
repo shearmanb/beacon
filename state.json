@@ -896,7 +896,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-04T14:46:43.142Z",
+    "lastChecked": "2026-06-04T15:07:44.503Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -934,7 +934,13 @@
       }
     },
     "consecutiveErrors": 0,
-    "errorAlertSent": false
+    "errorAlertSent": false,
+    "checkHistory": [
+      {
+        "ts": "2026-06-04T15:07:44.503Z",
+        "ok": true
+      }
+    ]
   },
   "bourbon_concierge": {
     "lastChecked": "2026-06-04T15:03:29.334Z",
@@ -1142,7 +1148,7 @@
     "pageReset": false,
     "consecutiveErrors": 0,
     "errorAlertSent": false,
-    "lastChecked": "2026-06-04T15:02:10.497Z",
+    "lastChecked": "2026-06-04T15:07:50.927Z",
     "checkHistory": [
       {
         "ts": "2026-06-04T14:51:10.466Z",
@@ -1155,16 +1161,26 @@
       {
         "ts": "2026-06-04T15:02:10.497Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T15:07:50.927Z",
+        "ok": true
       }
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-04T14:46:58.805Z",
+    "lastChecked": "2026-06-04T15:07:47.399Z",
     "products": {},
     "pageReset": true,
     "resetAlertSent": true,
     "resetReason": "HTTP 401/403",
     "consecutiveErrors": 0,
-    "errorAlertSent": false
+    "errorAlertSent": false,
+    "checkHistory": [
+      {
+        "ts": "2026-06-04T15:07:47.399Z",
+        "ok": true
+      }
+    ]
   }
 }
