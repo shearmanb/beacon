@@ -187,6 +187,7 @@
     .pulse-body { margin-top: .3rem; }
     .pulse-strip { position: relative; height: 22px; width: 100%; }
     .pulse-track { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--border); transform: translateY(-.5px); }
+    .pulse-tick { position: absolute; top: 4px; bottom: 4px; width: 1px; background: var(--border); opacity: .55; pointer-events: none; }
     .pulse-gap { position: absolute; top: 0; bottom: 0; right: 0; background: linear-gradient(to right, transparent, rgba(231,76,60,.25)); pointer-events: none; }
     .pulse-now { position: absolute; right: 0; top: 3px; bottom: 3px; width: 1.5px; background: var(--muted); border-radius: 1px; }
     .pulse-wrap.pulse-stalled .pulse-now { width: 3px; background: var(--red); animation: stall-pulse 1.8s ease-in-out infinite; }
@@ -825,7 +826,15 @@
     if (isStalled) cls.push('pulse-stalled');
     else if (isFailing) cls.push('pulse-failing');
 
-    const labelText = isStalled ? '⚠ ACTIVITY' : 'ACTIVITY';
+    const cadence = (() => {
+      const m = Math.round(intervalMinutes || 0);
+      if (!m) return '';
+      if (m < 60) return `every ${m}m`;
+      const h = m / 60;
+      return `every ${Number.isInteger(h) ? h : h.toFixed(1)}h`;
+    })();
+    const baseLabel = isStalled ? '⚠ ACTIVITY' : 'ACTIVITY';
+    const labelText = cadence ? `${baseLabel} · ${cadence}` : baseLabel;
     const nowLabel = isStalled ? '⚠ now' : 'now';
 
     let body;
@@ -846,6 +855,9 @@
       body = `<div class="pulse-body">
         <div class="pulse-strip">
           <div class="pulse-track"></div>
+          <div class="pulse-tick" style="left:25%"></div>
+          <div class="pulse-tick" style="left:50%"></div>
+          <div class="pulse-tick" style="left:75%"></div>
           ${gap}
           ${marks}
           <div class="pulse-now"></div>
