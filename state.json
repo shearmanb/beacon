@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-04T19:34:20.700Z",
+    "lastChecked": "2026-06-04T19:40:08.884Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -1043,11 +1043,15 @@
       {
         "ts": "2026-06-04T19:34:20.701Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T19:40:08.884Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-04T19:34:25.521Z",
+    "lastChecked": "2026-06-04T19:40:12.591Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1284,6 +1288,10 @@
       {
         "ts": "2026-06-04T19:34:25.521Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-04T19:40:12.591Z",
+        "ok": true
       }
     ]
   },
@@ -1439,7 +1447,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-04T19:34:34.303Z",
+    "lastChecked": "2026-06-04T19:40:22.497Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -1806,6 +1814,10 @@
       },
       {
         "ts": "2026-06-04T19:34:34.303Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-04T19:40:22.497Z",
         "ok": true
       }
     ]
