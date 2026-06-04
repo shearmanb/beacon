@@ -81,7 +81,7 @@ Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. The worker l
 
 ## Dashboard features (`docs/index.html`)
 
-The dashboard is a single static HTML file fetching raw GitHub files every 2 minutes. Fetches: `state.json`, `alert_history.json`, `config.json`, `ignored_products.json`, `schedules.json`.
+The dashboard is a single static HTML file fetching raw GitHub files every 2 minutes. Fetches: `state.json`, `alert_history.json`, `config.json`, `ignored_products.json`, `schedules.json`, `reminders.json`.
 
 **Header**: Shows `v0.4 · App update: [date/time] EST` under the Beacon title.
 
@@ -92,6 +92,8 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
 4. **Alert History** — last 100 alerts, color-coded.
 
 **Header actions**: Refresh, ▶ Run Now (clears `lastChecked` so worker re-checks all sites on next ~60s loop), ⚙ Schedules, GitHub Token, Discord Webhook.
+
+**Drop Reminders sidebar**: A collapsible left drawer (`📅` floating toggle) holding date-ordered drop reminders — a mix of to-do list / scratchpad / calendar-in-list-form for tracking drops on sites Beacon doesn't monitor. Each item has a required date, optional time, text, a done checkbox (strikes through), and a priority flag (★, red accent). Sorted date-ascending (untimed items first within a day). Open/closed state is a per-browser pref in `localStorage` under `beacon_sidebar_open`; the **data is synced to GitHub** in `reminders.json` (`{ items: [...] }`) so reminders appear on every device. Reads use raw URLs (no token needed); add/done/priority/delete write via the Contents API and require the GitHub token (controls disable with a hint when absent). Writes go through `commitReminders(mutate, msg)` — fetch sha → mutate → PUT, retry once on 409, UI updates only after the write succeeds (same write-confirmed discipline as `updateSiteField`). The worker never reads `reminders.json`.
 
 **Config edits**: All site field edits go through `updateSiteField(siteId, field, value, commitMsg)` which fetches `config.json`, mutates the field, PUTs JSON back, and **only updates local UI after the write succeeds**. Eliminates the old class of bug where a failed GitHub write would leave the dashboard showing a value that wasn't actually saved.
 

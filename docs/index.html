@@ -204,6 +204,43 @@
     .pulse-tooltip .pt-fail { color: var(--red); font-weight: 700; }
     .pulse-tooltip::after { content: ""; position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--border); }
     @keyframes stall-pulse { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.15; } }
+    /* ── Drop Reminders sidebar ── */
+    .drop-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 280px; background: var(--surface); border-right: 1px solid var(--border); z-index: 40; display: flex; flex-direction: column; transition: transform .22s ease; box-shadow: 2px 0 12px rgba(0,0,0,.25); }
+    .drop-sidebar.collapsed { transform: translateX(-281px); }
+    .drop-sb-header { display: flex; align-items: center; justify-content: space-between; padding: .9rem 1rem .7rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .drop-sb-header h2 { font-size: .82rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; display: flex; align-items: center; gap: .4rem; }
+    .drop-sb-collapse { background: none; border: none; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; padding: .1rem .35rem; border-radius: 6px; }
+    .drop-sb-collapse:hover { color: var(--text); background: rgba(255,255,255,.06); }
+    .drop-sb-add { padding: .75rem 1rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: .45rem; flex-shrink: 0; }
+    .drop-sb-add .row { display: flex; gap: .4rem; }
+    .drop-sb-add input[type=date] { flex: 1; }
+    .drop-sb-add input[type=time] { width: 96px; }
+    .drop-sb-add input[type=date], .drop-sb-add input[type=time], .drop-sb-add input[type=text] { padding: .35rem .5rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: .8rem; }
+    .drop-sb-add input[type=text] { width: 100%; }
+    .drop-sb-add .add-controls { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+    .drop-sb-add .prio-check { display: flex; align-items: center; gap: .3rem; font-size: .75rem; color: var(--muted); cursor: pointer; user-select: none; }
+    .drop-sb-add button { padding: .35rem .8rem; border-radius: 6px; border: none; background: var(--blue); color: #fff; font-size: .8rem; cursor: pointer; }
+    .drop-sb-add button:hover { opacity: .88; }
+    .drop-sb-add button:disabled { opacity: .4; cursor: not-allowed; }
+    .drop-sb-list { flex: 1; overflow-y: auto; padding: .5rem .6rem 1rem; display: flex; flex-direction: column; gap: .35rem; }
+    .drop-item { display: flex; align-items: flex-start; gap: .45rem; padding: .45rem .5rem; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--border); font-size: .8rem; }
+    .drop-item.prio { border-left-color: var(--red); }
+    .drop-item.done { opacity: .5; }
+    .drop-item.done .drop-text { text-decoration: line-through; }
+    .drop-item .drop-check { margin-top: .15rem; cursor: pointer; accent-color: var(--green); flex-shrink: 0; }
+    .drop-item .drop-star { background: none; border: none; cursor: pointer; font-size: .9rem; line-height: 1; padding: 0; flex-shrink: 0; color: var(--muted); }
+    .drop-item.prio .drop-star { color: var(--red); }
+    .drop-item .drop-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .12rem; }
+    .drop-item .drop-date { font-size: .68rem; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+    .drop-item .drop-date .drop-time { color: var(--blue); }
+    .drop-item .drop-text { word-break: break-word; line-height: 1.35; }
+    .drop-item .drop-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0 .15rem; flex-shrink: 0; }
+    .drop-item .drop-del:hover { color: var(--red); }
+    .drop-sb-empty { color: var(--muted); font-size: .8rem; font-style: italic; padding: 1rem .5rem; text-align: center; }
+    .drop-sb-tokenhint { color: var(--muted); font-size: .72rem; padding: .5rem 1rem; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .sidebar-toggle { position: fixed; left: .5rem; top: .6rem; z-index: 41; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 1.05rem; line-height: 1; padding: .35rem .55rem; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+    .sidebar-toggle:hover { border-color: var(--blue); }
+    @media (max-width: 1100px) { .drop-sidebar { width: 86vw; max-width: 320px; } .drop-sidebar.collapsed { transform: translateX(-101%); } }
   </style>
 </head>
 <body>
@@ -220,6 +257,29 @@
 </div>
 
 <div id="app">
+  <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Drop Reminders">📅</button>
+  <aside class="drop-sidebar" id="drop-sidebar">
+    <div class="drop-sb-header">
+      <h2>📅 Drop Reminders</h2>
+      <button class="drop-sb-collapse" onclick="toggleSidebar()" title="Collapse">«</button>
+    </div>
+    <div class="drop-sb-add" id="drop-sb-add">
+      <div class="row">
+        <input type="date" id="drop-date" />
+        <input type="time" id="drop-time" />
+      </div>
+      <input type="text" id="drop-text" placeholder="What to remember…" maxlength="240"
+             onkeydown="if(event.key==='Enter')addReminder()" />
+      <div class="add-controls">
+        <label class="prio-check"><input type="checkbox" id="drop-prio" /> ★ Priority</label>
+        <button id="drop-add-btn" onclick="addReminder()">Add</button>
+      </div>
+    </div>
+    <div class="drop-sb-list" id="drop-sb-list">
+      <div class="drop-sb-empty">Loading…</div>
+    </div>
+    <div class="drop-sb-tokenhint" id="drop-sb-tokenhint" style="display:none">GitHub token required to add or edit reminders</div>
+  </aside>
   <header>
     <div class="header-brand">
       <h1>🔦 Beacon</h1>
@@ -839,11 +899,14 @@
   const TOKEN_KEY   = 'beacon_gh_token';
   const WEBHOOK_KEY = 'beacon_discord_webhook';
 
+  const SIDEBAR_KEY = 'beacon_sidebar_open';
+
   let state = {};
   let history = [];
   let config = { sites: [] };
   let ignored = {};
   let schedules = {};
+  let reminders = { items: [] };
   let lastLoadedAt = null;
   let isRefreshing = false;
 
@@ -890,6 +953,7 @@
 
   setVersionText(null);
   fetchLastCodeCommit().catch(() => {});
+  applySidebarState();
 
   // ── Auth gate ────────────────────────────────────────────────────────────────
   document.getElementById('gate-form').addEventListener('submit', (e) => {
@@ -913,12 +977,13 @@
     if (config.sites.length) renderSiteCards();
     const errors = [];
 
-    const [stateText, historyText, configText, ignoredText, schedulesText] = await Promise.all([
+    const [stateText, historyText, configText, ignoredText, schedulesText, remindersText] = await Promise.all([
       fetchRaw('state.json').catch(e => { errors.push(`state: ${e.message}`); return null; }),
       fetchRaw('alert_history.json').catch(e => { errors.push(`history: ${e.message}`); return null; }),
       fetchRaw('config.json').catch(e => { errors.push(`config: ${e.message}`); return null; }),
       fetchRaw('ignored_products.json').catch(() => '{}'),
       fetchRaw('schedules.json').catch(() => null),
+      fetchRaw('reminders.json').catch(() => null),
     ]);
 
     if (stateText)     state        = JSON.parse(stateText);
@@ -926,6 +991,10 @@
     if (configText)    config.sites = (JSON.parse(configText).sites ?? []);
     if (schedulesText) schedules    = JSON.parse(schedulesText);
     ignored = JSON.parse(ignoredText);
+    if (remindersText) {
+      try { const r = JSON.parse(remindersText); reminders = { items: Array.isArray(r.items) ? r.items : [] }; }
+      catch { reminders = { items: [] }; }
+    }
 
     lastLoadedAt = Date.now();
     isRefreshing = false;
@@ -950,6 +1019,153 @@
     return site.url;
   }
 
+  // ── Drop Reminders sidebar ───────────────────────────────────────────────────
+  function isSidebarOpen() { return localStorage.getItem(SIDEBAR_KEY) !== 'false'; }
+  function applySidebarState() {
+    document.getElementById('drop-sidebar')?.classList.toggle('collapsed', !isSidebarOpen());
+  }
+  function toggleSidebar() {
+    localStorage.setItem(SIDEBAR_KEY, isSidebarOpen() ? 'false' : 'true');
+    applySidebarState();
+  }
+
+  function fmtReminderDate(dateStr, timeStr) {
+    // dateStr "YYYY-MM-DD"; render as "Thu Jun 12" + optional "@ 12:00 PM"
+    const [y, m, d] = (dateStr || '').split('-').map(Number);
+    if (!y || !m || !d) return esc(dateStr || '');
+    const dt = new Date(y, m - 1, d);
+    let out = dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    if (timeStr) {
+      const [hh, mm] = timeStr.split(':').map(Number);
+      const ampm = hh >= 12 ? 'PM' : 'AM';
+      const h12 = ((hh + 11) % 12) + 1;
+      out += `<span class="drop-time"> @ ${h12}:${String(mm).padStart(2, '0')} ${ampm}</span>`;
+    }
+    return out;
+  }
+
+  function sortedReminders() {
+    return [...(reminders.items || [])].sort((a, b) => {
+      const ad = a.date || '', bd = b.date || '';
+      if (ad !== bd) return ad < bd ? -1 : 1;
+      return (a.time || '') < (b.time || '') ? -1 : (a.time || '') > (b.time || '') ? 1 : 0;
+    });
+  }
+
+  function renderSidebar() {
+    applySidebarState();
+    const hasToken = !!localStorage.getItem(TOKEN_KEY);
+    const addBox = document.getElementById('drop-sb-add');
+    const hint = document.getElementById('drop-sb-tokenhint');
+    if (addBox) addBox.querySelectorAll('input, button').forEach(el => { el.disabled = !hasToken; });
+    if (hint) hint.style.display = hasToken ? 'none' : 'block';
+
+    const dateInput = document.getElementById('drop-date');
+    if (dateInput && !dateInput.value) {
+      const now = new Date();
+      dateInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    }
+
+    const list = document.getElementById('drop-sb-list');
+    if (!list) return;
+    const items = sortedReminders();
+    if (!items.length) {
+      list.innerHTML = '<div class="drop-sb-empty">No reminders yet.<br>Add a drop date above.</div>';
+      return;
+    }
+    list.innerHTML = items.map(it => {
+      const cls = ['drop-item'];
+      if (it.priority) cls.push('prio');
+      if (it.done) cls.push('done');
+      return `<div class="${cls.join(' ')}">
+        <input type="checkbox" class="drop-check" ${it.done ? 'checked' : ''} ${hasToken ? '' : 'disabled'} onchange="toggleReminderDone('${esc(it.id)}')" title="Mark done" />
+        <button class="drop-star" ${hasToken ? '' : 'disabled'} onclick="toggleReminderPriority('${esc(it.id)}')" title="Toggle priority">${it.priority ? '★' : '☆'}</button>
+        <div class="drop-main">
+          <div class="drop-date">${fmtReminderDate(it.date, it.time)}</div>
+          <div class="drop-text">${esc(it.text)}</div>
+        </div>
+        <button class="drop-del" ${hasToken ? '' : 'disabled'} onclick="deleteReminder('${esc(it.id)}')" title="Delete">×</button>
+      </div>`;
+    }).join('');
+  }
+
+  // Fetch reminders.json, apply mutator(items)->items, PUT back. Re-render on success.
+  async function commitReminders(mutate, commitMessage) {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) { alert('Add a GitHub token to edit reminders.'); return false; }
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const res = await fetch(`${API_BASE}/contents/reminders.json`, {
+          headers: { Authorization: `token ${token}` },
+        });
+        let sha = null, current = { items: [] };
+        if (res.ok) {
+          const data = await res.json();
+          sha = data.sha;
+          try { const p = JSON.parse(safeAtob(data.content.replace(/\n/g, ''))); current = { items: Array.isArray(p.items) ? p.items : [] }; }
+          catch { current = { items: [] }; }
+        } else if (res.status !== 404) {
+          alert(`Could not fetch reminders.json (${res.status})`);
+          return false;
+        }
+
+        const next = { items: mutate([...current.items]) };
+        const putRes = await fetch(`${API_BASE}/contents/reminders.json`, {
+          method: 'PUT',
+          headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: commitMessage,
+            content: safeBtoa(JSON.stringify(next, null, 2) + '\n'),
+            ...(sha ? { sha } : {}),
+            branch: 'main',
+          }),
+        });
+        if (putRes.status === 409 && attempt === 0) continue; // stale sha — retry once
+        if (!putRes.ok) { alert(`Failed to save reminders: ${putRes.status}`); return false; }
+
+        reminders = next;   // write confirmed
+        renderSidebar();
+        return true;
+      } catch (err) {
+        alert(`Error: ${err.message}`);
+        return false;
+      }
+    }
+    return false;
+  }
+
+  async function addReminder() {
+    const date = document.getElementById('drop-date').value;
+    const time = document.getElementById('drop-time').value;
+    const textEl = document.getElementById('drop-text');
+    const text = textEl.value.trim();
+    const priority = document.getElementById('drop-prio').checked;
+    if (!date) { alert('Pick a date.'); return; }
+    if (!text) { alert('Enter a reminder.'); return; }
+    const btn = document.getElementById('drop-add-btn');
+    if (btn) btn.disabled = true;
+    try {
+      const item = { id: `r_${Date.now()}`, date, time: time || '', text, priority, done: false, createdAt: new Date().toISOString() };
+      const ok = await commitReminders(items => [...items, item], `chore: add drop reminder [skip ci]`);
+      if (ok) { textEl.value = ''; document.getElementById('drop-time').value = ''; document.getElementById('drop-prio').checked = false; }
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  async function toggleReminderDone(id) {
+    await commitReminders(items => items.map(it => it.id === id ? { ...it, done: !it.done } : it),
+      `chore: toggle reminder done [skip ci]`);
+  }
+  async function toggleReminderPriority(id) {
+    await commitReminders(items => items.map(it => it.id === id ? { ...it, priority: !it.priority } : it),
+      `chore: toggle reminder priority [skip ci]`);
+  }
+  async function deleteReminder(id) {
+    if (!confirm('Delete this reminder?')) return;
+    await commitReminders(items => items.filter(it => it.id !== id), `chore: delete drop reminder [skip ci]`);
+  }
+
   // ── Render ───────────────────────────────────────────────────────────────────
   function renderAll() {
     renderSiteCards();
@@ -957,6 +1173,7 @@
     renderProducts();
     renderHistory();
     updateSiteFilter();
+    renderSidebar();
     const token = localStorage.getItem(TOKEN_KEY);
     document.getElementById('run-now-btn').style.display = token ? 'inline-block' : 'none';
     renderWorkerHealth();
