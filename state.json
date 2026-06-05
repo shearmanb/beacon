@@ -2679,7 +2679,7 @@
     ]
   },
   "reveries_official": {
-    "lastChecked": "2026-06-05T15:08:10.783Z",
+    "lastChecked": "2026-06-05T15:13:48.007Z",
     "productCount": 3,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -2695,7 +2695,7 @@
       },
       "the-reveries-single-barrel-arrivals-barrel-strength-bourbon": {
         "handle": "the-reveries-single-barrel-arrivals-barrel-strength-bourbon",
-        "title": "The Reveries: 10 Year Single Barrel \"Arrivals\" Barrel Strength Bourbon T8ke Reserve Cask",
+        "title": "THE REVERIES 10 Year Single Barrel \"Arrivals\" Barrel Strength Bourbon T8ke Reserve Cask",
         "vendor": "The Reveries",
         "productType": "Whiskey",
         "tags": [],
@@ -2721,10 +2721,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-04T15:24:09.284Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-04T15:29:40.958Z",
         "ok": true
@@ -3119,6 +3115,10 @@
       },
       {
         "ts": "2026-06-05T15:08:10.783Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-05T15:13:48.007Z",
         "ok": true
       }
     ]
