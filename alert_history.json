@@ -3504,5 +3504,16 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RavenV.png?v=1780671359",
       "url": "https://www.thereveries.co/shop"
     }
+  },
+  {
+    "timestamp": "2026-06-05T15:35:28.318Z",
+    "siteId": "reveries_official",
+    "siteName": "The Reveries Official Shop",
+    "type": "imminent_timeout",
+    "product": {
+      "title": "The Reveries Official Shop",
+      "url": "https://www.thereveries.co/shop",
+      "note": "Imminent mode auto-disabled after 20 min. Back to 20 schedule."
+    }
   }
 ]
