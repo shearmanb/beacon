@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-05T20:44:22.706Z",
+    "lastChecked": "2026-06-05T20:49:50.855Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -837,10 +837,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-04T23:01:16.711Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-04T23:22:01.618Z",
         "ok": true
       },
@@ -1235,11 +1231,15 @@
       {
         "ts": "2026-06-05T20:44:22.706Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-05T20:49:50.855Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-05T20:44:27.927Z",
+    "lastChecked": "2026-06-05T20:49:56.031Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-04T23:01:22.735Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-04T23:22:06.198Z",
         "ok": true
@@ -1667,6 +1663,10 @@
       },
       {
         "ts": "2026-06-05T20:44:27.927Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-05T20:49:56.031Z",
         "ok": true
       }
     ]
@@ -2273,13 +2273,9 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 1,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-04T23:01:30.709Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-04T23:22:18.759Z",
         "ok": true
@@ -2675,8 +2671,14 @@
       {
         "ts": "2026-06-05T20:44:36.186Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-05T20:50:09.222Z",
+        "ok": false
       }
-    ]
+    ],
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-05T20:50:09.222Z"
   },
   "reveries_official": {
     "lastChecked": "2026-06-05T20:44:41.803Z",
