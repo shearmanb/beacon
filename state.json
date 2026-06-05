@@ -2679,41 +2679,48 @@
     ]
   },
   "reveries_official": {
-    "productCount": 2,
+    "lastChecked": "2026-06-05T15:08:10.783Z",
+    "productCount": 3,
     "products": {
-      "the-reveries-8-year-single-barrel-only-all-the-time-barrel-strength-bourbon-t8ke-reserve-cask": {
-        "handle": "the-reveries-8-year-single-barrel-only-all-the-time-barrel-strength-bourbon-t8ke-reserve-cask",
-        "title": "The Reveries: 8 Year Single Barrel \"Only All The Time\" Barrel Strength Bourbon T8ke Reserve Cask",
+      "the-reveries-mash-journey-27454": {
+        "handle": "the-reveries-mash-journey-27454",
+        "title": "THE REVERIES 7 Year Single Barrel #27454 \"GAMBIT\" Kentucky Straight Bourbon T8KE Select",
         "vendor": "The Reveries",
         "productType": "Whiskey",
         "tags": [],
-        "minPrice": 84.99,
-        "available": false,
+        "minPrice": 79.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/GAMBIT.png?v=1780671568",
+        "url": "https://www.thereveries.co/shop"
+      },
+      "the-reveries-single-barrel-arrivals-barrel-strength-bourbon": {
+        "handle": "the-reveries-single-barrel-arrivals-barrel-strength-bourbon",
+        "title": "The Reveries: 10 Year Single Barrel \"Arrivals\" Barrel Strength Bourbon T8ke Reserve Cask",
+        "vendor": "The Reveries",
+        "productType": "Whiskey",
+        "tags": [],
+        "minPrice": 119.99,
+        "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RevPlaceholder.png?v=1773967832",
         "url": "https://www.thereveries.co/shop"
       },
-      "the-reveries-8-year-single-barrel-wake-of-the-ship-barrel-strength-bourbon-t8ke-reserve-cask": {
-        "handle": "the-reveries-8-year-single-barrel-wake-of-the-ship-barrel-strength-bourbon-t8ke-reserve-cask",
-        "title": "The Reveries: 8 Year Single Barrel \"Wake of the Ship\" Barrel Strength Bourbon T8ke Reserve Cask",
+      "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
+        "handle": "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release",
+        "title": "THE REVERIES \"RAVEN\" Rare Release Batch V Barrel Strength Bourbon (2026 Release)",
         "vendor": "The Reveries",
         "productType": "Whiskey",
         "tags": [],
-        "minPrice": 84.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RevPlaceholder.png?v=1773967832",
+        "minPrice": 159.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RavenV.png?v=1780671359",
         "url": "https://www.thereveries.co/shop"
       }
     },
-    "collectionEmpty": true,
+    "collectionEmpty": false,
     "pageReset": false,
     "consecutiveErrors": 0,
     "errorAlertSent": false,
-    "lastChecked": "2026-06-05T14:47:30.714Z",
     "checkHistory": [
-      {
-        "ts": "2026-06-04T15:18:45.276Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-04T15:24:09.284Z",
         "ok": true
@@ -3108,6 +3115,10 @@
       },
       {
         "ts": "2026-06-05T14:47:30.714Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-05T15:08:10.783Z",
         "ok": true
       }
     ]
