@@ -12,6 +12,7 @@ const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
 const LOOP_BASE_MS = 60_000;
 const MAX_HISTORY = 250;
 const ERROR_ALERT_THRESHOLD = 5; // consecutive failures before paging Discord
+const DEFAULT_IMMINENT_DURATION_MIN = 20;
 
 // ── In-memory state ───────────────────────────────────────────────────────────
 
@@ -92,6 +93,29 @@ async function appendAndPushHistory(events) {
   }
 }
 
+// Re-reads config.json, applies `updates` to the named site, and writes back.
+// Retries once on 409 conflict.
+async function updateConfigSiteFields(siteId, updates, message) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await readFile("config.json");
+    if (!res.content) throw new Error("config.json missing");
+    let cfg;
+    try { cfg = JSON.parse(res.content); }
+    catch { throw new Error("config.json parse failed"); }
+    const site = cfg.sites?.find((s) => s.id === siteId);
+    if (!site) return false;
+    Object.assign(site, updates);
+    try {
+      await writeFile("config.json", JSON.stringify(cfg, null, 2) + "\n", res.sha, message);
+      return true;
+    } catch (err) {
+      if (err.message.includes("409") && attempt === 0) continue;
+      throw err;
+    }
+  }
+  return false;
+}
+
 async function fetchJsonFile(path) {
   const res = await readFile(path);
   if (!res.content) return null;
@@ -126,6 +150,51 @@ async function run() {
   const newHistory = [];
   const touchedSiteIds = [];
   let stateChanged = false;
+
+  // Imminent mode auto-off: any site whose imminent timer has elapsed gets
+  // flipped back off and its prior schedule restored. Fires a Discord alert
+  // so you know the cooldown started.
+  for (const site of config.sites) {
+    if (!site.imminent || !site.imminentSince) continue;
+    const durationMin = site.imminentDurationMinutes ?? DEFAULT_IMMINENT_DURATION_MIN;
+    const elapsedMs = Date.now() - new Date(site.imminentSince).getTime();
+    if (!(elapsedMs >= durationMin * 60_000)) continue;
+
+    const restoredSchedule = site.scheduleBeforeImminent ?? site.schedule ?? null;
+    try {
+      await updateConfigSiteFields(site.id, {
+        imminent: false,
+        imminentSince: null,
+        scheduleBeforeImminent: null,
+        schedule: restoredSchedule,
+      }, `chore: auto-off imminent for ${site.id} [skip ci]`);
+      // Mutate the in-memory copy so the rest of this loop sees the new state.
+      site.imminent = false;
+      site.imminentSince = null;
+      site.scheduleBeforeImminent = null;
+      site.schedule = restoredSchedule;
+      console.log(`[${site.name}] Imminent auto-off after ${durationMin}m timeout`);
+
+      const event = {
+        timestamp: new Date().toISOString(),
+        siteId: site.id,
+        siteName: site.name,
+        type: "imminent_timeout",
+        product: {
+          title: site.name,
+          url: site.url,
+          note: `Imminent mode auto-disabled after ${durationMin} min. Back to ${restoredSchedule ?? site.intervalMinutes + ' min'} schedule.`,
+        },
+      };
+      newHistory.push(event);
+      if (DISCORD_WEBHOOK) {
+        try { await sendDiscordAlert(DISCORD_WEBHOOK, site.name, event); }
+        catch (err) { console.error(`  Discord imminent_timeout error: ${err.message}`); }
+      }
+    } catch (err) {
+      console.error(`[${site.name}] Failed to auto-off imminent: ${err.message}`);
+    }
+  }
 
   for (const site of config.sites) {
     if (!site.enabled) continue;

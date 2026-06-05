@@ -1318,13 +1318,30 @@
           </label>
           <span>Monitoring <span class="badge ${isEnabled ? 'badge-green' : 'badge-red'}">${isEnabled ? 'ON' : 'OFF'}</span></span>
         </div>
-        <div class="toggle-row">
+        ${(() => {
+          const durMin = site.imminentDurationMinutes ?? 20;
+          let badge = 'OFF';
+          if (imminentChecked) {
+            badge = '🔥 ON';
+            if (site.imminentSince) {
+              const leftMs = new Date(site.imminentSince).getTime() + durMin * 60_000 - Date.now();
+              const leftMin = Math.max(0, Math.ceil(leftMs / 60_000));
+              badge = `🔥 ON (~${leftMin}m left)`;
+            }
+          }
+          return `<div class="toggle-row">
           <label class="toggle">
             <input type="checkbox" ${imminentChecked ? 'checked' : ''} onchange="toggleImminent('${site.id}', this.checked, this)" />
             <span class="slider"></span>
           </label>
-          <span>Imminent mode <span class="badge ${imminentChecked ? 'badge-yellow' : ''}">${imminentChecked ? '🔥 ON' : 'OFF'}</span></span>
+          <span>Imminent mode <span class="badge ${imminentChecked ? 'badge-yellow' : ''}">${badge}</span></span>
         </div>
+        <div class="schedule-row" style="margin-top:.35rem">
+          <label>Auto-off after</label>
+          <input type="number" min="1" max="1440" value="${durMin}" class="schedule-select" style="max-width:7rem"
+            onchange="setImminentDuration('${esc(site.id)}', this.value, this)" />
+        </div>`;
+        })()}
         <div class="token-hint">Requires GitHub token to change</div>
       </div>`;
     }).join('');
@@ -1401,7 +1418,7 @@
 
     const recent = [...history].reverse().slice(0, 100);
     list.innerHTML = recent.map(h => {
-      const label = h.type === 'new_product' ? '🆕 New' : h.type === 'restock' ? '✅ Restock' : h.type === 'sold_out' ? '❌ Sold Out' : h.type === 'site_reset' ? '⚠️ Reset' : h.type === 'site_changed' ? '🔔 Changed' : h.type;
+      const label = h.type === 'new_product' ? '🆕 New' : h.type === 'restock' ? '✅ Restock' : h.type === 'sold_out' ? '❌ Sold Out' : h.type === 'site_reset' ? '⚠️ Reset' : h.type === 'site_changed' ? '🔔 Changed' : h.type === 'site_error' ? '🚨 Site Down' : h.type === 'site_recovered' ? '✅ Recovered' : h.type === 'imminent_timeout' ? '⏱ Imminent Off' : h.type;
       const time = new Date(h.timestamp).toLocaleString();
       return `<div class="history-item ${esc(h.type)}">
         <span class="history-time">${esc(time)}</span>
@@ -1609,6 +1626,10 @@
   // write succeeds — so a failed write can't leave the dashboard showing
   // a value that isn't actually saved.
   async function updateSiteField(siteId, field, value, commitMessage) {
+    return updateSiteFields(siteId, { [field]: value }, commitMessage);
+  }
+
+  async function updateSiteFields(siteId, updates, commitMessage) {
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) { alert('Add a GitHub token to edit config.'); renderSiteCards(); return false; }
     try {
@@ -1620,8 +1641,11 @@
       const parsed = JSON.parse(safeAtob(data.content.replace(/\n/g, '')));
       const site = parsed.sites?.find(s => s.id === siteId);
       if (!site) { alert(`Site ${siteId} not in config.json.`); renderSiteCards(); return false; }
-      if (site[field] === value) return true; // no-op
-      site[field] = value;
+      let changed = false;
+      for (const [k, v] of Object.entries(updates)) {
+        if (site[k] !== v) { site[k] = v; changed = true; }
+      }
+      if (!changed) return true;
 
       const putRes = await fetch(`${API_BASE}/contents/config.json`, {
         method: 'PUT',
@@ -1641,7 +1665,7 @@
 
       // Only NOW update local model — write confirmed.
       const localSite = config.sites.find(s => s.id === siteId);
-      if (localSite) localSite[field] = value;
+      if (localSite) Object.assign(localSite, updates);
       renderSiteCards();
       return true;
     } catch (err) {
@@ -1689,8 +1713,34 @@
   async function toggleImminent(siteId, value, el) {
     if (el) el.disabled = true;
     try {
-      await updateSiteField(siteId, 'imminent', value,
+      const site = config.sites.find(s => s.id === siteId);
+      const updates = value
+        ? {
+            imminent: true,
+            imminentSince: new Date().toISOString(),
+            scheduleBeforeImminent: site?.schedule ?? null,
+          }
+        : {
+            imminent: false,
+            imminentSince: null,
+            scheduleBeforeImminent: null,
+          };
+      await updateSiteFields(siteId, updates,
         `chore: ${value ? 'enable' : 'disable'} imminent mode for ${siteId} [skip ci]`);
+    } finally { if (el) el.disabled = false; }
+  }
+
+  async function setImminentDuration(siteId, raw, el) {
+    const n = parseInt(raw, 10);
+    if (!Number.isFinite(n) || n < 1 || n > 1440) {
+      alert('Enter a number of minutes between 1 and 1440.');
+      renderSiteCards();
+      return;
+    }
+    if (el) el.disabled = true;
+    try {
+      await updateSiteField(siteId, 'imminentDurationMinutes', n,
+        `chore: set imminent duration for ${siteId} to ${n}m [skip ci]`);
     } finally { if (el) el.disabled = false; }
   }
 

@@ -10,6 +10,7 @@ const COLORS = {
   site_changed: 0x9b59b6,   // purple
   site_error: 0xe67e22,     // dark orange
   site_recovered: 0x16a085, // teal
+  imminent_timeout: 0xf1c40f, // yellow
 };
 
 const LABELS = {
@@ -20,6 +21,7 @@ const LABELS = {
   site_changed: "🔔 Store Changed",
   site_error: "🚨 Site Down",
   site_recovered: "✅ Site Recovered",
+  imminent_timeout: "⏱ Imminent Timed Out",
 };
 
 export async function sendAlert(webhookUrl, siteName, alert) {
@@ -29,13 +31,14 @@ export async function sendAlert(webhookUrl, siteName, alert) {
 
   let embed;
 
-  const SITE_LEVEL = new Set(["site_reset", "site_changed", "site_error", "site_recovered"]);
+  const SITE_LEVEL = new Set(["site_reset", "site_changed", "site_error", "site_recovered", "imminent_timeout"]);
   if (SITE_LEVEL.has(type)) {
     const defaults = {
       site_reset: "Coming Soon page detected — shop has reset between waves.",
       site_changed: "Something changed on the store page.",
       site_error: "Repeated check failures — investigate.",
       site_recovered: "Checks are succeeding again.",
+      imminent_timeout: "Imminent mode auto-disabled after timeout.",
     };
     const extraFields =
       type === "site_reset"
