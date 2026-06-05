@@ -3113,7 +3113,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-05T14:27:56.958Z",
+    "lastChecked": "2026-06-05T14:48:35.953Z",
     "products": {},
     "pageReset": true,
     "resetAlertSent": true,
@@ -3395,6 +3395,10 @@
       },
       {
         "ts": "2026-06-05T14:27:56.958Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-05T14:48:35.953Z",
         "ok": true
       }
     ]
