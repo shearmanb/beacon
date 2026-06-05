@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-05T20:39:05.893Z",
+    "lastChecked": "2026-06-05T20:44:22.706Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -837,10 +837,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-04T22:40:38.398Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-04T23:01:16.711Z",
         "ok": true
       },
@@ -1235,11 +1231,15 @@
       {
         "ts": "2026-06-05T20:39:05.893Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-05T20:44:22.706Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-05T20:39:09.315Z",
+    "lastChecked": "2026-06-05T20:44:27.927Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-04T22:40:42.909Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-04T23:01:22.735Z",
         "ok": true
@@ -1667,6 +1663,10 @@
       },
       {
         "ts": "2026-06-05T20:39:09.315Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-05T20:44:27.927Z",
         "ok": true
       }
     ]
@@ -2115,7 +2115,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-05T20:39:17.200Z",
+    "lastChecked": "2026-06-05T20:44:36.186Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2276,10 +2276,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-04T22:40:51.598Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-04T23:01:30.709Z",
         "ok": true
@@ -2675,11 +2671,15 @@
       {
         "ts": "2026-06-05T20:39:17.200Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-05T20:44:36.186Z",
+        "ok": true
       }
     ]
   },
   "reveries_official": {
-    "lastChecked": "2026-06-05T20:24:00.926Z",
+    "lastChecked": "2026-06-05T20:44:41.803Z",
     "productCount": 3,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -2721,10 +2721,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-04T17:36:21.500Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-04T17:41:58.867Z",
         "ok": true
@@ -3119,6 +3115,10 @@
       },
       {
         "ts": "2026-06-05T20:24:00.926Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-05T20:44:41.803Z",
         "ok": true
       }
     ]
