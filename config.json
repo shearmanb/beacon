@@ -134,8 +134,8 @@
       "alertOnRestock": true,
       "alertOnSoldOut": true,
       "filters": {},
-      "imminentSince": "2026-06-05T15:13:03.215Z",
-      "scheduleBeforeImminent": "2"
+      "imminentSince": "2026-06-05T15:14:02.764Z",
+      "scheduleBeforeImminent": "20"
     }
   ]
 }
