@@ -3515,5 +3515,22 @@
       "url": "https://www.thereveries.co/shop",
       "note": "Imminent mode auto-disabled after 20 min. Back to 20 schedule."
     }
+  },
+  {
+    "timestamp": "2026-06-05T16:36:15.270Z",
+    "siteId": "reveries_official",
+    "siteName": "The Reveries Official Shop",
+    "type": "sold_out",
+    "product": {
+      "handle": "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release",
+      "title": "THE REVERIES \"RAVEN\" Rare Release Batch V Barrel Strength Bourbon (2026 Release)",
+      "vendor": "The Reveries",
+      "productType": "Whiskey",
+      "tags": [],
+      "minPrice": 159.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RavenV.png?v=1780671359",
+      "url": "https://www.thereveries.co/shop"
+    }
   }
 ]
