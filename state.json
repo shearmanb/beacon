@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-05T13:49:45.438Z",
+    "lastChecked": "2026-06-05T13:55:19.884Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -837,10 +837,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-04T15:14:13.868Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-04T15:19:52.530Z",
         "ok": true
       },
@@ -1235,11 +1231,15 @@
       {
         "ts": "2026-06-05T13:49:45.438Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-05T13:55:19.884Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-05T13:49:50.003Z",
+    "lastChecked": "2026-06-05T13:55:25.058Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-04T15:14:19.494Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-04T15:19:56.044Z",
         "ok": true
@@ -1667,6 +1663,10 @@
       },
       {
         "ts": "2026-06-05T13:49:50.003Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-05T13:55:25.058Z",
         "ok": true
       }
     ]
@@ -2115,7 +2115,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-05T13:49:58.638Z",
+    "lastChecked": "2026-06-05T13:55:34.231Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2276,10 +2276,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-04T15:14:36.730Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-04T15:20:04.822Z",
         "ok": true
@@ -2674,6 +2670,10 @@
       },
       {
         "ts": "2026-06-05T13:49:58.638Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-05T13:55:34.231Z",
         "ok": true
       }
     ]
