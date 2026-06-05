@@ -129,11 +129,13 @@
       "intervalMinutes": 30,
       "schedule": "2",
       "imminentIntervalMinutes": 2,
-      "imminent": false,
+      "imminent": true,
       "alertOnNewProduct": true,
       "alertOnRestock": true,
       "alertOnSoldOut": true,
-      "filters": {}
+      "filters": {},
+      "imminentSince": "2026-06-05T15:13:03.215Z",
+      "scheduleBeforeImminent": "2"
     }
   ]
 }
