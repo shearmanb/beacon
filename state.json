@@ -2115,7 +2115,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-06T16:49:17.530Z",
+    "lastChecked": "2026-06-06T17:01:41.189Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2273,13 +2273,9 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 5,
-    "errorAlertSent": true,
+    "consecutiveErrors": 0,
+    "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T18:50:38.554Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T18:56:08.731Z",
         "ok": true
@@ -2675,10 +2671,12 @@
       {
         "ts": "2026-06-06T17:00:18.473Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-06T17:01:41.189Z",
+        "ok": true
       }
-    ],
-    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=4",
-    "lastErrorAt": "2026-06-06T17:00:18.473Z"
+    ]
   },
   "reveries_official": {
     "lastChecked": "2026-06-06T16:55:03.431Z",
