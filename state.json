@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-06T20:28:00.054Z",
+    "lastChecked": "2026-06-06T20:33:18.771Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -837,10 +837,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-05T21:55:52.617Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-05T22:16:30.641Z",
         "ok": true
       },
@@ -1235,11 +1231,15 @@
       {
         "ts": "2026-06-06T20:28:00.054Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-06T20:33:18.771Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-06T20:28:03.480Z",
+    "lastChecked": "2026-06-06T20:33:24.333Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T21:55:56.615Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T22:16:34.167Z",
         "ok": true
@@ -1668,6 +1664,10 @@
       {
         "ts": "2026-06-06T20:28:03.480Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-06T20:33:24.333Z",
+        "ok": true
       }
     ]
   },
@@ -1709,13 +1709,9 @@
         "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
       }
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 1,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T22:16:38.536Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T22:21:44.560Z",
         "ok": true
@@ -2111,8 +2107,14 @@
       {
         "ts": "2026-06-06T20:28:09.306Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-06T20:33:36.563Z",
+        "ok": false
       }
-    ]
+    ],
+    "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-06T20:33:36.563Z"
   },
   "bourbon_concierge": {
     "lastChecked": "2026-06-06T20:29:13.893Z",
