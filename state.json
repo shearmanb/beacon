@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-06T19:06:27.801Z",
+    "lastChecked": "2026-06-06T19:11:47.952Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -837,10 +837,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-05T20:33:36.473Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-05T20:39:05.893Z",
         "ok": true
       },
@@ -1235,11 +1231,15 @@
       {
         "ts": "2026-06-06T19:06:27.801Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-06T19:11:47.952Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-06T19:06:33.272Z",
+    "lastChecked": "2026-06-06T19:11:52.749Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T20:33:41.238Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T20:39:09.315Z",
         "ok": true
@@ -1668,11 +1664,15 @@
       {
         "ts": "2026-06-06T19:06:33.272Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-06T19:11:52.749Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-06T19:06:36.823Z",
+    "lastChecked": "2026-06-06T19:11:57.606Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1712,10 +1712,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T20:54:34.316Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T20:59:58.879Z",
         "ok": true
@@ -2110,6 +2106,10 @@
       },
       {
         "ts": "2026-06-06T19:06:36.823Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-06T19:11:57.606Z",
         "ok": true
       }
     ]
