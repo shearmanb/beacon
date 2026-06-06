@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-06T09:43:21.335Z",
+    "lastChecked": "2026-06-06T11:44:01.497Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -531,6 +531,27 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ea0cec6-1621-ee9c-d16f-368a769082f8.jpg?v=1764513403",
         "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45"
       },
+      "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch": {
+        "handle": "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch",
+        "title": "T8KE x Hazelbaker 7 Year Double Oaked Bottled In Bond T8ke x Hazelbaker Exclusive Batch",
+        "vendor": "Nulu",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "nulu",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 69.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00904.jpg?v=1780229762",
+        "url": "https://sharedpour.com/products/t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch"
+      },
       "bardstown-single-barrel-bourbon-t8ke-2026": {
         "handle": "bardstown-single-barrel-bourbon-t8ke-2026",
         "title": "Bardstown Single Barrel Bourbon T8KE II.I 54.1% ABV",
@@ -552,27 +573,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
         "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026"
-      },
-      "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch": {
-        "handle": "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch",
-        "title": "T8KE x Hazelbaker 7 Year Double Oaked Bottled In Bond T8ke x Hazelbaker Exclusive Batch",
-        "vendor": "Nulu",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "nulu",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 69.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00904.jpg?v=1780229762",
-        "url": "https://sharedpour.com/products/t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch"
       },
       "agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez": {
         "handle": "agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez",
@@ -836,10 +836,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T14:17:03.850Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T14:22:24.234Z",
         "ok": true
@@ -1234,6 +1230,10 @@
       },
       {
         "ts": "2026-06-06T09:43:21.335Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-06T11:44:01.497Z",
         "ok": true
       }
     ]
