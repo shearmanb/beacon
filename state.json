@@ -1239,7 +1239,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-06T16:38:25.692Z",
+    "lastChecked": "2026-06-06T16:43:44.428Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T18:06:38.152Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T18:12:02.411Z",
         "ok": true
@@ -1668,11 +1664,15 @@
       {
         "ts": "2026-06-06T16:38:25.692Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-06T16:43:44.428Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-06T16:23:40.565Z",
+    "lastChecked": "2026-06-06T16:43:50.045Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1712,10 +1712,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T19:22:05.860Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T19:27:35.833Z",
         "ok": true
@@ -2111,11 +2107,15 @@
       {
         "ts": "2026-06-06T16:23:40.565Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-06T16:43:50.045Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-06T16:38:33.502Z",
+    "lastChecked": "2026-06-06T16:43:58.763Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2276,10 +2276,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T18:12:11.924Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T18:17:41.404Z",
         "ok": true
@@ -2674,6 +2670,10 @@
       },
       {
         "ts": "2026-06-06T16:38:33.502Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-06T16:43:58.763Z",
         "ok": true
       }
     ]
