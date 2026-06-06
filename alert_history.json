@@ -3588,5 +3588,22 @@
       "url": "https://thebourbonconcierge.com",
       "note": "Checks are succeeding again."
     }
+  },
+  {
+    "timestamp": "2026-06-06T21:29:34.999Z",
+    "siteId": "fountain_inn_dc",
+    "siteName": "Fountain Inn DC",
+    "type": "restock",
+    "product": {
+      "handle": "reveries-the-raven-batch-v",
+      "title": "Reveries: The Raven Batch V",
+      "vendor": "Bottle Shop at The Fountain Inn",
+      "productType": "",
+      "tags": [],
+      "minPrice": 170,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5766.heic?v=1780435180",
+      "url": "https://shop.fountaininndc.com/products/reveries-the-raven-batch-v"
+    }
   }
 ]
