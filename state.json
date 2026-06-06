@@ -1239,7 +1239,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-06T01:01:26.586Z",
+    "lastChecked": "2026-06-06T01:22:27.933Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T13:44:25.519Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T13:49:50.003Z",
         "ok": true
@@ -1667,6 +1663,10 @@
       },
       {
         "ts": "2026-06-06T01:01:26.586Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-06T01:22:27.933Z",
         "ok": true
       }
     ]
