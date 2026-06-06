@@ -1672,7 +1672,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-06T20:34:53.397Z",
+    "lastChecked": "2026-06-06T20:40:21.613Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1712,10 +1712,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T22:27:45.726Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T22:33:00.265Z",
         "ok": true
@@ -2111,11 +2107,15 @@
       {
         "ts": "2026-06-06T20:34:53.397Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-06T20:40:21.613Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-06T20:35:10.621Z",
+    "lastChecked": "2026-06-06T20:40:36.512Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2276,10 +2276,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T23:41:11.262Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-06T00:02:08.517Z",
         "ok": true
@@ -2674,6 +2670,10 @@
       },
       {
         "ts": "2026-06-06T20:35:10.621Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-06T20:40:36.512Z",
         "ok": true
       }
     ]
@@ -3124,7 +3124,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-06T20:19:23.658Z",
+    "lastChecked": "2026-06-06T20:40:42.002Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3132,10 +3132,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-05T10:22:47.090Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-05T10:42:56.116Z",
         "ok": true
@@ -3530,6 +3526,10 @@
       },
       {
         "ts": "2026-06-06T20:19:23.658Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-06T20:40:42.002Z",
         "ok": true
       }
     ]
