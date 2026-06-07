@@ -2115,7 +2115,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-07T08:42:52.335Z",
+    "lastChecked": "2026-06-07T09:03:18.186Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2276,10 +2276,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-06T16:22:40.747Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-06T16:27:59.829Z",
         "ok": true
@@ -2674,6 +2670,10 @@
       },
       {
         "ts": "2026-06-07T08:42:52.335Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-07T09:03:18.186Z",
         "ok": true
       }
     ]
