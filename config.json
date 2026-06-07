@@ -31,7 +31,7 @@
       "strategy": "shopify_collection",
       "url": "https://sharedpour.com",
       "intervalMinutes": 20,
-      "schedule": "working_hours_heavy",
+      "schedule": "weekend_light_20_mins",
       "imminentIntervalMinutes": 2,
       "imminent": false,
       "alertOnNewProduct": true,
