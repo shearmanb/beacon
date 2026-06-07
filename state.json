@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-07T02:24:21.696Z",
+    "lastChecked": "2026-06-07T02:46:47.527Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -833,13 +833,9 @@
         "url": "https://sharedpour.com/products/the-2025-t8ke-exclusive-collection-4x750ml"
       }
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-06T14:10:54.554Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-06T14:16:24.967Z",
         "ok": true
@@ -1235,13 +1231,15 @@
       {
         "ts": "2026-06-07T02:45:22.507Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-07T02:46:47.527Z",
+        "ok": true
       }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-07T02:45:22.507Z"
+    ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-07T02:24:26.606Z",
+    "lastChecked": "2026-06-07T02:46:53.655Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1268,13 +1266,9 @@
         "url": "https://sharedpour.com/products/the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1"
       }
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-06T14:10:58.811Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-06T14:16:30.778Z",
         "ok": true
@@ -1670,10 +1664,12 @@
       {
         "ts": "2026-06-07T02:45:33.064Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-07T02:46:53.655Z",
+        "ok": true
       }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-07T02:45:33.064Z"
+    ]
   },
   "fountain_inn_dc": {
     "lastChecked": "2026-06-07T02:43:04.601Z",
@@ -2277,13 +2273,9 @@
         "url": "https://thebourbonconcierge.com/products/the-reveries-bourbon-concierge-single-barrel-xxxpf"
       }
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 1,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-06T14:27:56.902Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-06T14:33:28.168Z",
         "ok": true
@@ -2679,8 +2671,14 @@
       {
         "ts": "2026-06-07T02:26:35.098Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-07T02:47:05.024Z",
+        "ok": false
       }
-    ]
+    ],
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-07T02:47:05.024Z"
   },
   "reveries_official": {
     "lastChecked": "2026-06-07T02:33:56.644Z",
