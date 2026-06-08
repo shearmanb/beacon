@@ -2679,7 +2679,7 @@
     ]
   },
   "reveries_official": {
-    "lastChecked": "2026-06-08T22:37:51.084Z",
+    "lastChecked": "2026-06-08T22:53:08.413Z",
     "productCount": 3,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -2721,10 +2721,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-07T08:04:14.986Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-07T08:25:01.293Z",
         "ok": true
@@ -3120,11 +3116,15 @@
       {
         "ts": "2026-06-08T22:37:51.084Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-08T22:53:08.413Z",
+        "ok": true
       }
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-08T22:37:47.178Z",
+    "lastChecked": "2026-06-08T22:53:03.973Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3132,10 +3132,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-07T08:03:10.905Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-07T08:23:57.386Z",
         "ok": true
@@ -3530,6 +3526,10 @@
       },
       {
         "ts": "2026-06-08T22:37:47.178Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-08T22:53:03.973Z",
         "ok": true
       }
     ]
