@@ -57,7 +57,7 @@
       "strategy": "shopify_collection",
       "url": "https://shop.fountaininndc.com",
       "intervalMinutes": 30,
-      "schedule": "bar_schedule_fi",
+      "schedule": "60",
       "imminentIntervalMinutes": 2,
       "imminent": false,
       "alertOnNewProduct": true,
