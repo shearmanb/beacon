@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-08T21:28:44.015Z",
+    "lastChecked": "2026-06-08T21:34:10.351Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -837,10 +837,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-07T23:47:25.412Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-08T00:08:10.246Z",
         "ok": true
       },
@@ -1235,11 +1231,15 @@
       {
         "ts": "2026-06-08T21:28:44.015Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-08T21:34:10.351Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-08T21:28:48.179Z",
+    "lastChecked": "2026-06-08T21:34:15.265Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-07T23:47:29.368Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-08T00:08:13.168Z",
         "ok": true
@@ -1668,11 +1664,15 @@
       {
         "ts": "2026-06-08T21:28:48.179Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-08T21:34:15.265Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-08T21:28:53.075Z",
+    "lastChecked": "2026-06-08T21:34:21.015Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1712,10 +1712,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-07T23:56:01.880Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-08T00:16:32.905Z",
         "ok": true
@@ -2111,11 +2107,15 @@
       {
         "ts": "2026-06-08T21:28:53.075Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-08T21:34:21.015Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-08T21:29:03.317Z",
+    "lastChecked": "2026-06-08T21:34:29.427Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2276,10 +2276,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-07T23:50:47.128Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-08T00:11:19.422Z",
         "ok": true
@@ -2675,11 +2671,15 @@
       {
         "ts": "2026-06-08T21:29:03.317Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-08T21:34:29.428Z",
+        "ok": true
       }
     ]
   },
   "reveries_official": {
-    "lastChecked": "2026-06-08T21:18:17.656Z",
+    "lastChecked": "2026-06-08T21:34:40.759Z",
     "productCount": 3,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -2721,10 +2721,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-07T06:21:17.088Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-07T06:41:45.281Z",
         "ok": true
@@ -3120,11 +3116,15 @@
       {
         "ts": "2026-06-08T21:18:17.656Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-08T21:34:40.759Z",
+        "ok": true
       }
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-08T21:18:13.557Z",
+    "lastChecked": "2026-06-08T21:34:35.399Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3132,10 +3132,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-07T06:20:06.788Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-07T06:40:41.502Z",
         "ok": true
@@ -3530,6 +3526,10 @@
       },
       {
         "ts": "2026-06-08T21:18:13.557Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-08T21:34:35.399Z",
         "ok": true
       }
     ]
