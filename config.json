@@ -109,7 +109,7 @@
       "strategy": "site_status_monitor",
       "url": "https://www.thereveries.co/shop",
       "intervalMinutes": 30,
-      "schedule": "weekend_light_20_mins",
+      "schedule": "60",
       "imminentIntervalMinutes": 5,
       "imminent": false,
       "alertOnNewProduct": false,
