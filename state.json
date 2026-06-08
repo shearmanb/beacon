@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-08T02:12:15.655Z",
+    "lastChecked": "2026-06-08T02:32:28.888Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -837,10 +837,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-06T20:28:00.054Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-06T20:33:18.771Z",
         "ok": true
       },
@@ -1235,11 +1231,15 @@
       {
         "ts": "2026-06-08T02:12:15.655Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-08T02:32:28.888Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-08T02:12:19.651Z",
+    "lastChecked": "2026-06-08T02:32:33.398Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-06T20:28:03.480Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-06T20:33:24.333Z",
         "ok": true
@@ -1667,6 +1663,10 @@
       },
       {
         "ts": "2026-06-08T02:12:19.651Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-08T02:32:33.398Z",
         "ok": true
       }
     ]
