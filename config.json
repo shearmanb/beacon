@@ -83,7 +83,7 @@
       "strategy": "shopify_collection",
       "url": "https://thebourbonconcierge.com",
       "intervalMinutes": 30,
-      "schedule": "weekend_light_20_mins",
+      "schedule": "60",
       "imminentIntervalMinutes": 2,
       "imminent": false,
       "alertOnNewProduct": true,
