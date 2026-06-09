@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-09T09:46:38.768Z",
+    "lastChecked": "2026-06-09T11:47:39.395Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -486,6 +486,27 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/0835fa5f-b427-103a-40af-379fb7716238.jpg?v=1777207285",
         "url": "https://sharedpour.com/products/starlight-single-barrel-px-sherry-finished-rye-t8ke-single-barrel-select-25-8426-114-proof"
       },
+      "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch": {
+        "handle": "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch",
+        "title": "T8KE x Hazelbaker 7 Year Double Oaked Bottled In Bond T8ke x Hazelbaker Exclusive Batch",
+        "vendor": "Nulu",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "nulu",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 69.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00904.jpg?v=1780229762",
+        "url": "https://sharedpour.com/products/t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch"
+      },
       "peerless-single-barrel-rye-t8ke-2026": {
         "handle": "peerless-single-barrel-rye-t8ke-2026",
         "title": "Peerless Distilling Single Barrel Barrel Strength Rye T8KE r/Bourbon Private Select (2026)",
@@ -530,27 +551,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ea0cec6-1621-ee9c-d16f-368a769082f8.jpg?v=1764513403",
         "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45"
-      },
-      "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch": {
-        "handle": "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch",
-        "title": "T8KE x Hazelbaker 7 Year Double Oaked Bottled In Bond T8ke x Hazelbaker Exclusive Batch",
-        "vendor": "Nulu",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "nulu",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 69.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00904.jpg?v=1780229762",
-        "url": "https://sharedpour.com/products/t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch"
       },
       "bardstown-single-barrel-bourbon-t8ke-2026": {
         "handle": "bardstown-single-barrel-bourbon-t8ke-2026",
@@ -836,10 +836,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-08T12:39:46.953Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-08T13:40:24.481Z",
         "ok": true
@@ -1235,11 +1231,15 @@
       {
         "ts": "2026-06-09T09:46:38.768Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-09T11:47:39.395Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-09T09:46:41.922Z",
+    "lastChecked": "2026-06-09T11:47:44.613Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-08T12:39:51.518Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-08T13:40:28.239Z",
         "ok": true
@@ -1668,11 +1664,15 @@
       {
         "ts": "2026-06-09T09:46:41.922Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-09T11:47:44.613Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-09T09:46:47.015Z",
+    "lastChecked": "2026-06-09T11:47:48.762Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1712,10 +1712,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-08T12:48:11.918Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-08T13:49:03.089Z",
         "ok": true
@@ -2111,11 +2107,15 @@
       {
         "ts": "2026-06-09T09:46:47.015Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-09T11:47:48.762Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-09T09:46:59.361Z",
+    "lastChecked": "2026-06-09T11:47:58.873Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2276,10 +2276,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-08T12:43:57.640Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-08T13:44:42.008Z",
         "ok": true
@@ -2674,6 +2670,10 @@
       },
       {
         "ts": "2026-06-09T09:46:59.361Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-09T11:47:58.873Z",
         "ok": true
       }
     ]
