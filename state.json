@@ -2679,7 +2679,7 @@
     ]
   },
   "reveries_official": {
-    "lastChecked": "2026-06-10T02:12:16.131Z",
+    "lastChecked": "2026-06-10T02:27:44.050Z",
     "productCount": 3,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -2721,10 +2721,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T00:26:21.994Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T00:42:00.613Z",
         "ok": true
@@ -3119,6 +3115,10 @@
       },
       {
         "ts": "2026-06-10T02:12:16.131Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T02:27:44.050Z",
         "ok": true
       }
     ]
