@@ -1239,7 +1239,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-10T18:06:18.218Z",
+    "lastChecked": "2026-06-10T18:15:30.365Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1266,13 +1266,9 @@
         "url": "https://sharedpour.com/products/the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1"
       }
     },
-    "consecutiveErrors": 2,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T19:40:36.465Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T19:46:05.166Z",
         "ok": true
@@ -1668,10 +1664,12 @@
       {
         "ts": "2026-06-10T18:13:47.014Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-10T18:15:30.365Z",
+        "ok": true
       }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-10T18:13:47.015Z"
+    ]
   },
   "fountain_inn_dc": {
     "lastChecked": "2026-06-10T18:06:22.798Z",
@@ -1711,13 +1709,9 @@
         "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
       }
     },
-    "consecutiveErrors": 2,
+    "consecutiveErrors": 3,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T19:40:42.103Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T19:46:10.249Z",
         "ok": true
@@ -2113,10 +2107,14 @@
       {
         "ts": "2026-06-10T18:14:00.235Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-10T18:15:42.784Z",
+        "ok": false
       }
     ],
     "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-10T18:14:00.235Z"
+    "lastErrorAt": "2026-06-10T18:15:42.784Z"
   },
   "bourbon_concierge": {
     "lastChecked": "2026-06-10T18:14:23.023Z",
