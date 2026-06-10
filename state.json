@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-10T18:57:00.848Z",
-    "productCount": 38,
+    "lastChecked": "2026-06-10T19:02:35.233Z",
+    "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -177,26 +177,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1255213e-491a-fec6-72f3-e9e0e63fa29a.png?v=1770052416",
         "url": "https://sharedpour.com/products/t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml"
       },
-      "t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection": {
-        "handle": "t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection",
-        "title": "Clear Creek Distillery x T8KE 15 Year Single Barrel Barrel Strength American Apple Brandy",
-        "vendor": "Hood River Distillers",
-        "productType": "",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "hood-river-distillers",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 99.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/860a314f-46ee-86f7-d387-ed8ed5246818.jpg?v=1765717125",
-        "url": "https://sharedpour.com/products/t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection"
-      },
       "alambique-serrano-altos-esteres-t8ke-701": {
         "handle": "alambique-serrano-altos-esteres-t8ke-701",
         "title": "Alambique Serrano Altos Esteres Reposado T8KE Exclsuive Batch Cask #701",
@@ -265,27 +245,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/8df56ab5-9e80-33a1-40aa-aecb2b7f8747.jpg?v=1775394875",
         "url": "https://sharedpour.com/products/pinhook-small-batch-bourbon-whiskey-single-barrel-selected-by-t8ke"
       },
-      "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3": {
-        "handle": "jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3",
-        "title": "Jack Daniel's Single Barrel Barrel Proof Tennessee Whiskey \"T8ke x ENDALZ\" 64.3% #25-25234",
-        "vendor": "Jack Daniel's",
-        "productType": "Whiskey",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "jack-daniels",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke",
-          "whiskey"
-        ],
-        "minPrice": 89.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1792a6ca-2f22-c9c9-4540-4f0971aa79d1.jpg?v=1774182274",
-        "url": "https://sharedpour.com/products/jack-daniels-single-barrel-barrel-proof-tennessee-whiskey-t8ke-x-endalz-64-3"
-      },
       "heaven-hill-bottled-in-bond-single-barrel": {
         "handle": "heaven-hill-bottled-in-bond-single-barrel",
         "title": "Heaven Hill 7 Year Single Barrel Bottled In Bond T8KE Private Barrel Selection",
@@ -331,48 +290,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/b3623675-71f3-657d-4d4a-f64e34eb5d2a.jpg?v=1775395761",
         "url": "https://sharedpour.com/products/augusta-wheated-bourbon-t8ke-single-barrel-26-1761-straight-bourbon"
-      },
-      "jack-daniels-x-t8ke-rye-whiskey": {
-        "handle": "jack-daniels-x-t8ke-rye-whiskey",
-        "title": "Jack Daniel’s Single Barrel Barrel Proof Rye Whiskey “T8KE\" Single Barrel Selection 66.3% ABV",
-        "vendor": "Jack Daniel's",
-        "productType": "",
-        "tags": [
-          "50-100",
-          "Brands: Jack Daniels",
-          "jack-daniels",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke",
-          "Tennessee"
-        ],
-        "minPrice": 89.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/78559c51-a67c-2e35-a40c-395c1299331e.jpg?v=1762088105",
-        "url": "https://sharedpour.com/products/jack-daniels-x-t8ke-rye-whiskey"
-      },
-      "driftless-glen-4625-mash-journey-single-barrel-bourbon-select-copy": {
-        "handle": "driftless-glen-4625-mash-journey-single-barrel-bourbon-select-copy",
-        "title": "Driftless Glen #4625 Mash & Journey Single Barrel Bourbon Select \"Apple Berry Fritter\"",
-        "vendor": "Driftless Glen",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 74.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DriftlessGlenn_Apple_Berry_Fritter_1.jpg?v=1770378586",
-        "url": "https://sharedpour.com/products/driftless-glen-4625-mash-journey-single-barrel-bourbon-select-copy"
       },
       "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof": {
         "handle": "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof",
@@ -837,10 +754,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-09T20:18:58.653Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-09T20:24:25.710Z",
         "ok": true
       },
@@ -1234,6 +1147,10 @@
       },
       {
         "ts": "2026-06-10T18:57:00.848Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T19:02:35.233Z",
         "ok": true
       }
     ]
