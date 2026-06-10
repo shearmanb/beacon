@@ -1239,40 +1239,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-10T18:54:41.285Z",
-    "productCount": 1,
-    "products": {
-      "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
-        "handle": "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1",
-        "title": "THE REVERIES: THE DEEP Kentucky Straight Bourbon Finished In French Oak Casks (Tide #1)",
-        "vendor": "The Reveries",
-        "productType": "Bourbon",
-        "tags": [
-          "100-200",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "presale",
-          "Single Barrel",
-          "single barrel selections",
-          "the-reveries"
-        ],
-        "minPrice": 129.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/682b836b-767b-b783-9747-e6e41a4c8f2a.jpg?v=1776644376",
-        "url": "https://sharedpour.com/products/the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1"
-      }
-    },
+    "lastChecked": "2026-06-10T19:00:26.497Z",
+    "productCount": 0,
+    "products": {},
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T20:24:29.410Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T20:29:56.953Z",
         "ok": true
@@ -1667,6 +1639,10 @@
       },
       {
         "ts": "2026-06-10T18:54:41.285Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T19:00:26.497Z",
         "ok": true
       }
     ]
