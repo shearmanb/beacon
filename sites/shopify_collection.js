@@ -14,9 +14,27 @@ function isAvailable(variants) {
 
 export async function checkSite(site, previousState) {
   const products = await fetchAllProducts(site);
+  const prevProducts = previousState?.products ?? {};
+
+  // Zero-product guard: a transient empty response (CDN blip, momentary 200
+  // with an empty body) must not wipe state — otherwise every product re-fires
+  // as new_product on the next successful check. Keyed on the *raw* fetch being
+  // empty while we previously tracked products, so a legitimate filter-miss
+  // (empty filtered set from a non-empty fetch) is unaffected.
+  if (products.length === 0 && Object.keys(prevProducts).length > 0) {
+    console.warn(
+      `[${site.name}] Fetch returned 0 products but state has ` +
+      `${Object.keys(prevProducts).length} — preserving state, skipping alerts`
+    );
+    return {
+      state: { ...previousState, lastChecked: new Date().toISOString() },
+      alerts: [],
+    };
+  }
+
   const filtered = applyFilters(products, site.filters);
   const productMap = buildProductMap(filtered, site.url);
-  const alerts = diff(previousState?.products ?? {}, productMap, site);
+  const alerts = diff(prevProducts, productMap, site);
 
   return {
     state: {
@@ -74,6 +92,7 @@ function buildProductMap(products, siteUrl) {
 }
 
 function applyFilters(products, filters) {
+  if (!filters) return products;
   return products.filter((p) => {
     if (filters.titleContains?.length) {
       const title = p.title.toLowerCase();

@@ -115,9 +115,11 @@ async function postWebhook(webhookUrl, payload, attempt = 0) {
       const chunks = [];
       res.on("data", (c) => chunks.push(c));
       res.on("end", () => resolve({ status: res.statusCode, body: Buffer.concat(chunks).toString() }));
+      res.on("error", reject);
     });
 
     req.on("error", reject);
+    req.setTimeout(10000, () => req.destroy(new Error("Discord webhook timeout")));
     req.write(payload);
     req.end();
   });
