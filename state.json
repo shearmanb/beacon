@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-10T16:03:31.717Z",
+    "lastChecked": "2026-06-10T16:14:50.597Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -837,14 +837,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-09T17:29:26.224Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-09T17:34:49.357Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-09T17:40:18.156Z",
         "ok": true
       },
@@ -1235,11 +1227,19 @@
       {
         "ts": "2026-06-10T16:03:31.717Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-10T16:09:10.851Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T16:14:50.597Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-10T16:03:37.715Z",
+    "lastChecked": "2026-06-10T16:14:54.607Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,14 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T17:29:29.905Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-09T17:34:53.256Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T17:40:22.219Z",
         "ok": true
@@ -1668,11 +1660,19 @@
       {
         "ts": "2026-06-10T16:03:37.715Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-10T16:09:13.955Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T16:14:54.607Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-10T16:03:42.570Z",
+    "lastChecked": "2026-06-10T16:14:59.219Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1712,14 +1712,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T17:29:33.466Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-09T17:34:58.830Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T17:40:25.252Z",
         "ok": true
@@ -2111,11 +2103,19 @@
       {
         "ts": "2026-06-10T16:03:42.570Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-10T16:09:17.976Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T16:14:59.219Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-10T16:03:54.418Z",
+    "lastChecked": "2026-06-10T16:15:07.185Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2276,14 +2276,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T17:29:43.117Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-09T17:35:09.156Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T17:40:33.166Z",
         "ok": true
@@ -2674,6 +2666,14 @@
       },
       {
         "ts": "2026-06-10T16:03:54.418Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T16:09:27.059Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T16:15:07.185Z",
         "ok": true
       }
     ]
@@ -3124,7 +3124,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-10T15:59:25.084Z",
+    "lastChecked": "2026-06-10T16:15:12.388Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3132,10 +3132,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T14:24:03.816Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T14:40:22.489Z",
         "ok": true
@@ -3530,6 +3526,10 @@
       },
       {
         "ts": "2026-06-10T15:59:25.084Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T16:15:12.388Z",
         "ok": true
       }
     ]
