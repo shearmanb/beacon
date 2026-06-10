@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-10T19:58:05.740Z",
+    "lastChecked": "2026-06-10T20:04:42.478Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -750,13 +750,9 @@
         "url": "https://sharedpour.com/products/the-2025-t8ke-exclusive-collection-4x750ml"
       }
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T21:24:36.085Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T21:29:58.765Z",
         "ok": true
@@ -1152,10 +1148,12 @@
       {
         "ts": "2026-06-10T20:03:34.159Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-10T20:04:42.478Z",
+        "ok": true
       }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-10T20:03:34.159Z"
+    ]
   },
   "sharedpour_reveries": {
     "lastChecked": "2026-06-10T20:01:15.184Z",
