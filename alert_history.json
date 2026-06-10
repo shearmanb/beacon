@@ -3622,5 +3622,20 @@
       "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5766.heic?v=1780435180",
       "url": "https://shop.fountaininndc.com/products/reveries-the-raven-batch-v"
     }
+  },
+  {
+    "timestamp": "2026-06-10T19:12:38.147Z",
+    "siteId": "reveries_official",
+    "siteName": "The Reveries Official Shop",
+    "type": "site_reset",
+    "product": {
+      "title": "The Reveries Official Shop",
+      "url": "https://www.thereveries.co/shop",
+      "vendor": null,
+      "minPrice": null,
+      "available": false,
+      "image": null,
+      "note": "Storefront API returned 0 products. The shop embed may have switched to a new Shopify collection ID.\n_Check View Source on https://www.thereveries.co/shop for the new id: value in ShopifyBuyInit._"
+    }
   }
 ]
