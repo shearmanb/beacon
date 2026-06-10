@@ -1156,16 +1156,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-10T20:17:55.206Z",
+    "lastChecked": "2026-06-10T20:23:20.994Z",
     "productCount": 0,
     "products": {},
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T21:46:38.329Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T21:52:02.721Z",
         "ok": true
@@ -1560,6 +1556,10 @@
       },
       {
         "ts": "2026-06-10T20:17:55.206Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T20:23:20.994Z",
         "ok": true
       }
     ]
