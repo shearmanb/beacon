@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-10T09:46:08.384Z",
+    "lastChecked": "2026-06-10T11:47:04.191Z",
     "productCount": 38,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -156,26 +156,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f96d2467-738c-b849-927c-03416b9f11ff.jpg?v=1771159501",
         "url": "https://sharedpour.com/products/pm-spirits-project-t8ke-armagnac-bourbon-concierge-105-8-prf"
       },
-      "t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection": {
-        "handle": "t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection",
-        "title": "Clear Creek Distillery x T8KE 15 Year Single Barrel Barrel Strength American Apple Brandy",
-        "vendor": "Hood River Distillers",
-        "productType": "",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "hood-river-distillers",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 99.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/860a314f-46ee-86f7-d387-ed8ed5246818.jpg?v=1765717125",
-        "url": "https://sharedpour.com/products/t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection"
-      },
       "t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml": {
         "handle": "t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml",
         "title": "Barrell Craft Spirits x T8ke Synthesis I, II, III Tasting Kit (3x 200ml)",
@@ -196,6 +176,26 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1255213e-491a-fec6-72f3-e9e0e63fa29a.png?v=1770052416",
         "url": "https://sharedpour.com/products/t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml"
+      },
+      "t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection": {
+        "handle": "t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection",
+        "title": "Clear Creek Distillery x T8KE 15 Year Single Barrel Barrel Strength American Apple Brandy",
+        "vendor": "Hood River Distillers",
+        "productType": "",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "hood-river-distillers",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 99.99,
+        "available": false,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/860a314f-46ee-86f7-d387-ed8ed5246818.jpg?v=1765717125",
+        "url": "https://sharedpour.com/products/t8ke-x-clear-creek-distillery-15-year-cask-strength-apple-brandy-aficionados-private-selection"
       },
       "alambique-serrano-altos-esteres-t8ke-701": {
         "handle": "alambique-serrano-altos-esteres-t8ke-701",
@@ -837,10 +837,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-09T14:18:21.450Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-09T14:23:38.215Z",
         "ok": true
       },
@@ -1235,11 +1231,15 @@
       {
         "ts": "2026-06-10T09:46:08.384Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-10T11:47:04.191Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-10T09:46:12.383Z",
+    "lastChecked": "2026-06-10T11:47:09.665Z",
     "productCount": 1,
     "products": {
       "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
@@ -1269,10 +1269,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T14:18:26.407Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T14:23:42.767Z",
         "ok": true
@@ -1668,11 +1664,15 @@
       {
         "ts": "2026-06-10T09:46:12.383Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-10T11:47:09.665Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-10T09:46:18.292Z",
+    "lastChecked": "2026-06-10T11:47:15.747Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1712,10 +1712,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T14:18:31.338Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T14:23:47.656Z",
         "ok": true
@@ -2111,11 +2107,15 @@
       {
         "ts": "2026-06-10T09:46:18.292Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-10T11:47:15.747Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-10T09:46:26.798Z",
+    "lastChecked": "2026-06-10T11:47:22.197Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2276,10 +2276,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T14:18:40.242Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T14:23:58.302Z",
         "ok": true
@@ -2674,6 +2670,10 @@
       },
       {
         "ts": "2026-06-10T09:46:26.798Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-10T11:47:22.197Z",
         "ok": true
       }
     ]
