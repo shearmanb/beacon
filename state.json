@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-11T09:49:25.596Z",
+    "lastChecked": "2026-06-11T11:50:06.090Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -381,6 +381,28 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_40_T8KE_Selection_Front.jpg?v=1757451767",
         "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke"
       },
+      "peerless-single-barrel-rye-t8ke-2026": {
+        "handle": "peerless-single-barrel-rye-t8ke-2026",
+        "title": "Peerless Distilling Single Barrel Barrel Strength Rye T8KE r/Bourbon Private Select (2026)",
+        "vendor": "Kentucky Peerless",
+        "productType": "Rye Whiskey",
+        "tags": [
+          "100-200",
+          "Barrel Pick",
+          "barrel picks",
+          "Bourbon Whiskey",
+          "kentucky-peerless",
+          "over-10",
+          "rye-whiskey",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 119.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f6e1b297-b0dd-184a-39cc-a63f5c2b2ac0.jpg?v=1778418010",
+        "url": "https://sharedpour.com/products/peerless-single-barrel-rye-t8ke-2026"
+      },
       "starlight-single-barrel-px-sherry-finished-rye-t8ke-single-barrel-select-25-8426-114-proof": {
         "handle": "starlight-single-barrel-px-sherry-finished-rye-t8ke-single-barrel-select-25-8426-114-proof",
         "title": "Starlight Single Barrel PX Sherry Finished Rye T8KE Single Barrel Select #25-8426 114 Proof",
@@ -423,28 +445,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00904.jpg?v=1780229762",
         "url": "https://sharedpour.com/products/t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch"
-      },
-      "peerless-single-barrel-rye-t8ke-2026": {
-        "handle": "peerless-single-barrel-rye-t8ke-2026",
-        "title": "Peerless Distilling Single Barrel Barrel Strength Rye T8KE r/Bourbon Private Select (2026)",
-        "vendor": "Kentucky Peerless",
-        "productType": "Rye Whiskey",
-        "tags": [
-          "100-200",
-          "Barrel Pick",
-          "barrel picks",
-          "Bourbon Whiskey",
-          "kentucky-peerless",
-          "over-10",
-          "rye-whiskey",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 119.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f6e1b297-b0dd-184a-39cc-a63f5c2b2ac0.jpg?v=1778418010",
-        "url": "https://sharedpour.com/products/peerless-single-barrel-rye-t8ke-2026"
       },
       "nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45": {
         "handle": "nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45",
@@ -642,27 +642,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/unnamed_2.jpg?v=1779640400",
         "url": "https://sharedpour.com/products/blackwood-bourbon-single-barrel-barrel-proof-t8ke-select"
       },
-      "whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection": {
-        "handle": "whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection",
-        "title": "WhistlePig Piggyback Rye Single Barrel 38792 Cask Strength r/Bourbon Single Barrel Selection",
-        "vendor": "WhistlePig",
-        "productType": "Rye",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "over-10",
-          "rye",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke",
-          "whistlepig"
-        ],
-        "minPrice": 62.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/aa853886-3923-811a-65c2-3a27041a2872.jpg?v=1744028681",
-        "url": "https://sharedpour.com/products/whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection"
-      },
       "peerless-single-barrel-bourbon-t8ke-2026": {
         "handle": "peerless-single-barrel-bourbon-t8ke-2026",
         "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #190809107",
@@ -685,6 +664,27 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
         "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-2026"
+      },
+      "whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection": {
+        "handle": "whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection",
+        "title": "WhistlePig Piggyback Rye Single Barrel 38792 Cask Strength r/Bourbon Single Barrel Selection",
+        "vendor": "WhistlePig",
+        "productType": "Rye",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "over-10",
+          "rye",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke",
+          "whistlepig"
+        ],
+        "minPrice": 62.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/aa853886-3923-811a-65c2-3a27041a2872.jpg?v=1744028681",
+        "url": "https://sharedpour.com/products/whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection"
       },
       "augusta-old-route-8-t8ke-single-barrel-select-24-6013-9-year-straight-bourbon": {
         "handle": "augusta-old-route-8-t8ke-single-barrel-select-24-6013-9-year-straight-bourbon",
@@ -753,10 +753,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T14:18:11.707Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T14:23:28.173Z",
         "ok": true
@@ -1151,6 +1147,10 @@
       },
       {
         "ts": "2026-06-11T09:49:25.596Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-11T11:50:06.090Z",
         "ok": true
       }
     ]
@@ -3017,7 +3017,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-11T11:34:29.582Z",
+    "lastChecked": "2026-06-11T11:50:09.063Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3025,10 +3025,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T10:03:44.489Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T10:18:54.531Z",
         "ok": true
@@ -3423,6 +3419,10 @@
       },
       {
         "ts": "2026-06-11T11:34:29.582Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-11T11:50:09.063Z",
         "ok": true
       }
     ]
