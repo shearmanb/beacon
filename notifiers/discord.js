@@ -114,11 +114,28 @@ async function postWebhook(webhookUrl, payload, attempt = 0) {
     const req = request(options, (res) => {
       const chunks = [];
       res.on("data", (c) => chunks.push(c));
-      res.on("end", () => resolve({ status: res.statusCode, body: Buffer.concat(chunks).toString() }));
-      res.on("error", reject);
+      res.on("end", () => {
+        clearTimeout(deadline);
+        resolve({ status: res.statusCode, body: Buffer.concat(chunks).toString() });
+      });
+      res.on("error", (err) => {
+        clearTimeout(deadline);
+        reject(err);
+      });
     });
 
-    req.on("error", reject);
+    // Wall-clock deadline: the idle timeout below resets on every byte, so a
+    // trickling response could hang past it indefinitely (same gap lib/fetch.js
+    // guards with its deadline timer).
+    const deadline = setTimeout(
+      () => req.destroy(new Error("Discord webhook deadline exceeded")),
+      15000
+    );
+
+    req.on("error", (err) => {
+      clearTimeout(deadline);
+      reject(err);
+    });
     req.setTimeout(10000, () => req.destroy(new Error("Discord webhook timeout")));
     req.write(payload);
     req.end();

@@ -1,6 +1,7 @@
 import { https } from "../lib/fetch.js";
 import { diff } from "../lib/diff.js";
 import { sleep } from "../lib/utils.js";
+import { emptyFetchGuard } from "../lib/empty_guard.js";
 
 function getMinPrice(variants) {
   if (!variants?.length) return null;
@@ -16,20 +17,22 @@ export async function checkSite(site, previousState) {
   const products = await fetchAllProducts(site);
   const prevProducts = previousState?.products ?? {};
 
-  // Zero-product guard: a transient empty response (CDN blip, momentary 200
-  // with an empty body) must not wipe state — otherwise every product re-fires
-  // as new_product on the next successful check. Keyed on the *raw* fetch being
-  // empty while we previously tracked products, so a legitimate filter-miss
-  // (empty filtered set from a non-empty fetch) is unaffected.
-  if (products.length === 0 && Object.keys(prevProducts).length > 0) {
-    console.warn(
-      `[${site.name}] Fetch returned 0 products but state has ` +
-      `${Object.keys(prevProducts).length} — preserving state, skipping alerts`
-    );
-    return {
-      state: { ...previousState, lastChecked: new Date().toISOString() },
-      alerts: [],
-    };
+  // Keyed on the *raw* fetch being empty, so a legitimate filter-miss
+  // (empty filtered set from a non-empty fetch) is unaffected. After 3
+  // consecutive empties the guard fires a one-time site_reset so a
+  // permanently empty/broken collection can't stay silent forever.
+  if (products.length === 0) {
+    const guarded = emptyFetchGuard({
+      site,
+      previousState,
+      prevProducts,
+      threshold: 3,
+      note:
+        `products.json returned 0 products on 3 consecutive checks. Previous products are ` +
+        `preserved. If the store is between waves this is expected — otherwise the ` +
+        `collection URL may have changed.`,
+    });
+    if (guarded) return guarded;
   }
 
   const filtered = applyFilters(products, site.filters);
