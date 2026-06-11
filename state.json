@@ -1156,16 +1156,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-11T20:53:10.667Z",
+    "lastChecked": "2026-06-11T20:58:48.996Z",
     "productCount": 0,
     "products": {},
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T23:18:34.805Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T23:39:16.532Z",
         "ok": true
@@ -1561,11 +1557,15 @@
       {
         "ts": "2026-06-11T20:53:10.667Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T20:58:48.996Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-11T20:53:13.950Z",
+    "lastChecked": "2026-06-11T20:58:54.372Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1605,10 +1605,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T23:19:36.198Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T23:40:22.997Z",
         "ok": true
@@ -2004,11 +2000,15 @@
       {
         "ts": "2026-06-11T20:53:13.950Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T20:58:54.372Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-11T20:53:24.534Z",
+    "lastChecked": "2026-06-11T20:59:03.219Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2169,10 +2169,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T23:17:29.397Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T23:38:12.594Z",
         "ok": true
@@ -2567,6 +2563,10 @@
       },
       {
         "ts": "2026-06-11T20:53:24.534Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-11T20:59:03.219Z",
         "ok": true
       }
     ]
