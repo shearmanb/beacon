@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-11T17:50:47.190Z",
+    "lastChecked": "2026-06-11T17:56:24.267Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -754,10 +754,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-10T19:24:44.823Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-10T19:30:17.366Z",
         "ok": true
       },
@@ -1151,6 +1147,10 @@
       },
       {
         "ts": "2026-06-11T17:50:47.190Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-11T17:56:24.267Z",
         "ok": true
       }
     ]
@@ -2572,7 +2572,7 @@
     ]
   },
   "reveries_official": {
-    "lastChecked": "2026-06-11T17:41:06.186Z",
+    "lastChecked": "2026-06-11T17:56:27.775Z",
     "productCount": 3,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -2609,15 +2609,11 @@
         "url": "https://www.thereveries.co/shop"
       }
     },
-    "emptyStreak": 63,
+    "emptyStreak": 64,
     "emptyAlertSent": true,
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T16:04:59.698Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T16:20:40.238Z",
         "ok": true
@@ -3012,6 +3008,10 @@
       },
       {
         "ts": "2026-06-11T17:41:06.186Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-11T17:56:27.775Z",
         "ok": true
       }
     ]
