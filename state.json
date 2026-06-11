@@ -1156,16 +1156,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-11T17:18:56.227Z",
+    "lastChecked": "2026-06-11T17:24:27.958Z",
     "productCount": 0,
     "products": {},
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T18:43:32.383Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T18:49:10.897Z",
         "ok": true
@@ -1561,11 +1557,15 @@
       {
         "ts": "2026-06-11T17:18:56.227Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T17:24:27.958Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-11T17:18:59.834Z",
+    "lastChecked": "2026-06-11T17:24:31.940Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1605,10 +1605,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T18:44:40.872Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T18:50:19.636Z",
         "ok": true
@@ -2004,11 +2000,15 @@
       {
         "ts": "2026-06-11T17:18:59.834Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T17:24:31.940Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-11T17:19:10.262Z",
+    "lastChecked": "2026-06-11T17:24:43.273Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2169,10 +2169,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T18:42:24.125Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T18:48:03.015Z",
         "ok": true
@@ -2568,11 +2564,15 @@
       {
         "ts": "2026-06-11T17:19:10.262Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T17:24:43.273Z",
+        "ok": true
       }
     ]
   },
   "reveries_official": {
-    "lastChecked": "2026-06-11T17:08:27.823Z",
+    "lastChecked": "2026-06-11T17:24:48.154Z",
     "productCount": 3,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -2609,15 +2609,11 @@
         "url": "https://www.thereveries.co/shop"
       }
     },
-    "emptyStreak": 61,
+    "emptyStreak": 62,
     "emptyAlertSent": true,
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T15:34:03.201Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T15:49:15.858Z",
         "ok": true
@@ -3012,6 +3008,10 @@
       },
       {
         "ts": "2026-06-11T17:08:27.823Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-11T17:24:48.154Z",
         "ok": true
       }
     ]
