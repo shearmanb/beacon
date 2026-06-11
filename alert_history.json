@@ -3637,5 +3637,27 @@
       "image": null,
       "note": "Storefront API returned 0 products. The shop embed may have switched to a new Shopify collection ID.\n_Check View Source on https://www.thereveries.co/shop for the new id: value in ShopifyBuyInit._"
     }
+  },
+  {
+    "timestamp": "2026-06-11T14:33:40.578Z",
+    "siteId": "sharedpour_reveries",
+    "siteName": "SharedPour The Reveries",
+    "type": "new_product",
+    "product": {
+      "handle": "the-reveries-rare-release-22-year-cask-strength-calvados",
+      "title": "THE REVERIES Rare Release \"NIGHTS IN NEUFCHATEL\" 22 Year Single Cask Cask Strength Calvados",
+      "vendor": "The Reveries",
+      "productType": "Brandy",
+      "tags": [
+        "200-300",
+        "brandy",
+        "over-10",
+        "the-reveries"
+      ],
+      "minPrice": 249.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ec783497-c47f-2cc4-3155-560837b85eee.jpg?v=1780794491",
+      "url": "https://sharedpour.com/products/the-reveries-rare-release-22-year-cask-strength-calvados"
+    }
   }
 ]
