@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-11T14:33:35.497Z",
+    "lastChecked": "2026-06-11T14:39:05.873Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -754,10 +754,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-10T16:03:31.717Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-10T16:09:10.851Z",
         "ok": true
       },
@@ -1152,37 +1148,20 @@
       {
         "ts": "2026-06-11T14:33:35.497Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T14:39:05.873Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-11T14:33:40.578Z",
-    "productCount": 1,
-    "products": {
-      "the-reveries-rare-release-22-year-cask-strength-calvados": {
-        "handle": "the-reveries-rare-release-22-year-cask-strength-calvados",
-        "title": "THE REVERIES Rare Release \"NIGHTS IN NEUFCHATEL\" 22 Year Single Cask Cask Strength Calvados",
-        "vendor": "The Reveries",
-        "productType": "Brandy",
-        "tags": [
-          "200-300",
-          "brandy",
-          "over-10",
-          "the-reveries"
-        ],
-        "minPrice": 249.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ec783497-c47f-2cc4-3155-560837b85eee.jpg?v=1780794491",
-        "url": "https://sharedpour.com/products/the-reveries-rare-release-22-year-cask-strength-calvados"
-      }
-    },
+    "lastChecked": "2026-06-11T14:39:12.003Z",
+    "productCount": 0,
+    "products": {},
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T16:03:37.715Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T16:09:13.955Z",
         "ok": true
@@ -1578,11 +1557,15 @@
       {
         "ts": "2026-06-11T14:33:40.578Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T14:39:12.003Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-11T14:33:46.806Z",
+    "lastChecked": "2026-06-11T14:39:16.810Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1622,10 +1605,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T16:09:17.976Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T16:14:59.219Z",
         "ok": true
@@ -2021,11 +2000,15 @@
       {
         "ts": "2026-06-11T14:33:46.806Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T14:39:16.810Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-11T14:33:54.779Z",
+    "lastChecked": "2026-06-11T14:39:26.131Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2186,10 +2169,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T15:58:16.850Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T16:03:54.418Z",
         "ok": true
@@ -2584,6 +2563,10 @@
       },
       {
         "ts": "2026-06-11T14:33:54.779Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-11T14:39:26.131Z",
         "ok": true
       }
     ]
