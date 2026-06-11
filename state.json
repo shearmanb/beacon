@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-11T14:28:07.116Z",
+    "lastChecked": "2026-06-11T14:33:35.497Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -754,10 +754,6 @@
     "errorAlertSent": false,
     "checkHistory": [
       {
-        "ts": "2026-06-10T15:58:01.865Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-10T16:03:31.717Z",
         "ok": true
       },
@@ -1152,20 +1148,37 @@
       {
         "ts": "2026-06-11T14:28:07.116Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T14:33:35.497Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-11T14:28:12.913Z",
-    "productCount": 0,
-    "products": {},
+    "lastChecked": "2026-06-11T14:33:40.578Z",
+    "productCount": 1,
+    "products": {
+      "the-reveries-rare-release-22-year-cask-strength-calvados": {
+        "handle": "the-reveries-rare-release-22-year-cask-strength-calvados",
+        "title": "THE REVERIES Rare Release \"NIGHTS IN NEUFCHATEL\" 22 Year Single Cask Cask Strength Calvados",
+        "vendor": "The Reveries",
+        "productType": "Brandy",
+        "tags": [
+          "200-300",
+          "brandy",
+          "over-10",
+          "the-reveries"
+        ],
+        "minPrice": 249.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ec783497-c47f-2cc4-3155-560837b85eee.jpg?v=1780794491",
+        "url": "https://sharedpour.com/products/the-reveries-rare-release-22-year-cask-strength-calvados"
+      }
+    },
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T15:58:05.825Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T16:03:37.715Z",
         "ok": true
@@ -1561,11 +1574,15 @@
       {
         "ts": "2026-06-11T14:28:12.913Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T14:33:40.578Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-11T14:28:16.760Z",
+    "lastChecked": "2026-06-11T14:33:46.806Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1605,10 +1622,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T16:03:42.570Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T16:09:17.976Z",
         "ok": true
@@ -2004,11 +2017,15 @@
       {
         "ts": "2026-06-11T14:28:16.760Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T14:33:46.806Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-11T14:28:26.539Z",
+    "lastChecked": "2026-06-11T14:33:54.779Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2169,10 +2186,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T15:52:44.097Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T15:58:16.850Z",
         "ok": true
@@ -2568,11 +2581,15 @@
       {
         "ts": "2026-06-11T14:28:26.539Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-11T14:33:54.779Z",
+        "ok": true
       }
     ]
   },
   "reveries_official": {
-    "lastChecked": "2026-06-11T14:17:34.891Z",
+    "lastChecked": "2026-06-11T14:33:58.774Z",
     "productCount": 3,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -2609,15 +2626,11 @@
         "url": "https://www.thereveries.co/shop"
       }
     },
-    "emptyStreak": 50,
+    "emptyStreak": 51,
     "emptyAlertSent": true,
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T12:43:38.555Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T12:58:51.964Z",
         "ok": true
@@ -3012,6 +3025,10 @@
       },
       {
         "ts": "2026-06-11T14:17:34.891Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-11T14:33:58.774Z",
         "ok": true
       }
     ]
