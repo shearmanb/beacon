@@ -1565,7 +1565,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-11T00:01:08.993Z",
+    "lastChecked": "2026-06-11T00:22:07.165Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1605,10 +1605,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-10T13:34:27.898Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-10T13:39:44.941Z",
         "ok": true
@@ -2003,6 +1999,10 @@
       },
       {
         "ts": "2026-06-11T00:01:08.993Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-11T00:22:07.165Z",
         "ok": true
       }
     ]
@@ -2572,7 +2572,7 @@
     ]
   },
   "reveries_official": {
-    "lastChecked": "2026-06-11T00:06:30.155Z",
+    "lastChecked": "2026-06-11T00:22:10.629Z",
     "productCount": 3,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -2614,10 +2614,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-09T22:34:41.757Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-09T22:50:14.259Z",
         "ok": true
@@ -3012,6 +3008,10 @@
       },
       {
         "ts": "2026-06-11T00:06:30.155Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-11T00:22:10.629Z",
         "ok": true
       }
     ]
