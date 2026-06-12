@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T18:45:42.522Z",
+    "lastChecked": "2026-06-12T18:51:11.444Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T20:04:15.405Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T20:09:31.455Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-12T18:45:42.522Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T18:51:11.444Z",
         "ok": true
       }
     ]
