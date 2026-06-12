@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T15:54:08.311Z",
+    "lastChecked": "2026-06-12T15:59:59.962Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T17:18:59.834Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T17:24:31.940Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-12T15:54:08.311Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T15:59:59.962Z",
         "ok": true
       }
     ]
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 81,
+    "consecutiveErrors": 82,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T09:27:54.497Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T09:44:00.963Z",
         "ok": true
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T15:58:56.396Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T16:00:03.535Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T15:58:56.396Z"
+    "lastErrorAt": "2026-06-12T16:00:03.535Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T15:50:38.860Z",
