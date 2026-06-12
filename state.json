@@ -1163,12 +1163,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-12T14:22:16.530Z",
+    "lastChecked": "2026-06-12T14:27:58.551Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:1bc6e6af8c598b7ff7c8d8f9a32c9751\"",
+      "etag": "\"page_cache:45343637659:ProductListController:d346e98fbeb49ce287239b63acec5ca3\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T15:51:03.465Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T15:56:27.013Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-12T14:22:16.530Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T14:27:58.551Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T14:22:21.485Z",
+    "lastChecked": "2026-06-12T14:28:02.878Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T15:51:09.046Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T15:56:30.544Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-12T14:22:21.485Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T14:28:02.878Z",
         "ok": true
       }
     ]
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 3,
+    "consecutiveErrors": 4,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T13:15:09.375Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T13:30:34.984Z",
         "ok": true
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T14:26:48.661Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T14:28:08.087Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T14:26:48.661Z"
+    "lastErrorAt": "2026-06-12T14:28:08.087Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T14:13:14.782Z",
