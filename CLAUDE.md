@@ -16,7 +16,7 @@ Beacon is a personal stock-monitoring bot owned by Brian (McLean, VA). It watche
 node worker.js
 ```
 
-Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. The worker loops every ~60 s and respects the effective interval per site — if a site was checked recently it will skip. To force a full recheck, click ▶ Run Now in the dashboard (clears `lastChecked` from `state.json`; worker picks it up on the next loop).
+Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. Optional: `HEALTHCHECK_URL` — a healthchecks.io (or similar) ping URL hit at the end of every loop; if the worker dies, the missed pings trigger an external alert (dead-man's switch for R3). The worker loops every ~60 s and respects the effective interval per site — if a site was checked recently it will skip. To force a full recheck, click ▶ Run Now in the dashboard (clears `lastChecked` from `state.json`; worker picks it up on the next loop).
 
 ## Architecture
 
@@ -38,6 +38,12 @@ Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. The worker l
 **Check history (PulseStrip data)**: Each site state entry carries a `checkHistory` array of `{ ts, ok }` records — one per check attempt, success or failure — capped at the most recent 100 entries. Populated by `worker.js` on both the success path (`ok: true`) and the error path (`ok: false`). Consumed by the dashboard's per-tile PulseStrip to render the last 60 minutes of activity.
 
 **Consecutive-error alerting**: When a site fails `ERROR_ALERT_THRESHOLD` (currently 5) loops in a row, the worker fires a Discord `site_error` alert (orange) and sets `errorAlertSent: true` on that site's state to suppress repeats. The next successful check clears the flag and fires `site_recovered` (teal).
+
+**Anti-bot / politeness behaviors** (in addition to the long-standing jitter at every level): `lib/fetch.js` holds one browser header profile per hostname for 6–24 h (rotating identity per request from one IP is itself a bot signature); conditional GET (`If-None-Match`/`If-Modified-Since`, stored as `httpValidators` in site state) lets unchanged pages answer 304 with no body — used by `site_status_monitor` always and by `shopify_collection` when the catalog fit one page on the previous check; `shouldCheck()` applies a deterministic per-cycle ±jitter factor (0.9–1.15× interval, skipped in imminent mode) so checks never land on a metronome; and a per-site circuit breaker cools a site down 5→15→60 min after a 429/403 (`cooldownUntil`/`cooldownLevel` in state, cleared on the next success). HTTP errors from `lib/fetch.js` and `shopify_storefront` carry `err.statusCode` for this.
+
+**Startup quiet mode**: any check where the site has no previous state entry (fresh site, or empty/corrupt state.json) records state but suppresses `new_product` alerts, logging a `baseline` history entry instead — prevents a mass false-alert flood (R1). A site whose previous check legitimately saw 0 products still alerts on a 0→N drop.
+
+**Config validation**: the worker validates every config.json site each loop (id present/unique, known strategy, parseable url) and skips invalid entries with a once-per-start Discord warning; the dashboard runs the same checks (`configValidationError`) before any config.json PUT.
 
 **Ignored products**: `ignored_products.json` — a flat object keyed by product handle (`{ "some-handle": true }`). The worker filters matching products from alerts before Discord/history. Ignored products still exist in `state.json` so unignoring never triggers a false "new product" alert. The dashboard writes this file via the GitHub API.
 
@@ -157,13 +163,6 @@ History is hard-capped at 250 entries in `alert_history.json`. When entry 251 ar
 
 ### Features (new capability)
 
-**Dashboard: Railway health indicator**
-There is no GitHub Actions fallback anymore. If Railway dies, nothing checks until it recovers. The site cards go red after 4× their interval, but there's no single header-level "is the worker alive?" signal.
-- Add a "Last run: X min ago" line to the header, derived from the most-recent `lastChecked` timestamp across all enabled sites in `state.json`
-- Color it yellow after 10 min, red after 20 min — independent of any per-site schedule
-- Effort: ~1 hr (dashboard-only change, no worker changes)
-- Risk: none — read-only display
-
 **Imminent mode: sub-60s floor**
 `imminentIntervalMinutes: 2` is currently floored at ~60s by the worker loop. During a drop you want to check every 2 minutes, not every 60s. Two options:
 - *Option A (simple)*: when any enabled site has `imminent: true`, reduce the loop sleep from ~60s to ~10s. All sites still respect `shouldCheck()` so non-imminent sites don't over-check.
@@ -230,6 +229,14 @@ These were completed during the Phase 1 / Phase 2 sessions. Listed so future Cla
 | ✅ | Fixed Fountain Inn DC schedule: `weekend_light_20_mins` → `bar_schedule_fi` |
 | ✅ | New `site_status_monitor` strategy — detects COMING SOON / password wall at thereveries.co/shop |
 | ✅ | New `reveries_site_status` site entry using `site_status_monitor` |
+| ✅ | Startup quiet mode — no-prior-products checks baseline silently instead of mass-alerting (R1) |
+| ✅ | `HEALTHCHECK_URL` dead-man ping after every loop + dashboard "worker late/stalled" chip (R3) |
+| ✅ | Empty-collection guard re-alerts every 24 h while stuck at 0 instead of going silent (R2) |
+| ✅ | Worker + dashboard config.json validation (invalid sites skipped/refused, not silently broken) |
+| ✅ | Per-site 429/403 circuit breaker — 5→15→60 min cooldowns (`cooldownUntil` in state) |
+| ✅ | Conditional GET (ETag/If-Modified-Since → 304) in `site_status_monitor` + single-page `shopify_collection` |
+| ✅ | Stable per-host browser identity (6–24 h) replacing per-request profile rotation |
+| ✅ | Deterministic ±jitter (0.9–1.15×) on effective intervals in `shouldCheck()` |
 
 
 ## Known quirks
@@ -242,20 +249,17 @@ These were completed during the Phase 1 / Phase 2 sessions. Listed so future Cla
 
 ## Risk register (biggest fragile points)
 
-**R1 — State corruption → mass false alert flood (highest operational risk)**
-If `state.json` is corrupt or missing at startup, the worker runs with empty state and re-alerts every known product as "new." 37+ T8KE products alone = 37 Discord alerts in seconds. Fix: startup quiet mode — skip alert generation on first run per site when state was empty at load time. Not yet implemented.
+**R1 — State corruption → mass false alert flood** *(mitigated 2026-06-12)*
+If `state.json` is corrupt or missing at startup, the worker runs with empty state. Startup quiet mode now suppresses `new_product` alerts on any check where the site had no previous state entry at all — the products are baselined silently (logged + a `baseline` history entry, no Discord). Keyed on the entry being absent, not the product map being empty, so a site whose last real check saw 0 products still alerts on a 0→N wave drop.
 
-**R2 — Reveries collection ID changes silently after one alert**
-`storefrontCollectionId: "367215214747"` in `config.json` is hardcoded. If thereveries.co updates their Shopify Buy Button to a new collection, the strategy returns 0 products, fires one `site_reset` alert, then goes permanently silent. You'd miss a drop. No automatic recovery. Manual fix: find new collection ID in page source and update config.json.
+**R2 — Reveries collection ID changes silently after one alert** *(partially mitigated 2026-06-12)*
+`storefrontCollectionId: "367215214747"` in `config.json` is hardcoded. If thereveries.co updates their Shopify Buy Button to a new collection, the strategy returns 0 products and fires `site_reset` — and now re-fires it every 24 h while the collection stays empty (`emptyAlertAt` in state), so a swapped ID nags instead of going permanently silent. Still no automatic recovery: find the new collection ID in page source and update config.json.
 
-**R3 — Railway down = complete monitoring blackout**
-No backup runner. If Railway crashes and `restartPolicyMaxRetries: 10` is exhausted, all checks stop silently. First Discord alert comes after 5 consecutive failures per site (~100 min on a 20-min schedule). During a Reveries drop this is catastrophic.
+**R3 — Railway down = complete monitoring blackout** *(mitigated 2026-06-12)*
+Still no backup runner, but two independent detectors now exist: (1) the worker pings `HEALTHCHECK_URL` after every loop — configure a healthchecks.io check (~2 min period, ~5 min grace) and the external service alerts when pings stop, even if the worker is fully dead; (2) the dashboard's worker chip turns "worker late/stalled" when the earliest-due site check is >10/>20 min overdue, schedule-aware. **Setup required**: create the healthchecks.io check and set `HEALTHCHECK_URL` on Railway.
 
 **R4 — GH_TOKEN expiration = silent total failure**
-If the fine-grained PAT expires, every `readFile`/`writeFile` call throws. The worker increments `consecutiveErrors` per site and eventually fires `site_error` alerts — but those alerts can't update state either. Worker continues running but is fully broken. No specific token-expiry detection. Check token expiry proactively.
-
-**R5 — No timeout on Discord webhook POST**
-`notifiers/discord.js` `postWebhook()` has no `req.setTimeout()`. If Discord's endpoint stalls, the worker loop hangs indefinitely at that point. All other HTTP code in the project has timeouts. Easy fix: add `req.setTimeout(10000, ...)`.
+If the fine-grained PAT expires, every `readFile`/`writeFile` call throws. The worker increments `consecutiveErrors` per site and eventually fires `site_error` alerts — but those alerts can't update state either. Worker continues running but is fully broken. No specific token-expiry detection. Check token expiry proactively. (The healthcheck ping still succeeds in this scenario — it only proves the loop is alive, not that GitHub writes work.)
 
 ---
 
@@ -270,6 +274,6 @@ These are not in the main backlog but should be done. Safe to batch into one com
 | D3 | `schedules.json` | `bar_schedule_fi` has an unreachable `defaultInterval` rule — the midnight-crossing window above it matches all remaining hours. Remove the dead rule. | None |
 | D4 | `lib/schedule.js:1` | Stale comment references deleted `checker.js` | None |
 | D5 | `worker.js:21` | Module-level `historyFileSha` is dead state — `appendAndPushHistory` always re-fetches fresh SHA and never reads this var. Remove it. | None |
-| D6 | `notifiers/discord.js` | Add `req.setTimeout(10000, ...)` to `postWebhook` — only HTTP path in the project without a timeout | None |
+| ~~D6~~ | `notifiers/discord.js` | ✅ Done — `postWebhook` has a 10s socket timeout and a 15s wall-clock deadline | — |
 | D7 | `shopify_storefront.js:4` | Shopify API version is `2024-01` — aging. Bump to `2025-01` and verify response shape unchanged. | Low |
 | D8 | `state.json` / `shopify_collection.js` | Product `tags` arrays stored in state add ~30% file size but are never used post-storage (filters run pre-state). Consider stripping tags from the product map before storing. Verify dashboard doesn't display tags before doing this. | Low |

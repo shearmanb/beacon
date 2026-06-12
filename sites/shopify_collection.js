@@ -1,4 +1,4 @@
-import { https } from "../lib/fetch.js";
+import { https, conditionalHeaders, extractValidators } from "../lib/fetch.js";
 import { diff } from "../lib/diff.js";
 import { sleep } from "../lib/utils.js";
 import { emptyFetchGuard } from "../lib/empty_guard.js";
@@ -14,8 +14,16 @@ function isAvailable(variants) {
 }
 
 export async function checkSite(site, previousState) {
-  const products = await fetchAllProducts(site);
+  const { products, notModified, validators, pageCount } = await fetchAllProducts(site, previousState);
   const prevProducts = previousState?.products ?? {};
+
+  // 304 on the (single) page — catalog is byte-identical, nothing to diff.
+  if (notModified) {
+    return {
+      state: { ...previousState, lastChecked: new Date().toISOString() },
+      alerts: [],
+    };
+  }
 
   // Keyed on the *raw* fetch being empty, so a legitimate filter-miss
   // (empty filtered set from a non-empty fetch) is unaffected. After 3
@@ -44,29 +52,45 @@ export async function checkSite(site, previousState) {
       lastChecked: new Date().toISOString(),
       productCount: Object.keys(productMap).length,
       products: productMap,
+      pageCount,
+      httpValidators: validators,
     },
     alerts,
   };
 }
 
-async function fetchAllProducts(site) {
+async function fetchAllProducts(site, previousState) {
   const base = site.url.replace(/\/$/, "");
   const extraParams = site.collectionParams ? `&${site.collectionParams}` : "";
   const all = [];
   let page = 1;
+  let validators = null;
+
+  // Conditional GET only when the whole catalog fit one page last check —
+  // a 304 on page 1 then proves nothing changed anywhere. Multi-page
+  // catalogs can change on later pages without touching page 1's ETag,
+  // so those always fetch in full.
+  const singlePage = previousState?.pageCount === 1 && previousState?.httpValidators;
 
   while (true) {
     if (page > 1) await sleep(300 + Math.floor(Math.random() * 500));
     const url = `${base}/products.json?limit=250&page=${page}${extraParams}`;
-    const data = await https(url);
-    const json = JSON.parse(data);
+    const res = await https(url, {
+      withResponse: true,
+      headers: page === 1 && singlePage ? conditionalHeaders(previousState.httpValidators) : {},
+    });
+    if (res.status === 304) {
+      return { products: [], notModified: true, validators: previousState.httpValidators, pageCount: 1 };
+    }
+    if (page === 1) validators = extractValidators(res.headers);
+    const json = JSON.parse(res.body);
     const batch = json.products ?? [];
     all.push(...batch);
     if (batch.length < 250) break;
     page++;
   }
 
-  return all;
+  return { products: all, notModified: false, validators, pageCount: page };
 }
 
 function buildProductMap(products, siteUrl) {

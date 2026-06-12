@@ -1464,6 +1464,24 @@
       level = 'warn'; icon = '🟡'; label = `${okCount}/${total} ok`;
     }
 
+    // Absolute stall check: the worker should have checked SOME site by
+    // min(lastChecked + interval) across enabled sites. If that moment is
+    // >10 min overdue, the worker itself (not one site) is the problem —
+    // catches a dead Railway before any per-site chip goes critical.
+    let nextDue = Infinity;
+    for (const site of enabledSites) {
+      const st = state[site.id];
+      if (!st?.lastChecked) continue;
+      const due = new Date(st.lastChecked).getTime() + (getEffectiveInterval(site) || 5) * 60_000;
+      if (due < nextDue) nextDue = due;
+    }
+    const lateMin = nextDue === Infinity ? 0 : (Date.now() - nextDue) / 60_000;
+    if (lateMin > 20) {
+      level = 'critical'; icon = '🔴'; label = `worker stalled ${Math.round(lateMin)}m`;
+    } else if (lateMin > 10 && level === 'ok') {
+      level = 'warn'; icon = '🟡'; label = `worker late ${Math.round(lateMin)}m`;
+    }
+
     chip.className = `worker-chip ${level}`;
     chip.innerHTML = `${icon} ${esc(label)}`;
   }
@@ -1651,7 +1669,7 @@
 
     const recent = [...history].reverse().slice(0, 100);
     list.innerHTML = recent.map(h => {
-      const label = h.type === 'new_product' ? '🆕 New' : h.type === 'restock' ? '✅ Restock' : h.type === 'sold_out' ? '❌ Sold Out' : h.type === 'site_reset' ? '⚠️ Reset' : h.type === 'site_changed' ? '🔔 Changed' : h.type === 'site_error' ? '🚨 Site Down' : h.type === 'site_recovered' ? '✅ Recovered' : h.type === 'imminent_timeout' ? '⏱ Imminent Off' : h.type;
+      const label = h.type === 'new_product' ? '🆕 New' : h.type === 'restock' ? '✅ Restock' : h.type === 'sold_out' ? '❌ Sold Out' : h.type === 'site_reset' ? '⚠️ Reset' : h.type === 'site_changed' ? '🔔 Changed' : h.type === 'site_error' ? '🚨 Site Down' : h.type === 'site_recovered' ? '✅ Recovered' : h.type === 'imminent_timeout' ? '⏱ Imminent Off' : h.type === 'baseline' ? '📋 Baseline' : h.type;
       const time = new Date(h.timestamp).toLocaleString();
       return `<div class="history-item ${esc(h.type)}">
         <span class="history-time">${esc(time)}</span>
@@ -1858,6 +1876,23 @@
   // the targeted field, PUTs back, and only updates the local UI after the
   // write succeeds — so a failed write can't leave the dashboard showing
   // a value that isn't actually saved.
+  // Keep in sync with the strategies map in lib/strategies.js. A bad write
+  // here would make the worker skip the site, so refuse it client-side too.
+  const KNOWN_STRATEGIES = ['shopify_collection', 'shopify_storefront', 'site_status_monitor'];
+
+  function configValidationError(cfg) {
+    if (!Array.isArray(cfg?.sites) || !cfg.sites.length) return 'config has no sites';
+    const ids = new Set();
+    for (const s of cfg.sites) {
+      if (!s.id) return 'a site is missing its id';
+      if (ids.has(s.id)) return `duplicate site id "${s.id}"`;
+      ids.add(s.id);
+      if (!KNOWN_STRATEGIES.includes(s.strategy)) return `${s.id}: unknown strategy "${s.strategy}"`;
+      if (!s.url) return `${s.id}: missing url`;
+    }
+    return null;
+  }
+
   async function updateSiteField(siteId, field, value, commitMessage) {
     return updateSiteFields(siteId, { [field]: value }, commitMessage);
   }
@@ -1879,6 +1914,9 @@
         if (site[k] !== v) { site[k] = v; changed = true; }
       }
       if (!changed) return true;
+
+      const vErr = configValidationError(parsed);
+      if (vErr) { alert(`Refusing to save config: ${vErr}`); renderSiteCards(); return false; }
 
       const putRes = await fetch(`${API_BASE}/contents/config.json`, {
         method: 'PUT',

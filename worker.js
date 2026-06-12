@@ -5,14 +5,19 @@
 import { sendAlert as sendDiscordAlert } from "./notifiers/discord.js";
 import { readFile, writeFile } from "./lib/github.js";
 import { shouldCheck } from "./lib/schedule.js";
-import { loadStrategy } from "./lib/strategies.js";
+import { loadStrategy, strategyNames } from "./lib/strategies.js";
 import { sleep, jitter } from "./lib/utils.js";
+import { https } from "./lib/fetch.js";
 
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
+const HEALTHCHECK_URL = process.env.HEALTHCHECK_URL; // optional dead-man ping
 const LOOP_BASE_MS = 60_000;
 const MAX_HISTORY = 250;
 const ERROR_ALERT_THRESHOLD = 5; // consecutive failures before paging Discord
 const DEFAULT_IMMINENT_DURATION_MIN = 20;
+// Escalating per-site cooldown after a 429/403 — back off immediately when a
+// site pushes back instead of re-hitting it on the normal schedule.
+const COOLDOWN_STEPS_MIN = [5, 15, 60];
 
 // ── In-memory state ───────────────────────────────────────────────────────────
 
@@ -122,6 +127,53 @@ async function fetchJsonFile(path) {
   try { return JSON.parse(res.content); } catch { return null; }
 }
 
+// ── Config validation ─────────────────────────────────────────────────────────
+// A hand-edited config.json with a typo'd strategy or missing URL would
+// otherwise fail silently every loop. Invalid sites are skipped (valid ones
+// still run) and flagged once on Discord per worker start.
+
+const invalidSitesAlerted = new Set();
+
+function validateSite(site, seenIds) {
+  if (!site.id || typeof site.id !== "string") return "missing id";
+  if (seenIds.has(site.id)) return `duplicate id "${site.id}"`;
+  if (!strategyNames.includes(site.strategy)) return `unknown strategy "${site.strategy}"`;
+  if (!site.url) return "missing url";
+  try { new URL(site.url); } catch { return `invalid url "${site.url}"`; }
+  return null;
+}
+
+async function filterValidSites(sites) {
+  const valid = [];
+  const seenIds = new Set();
+  for (const site of sites) {
+    const reason = validateSite(site, seenIds);
+    if (reason === null) {
+      seenIds.add(site.id);
+      valid.push(site);
+      continue;
+    }
+    const key = `${site.id ?? site.name ?? "?"}: ${reason}`;
+    console.error(`[config] Skipping invalid site — ${key}`);
+    if (DISCORD_WEBHOOK && !invalidSitesAlerted.has(key)) {
+      invalidSitesAlerted.add(key);
+      try {
+        await sendDiscordAlert(DISCORD_WEBHOOK, site.name ?? site.id ?? "config", {
+          type: "site_error",
+          product: {
+            title: `Invalid config entry: ${site.name ?? site.id ?? "?"}`,
+            url: site.url ?? "https://github.com",
+            note: `config.json validation failed (${reason}) — site is being skipped until fixed.`,
+          },
+        });
+      } catch (err) {
+        console.error(`[config] Discord invalid-site alert failed: ${err.message}`);
+      }
+    }
+  }
+  return valid;
+}
+
 // ── Main run ──────────────────────────────────────────────────────────────────
 
 async function run() {
@@ -144,6 +196,11 @@ async function run() {
   }
   if (!config?.sites?.length) {
     console.error("[run] No sites in config.json — skipping run.");
+    return;
+  }
+  config.sites = await filterValidSites(config.sites);
+  if (!config.sites.length) {
+    console.error("[run] No valid sites after config validation — skipping run.");
     return;
   }
 
@@ -200,6 +257,15 @@ async function run() {
     if (!site.enabled) continue;
 
     const siteState = globalState[site.id];
+
+    // Circuit breaker: a site that answered 429/403 sits out its cooldown
+    // regardless of schedule.
+    const cooldownUntil = siteState?.cooldownUntil ? new Date(siteState.cooldownUntil).getTime() : 0;
+    if (cooldownUntil > Date.now()) {
+      console.log(`[${site.name}] Skipping — rate-limit cooldown until ${siteState.cooldownUntil}`);
+      continue;
+    }
+
     if (!shouldCheck(site, siteState, schedules)) {
       console.log(`[${site.name}] Skipping — checked recently`);
       continue;
@@ -219,7 +285,14 @@ async function run() {
       // Recovery alert: if we had an open error page, close it.
       const wasInErrorAlert = siteState?.errorAlertSent === true;
       const checkHistory = [...(siteState?.checkHistory ?? []), { ts: new Date().toISOString(), ok: true }].slice(-100);
-      globalState[site.id] = { ...state, consecutiveErrors: 0, errorAlertSent: false, checkHistory };
+      globalState[site.id] = {
+        ...state,
+        consecutiveErrors: 0,
+        errorAlertSent: false,
+        cooldownLevel: 0,
+        cooldownUntil: null,
+        checkHistory,
+      };
       stateChanged = true;
 
       if (wasInErrorAlert) {
@@ -237,10 +310,36 @@ async function run() {
         }
       }
 
-      const filteredAlerts = alerts.filter((a) => !ignored[a.product?.handle]);
+      // Startup quiet mode: with no previous state entry at all (fresh site,
+      // or state.json was empty/corrupt at load), every product would alert
+      // as "new" — 37+ Discord pings from one bad state file. Baseline
+      // silently instead. Keyed on the state entry being absent, not on the
+      // product map being empty: a site whose last real check saw 0 products
+      // must still alert on a 0→N wave drop.
+      let activeAlerts = alerts;
+      if (!siteState) {
+        const suppressed = activeAlerts.filter((a) => a.type === "new_product");
+        if (suppressed.length > 0) {
+          activeAlerts = activeAlerts.filter((a) => a.type !== "new_product");
+          console.log(`[${site.name}] Baseline run — ${suppressed.length} product(s) recorded silently`);
+          newHistory.push({
+            timestamp: new Date().toISOString(),
+            siteId: site.id,
+            siteName: site.name,
+            type: "baseline",
+            product: {
+              title: site.name,
+              url: site.url,
+              note: `First check with no prior state — ${suppressed.length} existing product(s) baselined without alerts.`,
+            },
+          });
+        }
+      }
+
+      const filteredAlerts = activeAlerts.filter((a) => !ignored[a.product?.handle]);
       console.log(
         `[${site.name}] ${Object.keys(state.products ?? {}).length} products, ` +
-        `${filteredAlerts.length} alerts (${alerts.length - filteredAlerts.length} ignored)`
+        `${filteredAlerts.length} alerts (${activeAlerts.length - filteredAlerts.length} ignored)`
       );
 
       for (const alert of filteredAlerts) {
@@ -266,6 +365,19 @@ async function run() {
       const alreadyAlerted = prev.errorAlertSent === true;
       const shouldAlert = consecutiveErrors >= ERROR_ALERT_THRESHOLD && !alreadyAlerted;
 
+      // Circuit breaker: 429/403 means the site is pushing back — cool this
+      // site down with escalating delays instead of retrying on schedule.
+      let cooldown = {};
+      if (err.statusCode === 429 || err.statusCode === 403) {
+        const level = Math.min((prev.cooldownLevel ?? 0) + 1, COOLDOWN_STEPS_MIN.length);
+        const minutes = COOLDOWN_STEPS_MIN[level - 1];
+        cooldown = {
+          cooldownLevel: level,
+          cooldownUntil: new Date(Date.now() + minutes * 60_000).toISOString(),
+        };
+        console.warn(`[${site.name}] HTTP ${err.statusCode} — cooling down ${minutes}m (level ${level})`);
+      }
+
       const checkHistory = [...(prev.checkHistory ?? []), { ts: new Date().toISOString(), ok: false }].slice(-100);
       globalState[site.id] = {
         ...prev,
@@ -274,6 +386,7 @@ async function run() {
         lastErrorAt: new Date().toISOString(),
         errorAlertSent: alreadyAlerted || shouldAlert,
         checkHistory,
+        ...cooldown,
       };
       stateChanged = true;
 
@@ -340,6 +453,17 @@ async function startLoop() {
       await run();
     } catch (err) {
       console.error("[loop] Uncaught run error:", err.message);
+    }
+    // Dead-man's switch: ping healthchecks.io (or similar) after every loop.
+    // If the worker dies, the missed pings trigger an external alert — the
+    // one failure mode Discord alerts can't cover, since a dead worker can't
+    // send them.
+    if (HEALTHCHECK_URL) {
+      try {
+        await https(HEALTHCHECK_URL);
+      } catch (err) {
+        console.error("[loop] Healthcheck ping failed:", err.message);
+      }
     }
     // Loop every ~60 s ± 5 s so subsequent runs never land on the exact same
     // clock second.

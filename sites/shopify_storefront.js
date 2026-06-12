@@ -22,7 +22,9 @@ function storefrontPost(domain, token, query) {
       (res) => {
         if (res.statusCode < 200 || res.statusCode >= 300) {
           res.resume();
-          reject(new Error(`HTTP ${res.statusCode}`));
+          const err = new Error(`HTTP ${res.statusCode}`);
+          err.statusCode = res.statusCode; // worker uses this for 429/403 cooldowns
+          reject(err);
           return;
         }
         const chunks = [];

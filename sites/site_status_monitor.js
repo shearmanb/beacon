@@ -15,7 +15,7 @@
 // (network error, 5xx, timeout) is re-thrown so the worker increments
 // consecutiveErrors and fires a site_error alert after the threshold.
 
-import { https } from "../lib/fetch.js";
+import { https, conditionalHeaders, extractValidators } from "../lib/fetch.js";
 
 const RESET_SIGNALS = [
   "sqs-pw-form",
@@ -27,13 +27,29 @@ const RESET_SIGNALS = [
 
 export async function checkSite(site, previousState) {
   let html = "";
+  let validators = previousState?.httpValidators ?? null;
 
   try {
-    html = await https(site.url);
+    const res = await https(site.url, {
+      withResponse: true,
+      headers: conditionalHeaders(validators),
+    });
+
+    // 304: page is byte-identical to last time — previous status stands.
+    if (res.status === 304) {
+      return {
+        state: { ...previousState, lastChecked: new Date().toISOString() },
+        alerts: [],
+      };
+    }
+
+    html = res.body;
+    validators = extractValidators(res.headers);
   } catch (err) {
-    if (err.message.includes("HTTP 401") || err.message.includes("HTTP 403")) {
+    if (err.statusCode === 401 || err.statusCode === 403) {
       // Hard password wall — treat identically to an HTML reset signal.
       html = "";
+      validators = null;
     } else {
       throw err; // real error; worker handles consecutiveErrors + site_error alert
     }
@@ -68,6 +84,7 @@ export async function checkSite(site, previousState) {
       resetReason: isBlocked
         ? (matchedSignal ?? "HTTP 401/403")
         : null,
+      httpValidators: validators,
     },
     alerts,
   };
