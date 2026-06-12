@@ -2029,7 +2029,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-12T14:30:39.975Z",
+    "lastChecked": "2026-06-12T14:36:31.282Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T15:56:37.345Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T16:02:31.908Z",
         "ok": true
@@ -2596,6 +2592,10 @@
       {
         "ts": "2026-06-12T14:30:39.975Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T14:36:31.282Z",
+        "ok": true
       }
     ]
   },
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 10,
+    "consecutiveErrors": 11,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T15:05:14.192Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T15:20:28.211Z",
         "ok": true
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T14:35:25.668Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T14:36:35.726Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T14:35:25.668Z"
+    "lastErrorAt": "2026-06-12T14:36:35.726Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T14:30:46.440Z",
