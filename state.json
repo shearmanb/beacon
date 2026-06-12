@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 43,
+    "consecutiveErrors": 44,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T23:39:11.191Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T23:54:59.483Z",
         "ok": true
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T15:14:48.294Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T15:15:58.259Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T15:14:48.294Z"
+    "lastErrorAt": "2026-06-12T15:15:58.259Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T15:02:40.703Z",
