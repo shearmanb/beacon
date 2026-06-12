@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-12T21:33:49.215Z",
+    "lastChecked": "2026-06-12T21:39:05.041Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T00:44:17.448Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T01:05:05.148Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-12T21:33:49.215Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T21:39:05.041Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T21:33:55.164Z",
+    "lastChecked": "2026-06-12T21:39:10.975Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T01:05:09.422Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T01:26:15.711Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-12T21:33:55.164Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T21:39:10.975Z",
         "ok": true
       }
     ]
@@ -3047,7 +3047,7 @@
     "lastErrorAt": "2026-06-12T18:25:17.291Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-12T21:23:54.025Z",
+    "lastChecked": "2026-06-12T21:39:16.243Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3061,10 +3061,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T19:39:00.442Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T19:54:12.194Z",
         "ok": true
@@ -3459,6 +3455,10 @@
       },
       {
         "ts": "2026-06-12T21:23:54.025Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T21:39:16.243Z",
         "ok": true
       }
     ]
