@@ -41,10 +41,9 @@
     .btn-primary:hover { opacity: .85; }
     select.btn { appearance: none; max-width: 200px; }
     .status { font-size: .72rem; color: var(--muted); font-family: var(--mono); }
-    section { margin-bottom: 1.25rem; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    section.sec-sites    { border-top: 3px solid var(--blue); }
-    section.sec-reveries { border-top: 3px solid #9b59b6; }
-    section.sec-products { border-top: 3px solid #1abc9c; }
+    /* History + Sandbox keep the old boxed look until their redesign;
+       Sites/Reveries/Products are borderless .sect sections per the reference. */
+    section.sec-history, section.sec-sandbox { margin-bottom: 1.25rem; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
     section.sec-history  { border-top: 3px solid var(--yellow); }
     .section-header { display: flex; align-items: center; justify-content: space-between; padding: .7rem 1rem; background: var(--surface); cursor: pointer; user-select: none; border-bottom: 1px solid var(--border); }
     .section-header:hover { background: rgba(255,255,255,.04); }
@@ -88,20 +87,10 @@
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .empty { color: var(--muted); font-size: .875rem; padding: 1rem 0; }
-    .reveries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .65rem; }
-    .reveries-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
-    .reveries-card.rev-in { border-color: rgba(46,204,113,.45); border-top: 3px solid var(--green); }
-    .reveries-card.rev-out { border-color: rgba(231,76,60,.35); border-top: 3px solid var(--red); }
-    .rev-status-bar { padding: .25rem .5rem; font-size: .68rem; font-weight: 700; text-align: center; letter-spacing: .04em; text-transform: uppercase; }
-    .rev-status-bar.rev-in { background: rgba(46,204,113,.13); color: var(--green); }
-    .rev-status-bar.rev-out { background: rgba(231,76,60,.13); color: var(--red); }
-    .reveries-card .rev-img { width: 100%; height: 80px; object-fit: cover; display: block; }
-    .reveries-card .rev-img-placeholder { height: 80px; background: var(--border); }
-    .reveries-card .rev-body { padding: .5rem; display: flex; flex-direction: column; gap: .2rem; flex: 1; }
-    .reveries-card .rev-title { font-size: .75rem; font-weight: 600; line-height: 1.3; color: var(--text); }
-    .reveries-card .rev-title:hover { text-decoration: underline; }
-    .reveries-card .rev-meta { font-size: .68rem; color: var(--muted); }
-    .rev-updated-flag { padding: .22rem .5rem; font-size: .65rem; font-weight: 600; text-align: center; background: rgba(241,196,15,.1); color: var(--yellow); border-top: 1px solid rgba(241,196,15,.2); }
+    /* Reveries hero: real product image fills the ui.css .rev-img container */
+    .rev-img img.rev-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .rev-body .nm a { color: inherit; text-decoration: none; }
+    .rev-body .nm a:hover { color: var(--accent); }
     /* ── Schedule modal ── */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100; align-items: center; justify-content: center; }
     .modal-overlay.open { display: flex; }
@@ -265,16 +254,17 @@
     </div>
   </section>
 
-  <section class="sec-reveries">
-    <div class="section-header" onclick="toggleSection('reveries')">
-      <h2><span class="sec-icon">✨</span> Reveries</h2>
-      <span class="section-chevron">▾</span>
+  <section class="sect sect-reveries">
+    <div class="sect-hd rev">
+      <span class="tick"></span>
+      <h2><span class="h2-star">★ </span>Reveries · Jay West</h2>
+      <span class="rule"></span>
+      <span class="label" id="reveries-count"></span>
     </div>
-    <div class="section-body" id="body-reveries">
-      <div class="reveries-grid" id="reveries-grid">
-        <div class="empty">Loading…</div>
-      </div>
+    <div class="rev-strip" id="reveries-grid">
+      <div class="empty">Loading…</div>
     </div>
+    <div id="reveries-expander"></div>
   </section>
 
   <section class="sect sect-products">
@@ -1772,52 +1762,70 @@
     }).join('');
   }
 
+  // ── Reveries hero ────────────────────────────────────────────────────────────
+  const REV_CAP = 6; // sold-out tiles shown (~one row) before the "show all" expander
+  let _revShowAll = false;
+  function toggleRevShowAll() { _revShowAll = !_revShowAll; renderReveries(); }
+
   function renderReveries() {
     const grid = document.getElementById('reveries-grid');
+    const expander = document.getElementById('reveries-expander');
     const products = allProducts().filter(p => isReveriesProduct(p));
     if (!products.length) {
       grid.innerHTML = '<div class="empty">No Reveries products found</div>';
+      expander.innerHTML = '';
+      document.getElementById('reveries-count').textContent = '';
       return;
     }
 
-    const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
-    // Most recent alert timestamp per handle
+    // Most recent alert timestamp per handle (drives recency ordering).
     const lastAlert = {};
     for (const h of history) {
       if (!h.timestamp || !h.product?.handle) continue;
       const t = new Date(h.timestamp).getTime();
-      if (!lastAlert[h.product.handle] || t > lastAlert[h.product.handle]) {
-        lastAlert[h.product.handle] = t;
-      }
+      if (!lastAlert[h.product.handle] || t > lastAlert[h.product.handle]) lastAlert[h.product.handle] = t;
     }
-
-    // Sort: in-stock first, then by most recent alert desc, then alphabetically
     const sorted = [...products].sort((a, b) => {
       if (a.available !== b.available) return a.available ? -1 : 1;
-      const ta = lastAlert[a.handle] ?? 0;
-      const tb = lastAlert[b.handle] ?? 0;
+      const ta = lastAlert[a.handle] ?? 0, tb = lastAlert[b.handle] ?? 0;
       if (tb !== ta) return tb - ta;
       return a.title.localeCompare(b.title);
     });
 
-    grid.innerHTML = sorted.map(p => {
-      const cls = p.available ? 'rev-in' : 'rev-out';
-      const statusLabel = p.available ? 'In Stock' : 'Sold Out';
-      const isRecent = (lastAlert[p.handle] ?? 0) > oneDayAgo;
-      return `
-        <div class="reveries-card ${cls}">
-          <div class="rev-status-bar ${cls}">${statusLabel}</div>
-          ${p.image
-            ? `<img class="rev-img" src="${p.image}" alt="" loading="lazy" />`
-            : `<div class="rev-img-placeholder"></div>`}
-          <div class="rev-body">
-            <a href="${esc(p.url)}" target="_blank" rel="noopener" class="rev-title">${esc(p.title)}</a>
-            <div class="rev-meta">${esc(p.siteName)}</div>
-            ${p.minPrice != null ? `<div class="rev-meta">$${p.minPrice.toFixed(2)}</div>` : ''}
+    const inStock = sorted.filter(p => p.available);
+    const soldOut = sorted.filter(p => !p.available);
+    const liveCount = inStock.length;
+    const items = _revShowAll ? sorted : inStock.concat(soldOut.slice(0, REV_CAP));
+    const hidden = soldOut.length - REV_CAP;
+
+    const countEl = document.getElementById('reveries-count');
+    countEl.textContent = `${liveCount} live / ${products.length} tracked`;
+    countEl.style.color = liveCount ? 'var(--ok)' : 'var(--faint)';
+
+    grid.innerHTML = items.map(p => {
+      const cls = p.available ? 'rev-card live big' : 'rev-card dimmed';
+      const img = p.image
+        ? `<div class="rev-img"><img class="rev-photo" src="${esc(p.image)}" alt="" loading="lazy" /></div>`
+        : `<div class="rev-img"><span>${p.available ? 'BOTTLE IMG' : 'IMG'}</span></div>`;
+      const chip = p.available
+        ? '<span class="chip stock"><span class="dot ok"></span>In stock</span>'
+        : '<span class="chip out">Sold out</span>';
+      return `<div class="${cls}">
+        ${img}
+        <div class="rev-body">
+          <div style="display:flex;justify-content:space-between;gap:8px">${chip}</div>
+          <div class="nm"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></div>
+          <div class="rev-foot">
+            <span class="site">${esc(p.siteName)}</span>
+            ${p.minPrice != null ? `<span class="pr num">${fmt$(p.minPrice)}</span>` : ''}
           </div>
-          ${isRecent ? '<div class="rev-updated-flag">🕐 Updated &lt;24h</div>' : ''}
-        </div>`;
+        </div>
+      </div>`;
     }).join('');
+
+    expander.innerHTML = hidden > 0
+      ? `<button class="btn ghost sm" style="width:100%;margin-top:10px" onclick="toggleRevShowAll()">${_revShowAll ? '▴ show less' : '▾ show all ' + soldOut.length + ' sold out'}</button>`
+      : '';
   }
 
   function updateSiteFilter() {
