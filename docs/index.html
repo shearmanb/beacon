@@ -791,7 +791,7 @@
   }
 
   async function saveSchedulesToRepo(namedSchedules) {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = _sessionToken;
     if (!token) { alert('Add a GitHub token to save schedules.'); return; }
     try {
       const res = await fetch(`${API_BASE}/contents/schedules.json`, {
@@ -963,8 +963,8 @@
 
   const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main`;
   const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
-  const TOKEN_KEY   = 'beacon_gh_token';
-  const WEBHOOK_KEY = 'beacon_discord_webhook';
+  let _sessionToken   = null;
+  let _sessionWebhook = null;
 
   const SIDEBAR_KEY = 'beacon_sidebar_open';
   const BOTTLE_SIDEBAR_KEY = 'beacon_bottles_open';
@@ -1010,7 +1010,7 @@
   }
 
   async function fetchLastCodeCommit() {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = _sessionToken;
     const headers = token ? { Authorization: `token ${token}` } : {};
     const res = await fetch(`${API_BASE}/commits?per_page=20`, { headers });
     if (!res.ok) return;
@@ -1129,7 +1129,7 @@
 
   function renderSidebar() {
     applySidebarState();
-    const hasToken = !!localStorage.getItem(TOKEN_KEY);
+    const hasToken = !!_sessionToken;
     const addBox = document.getElementById('drop-sb-add');
     const hint = document.getElementById('drop-sb-tokenhint');
     if (addBox) addBox.querySelectorAll('input, button').forEach(el => { el.disabled = !hasToken; });
@@ -1166,7 +1166,7 @@
 
   // Fetch reminders.json, apply mutator(items)->items, PUT back. Re-render on success.
   async function commitReminders(mutate, commitMessage) {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = _sessionToken;
     if (!token) { alert('Add a GitHub token to edit reminders.'); return false; }
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
@@ -1420,7 +1420,7 @@
     updateSiteFilter();
     renderSidebar();
     renderBottleSidebar();
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = _sessionToken;
     document.getElementById('run-now-btn').style.display = token ? 'inline-block' : 'none';
     renderWorkerHealth();
   }
@@ -1735,39 +1735,37 @@
 
   // ── GitHub actions (require token) ───────────────────────────────────────────
   function promptToken() {
-    const current = localStorage.getItem(TOKEN_KEY) || '';
-    const val = prompt('GitHub fine-grained PAT (Contents + Actions write):\nLeave blank to clear.', current);
+    const val = prompt('GitHub fine-grained PAT (Contents + Actions write):\nStored for this session only — cleared when the tab closes.\nLeave blank to clear.', '');
     if (val === null) return;
     const trimmed = val.trim();
     if (trimmed) {
       if (!trimmed.startsWith('ghp_') && !trimmed.startsWith('github_pat_')) {
         if (!confirm('This doesn\'t look like a GitHub token (should start with ghp_ or github_pat_). Save anyway?')) return;
       }
-      localStorage.setItem(TOKEN_KEY, trimmed);
-      alert('Token saved.');
+      _sessionToken = trimmed;
+      alert('Token saved for this session.');
     } else {
-      localStorage.removeItem(TOKEN_KEY);
+      _sessionToken = null;
       alert('Token cleared.');
     }
     renderAll();
   }
 
   function promptWebhook() {
-    const current = localStorage.getItem(WEBHOOK_KEY) || '';
-    const val = prompt('Discord webhook URL for dashboard notifications:\nLeave blank to clear.', current);
+    const val = prompt('Discord webhook URL for dashboard notifications:\nStored for this session only — cleared when the tab closes.\nLeave blank to clear.', '');
     if (val === null) return;
     const trimmed = val.trim();
     if (trimmed) {
-      localStorage.setItem(WEBHOOK_KEY, trimmed);
-      alert('Discord webhook saved.');
+      _sessionWebhook = trimmed;
+      alert('Discord webhook saved for this session.');
     } else {
-      localStorage.removeItem(WEBHOOK_KEY);
+      _sessionWebhook = null;
       alert('Discord webhook cleared.');
     }
   }
 
   async function sendIgnoreToDiscord(handle, shouldIgnore) {
-    const webhookUrl = localStorage.getItem(WEBHOOK_KEY);
+    const webhookUrl = _sessionWebhook;
     if (!webhookUrl) return;
     const product = allProducts().find(p => p.handle === handle);
     const title   = product?.title ?? handle;
@@ -1794,7 +1792,7 @@
   // site on its next loop (within ~60s). No more workflow_dispatch — the
   // GitHub Actions backup was removed in favor of a hot-reloading worker.
   async function triggerRun() {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = _sessionToken;
     if (!token) { alert('Add a GitHub token first.'); return; }
     const btn = document.getElementById('run-now-btn');
     btn.disabled = true;
@@ -1826,7 +1824,7 @@
   }
 
   async function toggleIgnore(handle, shouldIgnore, btn) {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = _sessionToken;
     if (!token) { alert('Add a GitHub token to ignore products.'); return; }
 
     if (btn) btn.disabled = true;
@@ -1898,7 +1896,7 @@
   }
 
   async function updateSiteFields(siteId, updates, commitMessage) {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = _sessionToken;
     if (!token) { alert('Add a GitHub token to edit config.'); renderSiteCards(); return false; }
     try {
       const res = await fetch(`${API_BASE}/contents/config.json`, {
@@ -1954,7 +1952,7 @@
       // When re-enabling, clear lastChecked so the worker checks immediately
       // rather than waiting out the remainder of the previous interval.
       if (ok && value) {
-        const token = localStorage.getItem(TOKEN_KEY);
+        const token = _sessionToken;
         if (token) {
           try {
             const res = await fetch(`${API_BASE}/contents/state.json`, {
