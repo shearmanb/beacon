@@ -1156,16 +1156,19 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-12T14:11:56.897Z",
+    "lastChecked": "2026-06-12T14:16:40.222Z",
     "productCount": 0,
     "products": {},
+    "pageCount": 1,
+    "httpValidators": {
+      "etag": "\"page_cache:45343637659:ProductListController:1bc6e6af8c598b7ff7c8d8f9a32c9751\"",
+      "lastModified": null
+    },
     "consecutiveErrors": 0,
     "errorAlertSent": false,
+    "cooldownLevel": 0,
+    "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T15:40:07.344Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T15:45:32.588Z",
         "ok": true
@@ -1561,11 +1564,15 @@
       {
         "ts": "2026-06-12T14:11:56.897Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T14:16:40.222Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T14:11:59.824Z",
+    "lastChecked": "2026-06-12T14:16:45.967Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1602,13 +1609,16 @@
         "url": "https://shop.fountaininndc.com/products/reveries-the-deep"
       }
     },
+    "pageCount": 1,
+    "httpValidators": {
+      "etag": "\"page_cache:66506555478:ProductListController:657d9cf14534b56f890ad083174333b3\"",
+      "lastModified": null
+    },
     "consecutiveErrors": 0,
     "errorAlertSent": false,
+    "cooldownLevel": 0,
+    "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T15:40:13.181Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T15:45:35.796Z",
         "ok": true
@@ -2003,6 +2013,10 @@
       },
       {
         "ts": "2026-06-12T14:11:59.824Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T14:16:45.967Z",
         "ok": true
       }
     ]
