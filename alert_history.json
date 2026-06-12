@@ -3659,5 +3659,16 @@
       "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ec783497-c47f-2cc4-3155-560837b85eee.jpg?v=1780794491",
       "url": "https://sharedpour.com/products/the-reveries-rare-release-22-year-cask-strength-calvados"
     }
+  },
+  {
+    "timestamp": "2026-06-12T14:29:25.442Z",
+    "siteId": "reveries_official",
+    "siteName": "The Reveries Official Shop",
+    "type": "site_error",
+    "product": {
+      "title": "The Reveries Official Shop",
+      "url": "https://www.thereveries.co/shop",
+      "note": "5 consecutive failures. Last error: Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}"
+    }
   }
 ]
