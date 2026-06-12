@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-12T21:00:34.600Z",
+    "lastChecked": "2026-06-12T21:06:07.051Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-11T22:39:13.692Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-11T22:59:50.222Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-12T21:00:34.600Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T21:06:07.051Z",
         "ok": true
       }
     ]
@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T21:00:40.603Z",
+    "lastChecked": "2026-06-12T21:06:09.695Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T23:01:02.470Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T23:21:54.856Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-12T21:00:40.603Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T21:06:09.695Z",
         "ok": true
       }
     ]
