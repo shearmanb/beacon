@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T18:40:25.342Z",
+    "lastChecked": "2026-06-12T18:45:42.522Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T19:58:35.058Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T20:04:15.405Z",
         "ok": true
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-12T18:40:25.342Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T18:45:42.522Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-12T18:39:22.690Z",
+    "lastChecked": "2026-06-12T18:45:51.632Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2189,7 +2189,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:9fd69c64e80743499303d46eaf0a1076\"",
+      "etag": "\"page_cache:57076547742:ProductListController:266c0cc64eec6b544d935b597f1bca2c\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T19:53:11.296Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T19:58:44.509Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-12T18:39:22.690Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T18:45:51.632Z",
         "ok": true
       }
     ]
