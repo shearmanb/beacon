@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-12T17:22:46.550Z",
+    "lastChecked": "2026-06-12T17:28:36.472Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-11T18:40:41.017Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-11T18:46:20.072Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-12T17:22:46.551Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T17:28:36.472Z",
         "ok": true
       }
     ]
@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T17:23:57.308Z",
+    "lastChecked": "2026-06-12T17:28:40.357Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T18:47:31.751Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T18:52:51.283Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-12T17:23:57.308Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T17:28:40.357Z",
         "ok": true
       }
     ]
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 156,
+    "consecutiveErrors": 157,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T15:31:16.213Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-12T15:32:16.542Z",
         "ok": false
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T17:27:30.885Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T17:28:44.226Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T17:27:30.885Z"
+    "lastErrorAt": "2026-06-12T17:28:44.226Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T17:22:50.854Z",
