@@ -4,21 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Beacon Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Bebas+Neue&family=Besley:ital,wght@0,600;0,700;1,600&family=Bodoni+Moda:ital,opsz,wght@0,11,600;0,11,700;1,11,600;1,11,700&family=Cinzel:wght@600;700&family=IM+Fell+English+SC&family=IM+Fell+DW+Pica:ital@0;1&family=Marcellus&family=Pinyon+Script&family=Rye&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="brand.css">
+  <script>
+    // Apply persisted theme before first paint to avoid a flash of default colors.
+    document.documentElement.dataset.theme = localStorage.getItem('beacon_theme') || 'reveries';
+  </script>
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --border: #2a2d3a;
-      --text: #e2e8f0;
-      --muted: #64748b;
-      --green: #2ecc71;
-      --blue: #3498db;
-      --red: #e74c3c;
-      --yellow: #f1c40f;
-      --orange: #e67e22;
+      /* Bridge: legacy variable names used by the pre-redesign styles below,
+         mapped onto the theme system (theme.css). Repaints per data-theme. */
+      --surface: var(--panel);
+      --border: var(--line);
+      --green: var(--ok);
+      --blue: var(--accent);
+      --red: var(--err);
+      --yellow: var(--warn);
+      --orange: var(--warn);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; min-height: 100vh; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
     #gate { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
     #gate form { background: var(--surface); padding: 2rem; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 1rem; min-width: 300px; }
     #gate h1 { font-size: 1.5rem; }
@@ -347,6 +355,7 @@
       <button class="btn" onclick="openScheduleModal()">⚙ Schedules</button>
       <button class="btn" onclick="promptToken()">GitHub Token</button>
       <button class="btn" onclick="promptWebhook()">Discord Webhook</button>
+      <select class="btn" id="theme-select" onchange="setTheme(this.value)" title="Color scheme"></select>
     </div>
   </header>
 
@@ -539,7 +548,44 @@
   const DASH_PASSWORD = 'beam';
   // ─────────────────────────────────────────────────────────────────────────────
 
-  const VERSION  = 'v0.6';
+  const VERSION  = 'v0.7';
+
+  // ── Theme system ─────────────────────────────────────────────────────────────
+  const THEME_KEY = 'beacon_theme';
+  const THEMES = [
+    ['reveries', 'Reveries / T8KE — raven black & gold'],
+    ['wildturkey', 'Wild Turkey — 101 red & gold foil'],
+    ['jackdaniels', "Jack Daniel's — black label"],
+    ['heavenhill', 'Heaven Hill — heritage navy'],
+    ['willett', 'Willett — purple top / green top'],
+    ['weller', 'Weller — the rainbow'],
+    ['makersmark', "Maker's Mark — red wax"],
+    ['michters', "Michter's — US★1"],
+    ['flightdeck', 'Flightdeck — mission control'],
+    ['flightpath', 'Flightpath — purple ops'],
+  ];
+
+  function currentTheme() {
+    const t = localStorage.getItem(THEME_KEY);
+    return THEMES.some(([k]) => k === t) ? t : 'reveries';
+  }
+
+  function setTheme(theme) {
+    if (!THEMES.some(([k]) => k === theme)) theme = 'reveries';
+    localStorage.setItem(THEME_KEY, theme);
+    const root = document.documentElement;
+    // Kill transitions for two frames so resolved colors don't freeze mid-interpolation.
+    root.classList.add('theme-swap');
+    root.dataset.theme = theme;
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-swap')));
+  }
+
+  (function initThemeSelect() {
+    const sel = document.getElementById('theme-select');
+    sel.innerHTML = THEMES.map(([k, label]) => `<option value="${k}">${label}</option>`).join('');
+    sel.value = currentTheme();
+    document.documentElement.dataset.theme = currentTheme();
+  })();
 
   const BUILTIN_SCHEDULE_OPTIONS = [
     { value: '2',  label: '2 min' },

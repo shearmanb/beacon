@@ -1,0 +1,191 @@
+/* ==== Beacon theme system — brand-maximalist palettes ==== */
+:root {
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --sans: "IBM Plex Sans", system-ui, sans-serif;
+  --display: var(--mono);
+  --ok: #3ecf8e; --warn: #e8b13f; --err: #e8604f;
+  --radius: 8px;
+}
+
+/* Flightdeck — mission control: blue-black, cyan */
+[data-theme="flightdeck"], [data-theme="flightpath"] {
+  --bg: #090d13; --bg2: #0d121b; --panel: #101723; --panel2: #141c2b;
+  --line: #1d2940; --line2: #28385a;
+  --text: #dde6f2; --muted: #76849c; --faint: #4a5670;
+  --accent: #58c4dd; --accent-dim: rgba(88,196,221,.12);
+  --rev: #b08aff; --rev-dim: rgba(176,138,255,.10);
+}
+/* Flightpath — purple ops variant */
+[data-theme="flightpath"] {
+  --bg: #0c0a14; --bg2: #110e1c; --panel: #151226; --panel2: #1b1730;
+  --line: #272042; --line2: #392f60;
+  --text: #e2def2; --muted: #847ba3; --faint: #534b73;
+  --accent: #a78bfa; --accent-dim: rgba(167,139,250,.13);
+  --rev: #58c4dd; --rev-dim: rgba(88,196,221,.10);
+}
+
+/* Reveries / T8KE — Raven black, ornate antique gold */
+[data-theme="reveries"] {
+  --display: "IM Fell English SC", serif;
+  --bg: #070605; --bg2: #0b0a08; --panel: #11100b; --panel2: #171509;
+  --line: #322a12; --line2: #54461e;
+  --text: #f0e6cd; --muted: #a3936c; --faint: #645634;
+  --accent: #dcb45e; --accent-dim: rgba(220,180,94,.13);
+  --rev: #dcb45e; --rev-dim: rgba(220,180,94,.10);
+}
+
+/* Wild Turkey — charcoal & gray, 101 red, old cheesy gold foil */
+[data-theme="wildturkey"] {
+  --display: "Bebas Neue", sans-serif;
+  --bg: #141416; --bg2: #19191c; --panel: #202023; --panel2: #28282c;
+  --line: #333338; --line2: #47474e;
+  --text: #ececea; --muted: #9c9ca0; --faint: #606066;
+  --accent: #cf2733; --accent-dim: rgba(207,39,51,.14);
+  --rev: #d9b25f; --rev-dim: rgba(217,178,95,.12);
+}
+
+/* Jack Daniel's — classic black label: black & white, a little gold */
+[data-theme="jackdaniels"] {
+  --display: "Pinyon Script", cursive;
+  --bg: #0d0d0c; --bg2: #111110; --panel: #131312; --panel2: #1a1a18;
+  --line: #34342f; --line2: #4c4c45;
+  --text: #f4f1e8; --muted: #a3a094; --faint: #63615a;
+  --accent: #efece0; --accent-dim: rgba(244,241,232,.10);
+  --rev: #c9a356; --rev-dim: rgba(201,163,86,.12);
+}
+
+/* Heaven Hill Heritage — deep label navy, gold foil, serif */
+[data-theme="heavenhill"] {
+  --display: "Cinzel", serif;
+  --bg: #0a1230; --bg2: #0d163a; --panel: #111c46; --panel2: #162353;
+  --line: #243370; --line2: #364a96;
+  --text: #e8ecf9; --muted: #93a0cb; --faint: #5a679a;
+  --accent: #e0bb66; --accent-dim: rgba(224,187,102,.13);
+  --rev: #c4513f; --rev-dim: rgba(196,81,63,.12);
+}
+
+/* Willett — gallery white, purple top & green top */
+[data-theme="willett"] {
+  --display: "Bodoni Moda", serif;
+  --bg: #fbfbf8; --bg2: #f4f4ee; --panel: #ffffff; --panel2: #efefe8;
+  --line: #e3e3da; --line2: #c6c6ba;
+  --text: #151512; --muted: #6c6c63; --faint: #a8a89c;
+  --accent: #5e3a8c; --accent-dim: rgba(94,58,140,.10);
+  --rev: #20764a; --rev-dim: rgba(32,118,74,.10);
+  --ok: #1f8a55; --warn: #a5731a; --err: #bf3b2b;
+}
+
+/* Weller — wheated paper + the rainbow line */
+[data-theme="weller"] {
+  --display: "Besley", serif;
+  --bg: #f7f1e0; --bg2: #f1ead4; --panel: #fdf9ec; --panel2: #ebe2c8;
+  --line: #ded2b2; --line2: #c3b489;
+  --text: #292113; --muted: #7c6f57; --faint: #ad9f82;
+  --accent: #b9342c; --accent-dim: rgba(185,52,44,.10);
+  --rev: #d97a1f; --rev-dim: rgba(217,122,31,.12);
+  --wblue: #2456a8; --wgreen: #2c7a3f;
+  --ok: #2c7a3f; --warn: #b07d18; --err: #bf3b2b;
+}
+
+/* Maker's Mark — warm cream, red wax */
+[data-theme="makersmark"] {
+  --display: "IM Fell DW Pica", serif;
+  --bg: #f7f1e3; --bg2: #f1e9d6; --panel: #fcf7ea; --panel2: #ebe1ca;
+  --line: #ded2b5; --line2: #c4b48d;
+  --text: #2d2415; --muted: #7c6f56; --faint: #ad9f83;
+  --accent: #c02227; --accent-dim: rgba(192,34,39,.10);
+  --rev: #8a6d2f; --rev-dim: rgba(138,109,47,.12);
+  --ok: #2c7a3f; --warn: #a5731a; --err: #b8392a;
+}
+
+/* Michter's US★1 — buff label paper, roman caps, shield red & gold */
+[data-theme="michters"] {
+  --display: "Marcellus", serif;
+  --bg: #efe4c4; --bg2: #e8dbb5; --panel: #f6eed6; --panel2: #e2d3a8;
+  --line: #d2c194; --line2: #b3a070;
+  --text: #2a1d10; --muted: #75603f; --faint: #a18d63;
+  --accent: #9e1b1b; --accent-dim: rgba(158,27,27,.10);
+  --rev: #a87b2f; --rev-dim: rgba(168,123,47,.13);
+  --ok: #2c7a3f; --warn: #a5731a; --err: #9e1b1b;
+}
+
+* { box-sizing: border-box; }
+/* kill transitions during theme swap so resolved colors can't freeze */
+.theme-swap *, .theme-swap *::before, .theme-swap *::after { transition: none !important; }
+/* brand flourish hooks (real elements; shown per theme in brand.css) */
+.hdr-strip { display: none; position: absolute; left: 0; right: 0; pointer-events: none; }
+.h2-star { display: none; }
+html, body { margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; }
+button { font-family: inherit; cursor: pointer; }
+input, select { font-family: var(--mono); }
+
+.app { display: grid; grid-template-columns: 264px 1fr 296px; gap: 0; min-height: 100vh; }
+.rail { background: var(--bg2); border-right: 1px solid var(--line); padding: 16px 14px; position: sticky; top: 0; height: 100vh; overflow-y: auto; overflow-x: hidden; }
+.rail.right { border-right: 0; border-left: 1px solid var(--line); }
+.main { min-width: 0; padding: 0 24px 64px; }
+
+/* type utilities */
+.mono { font-family: var(--mono); }
+.label { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* header */
+.hdr { display: flex; align-items: center; gap: 16px; padding: 18px 0 14px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg); z-index: 20; }
+.hdr .wordmark { display: flex; align-items: baseline; gap: 8px; }
+.hdr .wordmark b { font-family: var(--display); font-size: 21px; font-weight: 600; letter-spacing: .08em; }
+.hdr .wordmark .beak { color: var(--accent); }
+.hdr-stats { display: flex; gap: 18px; margin-left: 8px; }
+.hdr-stat { display: flex; flex-direction: column; gap: 1px; }
+.hdr-stat .v { font-family: var(--mono); font-size: 14px; font-weight: 600; }
+.hdr-stat .v .dim { color: var(--faint); font-weight: 400; }
+.hdr-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+.btn { background: var(--panel); border: 1px solid var(--line2); color: var(--text); border-radius: 6px; padding: 7px 14px; font-family: var(--mono); font-size: 12px; transition: border-color .15s; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.btn.ghost { border-color: transparent; color: var(--muted); }
+.btn.ghost:hover { color: var(--text); border-color: var(--line2); }
+.btn.sm { padding: 4px 10px; font-size: 11px; }
+
+/* sections */
+.sect { margin-top: 28px; }
+.sect-hd { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.sect-hd h2 { font-family: var(--display); font-size: 15px; letter-spacing: .18em; text-transform: uppercase; margin: 0; font-weight: 600; white-space: nowrap; }
+.sect-hd .tick { width: 8px; height: 8px; background: var(--accent); }
+.sect-hd .rule { flex: 1; height: 1px; background: var(--line); }
+.sect-hd.rev .tick { background: var(--rev); }
+
+/* status dot + chips */
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex: none; }
+.dot.ok { background: var(--ok); box-shadow: 0 0 6px color-mix(in srgb, var(--ok) 60%, transparent); }
+.dot.warn { background: var(--warn); box-shadow: 0 0 6px color-mix(in srgb, var(--warn) 60%, transparent); }
+.dot.err { background: var(--err); }
+.chip { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; padding: 2px 8px; border-radius: 4px; border: 1px solid; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.chip.stock { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, transparent); background: color-mix(in srgb, var(--ok) 9%, transparent); }
+.chip.out { color: var(--faint); border-color: var(--line); background: transparent; }
+.chip.rev { color: var(--rev); border-color: color-mix(in srgb, var(--rev) 40%, transparent); background: var(--rev-dim); }
+
+/* toggle switch */
+.sw { width: 30px; height: 17px; border-radius: 10px; background: var(--line); border: 1px solid var(--line2); position: relative; padding: 0; }
+.sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: var(--muted); transition: left .15s; }
+.sw.on { background: color-mix(in srgb, var(--ok) 30%, var(--panel)); border-color: color-mix(in srgb, var(--ok) 50%, transparent); }
+.sw.on::after { left: 15px; background: var(--ok); }
+
+/* inputs */
+.in { background: var(--bg); border: 1px solid var(--line); color: var(--text); border-radius: 6px; padding: 7px 9px; font-size: 12px; width: 100%; min-width: 0; }
+.in:focus { outline: none; border-color: var(--accent); }
+.in::placeholder { color: var(--faint); }
+select.in { appearance: none; }
+
+/* scrollbars */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 5px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* responsive: rails fold under */
+@media (max-width: 1100px) {
+  .app { grid-template-columns: 1fr; }
+  .rail { position: static; height: auto; border: 0; border-bottom: 1px solid var(--line); }
+  .rail.right { border-left: 0; }
+}
