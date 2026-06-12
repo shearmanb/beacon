@@ -1142,12 +1142,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-12T17:09:27.560Z",
+    "lastChecked": "2026-06-12T17:15:23.867Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:84323d8ac6f596b51e411856b5bbbd20\"",
+      "etag": "\"page_cache:45343637659:ProductListController:40f71ffdcfc1cad81e85f2b166019c0c\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1155,10 +1155,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T18:30:29.079Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T18:36:05.525Z",
         "ok": true
@@ -1553,6 +1549,10 @@
       },
       {
         "ts": "2026-06-12T17:09:27.560Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T17:15:23.867Z",
         "ok": true
       }
     ]
@@ -2008,7 +2008,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-12T17:10:43.542Z",
+    "lastChecked": "2026-06-12T17:15:39.984Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2176,10 +2176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T18:30:44.475Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T18:36:19.943Z",
         "ok": true
@@ -2575,6 +2571,10 @@
       {
         "ts": "2026-06-12T17:10:43.542Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T17:15:39.984Z",
+        "ok": true
       }
     ]
   },
@@ -2618,13 +2618,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 145,
+    "consecutiveErrors": 146,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T15:18:35.173Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-12T15:19:48.414Z",
         "ok": false
@@ -3020,10 +3016,14 @@
       {
         "ts": "2026-06-12T17:14:19.319Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T17:15:44.695Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T17:14:19.319Z"
+    "lastErrorAt": "2026-06-12T17:15:44.695Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T17:07:06.037Z",
