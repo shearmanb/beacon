@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-12T14:27:58.551Z",
+    "lastChecked": "2026-06-12T14:33:03.671Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T15:56:27.013Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T16:02:10.526Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-12T14:27:58.551Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T14:33:03.671Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T14:28:02.878Z",
+    "lastChecked": "2026-06-12T14:33:06.933Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T15:56:30.544Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T16:02:14.827Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-12T14:28:02.878Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T14:33:06.933Z",
         "ok": true
       }
     ]
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 7,
+    "consecutiveErrors": 8,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T14:17:34.891Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T14:33:58.774Z",
         "ok": true
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T14:31:59.258Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T14:33:12.454Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T14:31:59.260Z"
+    "lastErrorAt": "2026-06-12T14:33:12.454Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T14:30:46.440Z",
