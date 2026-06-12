@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-12T15:39:16.578Z",
+    "lastChecked": "2026-06-12T15:44:57.124Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T17:08:11.340Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T17:13:36.591Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-12T15:39:16.578Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T15:44:57.124Z",
         "ok": true
       }
     ]
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 68,
+    "consecutiveErrors": 69,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T06:06:52.986Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T06:22:09.280Z",
         "ok": true
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T15:43:56.946Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T15:45:01.643Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T15:43:56.946Z"
+    "lastErrorAt": "2026-06-12T15:45:01.643Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T15:36:52.717Z",
