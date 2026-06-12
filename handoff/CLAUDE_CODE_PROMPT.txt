@@ -19,10 +19,7 @@ component structure, and styling approach. NOTE: screenshots were captured at ~9
 width (single-column responsive layout); the desktop layout is the 3-column grid
 specified in the README.
 
-My stack: <DESCRIBE — e.g. "Flask backend serving a vanilla-JS frontend in /static",
-or "Next.js app in /app, components in /components, CSS modules">. The live data comes
-from <DESCRIBE — e.g. "the /api/sites and /api/products endpoints; monitor state is in
-monitor.py">. The mock `data.js` shows the entity shapes — map them to my real data.
+My stack: single static file — the entire frontend is docs/index.html with all markup, vanilla ES-module JavaScript, and inline <style> blocks in one file. No framework, no build step, no separate component files or CSS modules. The live data comes from GitHub's raw file API — the dashboard fetches state.json, config.json, alert_history.json, ignored_products.json, schedules.json, and reminders.json directly from https://raw.githubusercontent.com/shearmanb/beacon/main/<file> every 2 minutes. There is no backend server or API layer. The mock data.js shapes map to real data as follows: sites[] = config.json (id, name, enabled, strategy, schedule, imminent, intervalMinutes, imminentIntervalMinutes) merged with state.json (lastChecked, products map, checkHistory, consecutiveErrors, cooldownUntil, errorAlertSent); products[] = flattened from the products map inside each site's state entry in state.json; reveries[] = subset of products where title.toLowerCase().includes("reveries") or siteId is reveries_official or sharedpour_reveries; scheduleOptions[] = keys from schedules.json plus fixed presets "5", "15", "20", "30", "60"; reminders[] = reminders.json ({ items: [...] }); pending[] and collection[] have no current real data source — leave as placeholder tabs. The check timeline data (checks[], found[], fails[] in mock) maps to checkHistory in state: each entry is { ts, ok } where ts is a Unix ms timestamp and ok is a boolean — derive minutes-ago as (Date.now() - ts) / 60000 and filter to the last 60 minutes; found entries are checks that immediately followed a state change from 0→N products
 
 Please work in this order and check in after each step:
 
