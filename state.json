@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-12T18:31:47.961Z",
+    "lastChecked": "2026-06-12T18:37:11.647Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-11T19:46:27.549Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-11T19:51:49.335Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-12T18:31:47.961Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T18:37:11.647Z",
         "ok": true
       }
     ]
