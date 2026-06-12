@@ -1142,12 +1142,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-12T16:45:47.930Z",
+    "lastChecked": "2026-06-12T16:51:46.484Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:1cf602f19046e21b26b88c7daf931f55\"",
+      "etag": "\"page_cache:45343637659:ProductListController:9725d558db754372599a73f3cf46857c\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1155,10 +1155,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T18:08:18.834Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T18:13:45.123Z",
         "ok": true
@@ -1553,6 +1549,10 @@
       },
       {
         "ts": "2026-06-12T16:45:47.930Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T16:51:46.484Z",
         "ok": true
       }
     ]
@@ -2618,13 +2618,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 125,
+    "consecutiveErrors": 126,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T14:54:31.931Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-12T14:55:44.504Z",
         "ok": false
@@ -3020,13 +3016,17 @@
       {
         "ts": "2026-06-12T16:50:39.393Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T16:51:58.105Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T16:50:39.393Z"
+    "lastErrorAt": "2026-06-12T16:51:58.105Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-12T16:34:20.449Z",
+    "lastChecked": "2026-06-12T16:51:51.095Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3040,10 +3040,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T14:59:40.000Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T15:14:52.416Z",
         "ok": true
@@ -3438,6 +3434,10 @@
       },
       {
         "ts": "2026-06-12T16:34:20.449Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T16:51:51.095Z",
         "ok": true
       }
     ]
