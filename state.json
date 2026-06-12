@@ -2029,7 +2029,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-12T14:24:29.190Z",
+    "lastChecked": "2026-06-12T14:30:39.975Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T15:51:16.620Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T15:56:37.345Z",
         "ok": true
@@ -2596,6 +2592,10 @@
       {
         "ts": "2026-06-12T14:24:29.190Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T14:30:39.975Z",
+        "ok": true
       }
     ]
   },
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 5,
+    "consecutiveErrors": 6,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T13:45:57.428Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T14:01:14.306Z",
         "ok": true
@@ -3041,24 +3037,30 @@
       {
         "ts": "2026-06-12T14:29:25.442Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T14:30:49.910Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T14:29:25.442Z"
+    "lastErrorAt": "2026-06-12T14:30:49.910Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-12T14:13:14.782Z",
+    "lastChecked": "2026-06-12T14:30:46.440Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
     "resetReason": null,
+    "httpValidators": {
+      "etag": "W/\"977ecd214d80cc175932d7d13ba2e057\"",
+      "lastModified": null
+    },
     "consecutiveErrors": 0,
     "errorAlertSent": false,
+    "cooldownLevel": 0,
+    "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T12:36:28.260Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T12:51:36.304Z",
         "ok": true
@@ -3453,6 +3455,10 @@
       },
       {
         "ts": "2026-06-12T14:13:14.782Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T14:30:46.440Z",
         "ok": true
       }
     ]
