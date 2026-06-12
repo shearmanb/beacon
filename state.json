@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 73,
+    "consecutiveErrors": 74,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T07:24:20.977Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T07:39:36.607Z",
         "ok": true
@@ -3041,13 +3037,17 @@
       {
         "ts": "2026-06-12T15:49:38.875Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T15:50:44.027Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T15:49:38.875Z"
+    "lastErrorAt": "2026-06-12T15:50:44.027Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-12T15:36:52.717Z",
+    "lastChecked": "2026-06-12T15:50:38.860Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3061,10 +3061,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T13:55:49.335Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T14:12:07.911Z",
         "ok": true
@@ -3459,6 +3455,10 @@
       },
       {
         "ts": "2026-06-12T15:36:52.717Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T15:50:38.860Z",
         "ok": true
       }
     ]
