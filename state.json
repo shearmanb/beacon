@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-12T09:48:17.332Z",
+    "lastChecked": "2026-06-12T11:49:12.669Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -291,28 +291,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/b3623675-71f3-657d-4d4a-f64e34eb5d2a.jpg?v=1775395761",
         "url": "https://sharedpour.com/products/augusta-wheated-bourbon-t8ke-single-barrel-26-1761-straight-bourbon"
       },
-      "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof": {
-        "handle": "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof",
-        "title": "Starlight Single Barrel Honey Cask Finished Rye T8KE Single Barrel Select #25-8344 112 Proof",
-        "vendor": "Starlight Distillery",
-        "productType": "Bourbon",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "starlight-distillery",
-          "t8ke"
-        ],
-        "minPrice": 79.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f3e23a9d-5762-1462-95c4-4ba4de8dc8c9.jpg?v=1777207304",
-        "url": "https://sharedpour.com/products/starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof"
-      },
       "green-river-single-barrel-2026": {
         "handle": "green-river-single-barrel-2026",
         "title": "Green River Single Barrel T8KE II.II Private Barrel Selection",
@@ -335,6 +313,28 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a0899ab2-3bfe-3e3b-a563-71cf4ead8e7d.jpg?v=1778418189",
         "url": "https://sharedpour.com/products/green-river-single-barrel-2026"
+      },
+      "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof": {
+        "handle": "starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof",
+        "title": "Starlight Single Barrel Honey Cask Finished Rye T8KE Single Barrel Select #25-8344 112 Proof",
+        "vendor": "Starlight Distillery",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "starlight-distillery",
+          "t8ke"
+        ],
+        "minPrice": 79.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f3e23a9d-5762-1462-95c4-4ba4de8dc8c9.jpg?v=1777207304",
+        "url": "https://sharedpour.com/products/starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof"
       },
       "el-jolgorio-mezcal-artesanal-tepeztate-edition-39": {
         "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-39",
@@ -619,29 +619,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e8d4cd80-4ab8-077f-345b-74dd98f1f862.jpg?v=1773577422",
         "url": "https://sharedpour.com/products/westland-american-single-malt-cask-1757"
       },
-      "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select": {
-        "handle": "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select",
-        "title": "Blackwood Bourbon Single Barrel Barrel Proof T8KE Select",
-        "vendor": "Blackwood",
-        "productType": "Bourbon",
-        "tags": [
-          "100-200",
-          "American-Bourbon",
-          "Barrel Pick",
-          "barrel picks",
-          "blackwood",
-          "bourbon",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke"
-        ],
-        "minPrice": 179.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/unnamed_2.jpg?v=1779640400",
-        "url": "https://sharedpour.com/products/blackwood-bourbon-single-barrel-barrel-proof-t8ke-select"
-      },
       "peerless-single-barrel-bourbon-t8ke-2026": {
         "handle": "peerless-single-barrel-bourbon-t8ke-2026",
         "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #190809107",
@@ -664,6 +641,29 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
         "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-2026"
+      },
+      "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select": {
+        "handle": "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select",
+        "title": "Blackwood Bourbon Single Barrel Barrel Proof T8KE Select",
+        "vendor": "Blackwood",
+        "productType": "Bourbon",
+        "tags": [
+          "100-200",
+          "American-Bourbon",
+          "Barrel Pick",
+          "barrel picks",
+          "blackwood",
+          "bourbon",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke"
+        ],
+        "minPrice": 179.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/unnamed_2.jpg?v=1779640400",
+        "url": "https://sharedpour.com/products/blackwood-bourbon-single-barrel-barrel-proof-t8ke-select"
       },
       "whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection": {
         "handle": "whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection",
@@ -753,10 +753,6 @@
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T14:17:11.639Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T14:22:43.059Z",
         "ok": true
@@ -1151,6 +1147,10 @@
       },
       {
         "ts": "2026-06-12T09:48:17.332Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T11:49:12.669Z",
         "ok": true
       }
     ]
