@@ -1163,12 +1163,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-12T15:33:19.600Z",
+    "lastChecked": "2026-06-12T15:39:16.578Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:261463f271f49bf660813e194febea7c\"",
+      "etag": "\"page_cache:45343637659:ProductListController:5130b1caa413aa92b7da512c1baac092\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T17:02:05.270Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T17:08:11.340Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-12T15:33:19.600Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T15:39:16.578Z",
         "ok": true
       }
     ]
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 63,
+    "consecutiveErrors": 64,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T04:49:47.028Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T05:04:49.569Z",
         "ok": true
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T15:38:09.293Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T15:39:22.226Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T15:38:09.293Z"
+    "lastErrorAt": "2026-06-12T15:39:22.226Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T15:36:52.717Z",
