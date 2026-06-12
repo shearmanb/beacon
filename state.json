@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T15:31:10.763Z",
+    "lastChecked": "2026-06-12T15:36:48.844Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T16:56:50.453Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T17:02:11.123Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-12T15:31:10.763Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T15:36:48.844Z",
         "ok": true
       }
     ]
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 61,
+    "consecutiveErrors": 62,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T04:19:18.039Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T04:34:34.925Z",
         "ok": true
@@ -3041,13 +3037,17 @@
       {
         "ts": "2026-06-12T15:35:46.731Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T15:36:58.287Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T15:35:46.731Z"
+    "lastErrorAt": "2026-06-12T15:36:58.287Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-12T15:19:42.914Z",
+    "lastChecked": "2026-06-12T15:36:52.717Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3061,10 +3061,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T13:39:24.838Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T13:55:49.335Z",
         "ok": true
@@ -3459,6 +3455,10 @@
       },
       {
         "ts": "2026-06-12T15:19:42.914Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T15:36:52.717Z",
         "ok": true
       }
     ]
