@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-12T17:21:31.627Z",
+    "lastChecked": "2026-06-12T17:27:19.292Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T18:41:46.367Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T18:47:26.681Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-12T17:21:31.627Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T17:27:19.292Z",
         "ok": true
       }
     ]
@@ -2029,7 +2029,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-12T17:21:40.100Z",
+    "lastChecked": "2026-06-12T17:27:27.806Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T18:41:59.143Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T18:47:38.672Z",
         "ok": true
@@ -2596,6 +2592,10 @@
       {
         "ts": "2026-06-12T17:21:40.100Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T17:27:27.806Z",
+        "ok": true
       }
     ]
   },
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 155,
+    "consecutiveErrors": 156,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T15:30:06.241Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-12T15:31:16.213Z",
         "ok": false
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T17:26:08.696Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T17:27:30.885Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T17:26:08.696Z"
+    "lastErrorAt": "2026-06-12T17:27:30.885Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T17:22:50.854Z",
