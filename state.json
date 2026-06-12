@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-12T15:40:22.471Z",
+    "lastChecked": "2026-06-12T15:46:05.056Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-11T17:01:59.301Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-11T17:07:02.035Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-12T15:40:22.471Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T15:46:05.056Z",
         "ok": true
       }
     ]
@@ -2029,7 +2029,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-12T15:40:32.460Z",
+    "lastChecked": "2026-06-12T15:46:14.630Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T17:02:19.277Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T17:08:22.874Z",
         "ok": true
@@ -2596,6 +2592,10 @@
       {
         "ts": "2026-06-12T15:40:32.460Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T15:46:14.630Z",
+        "ok": true
       }
     ]
   },
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 69,
+    "consecutiveErrors": 70,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T06:22:09.280Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T06:38:05.511Z",
         "ok": true
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T15:45:01.643Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T15:46:18.393Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T15:45:01.643Z"
+    "lastErrorAt": "2026-06-12T15:46:18.393Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T15:36:52.717Z",
