@@ -3670,5 +3670,32 @@
       "url": "https://www.thereveries.co/shop",
       "note": "5 consecutive failures. Last error: Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}"
     }
+  },
+  {
+    "timestamp": "2026-06-12T17:16:55.209Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour T8KE",
+    "type": "new_product",
+    "product": {
+      "handle": "augusta-buckners-13-year-t8ke-single-barrel-select-25-3637-straight-bourbon",
+      "title": "Augusta Buckner's 13 Year T8KE Single Barrel Select #26-22 Straight Bourbon",
+      "vendor": "Augusta Distillery",
+      "productType": "Bourbon",
+      "tags": [
+        "200-300",
+        "American-Bourbon",
+        "augusta-distillery",
+        "bourbon",
+        "Bourbon Whiskey",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 229.99,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/c2458521-2c19-f705-e77d-8808e2520a01.jpg?v=1775395350",
+      "url": "https://sharedpour.com/products/augusta-buckners-13-year-t8ke-single-barrel-select-25-3637-straight-bourbon"
+    }
   }
 ]
