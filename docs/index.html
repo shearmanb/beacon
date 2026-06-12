@@ -8,10 +8,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Bebas+Neue&family=Besley:ital,wght@0,600;0,700;1,600&family=Bodoni+Moda:ital,opsz,wght@0,11,600;0,11,700;1,11,600;1,11,700&family=Cinzel:wght@600;700&family=IM+Fell+English+SC&family=IM+Fell+DW+Pica:ital@0;1&family=Marcellus&family=Pinyon+Script&family=Rye&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="ui.css">
   <link rel="stylesheet" href="brand.css">
   <script>
-    // Apply persisted theme before first paint to avoid a flash of default colors.
+    // Apply persisted theme + density before first paint to avoid a flash of defaults.
     document.documentElement.dataset.theme = localStorage.getItem('beacon_theme') || 'reveries';
+    document.documentElement.dataset.density = localStorage.getItem('beacon_density') || 'regular';
   </script>
   <style>
     :root {
@@ -33,17 +35,12 @@
     #gate input { padding: .6rem .8rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem; }
     #gate button { padding: .6rem 1.2rem; border-radius: 8px; border: none; background: var(--blue); color: #fff; font-size: 1rem; cursor: pointer; }
     #gate .error { color: var(--red); font-size: .875rem; }
-    #app { display: none; max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
-    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: .75rem; }
-    header h1 { font-size: 1.5rem; }
-    .header-brand { display: flex; flex-direction: column; gap: .1rem; }
-    .header-version { font-size: .72rem; color: var(--muted); }
-    .header-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
-    .btn { padding: .4rem .9rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .875rem; cursor: pointer; white-space: nowrap; }
-    .btn:hover { border-color: var(--blue); }
-    .btn-primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    #app { display: none; }
+    .hdr { flex-wrap: wrap; row-gap: 8px; }
+    .btn-primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
     .btn-primary:hover { opacity: .85; }
-    .status { font-size: .8rem; color: var(--muted); }
+    select.btn { appearance: none; max-width: 200px; }
+    .status { font-size: .72rem; color: var(--muted); font-family: var(--mono); }
     section { margin-bottom: 1.25rem; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
     section.sec-sites    { border-top: 3px solid var(--blue); }
     section.sec-reveries { border-top: 3px solid #9b59b6; }
@@ -213,14 +210,8 @@
     .pulse-tooltip .pt-fail { color: var(--red); font-weight: 700; }
     .pulse-tooltip::after { content: ""; position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--border); }
     @keyframes stall-pulse { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.15; } }
-    /* ── Drop Reminders sidebar ── */
-    .drop-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 280px; background: var(--surface); border-right: 1px solid var(--border); z-index: 40; display: flex; flex-direction: column; transition: transform .22s ease; box-shadow: 2px 0 12px rgba(0,0,0,.25); }
-    .drop-sidebar.collapsed { transform: translateX(-281px); }
-    .drop-sb-header { display: flex; align-items: center; justify-content: space-between; padding: .9rem 1rem .7rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-    .drop-sb-header h2 { font-size: .82rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; display: flex; align-items: center; gap: .4rem; }
-    .drop-sb-collapse { background: none; border: none; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; padding: .1rem .35rem; border-radius: 6px; }
-    .drop-sb-collapse:hover { color: var(--text); background: rgba(255,255,255,.06); }
-    .drop-sb-add { padding: .75rem 1rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: .45rem; flex-shrink: 0; }
+    /* ── Drop Reminders rail (left) ── */
+    .drop-sb-add { padding: 0 0 .75rem; margin-bottom: .6rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: .45rem; }
     .drop-sb-add .row { display: flex; gap: .4rem; }
     .drop-sb-add input[type=date] { flex: 1; }
     .drop-sb-add input[type=time] { width: 96px; }
@@ -231,7 +222,7 @@
     .drop-sb-add button { padding: .35rem .8rem; border-radius: 6px; border: none; background: var(--blue); color: #fff; font-size: .8rem; cursor: pointer; }
     .drop-sb-add button:hover { opacity: .88; }
     .drop-sb-add button:disabled { opacity: .4; cursor: not-allowed; }
-    .drop-sb-list { flex: 1; overflow-y: auto; padding: .5rem .6rem 1rem; display: flex; flex-direction: column; gap: .35rem; }
+    .drop-sb-list { display: flex; flex-direction: column; gap: .35rem; }
     .drop-item { display: flex; align-items: flex-start; gap: .45rem; padding: .45rem .5rem; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--border); font-size: .8rem; }
     .drop-item.prio { border-left-color: var(--red); }
     .drop-item.done { opacity: .5; }
@@ -246,18 +237,11 @@
     .drop-item .drop-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0 .15rem; flex-shrink: 0; }
     .drop-item .drop-del:hover { color: var(--red); }
     .drop-sb-empty { color: var(--muted); font-size: .8rem; font-style: italic; padding: 1rem .5rem; text-align: center; }
-    .drop-sb-tokenhint { color: var(--muted); font-size: .72rem; padding: .5rem 1rem; border-top: 1px solid var(--border); flex-shrink: 0; }
-    .sidebar-toggle { position: fixed; left: .5rem; top: .6rem; z-index: 41; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 1.05rem; line-height: 1; padding: .35rem .55rem; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
-    .sidebar-toggle:hover { border-color: var(--blue); }
-    @media (max-width: 1100px) { .drop-sidebar { width: 86vw; max-width: 320px; } .drop-sidebar.collapsed { transform: translateX(-101%); } }
-    /* ── Pending Bottles sidebar ── */
-    .bottle-sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 320px; background: var(--surface); border-left: 1px solid var(--border); z-index: 40; display: flex; flex-direction: column; transition: transform .22s ease; box-shadow: -2px 0 12px rgba(0,0,0,.25); }
-    .bottle-sidebar.collapsed { transform: translateX(321px); }
-    .bottle-toggle { position: fixed; right: .5rem; top: .6rem; z-index: 41; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 1.05rem; line-height: 1; padding: .35rem .55rem; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
-    .bottle-toggle:hover { border-color: var(--blue); }
-    .bottle-sb-totals { font-size: .72rem; color: var(--muted); padding: .4rem 1rem .55rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-    .bottle-sidebar .drop-sb-add .row input[type=text] { flex: 1; min-width: 0; width: auto; }
-    .bottle-sidebar .drop-sb-add input[type=date] { min-width: 0; }
+    .drop-sb-tokenhint { color: var(--muted); font-size: .72rem; padding: .5rem 0; border-top: 1px solid var(--border); }
+    /* ── Pending Bottles rail (right) ── */
+    .bottle-sb-totals { font-size: .72rem; color: var(--muted); padding: 0 0 .55rem; margin-bottom: .6rem; border-bottom: 1px solid var(--border); }
+    .rail.right .drop-sb-add .row input[type=text] { flex: 1; min-width: 0; width: auto; }
+    .rail.right .drop-sb-add input[type=date] { min-width: 0; }
     .bottle-item { display: flex; align-items: flex-start; gap: .45rem; padding: .45rem .5rem; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--blue); font-size: .8rem; }
     .bottle-item.to_buy { border-left-color: var(--yellow); }
     .bottle-item.received { border-left-color: var(--border); opacity: .5; }
@@ -270,7 +254,6 @@
     .bottle-meta { font-size: .7rem; color: var(--muted); line-height: 1.35; word-break: break-word; }
     .bottle-meta .bottle-cost { color: var(--green); font-weight: 600; }
     .bottle-eta { font-size: .7rem; color: var(--blue); }
-    @media (max-width: 1100px) { .bottle-sidebar { width: 86vw; max-width: 340px; } .bottle-sidebar.collapsed { transform: translateX(101%); } }
   </style>
 </head>
 <body>
@@ -286,13 +269,10 @@
   </form>
 </div>
 
-<div id="app">
-  <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Drop Reminders">📅</button>
-  <aside class="drop-sidebar" id="drop-sidebar">
-    <div class="drop-sb-header">
-      <h2>📅 Drop Reminders</h2>
-      <button class="drop-sb-collapse" onclick="toggleSidebar()" title="Collapse">«</button>
-    </div>
+<div id="app" class="app">
+  <div class="glance" id="glance-strip"></div>
+  <aside class="rail" id="left-rail">
+    <div class="rail-hd"><h3>📅 Drop Reminders</h3><span class="cnt" id="drop-count" style="display:none"></span></div>
     <div class="drop-sb-add" id="drop-sb-add">
       <div class="row">
         <input type="date" id="drop-date" />
@@ -310,52 +290,20 @@
     </div>
     <div class="drop-sb-tokenhint" id="drop-sb-tokenhint" style="display:none">GitHub token required to add or edit reminders</div>
   </aside>
-  <button class="bottle-toggle" id="bottle-toggle" onclick="toggleBottleSidebar()" title="Pending Bottles">🍾</button>
-  <aside class="bottle-sidebar collapsed" id="bottle-sidebar">
-    <div class="drop-sb-header">
-      <h2>🍾 Pending Bottles</h2>
-      <button class="drop-sb-collapse" onclick="toggleBottleSidebar()" title="Collapse">»</button>
-    </div>
-    <div class="bottle-sb-totals" id="bottle-totals" style="display:none"></div>
-    <div class="drop-sb-add" id="bottle-add">
-      <input type="text" id="bottle-name-in" placeholder="Bottle *" maxlength="120"
-             onkeydown="if(event.key==='Enter')addBottle()" />
-      <div class="row">
-        <input type="text" id="bottle-brand-in" placeholder="Brand" maxlength="80" />
-        <input type="text" id="bottle-line-in" placeholder="Line" maxlength="80" />
-      </div>
-      <div class="row">
-        <input type="text" id="bottle-cost-in" placeholder="Cost $" inputmode="decimal" style="flex:0 0 80px" />
-        <input type="text" id="bottle-retailer-in" placeholder="Retailer" maxlength="80" />
-      </div>
-      <div class="row">
-        <input type="date" id="bottle-eta-date-in" title="ETA date" />
-        <input type="text" id="bottle-eta-note-in" placeholder="ETA note" maxlength="80"
-               onkeydown="if(event.key==='Enter')addBottle()" />
-      </div>
-      <div class="add-controls">
-        <span style="font-size:.7rem;color:var(--muted)">Added as 📦 Ordered</span>
-        <button id="bottle-add-btn" onclick="addBottle()">Add</button>
-      </div>
-    </div>
-    <div class="drop-sb-list" id="bottle-list">
-      <div class="drop-sb-empty">Loading…</div>
-    </div>
-    <div class="drop-sb-tokenhint" id="bottle-tokenhint" style="display:none">GitHub token required to add or edit bottles</div>
-  </aside>
-  <header>
-    <div class="header-brand">
-      <h1>🔦 Beacon</h1>
-      <div class="header-version" id="header-version"></div>
-    </div>
-    <div class="header-actions">
+  <main class="main">
+  <header class="hdr">
+    <div class="hdr-strip"></div>
+    <div class="wordmark"><b><span class="beak">▲</span> BEACON</b><span class="label" id="header-version"></span></div>
+    <div class="hdr-stats" id="hdr-stats"></div>
+    <div class="hdr-actions">
       <span class="status" id="refresh-status">Loading…</span>
-      <button class="btn" onclick="loadData()">Refresh</button>
-      <button class="btn btn-primary" id="run-now-btn" onclick="triggerRun()" style="display:none">▶ Run Now</button>
-      <button class="btn" onclick="openScheduleModal()">⚙ Schedules</button>
-      <button class="btn" onclick="promptToken()">GitHub Token</button>
-      <button class="btn" onclick="promptWebhook()">Discord Webhook</button>
+      <button class="btn ghost" onclick="loadData()">Refresh</button>
+      <button class="btn primary btn-primary" id="run-now-btn" onclick="triggerRun()" style="display:none">▶ Run now</button>
+      <button class="btn" onclick="openScheduleModal()">Schedules</button>
+      <button class="btn ghost" onclick="promptToken()">Token</button>
+      <button class="btn ghost" onclick="promptWebhook()">Webhook</button>
       <select class="btn" id="theme-select" onchange="setTheme(this.value)" title="Color scheme"></select>
+      <button class="btn ghost" id="density-toggle" onclick="toggleDensity()" title="Toggle compact density">▤</button>
     </div>
   </header>
 
@@ -539,6 +487,36 @@
       <div id="sandbox-results"></div>
     </div>
   </section>
+  </main>
+  <aside class="rail right" id="right-rail">
+    <div class="rail-hd"><h3>🍾 Pending Bottles</h3></div>
+    <div class="bottle-sb-totals" id="bottle-totals" style="display:none"></div>
+    <div class="drop-sb-add" id="bottle-add">
+      <input type="text" id="bottle-name-in" placeholder="Bottle *" maxlength="120"
+             onkeydown="if(event.key==='Enter')addBottle()" />
+      <div class="row">
+        <input type="text" id="bottle-brand-in" placeholder="Brand" maxlength="80" />
+        <input type="text" id="bottle-line-in" placeholder="Line" maxlength="80" />
+      </div>
+      <div class="row">
+        <input type="text" id="bottle-cost-in" placeholder="Cost $" inputmode="decimal" style="flex:0 0 80px" />
+        <input type="text" id="bottle-retailer-in" placeholder="Retailer" maxlength="80" />
+      </div>
+      <div class="row">
+        <input type="date" id="bottle-eta-date-in" title="ETA date" />
+        <input type="text" id="bottle-eta-note-in" placeholder="ETA note" maxlength="80"
+               onkeydown="if(event.key==='Enter')addBottle()" />
+      </div>
+      <div class="add-controls">
+        <span style="font-size:.7rem;color:var(--muted)">Added as 📦 Ordered</span>
+        <button id="bottle-add-btn" onclick="addBottle()">Add</button>
+      </div>
+    </div>
+    <div class="drop-sb-list" id="bottle-list">
+      <div class="drop-sb-empty">Loading…</div>
+    </div>
+    <div class="drop-sb-tokenhint" id="bottle-tokenhint" style="display:none">GitHub token required to add or edit bottles</div>
+  </aside>
 </div>
 
 <script>
@@ -586,6 +564,55 @@
     sel.value = currentTheme();
     document.documentElement.dataset.theme = currentTheme();
   })();
+
+  // ── Density toggle (regular / compact) ───────────────────────────────────────
+  const DENSITY_KEY = 'beacon_density';
+  function toggleDensity() {
+    const next = document.documentElement.dataset.density === 'compact' ? 'regular' : 'compact';
+    localStorage.setItem(DENSITY_KEY, next);
+    document.documentElement.dataset.density = next;
+    syncDensityBtn();
+  }
+  function syncDensityBtn() {
+    const btn = document.getElementById('density-toggle');
+    const compact = document.documentElement.dataset.density === 'compact';
+    btn.classList.toggle('primary', compact);
+    btn.classList.toggle('ghost', !compact);
+  }
+  syncDensityBtn();
+
+  // ── Header stats + mobile glance strip ───────────────────────────────────────
+  function fmtSyncTime(ms) {
+    if (!ms) return '—';
+    return new Date(ms).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  }
+
+  function renderHeaderStats() {
+    const el = document.getElementById('hdr-stats');
+    const enabled = config.sites.filter(s => s.enabled);
+    const healthy = enabled.filter(s => getSiteHealth(s, state[s.id])?.level === 'ok').length;
+    const products = allProducts();
+    const inStock = products.filter(p => p.available).length;
+    const [t, ampm] = fmtSyncTime(lastLoadedAt).split(' ');
+    el.innerHTML = `
+      <div class="hdr-stat"><span class="label">sites</span><span class="v num">${healthy}<span class="dim">/${enabled.length}</span></span></div>
+      <div class="hdr-stat"><span class="label">tracked</span><span class="v num">${products.length}</span></div>
+      <div class="hdr-stat"><span class="label">in stock</span><span class="v num"${inStock ? ' style="color:var(--ok)"' : ''}>${inStock}</span></div>
+      <div class="hdr-stat"><span class="label">last sync</span><span class="v num">${esc(t)}<span class="dim">${ampm ? ' ' + esc(ampm) : ''}</span></span></div>`;
+  }
+
+  function renderGlance() {
+    const el = document.getElementById('glance-strip');
+    const enabled = config.sites.filter(s => s.enabled);
+    const healthy = enabled.filter(s => getSiteHealth(s, state[s.id])?.level === 'ok').length;
+    const inStock = allProducts().filter(p => p.available).length;
+    el.innerHTML = `
+      <span><span class="dot ${healthy === enabled.length ? 'ok' : 'warn'}"></span> <b class="num">${healthy}/${enabled.length}</b> sites</span>
+      <span class="gsep">·</span>
+      <span${inStock ? ' style="color:var(--ok)"' : ''}><b class="num">${inStock}</b> in stock</span>
+      <span class="gsep">·</span>
+      <span style="color:var(--muted)">synced ${esc(fmtSyncTime(lastLoadedAt))}</span>`;
+  }
 
   const BUILTIN_SCHEDULE_OPTIONS = [
     { value: '2',  label: '2 min' },
@@ -1012,9 +1039,6 @@
   let _sessionToken   = null;
   let _sessionWebhook = null;
 
-  const SIDEBAR_KEY = 'beacon_sidebar_open';
-  const BOTTLE_SIDEBAR_KEY = 'beacon_bottles_open';
-
   let state = {};
   let history = [];
   let config = { sites: [] };
@@ -1042,16 +1066,19 @@
     if (!lastLoadedAt) return;
     const el = document.getElementById('refresh-status');
     const mins = Math.floor((Date.now() - lastLoadedAt) / 60_000);
-    const age = mins < 1 ? 'just now' : `${mins} min ago`;
-    el.textContent = `Data Last Updated: ${fmtEST(new Date(lastLoadedAt))} (${age})`;
-    el.style.color = mins >= 15 ? 'var(--red)' : mins >= 5 ? 'var(--yellow)' : '';
+    const age = mins < 1 ? 'just now' : `${mins}m ago`;
+    el.textContent = `synced ${age}`;
+    el.title = `Data last updated: ${fmtEST(new Date(lastLoadedAt))}`;
+    el.style.color = mins >= 15 ? 'var(--err)' : mins >= 5 ? 'var(--warn)' : '';
   }
 
   setInterval(updateDataAge, 30_000);
 
   function setVersionText(dateStr) {
     const text = dateStr ? `${VERSION} · App update: ${dateStr}` : VERSION;
-    document.getElementById('header-version').textContent = text;
+    const hdr = document.getElementById('header-version');
+    hdr.textContent = VERSION;
+    hdr.title = text;
     document.getElementById('gate-version').textContent = text;
   }
 
@@ -1068,8 +1095,6 @@
 
   setVersionText(null);
   fetchLastCodeCommit().catch(() => {});
-  applySidebarState();
-  applyBottleSidebarState();
 
   // ── Auth gate ────────────────────────────────────────────────────────────────
   document.getElementById('gate-form').addEventListener('submit', (e) => {
@@ -1078,7 +1103,7 @@
     if (pw === DASH_PASSWORD) {
       document.getElementById('pw-input').value = '';
       document.getElementById('gate').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
+      document.getElementById('app').style.display = 'grid';
       loadData();
       setInterval(loadData, 120_000);
     } else {
@@ -1140,16 +1165,7 @@
     return site.url;
   }
 
-  // ── Drop Reminders sidebar ───────────────────────────────────────────────────
-  function isSidebarOpen() { return localStorage.getItem(SIDEBAR_KEY) !== 'false'; }
-  function applySidebarState() {
-    document.getElementById('drop-sidebar')?.classList.toggle('collapsed', !isSidebarOpen());
-  }
-  function toggleSidebar() {
-    localStorage.setItem(SIDEBAR_KEY, isSidebarOpen() ? 'false' : 'true');
-    applySidebarState();
-  }
-
+  // ── Drop Reminders rail ──────────────────────────────────────────────────────
   function fmtReminderDate(dateStr, timeStr) {
     // dateStr "YYYY-MM-DD"; render as "Thu Jun 12" + optional "@ 12:00 PM"
     const [y, m, d] = (dateStr || '').split('-').map(Number);
@@ -1174,7 +1190,6 @@
   }
 
   function renderSidebar() {
-    applySidebarState();
     const hasToken = !!_sessionToken;
     const addBox = document.getElementById('drop-sb-add');
     const hint = document.getElementById('drop-sb-tokenhint');
@@ -1190,6 +1205,10 @@
     const list = document.getElementById('drop-sb-list');
     if (!list) return;
     const items = sortedReminders();
+    const cnt = document.getElementById('drop-count');
+    const active = items.filter(it => !it.done).length;
+    cnt.style.display = active ? '' : 'none';
+    cnt.textContent = active;
     if (!items.length) {
       list.innerHTML = '<div class="drop-sb-empty">No reminders yet.<br>Add a drop date above.</div>';
       return;
@@ -1287,16 +1306,7 @@
     await commitReminders(items => items.filter(it => it.id !== id), `chore: delete drop reminder [skip ci]`);
   }
 
-  // ── Pending Bottles sidebar ──────────────────────────────────────────────────
-  function isBottleSidebarOpen() { return localStorage.getItem(BOTTLE_SIDEBAR_KEY) === 'true'; }
-  function applyBottleSidebarState() {
-    document.getElementById('bottle-sidebar')?.classList.toggle('collapsed', !isBottleSidebarOpen());
-  }
-  function toggleBottleSidebar() {
-    localStorage.setItem(BOTTLE_SIDEBAR_KEY, isBottleSidebarOpen() ? 'false' : 'true');
-    applyBottleSidebarState();
-  }
-
+  // ── Pending Bottles rail ─────────────────────────────────────────────────────
   const BOTTLE_STAGES = {
     to_buy:   { icon: '🛒', label: 'To buy',   next: 'ordered' },
     ordered:  { icon: '📦', label: 'Ordered',  next: 'received' },
@@ -1319,8 +1329,7 @@
   }
 
   function renderBottleSidebar() {
-    applyBottleSidebarState();
-    const hasToken = !!localStorage.getItem(TOKEN_KEY);
+    const hasToken = !!_sessionToken;
     const addBox = document.getElementById('bottle-add');
     const hint = document.getElementById('bottle-tokenhint');
     if (addBox) addBox.querySelectorAll('input, button').forEach(el => { el.disabled = !hasToken; });
@@ -1372,7 +1381,7 @@
 
   // Fetch pending_bottles.json, apply mutator(items)->items, PUT back. Re-render on success.
   async function commitBottles(mutate, commitMessage) {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = _sessionToken;
     if (!token) { alert('Add a GitHub token to edit bottles.'); return false; }
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
@@ -1469,6 +1478,8 @@
     const token = _sessionToken;
     document.getElementById('run-now-btn').style.display = token ? 'inline-block' : 'none';
     renderWorkerHealth();
+    renderHeaderStats();
+    renderGlance();
   }
 
   // Returns {level, ago} for one site, or null if disabled.

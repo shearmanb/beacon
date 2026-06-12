@@ -189,3 +189,9 @@ select.in { appearance: none; }
   .rail { position: static; height: auto; border: 0; border-bottom: 1px solid var(--line); }
   .rail.right { border-left: 0; }
 }
+
+/* rails stack below the main column on mobile (DOM puts the left rail first) */
+@media (max-width: 1100px) {
+  .main { order: 1; }
+  .rail { order: 2; }
+}
