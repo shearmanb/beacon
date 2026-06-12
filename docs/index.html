@@ -61,14 +61,10 @@
     .site-banner { font-family: var(--mono); font-size: 10px; padding: 3px 7px; border-radius: 4px; margin-top: 5px; line-height: 1.45; }
     .site-banner.warn { background: color-mix(in srgb, var(--warn) 10%, transparent); color: var(--warn); }
     .site-banner.err { background: color-mix(in srgb, var(--err) 10%, transparent); color: var(--err); }
-    .controls { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .75rem; }
-    .controls input, .controls select { padding: .4rem .7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .875rem; }
-    .controls input { flex: 1; min-width: 160px; }
     table { width: 100%; border-collapse: collapse; font-size: .875rem; }
     th { text-align: left; padding: .5rem .75rem; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); }
     td { padding: .5rem .75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
-    .badge-reveries { background: rgba(155,89,182,.2); color: #c39bd3; border: 1px solid rgba(155,89,182,.35); font-size: .7rem; padding: .15rem .4rem; border-radius: 5px; font-weight: 600; white-space: nowrap; margin-left: .4rem; vertical-align: middle; }
     .btn-sm { padding: .2rem .55rem; font-size: .75rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; white-space: nowrap; }
     .btn-sm:hover { border-color: var(--red); color: var(--red); }
     .btn-sm.unignore { border-color: var(--border); color: var(--muted); }
@@ -78,6 +74,9 @@
     .avail-yes { color: var(--green); font-weight: 600; }
     .avail-no { color: var(--red); }
     .thumb { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; }
+    img.pthumb { object-fit: cover; }
+    .ptable .pname a { color: inherit; text-decoration: none; }
+    .ptable .pname a:hover { color: var(--accent); }
     .history-list { display: flex; flex-direction: column; gap: .5rem; max-height: 400px; overflow-y: auto; }
     .history-item { display: flex; gap: .75rem; align-items: flex-start; padding: .5rem .75rem; border-radius: 8px; background: var(--surface); border-left: 3px solid var(--border); font-size: .85rem; }
     .history-item.new_product { border-left-color: var(--blue); }
@@ -278,58 +277,49 @@
     </div>
   </section>
 
-  <section class="sec-products">
-    <div class="section-header" onclick="toggleSection('products')">
-      <h2><span class="sec-icon">📦</span> Products</h2>
-      <span class="section-chevron">▾</span>
+  <section class="sect sect-products">
+    <div class="sect-hd">
+      <span class="tick"></span>
+      <h2><span class="h2-star">★ </span>All Products</h2>
+      <span class="rule"></span>
+      <span class="label" id="products-count"></span>
     </div>
-    <div class="section-body" id="body-products">
-      <div class="controls">
-        <input type="text" id="search" placeholder="Search products…" oninput="renderProducts()" />
-        <select id="filter-site" onchange="renderProducts()">
-          <option value="">All sites</option>
-        </select>
-        <select id="filter-avail" onchange="renderProducts()">
-          <option value="">All availability</option>
-          <option value="yes">Available</option>
-          <option value="no">Sold Out</option>
-        </select>
-        <select id="filter-reveries" onchange="renderProducts()">
-          <option value="">All products</option>
-          <option value="yes">Reveries only</option>
-          <option value="no">Non-Reveries</option>
-        </select>
-        <select id="filter-price" onchange="renderProducts()">
-          <option value="">Any price</option>
-          <option value="0-50">$0 – $50</option>
-          <option value="50-100">$50 – $100</option>
-          <option value="100-150">$100 – $150</option>
-          <option value="150-250">$150 – $250</option>
-          <option value="250-300">$250 – $300</option>
-          <option value="300+">Over $300</option>
-        </select>
-        <select id="filter-ignored" onchange="renderProducts()">
-          <option value="visible">Hide ignored</option>
-          <option value="all">Show all</option>
-          <option value="only">Ignored only</option>
-        </select>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Product</th>
-            <th>Site</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="products-tbody">
-          <tr><td colspan="6" class="empty">Loading…</td></tr>
-        </tbody>
-      </table>
+    <div class="filters">
+      <input class="in search" type="text" id="search" placeholder="Search products…" oninput="renderProducts()" />
+      <select class="in" id="filter-site" onchange="renderProducts()">
+        <option value="">All sites</option>
+      </select>
+      <select class="in" id="filter-avail" onchange="renderProducts()">
+        <option value="">All availability</option>
+        <option value="yes">In stock</option>
+        <option value="no">Sold out</option>
+      </select>
+      <select class="in" id="filter-reveries" onchange="renderProducts()">
+        <option value="">All products</option>
+        <option value="yes">Reveries only</option>
+        <option value="no">Non-Reveries</option>
+      </select>
+      <select class="in" id="filter-price" onchange="renderProducts()">
+        <option value="">Any price</option>
+        <option value="0-50">$0 – $50</option>
+        <option value="50-100">$50 – $100</option>
+        <option value="100-150">$100 – $150</option>
+        <option value="150-250">$150 – $250</option>
+        <option value="250-300">$250 – $300</option>
+        <option value="300+">Over $300</option>
+      </select>
+      <select class="in" id="filter-ignored" onchange="renderProducts()">
+        <option value="visible">Hide ignored</option>
+        <option value="all">Show all</option>
+        <option value="only">Ignored only</option>
+      </select>
     </div>
+    <table class="ptable">
+      <thead><tr id="products-head"></tr></thead>
+      <tbody id="products-tbody">
+        <tr><td colspan="6" class="empty">Loading…</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <!-- Schedule management modal -->
@@ -1665,7 +1655,24 @@
       p.siteId === 'reveries_official' || p.siteId === 'sharedpour_reveries';
   }
 
+  // ── Products table: sortable columns, NEW badge, price deltas ────────────────
+  const fmt$ = n => '$' + n.toFixed(2).replace(/\.00$/, '');
+  let _prodSort = { key: null, dir: 1 };
+  function sortProductsBy(key) {
+    _prodSort = { key, dir: _prodSort.key === key ? -_prodSort.dir : 1 };
+    renderProducts();
+  }
+
+  function renderProductsHead() {
+    const arr = key => _prodSort.key === key ? `<span class="arr">${_prodSort.dir === 1 ? ' ▴' : ' ▾'}</span>` : '';
+    const th = (key, lbl, right) =>
+      `<th class="sortable"${right ? ' style="text-align:right"' : ''} onclick="sortProductsBy('${key}')">${lbl}${arr(key)}</th>`;
+    document.getElementById('products-head').innerHTML =
+      `<th></th>${th('name', 'Product')}${th('site', 'Site')}${th('price', 'Price', true)}${th('status', 'Status')}<th></th>`;
+  }
+
   function renderProducts() {
+    renderProductsHead();
     const search       = document.getElementById('search').value.toLowerCase();
     const filterSite   = document.getElementById('filter-site').value;
     const filterAvail  = document.getElementById('filter-avail').value;
@@ -1691,22 +1698,60 @@
     if (filterIgnored === 'visible') products = products.filter(p => !ignored[p.handle]);
     if (filterIgnored === 'only')    products = products.filter(p => !!ignored[p.handle]);
 
+    if (_prodSort.key) {
+      const k = _prodSort.key;
+      const val = p => k === 'status' ? (p.available ? 0 : 1)
+        : k === 'name' ? p.title
+        : k === 'site' ? p.siteName
+        : (p.minPrice ?? Infinity);
+      products.sort((a, b) => {
+        const va = val(a), vb = val(b);
+        return (typeof va === 'string' ? va.localeCompare(vb) : va - vb) * _prodSort.dir;
+      });
+    }
+
+    document.getElementById('products-count').textContent = `${products.length} shown`;
+
     const tbody = document.getElementById('products-tbody');
     if (!products.length) {
       tbody.innerHTML = '<tr><td colspan="6" class="empty">No products found</td></tr>';
       return;
     }
 
+    // NEW badge: first seen by the worker <24h ago, falling back to the most
+    // recent new_product alert for products that predate firstSeen tracking.
+    const dayAgo = Date.now() - 24 * 60 * 60 * 1000;
+    const lastNew = {};
+    for (const h of history) {
+      if (h.type !== 'new_product' || !h.product?.handle) continue;
+      const t = new Date(h.timestamp).getTime();
+      if (!lastNew[h.product.handle] || t > lastNew[h.product.handle]) lastNew[h.product.handle] = t;
+    }
+    const isNew = p =>
+      (p.firstSeen && new Date(p.firstSeen).getTime() > dayAgo) ||
+      (lastNew[p.handle] ?? 0) > dayAgo;
+
     tbody.innerHTML = products.map(p => {
-      const revBadge = isReveriesProduct(p) ? '<span class="badge-reveries">✨ Reveries</span>' : '';
       const isIgnored = !!ignored[p.handle];
-      const ignoreBtn = `<button class="btn-sm ${isIgnored ? 'unignore' : ''}" onclick="toggleIgnore('${esc(p.handle)}', ${!isIgnored}, this)">${isIgnored ? 'Unignore' : 'Ignore'}</button>`;
+      const revChip = isReveriesProduct(p) ? ' <span class="chip rev">Reveries</span>' : '';
+      const newChip = isNew(p) ? ' <span class="chip new">New</span>' : '';
+      const delta = (p.prevPrice != null && p.minPrice != null && p.prevPrice !== p.minPrice)
+        ? p.minPrice - p.prevPrice : null;
+      const deltaHtml = delta
+        ? `<span class="delta ${delta > 0 ? 'up' : 'down'}" title="was ${fmt$(p.prevPrice)}">${delta > 0 ? ' ↑' : ' ↓'}${fmt$(Math.abs(delta))}</span>`
+        : '';
+      const status = p.available
+        ? '<span class="chip stock"><span class="dot ok"></span>In stock</span>'
+        : '<span class="chip out">Sold out</span>';
+      const ignoreBtn = isIgnored
+        ? `<button class="btn ghost sm" onclick="toggleIgnore('${esc(p.handle)}', false, this)">Unignore</button>`
+        : `<button class="btn ghost sm ignore" onclick="toggleIgnore('${esc(p.handle)}', true, this)">Ignore</button>`;
       return `<tr class="${isIgnored ? 'ignored-row' : ''}">
-        <td>${p.image ? `<img class="thumb" src="${esc(p.image)}" alt="" loading="lazy" />` : ''}</td>
-        <td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>${revBadge}</td>
-        <td>${esc(p.siteName)}</td>
-        <td>${p.minPrice != null ? '$' + p.minPrice.toFixed(2) : '—'}</td>
-        <td class="${p.available ? 'avail-yes' : 'avail-no'}">${p.available ? 'In Stock' : 'Sold Out'}</td>
+        <td>${p.image ? `<img class="pthumb" src="${esc(p.image)}" alt="" loading="lazy" />` : '<div class="pthumb"></div>'}</td>
+        <td class="pname"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>${revChip}${newChip}</td>
+        <td class="psite">${esc(p.siteName)}</td>
+        <td class="pprice">${p.minPrice != null ? fmt$(p.minPrice) : '—'}${deltaHtml}</td>
+        <td>${status}</td>
         <td>${ignoreBtn}</td>
       </tr>`;
     }).join('');

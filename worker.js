@@ -174,6 +174,29 @@ async function filterValidSites(sites) {
   return valid;
 }
 
+// ── Product provenance ────────────────────────────────────────────────────────
+// Carries per-product metadata across checks: firstSeen powers the dashboard's
+// NEW badge, prevPrice/priceChangedAt its price-delta arrows. Deltas expire
+// after 7 days so an old price change doesn't wear an arrow forever.
+const PRICE_DELTA_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+function annotateProducts(prevProducts = {}, products = {}) {
+  const now = new Date().toISOString();
+  for (const [handle, p] of Object.entries(products ?? {})) {
+    const prev = (prevProducts ?? {})[handle];
+    if (!prev) { p.firstSeen = now; continue; }
+    if (prev.firstSeen) p.firstSeen = prev.firstSeen;
+    if (prev.minPrice != null && p.minPrice != null && prev.minPrice !== p.minPrice) {
+      p.prevPrice = prev.minPrice;
+      p.priceChangedAt = now;
+    } else if (prev.prevPrice != null && prev.priceChangedAt &&
+               Date.now() - new Date(prev.priceChangedAt).getTime() < PRICE_DELTA_TTL_MS) {
+      p.prevPrice = prev.prevPrice;
+      p.priceChangedAt = prev.priceChangedAt;
+    }
+  }
+}
+
 // ── Main run ──────────────────────────────────────────────────────────────────
 
 async function run() {
@@ -281,6 +304,7 @@ async function run() {
     try {
       const strategy = await loadStrategy(site.strategy);
       const { state, alerts } = await strategy.checkSite(site, siteState);
+      annotateProducts(siteState?.products, state.products);
 
       // Recovery alert: if we had an open error page, close it.
       const wasInErrorAlert = siteState?.errorAlertSent === true;
