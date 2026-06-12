@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-12T16:27:12.120Z",
-    "productCount": 34,
+    "lastChecked": "2026-06-12T16:33:00.362Z",
+    "productCount": 33,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -665,27 +665,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/unnamed_2.jpg?v=1779640400",
         "url": "https://sharedpour.com/products/blackwood-bourbon-single-barrel-barrel-proof-t8ke-select"
       },
-      "whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection": {
-        "handle": "whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection",
-        "title": "WhistlePig Piggyback Rye Single Barrel 38792 Cask Strength r/Bourbon Single Barrel Selection",
-        "vendor": "WhistlePig",
-        "productType": "Rye",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "over-10",
-          "rye",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke",
-          "whistlepig"
-        ],
-        "minPrice": 62.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/aa853886-3923-811a-65c2-3a27041a2872.jpg?v=1744028681",
-        "url": "https://sharedpour.com/products/whistlepig-piggyback-rye-single-barrel-38792-cask-strength-r-bourbon-single-barrel-selection"
-      },
       "augusta-old-route-8-t8ke-single-barrel-select-24-6013-9-year-straight-bourbon": {
         "handle": "augusta-old-route-8-t8ke-single-barrel-select-24-6013-9-year-straight-bourbon",
         "title": "Augusta Old Route 8 T8KE Single Barrel Select #24-6013 9 Year Straight Bourbon",
@@ -752,7 +731,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:68996691bb87cadfac734e31c6c5bf6e\"",
+      "etag": "\"page_cache:45343637659:ProductListController:05302b7a0f26396abb974063169f2ca1\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +739,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T17:45:18.977Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T17:50:47.190Z",
         "ok": true
@@ -1159,16 +1134,20 @@
       {
         "ts": "2026-06-12T16:27:12.120Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T16:33:00.362Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-12T16:27:18.122Z",
+    "lastChecked": "2026-06-12T16:33:04.668Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:fa79074a9c7f9731d059e777c5c30bcf\"",
+      "etag": "\"page_cache:45343637659:ProductListController:1d6d1d3b69d00f5f7d68eca655ab0226\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1155,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T17:52:02.625Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T17:57:36.914Z",
         "ok": true
@@ -1575,11 +1550,15 @@
       {
         "ts": "2026-06-12T16:27:18.122Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T16:33:04.669Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-12T16:27:22.686Z",
+    "lastChecked": "2026-06-12T16:33:09.647Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1605,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T17:52:07.909Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T17:57:42.939Z",
         "ok": true
@@ -2024,6 +1999,10 @@
       },
       {
         "ts": "2026-06-12T16:27:22.686Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T16:33:09.647Z",
         "ok": true
       }
     ]
@@ -2639,13 +2618,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 109,
+    "consecutiveErrors": 110,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T14:35:25.668Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-12T14:36:35.726Z",
         "ok": false
@@ -3041,10 +3016,14 @@
       {
         "ts": "2026-06-12T16:31:58.401Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T16:33:14.138Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T16:31:58.402Z"
+    "lastErrorAt": "2026-06-12T16:33:14.138Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T16:19:04.414Z",
