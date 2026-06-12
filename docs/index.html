@@ -54,29 +54,13 @@
     .section-header.sec-collapsed .section-chevron { transform: rotate(-90deg); }
     .section-body { padding: 1rem; background: var(--bg); }
     .section-body.sec-hidden { display: none; }
-    .site-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-    .site-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
-    .site-card h3 { font-size: .95rem; margin-bottom: .5rem; }
-    .site-card .meta { font-size: .8rem; color: var(--muted); display: flex; flex-direction: column; gap: .2rem; }
-    .meta-stale { color: var(--yellow) !important; }
-    .meta-overdue { color: var(--red) !important; }
-    .site-card .badge { display: inline-block; padding: .2rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 600; }
-    .badge-green { background: rgba(46,204,113,.15); color: var(--green); }
-    .badge-blue { background: rgba(52,152,219,.15); color: var(--blue); }
-    .badge-red { background: rgba(231,76,60,.15); color: var(--red); }
-    .badge-yellow { background: rgba(241,196,15,.15); color: var(--yellow); }
-    .site-card .toggle-row { margin-top: .75rem; display: flex; align-items: center; gap: .5rem; font-size: .8rem; }
-    .schedule-row { margin-top: .6rem; display: flex; flex-direction: column; gap: .25rem; }
-    .schedule-row label { font-size: .75rem; color: var(--muted); }
-    .schedule-select { padding: .3rem .5rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .8rem; cursor: pointer; width: 100%; }
-    .schedule-select:disabled { opacity: 0.5; cursor: not-allowed; }
-    .schedule-hint { font-size: .72rem; color: var(--muted); margin-top: .1rem; }
-    .toggle { position: relative; display: inline-block; width: 36px; height: 20px; }
-    .toggle input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; inset: 0; background: var(--border); border-radius: 20px; transition: .2s; cursor: pointer; }
-    .slider:before { content: ""; position: absolute; width: 14px; height: 14px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .2s; }
-    input:checked + .slider { background: var(--yellow); }
-    input:checked + .slider:before { transform: translateX(16px); }
+    /* ── Site card extras (banners, links, disabled) on top of ui.css ── */
+    .site-card.off, .site-pill.off { opacity: .45; }
+    .site-hd .name a { color: inherit; text-decoration: none; }
+    .site-hd .name a:hover { color: var(--accent); }
+    .site-banner { font-family: var(--mono); font-size: 10px; padding: 3px 7px; border-radius: 4px; margin-top: 5px; line-height: 1.45; }
+    .site-banner.warn { background: color-mix(in srgb, var(--warn) 10%, transparent); color: var(--warn); }
+    .site-banner.err { background: color-mix(in srgb, var(--err) 10%, transparent); color: var(--err); }
     .controls { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .75rem; }
     .controls input, .controls select { padding: .4rem .7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .875rem; }
     .controls input { flex: 1; min-width: 160px; }
@@ -105,19 +89,6 @@
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .empty { color: var(--muted); font-size: .875rem; padding: 1rem 0; }
-    .site-refreshing-bar { background: rgba(52,152,219,.1); border-bottom: 1px solid rgba(52,152,219,.2); color: var(--blue); font-size: .72rem; font-weight: 600; padding: .35rem .75rem; margin: -1rem -1rem .75rem; animation: beacon-pulse 1s ease-in-out infinite; }
-    @keyframes beacon-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
-    .site-card.disabled { opacity: 0.45; }
-    .site-card.site-in-reset { border-color: rgba(241,196,15,.5); border-top: 3px solid var(--yellow); }
-    .site-reset-banner { background: rgba(241,196,15,.1); border-bottom: 1px solid rgba(241,196,15,.25); color: var(--yellow); font-size: .75rem; font-weight: 600; padding: .5rem .75rem; margin: -1rem -1rem .75rem; line-height: 1.4; }
-    .site-error-banner { background: rgba(231,76,60,.1); border-bottom: 1px solid rgba(231,76,60,.3); color: var(--red); font-size: .75rem; font-weight: 600; padding: .5rem .75rem; margin: -1rem -1rem .75rem; line-height: 1.4; }
-    .site-error-banner .err-detail { display: block; font-weight: 400; opacity: .85; font-size: .7rem; margin-top: .15rem; word-break: break-word; }
-    .site-card.wave-reset { border-color: rgba(230,126,34,.6); border-top: 3px solid var(--orange); animation: wave-reset-pulse 2.5s ease-in-out infinite; }
-    @keyframes wave-reset-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(230,126,34,0); } 50% { box-shadow: 0 0 10px 3px rgba(230,126,34,.2); } }
-    .site-reset-banner.wave-reset { background: rgba(230,126,34,.12); border-bottom-color: rgba(230,126,34,.3); color: var(--orange); }
-    .site-card-header h3 a { color: var(--text); text-decoration: underline; text-decoration-style: dotted; text-decoration-color: rgba(226,232,240,.4); text-underline-offset: 3px; }
-    .site-card-header h3 a:hover { text-decoration-color: var(--text); }
-    .toggle-enabled input:checked + .slider { background: var(--green); }
     .reveries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .65rem; }
     .reveries-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
     .reveries-card.rev-in { border-color: rgba(46,204,113,.45); border-top: 3px solid var(--green); }
@@ -168,8 +139,6 @@
     .worker-chip.unknown  { background: rgba(100,116,139,.1);  color: var(--muted); }
     .worker-chip .chip-btn { background: none; border: 1px solid currentColor; color: inherit; cursor: pointer; font-size: .69rem; font-weight: 600; padding: .1rem .4rem; border-radius: 10px; margin-left: .25rem; }
     .worker-chip .chip-btn:hover { opacity: .75; }
-    .site-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; margin-bottom: .5rem; }
-    .site-card-header h3 { margin: 0; }
     /* ── Sandbox ── */
     section.sec-sandbox { border-top: 3px solid #e67e22; }
     .sandbox-form { display: flex; flex-direction: column; gap: .75rem; }
@@ -180,36 +149,6 @@
     .sandbox-summary { font-size: .85rem; color: var(--muted); margin: .75rem 0 .5rem; padding: .4rem .6rem; background: var(--surface); border-radius: 6px; }
     .sandbox-error { color: var(--red); font-size: .875rem; padding: .5rem 0; }
     .sandbox-loading { color: var(--muted); font-size: .875rem; padding: .75rem 0; }
-    /* ── PulseStrip (per-tile 60-min check activity) ── */
-    .pulse-wrap { margin-top: .55rem; }
-    .pulse-toggle { background: none; border: none; padding: 0; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: .25rem; line-height: 1; }
-    .pulse-toggle:hover { color: var(--text); }
-    .pulse-toggle .pulse-chev { transition: transform .15s; display: inline-block; font-size: 11px; }
-    .pulse-wrap.pulse-closed .pulse-toggle .pulse-chev { transform: rotate(-90deg); }
-    .pulse-wrap.pulse-failing .pulse-toggle { color: var(--orange); }
-    .pulse-wrap.pulse-stalled .pulse-toggle { color: var(--red); }
-    .pulse-wrap.pulse-closed .pulse-body { display: none; }
-    .pulse-body { margin-top: .3rem; }
-    .pulse-strip { position: relative; height: 22px; width: 100%; }
-    .pulse-track { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--border); transform: translateY(-.5px); }
-    .pulse-tick { position: absolute; top: 4px; bottom: 4px; width: 1px; background: var(--border); opacity: .55; pointer-events: none; }
-    .pulse-gap { position: absolute; top: 0; bottom: 0; right: 0; background: linear-gradient(to right, transparent, rgba(231,76,60,.25)); pointer-events: none; }
-    .pulse-now { position: absolute; right: 0; top: 3px; bottom: 3px; width: 1.5px; background: var(--muted); border-radius: 1px; }
-    .pulse-wrap.pulse-stalled .pulse-now { width: 3px; background: var(--red); animation: stall-pulse 1.8s ease-in-out infinite; }
-    .pulse-mark { position: absolute; top: 50%; transform: translate(-50%, -50%); transition: transform .12s, box-shadow .12s; cursor: default; }
-    .pulse-mark.ok { width: 6px; height: 6px; border-radius: 50%; background: rgba(46,204,113,.65); }
-    .pulse-mark.fail { width: 5px; height: 5px; background: rgba(231,76,60,.7); transform: translate(-50%, -50%) rotate(45deg); }
-    .pulse-mark.ok:hover { background: var(--green); transform: translate(-50%, -50%) scale(1.75); box-shadow: 0 0 9px var(--green); z-index: 2; }
-    .pulse-mark.fail:hover { background: var(--red); transform: translate(-50%, -50%) rotate(45deg) scale(1.75); box-shadow: 0 0 9px var(--red); z-index: 2; }
-    .pulse-legend { display: flex; justify-content: space-between; margin-top: .15rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; color: var(--muted); letter-spacing: .04em; }
-    .pulse-wrap.pulse-stalled .pulse-legend .pulse-now-lbl { color: var(--red); }
-    .pulse-empty { font-size: .72rem; color: var(--muted); padding: .25rem 0; font-style: italic; }
-    .pulse-tooltip { position: fixed; z-index: 50; background: #0b0d13; border: 1px solid var(--border); color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; padding: .3rem .5rem; border-radius: 6px; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,.4); display: none; }
-    .pulse-tooltip.show { display: block; }
-    .pulse-tooltip .pt-ok { color: var(--green); font-weight: 700; }
-    .pulse-tooltip .pt-fail { color: var(--red); font-weight: 700; }
-    .pulse-tooltip::after { content: ""; position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--border); }
-    @keyframes stall-pulse { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.15; } }
     /* ── Drop Reminders rail (left) ── */
     .drop-sb-add { padding: 0 0 .75rem; margin-bottom: .6rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: .45rem; }
     .drop-sb-add .row { display: flex; gap: .4rem; }
@@ -307,16 +246,23 @@
     </div>
   </header>
 
-  <section class="sec-sites">
-    <div class="section-header" onclick="toggleSection('sites')">
-      <h2><span class="sec-icon">📡</span> Sites</h2>
+  <section class="sect sect-sites">
+    <div class="sect-hd">
+      <span class="tick"></span>
+      <h2><span class="h2-star">★ </span>Sites</h2>
+      <span class="rule"></span>
       <span id="worker-status-chip"></span>
-      <span class="section-chevron">▾</span>
-    </div>
-    <div class="section-body" id="body-sites">
-      <div class="site-cards" id="site-cards">
-        <div class="empty">Loading…</div>
+      <span class="label" id="sites-healthy"></span>
+      <div class="seg" id="sites-seg">
+        <button data-view="mini" onclick="setSitesView('mini')">mini</button>
+        <button data-view="compact" onclick="setSitesView('compact')">compact</button>
+        <button data-view="detailed" onclick="setSitesView('detailed')">detailed</button>
       </div>
+      <button class="btn ghost sm" id="sites-collapse-btn" onclick="toggleSitesCollapsed()">▴ collapse</button>
+      <button class="btn ghost sm" onclick="openTileGuide()" title="What does everything on a site tile mean?">? guide</button>
+    </div>
+    <div id="site-cards" class="sites-grid detailed">
+      <div class="empty">Loading…</div>
     </div>
   </section>
 
@@ -919,120 +865,259 @@
     return site.intervalMinutes;
   }
 
-  // ── PulseStrip: per-tile 60-min check activity ──────────────────────────
-  const PULSE_KEY = 'beacon_pulse_open';
-  const PULSE_WINDOW_MIN = 60;
-  function getPulsePrefs() {
-    try { return JSON.parse(localStorage.getItem(PULSE_KEY) || '{}'); } catch { return {}; }
+  // ── Sites section: view modes, cards, check timeline ─────────────────────────
+  const SITES_VIEW_KEY = 'beacon.sitesView';
+  const SITES_COLLAPSED_KEY = 'beacon.sitesCollapsed';
+  const _openCards = new Set(); // cards with settings expanded in compact view
+
+  function sitesView() {
+    const v = localStorage.getItem(SITES_VIEW_KEY);
+    return ['mini', 'compact', 'detailed'].includes(v) ? v : 'detailed';
   }
-  function isPulseOpen(siteId) {
-    return getPulsePrefs()[siteId] !== false;
+  function setSitesView(v) { localStorage.setItem(SITES_VIEW_KEY, v); renderSiteCards(); }
+  function sitesCollapsed() { return localStorage.getItem(SITES_COLLAPSED_KEY) === '1'; }
+  function toggleSitesCollapsed() {
+    localStorage.setItem(SITES_COLLAPSED_KEY, sitesCollapsed() ? '0' : '1');
+    renderSiteCards();
   }
-  function togglePulse(siteId) {
-    const prefs = getPulsePrefs();
-    const open = isPulseOpen(siteId);
-    if (open) prefs[siteId] = false; else delete prefs[siteId];
-    localStorage.setItem(PULSE_KEY, JSON.stringify(prefs));
-    const wrap = document.querySelector(`.pulse-wrap[data-siteid="${siteId}"]`);
-    if (wrap) wrap.classList.toggle('pulse-closed', !isPulseOpen(siteId));
+  function toggleCardOpen(siteId) {
+    if (_openCards.has(siteId)) _openCards.delete(siteId); else _openCards.add(siteId);
+    renderSiteCards();
   }
-  function renderPulseStrip(siteId, history, intervalMinutes) {
+
+  function fmtCadence(mins) {
+    if (!mins || !Number.isFinite(mins)) return '—';
+    if (mins < 60) return `${Math.round(mins)}m`;
+    const h = mins / 60;
+    return `${Number.isInteger(h) ? h : h.toFixed(1)}h`;
+  }
+  function fmtAgoShort(ms) {
+    const mins = (Date.now() - ms) / 60_000;
+    if (mins < 1) return '<1m';
+    if (mins < 90) return `${Math.round(mins)}m`;
+    if (mins < 36 * 60) return `${(mins / 60).toFixed(mins < 600 ? 1 : 0)}h`;
+    return `${Math.round(mins / 1440)}d`;
+  }
+
+  // Computed view model for one site: merges config + state + history-derived
+  // timeline marks. "checking" = the check is due right now (the worker sweeps
+  // every ~60s), shown as the pulsing now-dot for up to 90s before it counts
+  // as late instead.
+  function siteVM(site) {
+    const s = state[site.id] || {};
     const now = Date.now();
-    const start = now - PULSE_WINDOW_MIN * 60_000;
-    const recent = (history || []).filter(h => h && h.ts && new Date(h.ts).getTime() >= start);
-    const last = recent.length ? recent[recent.length - 1] : null;
-    const lastMs = last ? new Date(last.ts).getTime() : null;
-    const stallMs = Math.max(1, intervalMinutes || 1) * 2.5 * 60_000;
-    const isStalled = recent.length > 0 && lastMs != null && (now - lastMs) > stallMs;
-    const lastFour = recent.slice(-4);
-    const isFailing = !isStalled && lastFour.some(h => h.ok === false);
-    const isEmpty = recent.length === 0;
+    const products = Object.values(s.products || {});
+    const inStock = products.filter(p => p.available).length;
+    const revStock = products.filter(p => p.available && isReveriesProduct({ ...p, siteId: site.id })).length;
+    const enabled = site.enabled !== false;
+    const effInterval = getEffectiveInterval(site);
+    const lastMs = s.lastChecked ? new Date(s.lastChecked).getTime() : null;
+    const dueMs = (enabled && lastMs && effInterval) ? lastMs + effInterval * 60_000 : null;
+    const checking = dueMs != null && now >= dueMs && (now - dueMs) < 90_000;
+    const nextIn = dueMs != null ? (dueMs - now) / 60_000 : null;
+    const health = getSiteHealth(site, s);
+    const dot = !enabled || !health ? 'err'
+      : health.level === 'ok' ? 'ok'
+      : health.level === 'critical' ? 'err' : 'warn';
 
-    const open = isPulseOpen(siteId);
-    const cls = ['pulse-wrap'];
-    if (!open) cls.push('pulse-closed');
-    if (isStalled) cls.push('pulse-stalled');
-    else if (isFailing) cls.push('pulse-failing');
-
-    const cadence = (() => {
-      const m = Math.round(intervalMinutes || 0);
-      if (!m) return '';
-      if (m < 60) return `every ${m}m`;
-      const h = m / 60;
-      return `every ${Number.isInteger(h) ? h : h.toFixed(1)}h`;
-    })();
-    const baseLabel = isStalled ? '⚠ ACTIVITY' : 'ACTIVITY';
-    const labelText = cadence ? `${baseLabel} · ${cadence}` : baseLabel;
-    const nowLabel = isStalled ? '⚠ now' : 'now';
-
-    let body;
-    if (isEmpty) {
-      body = `<div class="pulse-body"><div class="pulse-empty">No history yet</div></div>`;
-    } else {
-      const marks = recent.map(h => {
-        const ms = new Date(h.ts).getTime();
-        const pct = Math.max(0, Math.min(100, ((ms - start) / (now - start)) * 100));
-        const okCls = h.ok === false ? 'fail' : 'ok';
-        return `<span class="pulse-mark ${okCls}" style="left:${pct.toFixed(2)}%" data-ts="${esc(h.ts)}" data-ok="${h.ok === false ? '0' : '1'}"></span>`;
-      }).join('');
-      let gap = '';
-      if (isStalled && lastMs != null) {
-        const lastPct = Math.max(0, Math.min(100, ((lastMs - start) / (now - start)) * 100));
-        gap = `<div class="pulse-gap" style="left:${lastPct.toFixed(2)}%"></div>`;
-      }
-      body = `<div class="pulse-body">
-        <div class="pulse-strip">
-          <div class="pulse-track"></div>
-          <div class="pulse-tick" style="left:25%"></div>
-          <div class="pulse-tick" style="left:50%"></div>
-          <div class="pulse-tick" style="left:75%"></div>
-          ${gap}
-          ${marks}
-          <div class="pulse-now"></div>
-        </div>
-        <div class="pulse-legend"><span>1h ago</span><span class="pulse-now-lbl">${nowLabel}</span></div>
-      </div>`;
+    const checks = [], fails = [];
+    for (const h of (s.checkHistory || [])) {
+      if (!h?.ts) continue;
+      const m = (now - new Date(h.ts).getTime()) / 60_000;
+      if (m < 0 || m > 60) continue;
+      checks.push(m);
+      if (h.ok === false) fails.push(m);
     }
+    // finds = stock-found alerts (new product / restock); last hour marks the
+    // timeline, the most recent ever feeds the "find Xh ago" meta.
+    const found = [];
+    let lastChangeMs = null;
+    for (const h of history) {
+      if (h.siteName !== site.name) continue;
+      if (h.type !== 'new_product' && h.type !== 'restock') continue;
+      const t = new Date(h.timestamp).getTime();
+      const m = (now - t) / 60_000;
+      if (m >= 0 && m <= 60) found.push(m);
+      if (!lastChangeMs || t > lastChangeMs) lastChangeMs = t;
+    }
+    return {
+      site, s, enabled, inStock, revStock, effInterval, checking, nextIn, dot,
+      checks, found, fails,
+      total: products.length,
+      quick: site.scheduleBeforeQuick != null,
+      cadence: fmtCadence(effInterval),
+      lastCheckedTxt: lastMs ? new Date(lastMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : 'never',
+      lastChangeTxt: lastChangeMs ? fmtAgoShort(lastChangeMs) + ' ago' : '—',
+    };
+  }
 
-    return `<div class="${cls.join(' ')}" data-siteid="${esc(siteId)}">
-      <button type="button" class="pulse-toggle" onclick="togglePulse('${esc(siteId)}')">${labelText} <span class="pulse-chev">▾</span></button>
-      ${body}
+  function renderCheckTimeline(vm) {
+    const pos = m => Math.max(0, Math.min(100, ((60 - m) / 60) * 100)).toFixed(2);
+    const ticks = vm.checks.map(m => `<div class="tick" style="left:${pos(m)}%" title="${Math.round(m)}m ago — checked"></div>`).join('');
+    const finds = vm.found.map(m => `<div class="ev-found" style="left:${pos(m)}%" title="${Math.round(m)}m ago — new bottle found"></div>`).join('');
+    const failMarks = vm.fails.map(m => `<div class="ev-fail" style="left:${pos(m)}%" title="${Math.round(m)}m ago — check failed"></div>`).join('');
+    return `<div class="tl${vm.checking ? ' live' : ''}">
+      <div class="track">
+        <div class="rail-line"></div>${ticks}${finds}${failMarks}
+        <div class="now-dot"></div>
+      </div>
+      <div class="tl-line">
+        <span class="tl-tally" title="Last hour: checks · finds · fails">
+          <span>${vm.checks.length}✓</span>
+          <span${vm.found.length ? ' class="f"' : ''}>${vm.found.length}◆</span>
+          <span${vm.fails.length ? ' class="x"' : ''}>${vm.fails.length}✗</span>
+        </span>
+        <span class="tl-cad" title="Cadence · last check · last find">every <b${vm.quick ? ' class="qk"' : ''}>${esc(vm.cadence)}</b>${vm.quick ? '⚡' : ''} · ${vm.checking ? 'checking…' : esc(vm.lastCheckedTxt)} · find ${esc(vm.lastChangeTxt)}</span>
+      </div>
     </div>`;
   }
-  // Delegated tooltip for pulse marks
-  (function initPulseTooltip() {
-    let tip;
-    function ensureTip() {
-      if (!tip) {
-        tip = document.createElement('div');
-        tip.className = 'pulse-tooltip';
-        document.body.appendChild(tip);
-      }
-      return tip;
+
+  function renderSiteBanners(vm) {
+    const { site, s } = vm;
+    const out = [];
+    if (s.pageReset) {
+      const wave = site.id === 'reveries_official';
+      out.push(`<div class="site-banner warn">${wave ? '🌊 Wave reset — Coming Soon page detected' : '⚠️ Site reset — Coming Soon / password wall'}${s.resetReason ? ` · ${esc(s.resetReason)}` : ''}</div>`);
     }
-    document.addEventListener('mouseover', e => {
-      const m = e.target.closest && e.target.closest('.pulse-mark');
-      if (!m) return;
-      const ts = m.getAttribute('data-ts');
-      const ok = m.getAttribute('data-ok') === '1';
-      if (!ts) return;
-      const d = new Date(ts);
-      const hh = String(d.getHours()).padStart(2, '0');
-      const mm = String(d.getMinutes()).padStart(2, '0');
-      const ss = String(d.getSeconds()).padStart(2, '0');
-      const t = ensureTip();
-      t.innerHTML = `${hh}:${mm}:${ss} <span class="${ok ? 'pt-ok' : 'pt-fail'}">${ok ? '✓' : '✗'}</span>`;
-      const r = m.getBoundingClientRect();
-      t.classList.add('show');
-      const tw = t.offsetWidth, th = t.offsetHeight;
-      t.style.left = Math.max(4, Math.min(window.innerWidth - tw - 4, r.left + r.width / 2 - tw / 2)) + 'px';
-      t.style.top = Math.max(4, r.top - th - 8) + 'px';
-    });
-    document.addEventListener('mouseout', e => {
-      const m = e.target.closest && e.target.closest('.pulse-mark');
-      if (m && tip) tip.classList.remove('show');
-    });
-  })();
+    const errCount = s.consecutiveErrors ?? 0;
+    if (vm.enabled && errCount > 0 && !s.pageReset) {
+      out.push(`<div class="site-banner err">⚠️ ${errCount} consecutive error${errCount === 1 ? '' : 's'}${s.lastError ? ` · ${esc(s.lastError)}` : ''}</div>`);
+    }
+    return out.join('');
+  }
+
+  function renderSiteSettings(vm) {
+    const { site } = vm;
+    const schedOpts = getScheduleOptions();
+    const current = site.schedule ?? '';
+    const inList = schedOpts.some(o => o.value === current);
+    const extra = (!inList && current) ? `<option value="${esc(current)}" selected>${esc(current)} min</option>` : '';
+    const options = extra + schedOpts.map(o => `<option value="${esc(o.value)}"${o.value === current ? ' selected' : ''}>${esc(o.label)}</option>`).join('');
+    const durMin = site.imminentDurationMinutes ?? 20;
+    const quickCtl = vm.quick
+      ? `<button class="btn ghost sm" style="color:var(--warn)" onclick="revertQuickCadence('${esc(site.id)}')" title="Quick cadence active — click to revert to schedule">⚡${esc(vm.cadence)} ✕</button>`
+      : `<span class="qk-wrap" title="Quick cadence: temporarily check every N minutes (Enter to apply)"><span class="cfg-sep">⚡QUICK</span><input class="in" style="width:38px;text-align:center" placeholder="m" inputmode="numeric" onkeydown="if(event.key==='Enter')applyQuickCadence('${esc(site.id)}', this)" /></span>`;
+    return `<div class="site-cfg">
+      <select class="in" style="flex:1 1 110px" title="Check schedule" onchange="setSchedule('${esc(site.id)}', this.value, this)">${options}</select>
+      <span class="cfg-sep">MON</span>
+      <button class="sw${vm.enabled ? ' on' : ''}" aria-pressed="${vm.enabled}" title="Monitoring on/off" onclick="toggleEnabled('${esc(site.id)}', ${!vm.enabled}, this)"></button>
+      <span class="cfg-sep" title="Imminent mode turns itself off after AUTO-OFF minutes">IMM</span>
+      <button class="sw${site.imminent ? ' on' : ''}" aria-pressed="${!!site.imminent}" title="Imminent mode" onclick="toggleImminent('${esc(site.id)}', ${!site.imminent}, this)"></button>
+      <span class="cfg-sep" title="Imminent mode turns itself off after this many minutes">AUTO-OFF</span>
+      <input class="in" style="width:42px;text-align:center" value="${durMin}" inputmode="numeric" title="auto-off minutes" onchange="setImminentDuration('${esc(site.id)}', this.value, this)" />
+      ${quickCtl}
+    </div>`;
+  }
+
+  function renderSiteCard(vm, view) {
+    const { site } = vm;
+    const open = _openCards.has(site.id);
+    const showSettings = view === 'detailed' || open;
+    const url = getSiteUrl(site);
+    const nameHtml = url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(site.name)}</a>` : esc(site.name);
+    const nextTxt = vm.checking ? 'now'
+      : vm.nextIn == null ? '—'
+      : vm.nextIn <= 0 ? 'due'
+      : vm.nextIn < 1 ? '<1m' : `${Math.round(vm.nextIn)}m`;
+    const badges = !showSettings
+      ? `<span class="sicon${vm.enabled ? ' on' : ''}" title="Monitoring">MON</span>${site.imminent ? '<span class="sicon bolt">IMM</span>' : ''}`
+      : '';
+    const expander = view === 'compact'
+      ? `<button class="btn ghost sm" style="margin-top:5px;width:100%;padding:2px 0" onclick="toggleCardOpen('${esc(site.id)}')">${open ? '▴' : '▾'}</button>`
+      : '';
+    return `<div class="site-card${vm.checking ? ' checking' : ''}${vm.enabled ? '' : ' off'}">
+      <div class="site-hd">
+        <span class="dot ${vm.dot}"></span>
+        <span class="name">${nameHtml}</span>
+        <span class="sc-stat${vm.inStock === 0 ? ' zero' : ''}" title="In stock / tracked"><span class="sc-lbl">stock</span><b>${vm.inStock}</b><span class="sc-dim">/${vm.total}</span></span>
+        <span class="sc-stat" title="Next check"><span class="sc-lbl">next</span><span${vm.checking ? ' style="color:var(--accent)"' : ''}>${nextTxt}</span></span>
+        ${badges}
+      </div>
+      ${renderSiteBanners(vm)}
+      ${renderCheckTimeline(vm)}
+      ${showSettings ? renderSiteSettings(vm) : ''}${expander}
+    </div>`;
+  }
+
+  function renderSitePill(vm) {
+    const { site } = vm;
+    return `<div class="site-pill${vm.checking ? ' checking' : ''}${vm.enabled ? '' : ' off'}" title="${esc(site.name)} — ${vm.inStock}/${vm.total} in stock · ${vm.revStock} Reveries · checks every ${esc(vm.cadence)}">
+      <span class="dot ${vm.dot}"></span>
+      <span class="pname">${esc(site.name)}</span>
+      <span class="stock-frac${vm.inStock === 0 ? ' zero' : ''}"><b>${vm.inStock}</b><span style="color:var(--faint)">/${vm.total}</span></span>
+      ${vm.revStock > 0 ? `<span class="pill-rev" title="Reveries in stock">R·${vm.revStock}</span>` : ''}
+      ${site.imminent ? '<span class="sicon bolt">IMM</span>' : ''}
+      <span class="pnext" title="Current check cadence">${vm.checking ? '…' : '↻ ' + esc(vm.cadence)}</span>
+    </div>`;
+  }
+
+  // Quick cadence: temporary flat-interval override. Implemented by swapping
+  // site.schedule for a fixed numeric value (the worker parses any numeric
+  // schedule as flat minutes) and remembering the old one in
+  // scheduleBeforeQuick so ✕ can revert it.
+  async function applyQuickCadence(siteId, el) {
+    const n = parseInt(el.value, 10);
+    if (!Number.isFinite(n) || n < 1 || n > 1440) { alert('Enter minutes between 1 and 1440.'); el.value = ''; return; }
+    el.disabled = true;
+    const site = config.sites.find(s => s.id === siteId);
+    await updateSiteFields(siteId, { scheduleBeforeQuick: site?.schedule ?? null, schedule: String(n) },
+      `chore: quick cadence ${n}m for ${siteId} [skip ci]`);
+  }
+  async function revertQuickCadence(siteId) {
+    const site = config.sites.find(s => s.id === siteId);
+    await updateSiteFields(siteId, { schedule: site?.scheduleBeforeQuick ?? site?.schedule ?? '20', scheduleBeforeQuick: null },
+      `chore: revert quick cadence for ${siteId} [skip ci]`);
+  }
+  // Keep "next" countdowns and the checking pulse fresh between data loads.
+  setInterval(() => { if (config.sites.length) renderSiteCards(); }, 30_000);
+
+  // ── Tile guide: annotated map of every element on a site tile ────────────────
+  function openTileGuide() {
+    if (document.getElementById('tile-guide')) return;
+    const G = (title, rows) => `<div class="lg-group"><div class="lg-title">${title}</div>${rows}</div>`;
+    const R = (sym, name, desc) => `<div class="lg-row"><span class="lg-sym">${sym}</span><span class="lg-name">${name}</span><span class="lg-desc">${desc}</span></div>`;
+    const el = document.createElement('div');
+    el.className = 'lg-overlay';
+    el.id = 'tile-guide';
+    el.innerHTML = `<div class="lg-panel">
+      <div class="lg-hd"><span>Site tile — element guide</span><button class="btn ghost sm" onclick="closeTileGuide()">✕ close</button></div>
+      ${G('Header row',
+        R('<span class="dot ok"></span>', 'Health dot', 'Green = site healthy · amber = degraded or being checked right now · red = down') +
+        R('<b style="font-size:11px">Name</b>', 'Site', 'The monitored store / page — click to open it') +
+        R('<span class="mono" style="font-size:10px">STOCK 1/3</span>', 'Stock', 'Bottles in stock / total bottles tracked on this site (green when any in stock)') +
+        R('<span class="mono" style="font-size:10px">NEXT 8m</span>', 'Next check', 'Minutes until the next scheduled check (‘now’ while one is running)') +
+        R('<span class="sicon on">MON</span>', 'Monitoring', 'Green = monitoring on · gray = paused') +
+        R('<span class="sicon bolt">IMM</span>', 'Imminent', 'Imminent-drop mode — checking at max speed; auto-disables after the AUTO-OFF time'))}
+      ${G('Timeline (last 60 minutes)',
+        R('<span style="display:inline-block;width:2px;height:10px;background:var(--muted)"></span>', 'Tick', 'One check ran at this moment') +
+        R('<span style="display:inline-block;width:8px;height:8px;background:var(--ok);transform:rotate(45deg)"></span>', 'Find', 'A new bottle came in stock on this check') +
+        R('<span style="display:inline-block;width:8px;height:8px;border-radius:50%;border:2px solid var(--err)"></span>', 'Fail', 'This check errored (site down, blocked, timeout)') +
+        R('<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>', 'Now', 'Right edge = now; pulses while a check is in flight') +
+        R('<span class="mono" style="font-size:9px">4✓ 1◆ 0✗</span>', 'Tally', 'Checks · finds · fails in the last hour (left side of the line under the track)'))}
+      ${G('Meta line (right side)',
+        R('<span class="mono" style="font-size:9px">every 20m</span>', 'Cadence', 'How often this site is being checked right now (amber + ⚡ = quick override active)') +
+        R('<span class="mono" style="font-size:9px">6:39 PM</span>', 'Last check', 'Clock time of the most recent check') +
+        R('<span class="mono" style="font-size:9px">find 2h</span>', 'Last find', 'How long since stock last changed here'))}
+      ${G('Settings (detailed view, or ▾ on compact)',
+        R('<span class="mono" style="font-size:9px">Schedule ▾</span>', 'Schedule', 'Named check plan, e.g. Working Hours Heavy = 5m 9–6, 20m 6–10, slower overnight') +
+        R('<span class="mono" style="font-size:9px">MON ⭘</span>', 'Monitoring', 'Master on/off for this site') +
+        R('<span class="mono" style="font-size:9px">IMM ⭘</span>', 'Imminent', 'Max-speed checking for a drop you expect any minute') +
+        R('<span class="mono" style="font-size:9px">AUTO-OFF 20m</span>', 'Auto-off', 'Imminent mode turns itself off after this many minutes') +
+        R('<span class="mono" style="font-size:9px">⚡ [min]</span>', 'Quick cadence', 'Type minutes and press Enter = temporary flat interval that overrides the schedule; ⚡Nm ✕ reverts'))}
+      ${G('Compact / mini',
+        R('<span class="sicon on">MON</span>', 'Badges', 'When settings are hidden, MON/IMM state shows as badges in the header instead') +
+        R('<span class="pill-rev">R·1</span>', 'Reveries', 'Number of Reveries bottles in stock at this site') +
+        R('<span class="mono" style="font-size:9px">↻ 20m</span>', 'Cadence', 'Far-right timer = current check cadence'))}
+    </div>`;
+    el.addEventListener('click', e => { if (e.target === el) closeTileGuide(); });
+    document.body.appendChild(el);
+    document.addEventListener('keydown', _tileGuideEsc);
+  }
+  function _tileGuideEsc(e) { if (e.key === 'Escape') closeTileGuide(); }
+  function closeTileGuide() {
+    document.getElementById('tile-guide')?.remove();
+    document.removeEventListener('keydown', _tileGuideEsc);
+  }
 
   const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main`;
   const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
@@ -1493,14 +1578,6 @@
     return { level, ago };
   }
 
-  function siteChipHtml(site, siteState) {
-    const h = getSiteHealth(site, siteState);
-    if (!h) return '';
-    const icons = { ok: '🟢', warn: '🟡', critical: '🔴', unknown: '⚪' };
-    const label = h.level === 'critical' ? 'down' : h.level === 'unknown' ? 'never' : esc(h.ago);
-    return `<span class="worker-chip ${h.level}" style="font-size:.7rem;padding:.1rem .4rem">${icons[h.level] ?? '⚪'} ${label}</span>`;
-  }
-
   function renderWorkerHealth() {
     const chip = document.getElementById('worker-status-chip');
     if (!chip) return;
@@ -1545,114 +1622,29 @@
 
   function renderSiteCards() {
     const container = document.getElementById('site-cards');
-    if (!config.sites.length) { container.innerHTML = '<div class="empty">No sites configured</div>'; return; }
+    const view = sitesView();
+    const collapsed = sitesCollapsed();
+    const seg = document.getElementById('sites-seg');
+    seg.style.display = collapsed ? 'none' : '';
+    seg.querySelectorAll('button').forEach(b => b.classList.toggle('act', b.dataset.view === view));
+    document.getElementById('sites-collapse-btn').textContent = collapsed ? '▾ expand' : '▴ collapse';
 
-    container.innerHTML = config.sites.map(site => {
-      const s = state[site.id] || {};
-      const products = Object.values(s.products || {});
-      const inStock = products.filter(p => p.available).length;
-      const total = products.length;
-      const checked = s.lastChecked ? new Date(s.lastChecked).toLocaleString() : 'Never';
-      const imminentChecked = site.imminent;
-      const isEnabled = site.enabled !== false;
+    if (!config.sites.length) { container.className = ''; container.innerHTML = '<div class="empty">No sites configured</div>'; return; }
+    const vms = config.sites.map(siteVM);
 
-      const minsAgo = s.lastChecked ? (Date.now() - new Date(s.lastChecked).getTime()) / 60_000 : null;
-      const effInterval = getEffectiveInterval(site);
-      const checkedClass = (isEnabled && minsAgo != null && effInterval > 0)
-        ? (minsAgo > effInterval * 4 ? 'meta-overdue' : minsAgo > effInterval * 2 ? 'meta-stale' : '')
-        : '';
+    const enabledVms = vms.filter(v => v.enabled);
+    const okCount = enabledVms.filter(v => v.dot === 'ok').length;
+    const healthyEl = document.getElementById('sites-healthy');
+    healthyEl.textContent = `${okCount}/${enabledVms.length} healthy`;
+    healthyEl.style.color = okCount === enabledVms.length ? 'var(--ok)' : 'var(--warn)';
 
-      const nextRefreshText = (() => {
-        if (!isEnabled || !s.lastChecked || !effInterval) return null;
-        const nextMs = new Date(s.lastChecked).getTime() + effInterval * 60_000;
-        const diffMins = (nextMs - Date.now()) / 60_000;
-        if (diffMins <= 0) return 'overdue';
-        if (diffMins < 1) return 'in < 1 min';
-        return `in ${Math.round(diffMins)} min`;
-      })();
-
-      const isReset = !!s.pageReset;
-      const isWaveReset = isReset && site.id === 'reveries_official';
-      const resetBanner = isReset
-        ? isWaveReset
-          ? `<div class="site-reset-banner wave-reset">🌊 Wave Reset — Coming Soon page detected<br><span style="font-weight:400;opacity:.85">New bottles expected in 2–14 days · ${esc(s.resetReason)}</span></div>`
-          : `<div class="site-reset-banner">⚠️ Site reset — Coming Soon / password wall detected<br><span style="font-weight:400;opacity:.8">${esc(s.resetReason)}</span></div>`
-        : '';
-
-      const errCount = s.consecutiveErrors ?? 0;
-      const errorBanner = (isEnabled && errCount > 0 && !isReset)
-        ? `<div class="site-error-banner">⚠️ Check failing — ${errCount} consecutive error${errCount === 1 ? '' : 's'}<span class="err-detail">${esc(s.lastError ?? '')}</span></div>`
-        : '';
-
-      const refreshingBar = isRefreshing
-        ? `<div class="site-refreshing-bar">↻ Refreshing…</div>`
-        : '';
-      const siteUrl = getSiteUrl(site);
-      const siteTitleHtml = siteUrl
-        ? `<a href="${esc(siteUrl)}" target="_blank" rel="noopener noreferrer">${esc(site.name)}</a>`
-        : esc(site.name);
-      return `<div class="site-card${isEnabled ? '' : ' disabled'}${isWaveReset ? ' wave-reset' : isReset ? ' site-in-reset' : ''}">
-        ${refreshingBar}${resetBanner}${errorBanner}
-        <div class="site-card-header">
-          <h3>${siteTitleHtml}</h3>
-          ${siteChipHtml(site, s)}
-        </div>
-        <div class="meta">
-          <span${checkedClass ? ` class="${checkedClass}"` : ''}>Last checked: ${checked}</span>
-          ${nextRefreshText ? `<span${checkedClass === 'meta-overdue' ? ' class="meta-overdue"' : checkedClass === 'meta-stale' ? ' class="meta-stale"' : ''}>Next refresh: ${nextRefreshText}</span>` : ''}
-          <span>${total} products &mdash; ${inStock} in stock</span>
-        </div>
-        ${renderPulseStrip(site.id, s.checkHistory, effInterval)}
-        ${(() => {
-          const schedDef = getNamedSchedules()[site.schedule];
-          const breakdown = schedDef?.rules?.length ? formatScheduleRules(schedDef.rules) : null;
-          return `<div class="schedule-row">
-          <label>Schedule${schedDef ? ` <span class="schedule-hint">(${effInterval} min now)</span>` : ''}</label>
-          <select class="schedule-select" onchange="setSchedule('${esc(site.id)}', this.value, this)">
-            ${(schedOpts => {
-              const current = site.schedule ?? '';
-              const inList = schedOpts.some(o => o.value === current);
-              const extra = (!inList && current) ? `<option value="${esc(current)}" selected>${esc(current)} min</option>` : '';
-              return extra + schedOpts.map(o => `<option value="${o.value}"${o.value === current ? ' selected' : ''}>${o.label}</option>`).join('');
-            })(getScheduleOptions())}
-          </select>
-          ${breakdown ? `<div class="schedule-hint" style="margin-top:.2rem;font-size:.7rem;line-height:1.5">${esc(breakdown)}</div>` : ''}
-        </div>`;
-        })()}
-        <div class="toggle-row">
-          <label class="toggle toggle-enabled">
-            <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleEnabled('${site.id}', this.checked, this)" />
-            <span class="slider"></span>
-          </label>
-          <span>Monitoring <span class="badge ${isEnabled ? 'badge-green' : 'badge-red'}">${isEnabled ? 'ON' : 'OFF'}</span></span>
-        </div>
-        ${(() => {
-          const durMin = site.imminentDurationMinutes ?? 20;
-          let badge = 'OFF';
-          if (imminentChecked) {
-            badge = '🔥 ON';
-            if (site.imminentSince) {
-              const leftMs = new Date(site.imminentSince).getTime() + durMin * 60_000 - Date.now();
-              const leftMin = Math.max(0, Math.ceil(leftMs / 60_000));
-              badge = `🔥 ON (~${leftMin}m left)`;
-            }
-          }
-          return `<div class="toggle-row">
-          <label class="toggle">
-            <input type="checkbox" ${imminentChecked ? 'checked' : ''} onchange="toggleImminent('${site.id}', this.checked, this)" />
-            <span class="slider"></span>
-          </label>
-          <span>Imminent mode <span class="badge ${imminentChecked ? 'badge-yellow' : ''}">${badge}</span></span>
-        </div>
-        <div class="schedule-row" style="margin-top:.35rem">
-          <label>Auto-off after</label>
-          <input type="number" min="1" max="1440" value="${durMin}" class="schedule-select" style="max-width:7rem"
-            onchange="setImminentDuration('${esc(site.id)}', this.value, this)" />
-        </div>`;
-        })()}
-        <div class="token-hint">Requires GitHub token to change</div>
-      </div>`;
-    }).join('');
+    if (collapsed || view === 'mini') {
+      container.className = 'sites-mini';
+      container.innerHTML = vms.map(renderSitePill).join('');
+    } else {
+      container.className = 'sites-grid ' + view;
+      container.innerHTML = vms.map(vm => renderSiteCard(vm, view)).join('');
+    }
   }
 
   function allProducts() {
