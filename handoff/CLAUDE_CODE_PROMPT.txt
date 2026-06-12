@@ -1,0 +1,57 @@
+PROMPT FOR CLAUDE CODE
+======================
+
+Paste everything below into Claude Code from the root of your Beacon repo, with this
+`handoff/` folder copied into the project. Adjust the first paragraph to name your real
+stack (framework, where components/styles live).
+
+----------------------------------------------------------------------------------------
+
+I'm redesigning the UI of Beacon, my personal bourbon stock-monitor app. I have a
+high-fidelity design reference in `handoff/design-reference/`, a full spec in
+`handoff/README.md`, and visual references in `handoff/screenshots/` (01–10 = one per
+color theme; 11–19 = each view/component: sites mini/compact/detailed, Reveries hero,
+products table, both rails, tile-guide modal). Read `handoff/README.md` first, look at
+the screenshots, then read the files in `handoff/design-reference/` — the
+`.jsx`/`.css`/`.html` there are a browser mockup (React + Babel, no build), NOT code to
+copy verbatim. Recreate the design in THIS codebase using its existing framework,
+component structure, and styling approach. NOTE: screenshots were captured at ~915px
+width (single-column responsive layout); the desktop layout is the 3-column grid
+specified in the README.
+
+My stack: <DESCRIBE — e.g. "Flask backend serving a vanilla-JS frontend in /static",
+or "Next.js app in /app, components in /components, CSS modules">. The live data comes
+from <DESCRIBE — e.g. "the /api/sites and /api/products endpoints; monitor state is in
+monitor.py">. The mock `data.js` shows the entity shapes — map them to my real data.
+
+Please work in this order and check in after each step:
+
+1. THEME SYSTEM FIRST. Implement the CSS custom-property system exactly as in
+   `theme.css` + `brand.css`: 10 themes selected via `data-theme` on the root element,
+   persisted to localStorage, switchable from a header dropdown. Keep base styles
+   referencing only the variables and keep all per-brand flourishes in a separate
+   brand stylesheet. Don't simplify the palettes — use the exact hex values.
+
+2. LAYOUT SHELL. 3-column grid (264 / 1fr / 296) on desktop, collapsing to a single
+   column with a sticky mobile "glance strip" below 1100px. Global compact-density
+   toggle via `data-density`.
+
+3. SITES + CHECK TIMELINE. Site cards with mini/compact/detailed view modes +
+   collapse-all (persist the choice). Build the per-site check timeline (last 60 min:
+   tick per check, green diamond = bottle found, red ring = failed check, pulsing "now"
+   dot while a check is in flight). Wire "checking" state to my real monitor.
+
+4. PRODUCTS TABLE. Sortable columns, NEW badge (<24h), price-change arrows.
+
+5. REVERIES HERO. In-stock first + enlarged + glow; sold-out capped at one row with a
+   "show all" expander. Use real product images.
+
+6. RAILS. Left = drop reminders (auto-sort, 48h amber countdown, jump-to-site links).
+   Right = Pending (Ordered→Shipped→Delivered tap stepper) / Collection (leave the
+   Collection tab as the existing summary placeholder — do NOT build the full
+   collection manager yet, it's deferred).
+
+Do NOT port `tweaks-panel.jsx` or any `useTweaks` plumbing — that's mockup-only tooling.
+
+Match colors, spacing, and typography precisely to the reference. Ask me before adding
+any content, sections, or features not in the spec.
