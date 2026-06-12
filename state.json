@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-12T14:35:21.475Z",
+    "lastChecked": "2026-06-12T14:41:09.626Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-11T16:02:07.194Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-11T16:07:44.954Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-12T14:35:21.475Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T14:41:09.627Z",
         "ok": true
       }
     ]
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 14,
+    "consecutiveErrors": 15,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T16:06:38.602Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T16:21:51.758Z",
         "ok": true
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T14:40:02.826Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T14:41:14.045Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T14:40:02.826Z"
+    "lastErrorAt": "2026-06-12T14:41:14.045Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T14:30:46.440Z",
