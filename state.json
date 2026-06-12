@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-12T18:14:42.272Z",
+    "lastChecked": "2026-06-12T18:20:31.967Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-11T19:30:13.054Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-11T19:35:40.234Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-12T18:14:42.272Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-12T18:20:31.967Z",
         "ok": true
       }
     ]
@@ -2029,7 +2029,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-12T18:14:49.798Z",
+    "lastChecked": "2026-06-12T18:20:39.677Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-11T19:31:41.259Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-11T19:37:00.772Z",
         "ok": true
@@ -2596,6 +2592,10 @@
       {
         "ts": "2026-06-12T18:14:49.798Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-12T18:20:39.677Z",
+        "ok": true
       }
     ]
   },
@@ -2639,13 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 200,
+    "consecutiveErrors": 201,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T16:22:44.577Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-12T16:23:49.589Z",
         "ok": false
@@ -3041,10 +3037,14 @@
       {
         "ts": "2026-06-12T18:19:24.366Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-12T18:20:45.661Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-12T18:19:24.366Z"
+    "lastErrorAt": "2026-06-12T18:20:45.661Z"
   },
   "reveries_site_status": {
     "lastChecked": "2026-06-12T18:11:13.197Z",
