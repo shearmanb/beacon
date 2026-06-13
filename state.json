@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-13T21:51:37.750Z",
+    "lastChecked": "2026-06-13T21:58:13.957Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1621,15 +1621,11 @@
       "etag": "\"page_cache:66506555478:ProductListController:5037049a72672fe0e95493a912d6c59c\"",
       "lastModified": null
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-13T09:37:18.555Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-13T11:34:23.682Z",
         "ok": true
@@ -2025,6 +2021,10 @@
       {
         "ts": "2026-06-13T21:56:47.664Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-13T21:58:13.957Z",
+        "ok": true
       }
     ],
     "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
@@ -2194,15 +2194,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:9d08060ba8e1c2b8ac6291d010af9494\"",
       "lastModified": null
     },
-    "consecutiveErrors": 4,
-    "errorAlertSent": false,
+    "consecutiveErrors": 5,
+    "errorAlertSent": true,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-13T10:08:49.904Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-13T12:25:01.335Z",
         "ok": true
@@ -2598,10 +2594,14 @@
       {
         "ts": "2026-06-13T21:56:58.250Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-13T21:58:24.793Z",
+        "ok": false
       }
     ],
     "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-13T21:56:58.250Z"
+    "lastErrorAt": "2026-06-13T21:58:24.793Z"
   },
   "reveries_official": {
     "lastChecked": "2026-06-12T14:07:54.772Z",
