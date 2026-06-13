@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-13T13:41:06.477Z",
+    "lastChecked": "2026-06-13T13:46:29.761Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-12T14:47:07.538Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-12T14:53:06.594Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-13T13:41:06.477Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T13:46:29.761Z",
         "ok": true
       }
     ]
@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-13T13:41:10.734Z",
+    "lastChecked": "2026-06-13T13:46:32.857Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T14:50:49.256Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T14:55:40.331Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-13T13:41:10.734Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T13:46:32.857Z",
         "ok": true
       }
     ]
@@ -3047,7 +3047,7 @@
     "lastErrorAt": "2026-06-12T18:25:17.291Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-13T13:31:05.164Z",
+    "lastChecked": "2026-06-13T13:46:37.304Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3061,10 +3061,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T11:22:04.448Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T11:38:08.190Z",
         "ok": true
@@ -3459,6 +3455,10 @@
       },
       {
         "ts": "2026-06-13T13:31:05.164Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T13:46:37.304Z",
         "ok": true
       }
     ]
