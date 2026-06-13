@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-13T19:09:56.365Z",
+    "lastChecked": "2026-06-13T19:15:20.038Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-12T20:32:47.236Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-12T20:39:04.174Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-13T19:09:56.365Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-13T19:15:20.038Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-13T19:08:45.112Z",
+    "lastChecked": "2026-06-13T19:14:08.966Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T20:20:50.162Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T20:26:10.652Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-13T19:08:45.112Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-13T19:14:08.966Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-13T19:08:50.705Z",
+    "lastChecked": "2026-06-13T19:14:13.850Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T20:32:51.023Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T20:38:03.516Z",
         "ok": true
@@ -2025,13 +2021,17 @@
       {
         "ts": "2026-06-13T19:08:50.705Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-13T19:14:13.850Z",
+        "ok": true
       }
     ],
     "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
     "lastErrorAt": "2026-06-13T17:06:06.157Z"
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-13T19:13:05.388Z",
+    "lastChecked": "2026-06-13T19:18:32.597Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2191,7 +2191,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:6b8c983329f9ec8cdafff40615eea27e\"",
+      "etag": "\"page_cache:57076547742:ProductListController:4a652002632d7853b2cadc7f2ea9751f\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2199,10 +2199,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T20:25:01.255Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T20:31:40.241Z",
         "ok": true
@@ -2597,6 +2593,10 @@
       },
       {
         "ts": "2026-06-13T19:13:05.388Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T19:18:32.597Z",
         "ok": true
       }
     ]
@@ -3049,13 +3049,13 @@
     "lastErrorAt": "2026-06-12T18:25:17.291Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-13T18:57:59.546Z",
+    "lastChecked": "2026-06-13T19:15:23.953Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
     "resetReason": null,
     "httpValidators": {
-      "etag": "W/\"977ecd214d80cc175932d7d13ba2e057\"",
+      "etag": "W/\"c82cc0c568bfa06b69ea56e194678a95\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -3063,10 +3063,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T16:34:20.449Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T16:51:51.095Z",
         "ok": true
@@ -3461,6 +3457,10 @@
       },
       {
         "ts": "2026-06-13T18:57:59.546Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T19:15:23.953Z",
         "ok": true
       }
     ]
