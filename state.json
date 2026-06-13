@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-13T14:45:48.938Z",
+    "lastChecked": "2026-06-13T14:51:29.928Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T15:44:57.124Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T15:51:50.684Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-13T14:45:48.938Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T14:51:29.928Z",
         "ok": true
       }
     ]
