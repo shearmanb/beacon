@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-13T10:30:56.218Z",
+    "lastChecked": "2026-06-13T12:40:07.700Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -618,28 +618,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/950cd61e-e15d-ef92-aefd-822609967742.jpg?v=1761561000",
         "url": "https://sharedpour.com/products/agave-spirits-neta-barril-by-nicolas-garcia-vasquez-and-miguel-garcia-ortiz"
       },
-      "westland-american-single-malt-cask-1757": {
-        "handle": "westland-american-single-malt-cask-1757",
-        "title": "Westland American Single Malt Cask #1757 r/Bourbon Single Barrel Selection by T8KE",
-        "vendor": "Westland",
-        "productType": "Whiskey",
-        "tags": [
-          "50-100",
-          "Barrel Pick",
-          "barrel picks",
-          "Bourbon Whiskey",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke",
-          "westland",
-          "whiskey"
-        ],
-        "minPrice": 79.99,
-        "available": true,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e8d4cd80-4ab8-077f-345b-74dd98f1f862.jpg?v=1773577422",
-        "url": "https://sharedpour.com/products/westland-american-single-malt-cask-1757"
-      },
       "peerless-single-barrel-bourbon-t8ke-2026": {
         "handle": "peerless-single-barrel-bourbon-t8ke-2026",
         "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #190809107",
@@ -662,6 +640,28 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
         "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-2026"
+      },
+      "westland-american-single-malt-cask-1757": {
+        "handle": "westland-american-single-malt-cask-1757",
+        "title": "Westland American Single Malt Cask #1757 r/Bourbon Single Barrel Selection by T8KE",
+        "vendor": "Westland",
+        "productType": "Whiskey",
+        "tags": [
+          "50-100",
+          "Barrel Pick",
+          "barrel picks",
+          "Bourbon Whiskey",
+          "over-10",
+          "Single Barrel",
+          "single barrel selections",
+          "t8ke",
+          "westland",
+          "whiskey"
+        ],
+        "minPrice": 79.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e8d4cd80-4ab8-077f-345b-74dd98f1f862.jpg?v=1773577422",
+        "url": "https://sharedpour.com/products/westland-american-single-malt-cask-1757"
       },
       "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select": {
         "handle": "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select",
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:7db8c4e0609adc1c86a8b7f81700e45c\"",
+      "etag": "\"page_cache:45343637659:ProductListController:11ffc80c58602570ce4182a8c1bb9359\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T13:55:28.367Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T14:00:55.168Z",
         "ok": true
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-13T10:30:56.218Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T12:40:07.700Z",
         "ok": true
       }
     ]
