@@ -429,8 +429,12 @@
           <input class="in" type="text" id="bottle-eta-note-in" placeholder="ETA note" maxlength="80"
                  onkeydown="if(event.key==='Enter')addBottle()" />
         </div>
-        <input class="in" type="url" id="bottle-link-in" placeholder="Order link (URL)" maxlength="500"
-               onkeydown="if(event.key==='Enter')addBottle()" />
+        <div class="row2">
+          <input class="in" type="text" id="bottle-ordernum-in" placeholder="Order #" maxlength="120"
+                 onkeydown="if(event.key==='Enter')addBottle()" />
+          <input class="in" type="url" id="bottle-link-in" placeholder="Order link (URL)" maxlength="500"
+                 onkeydown="if(event.key==='Enter')addBottle()" />
+        </div>
         <button class="btn primary sm" id="bottle-add-btn" onclick="addBottle()">+ Add to pending</button>
       </div>
       <div id="bottle-list">
@@ -1503,6 +1507,7 @@
           <button style="background:none;border:none;color:var(--faint);cursor:pointer;font-size:13px;line-height:1;padding:0 2px;flex-shrink:0" ${hasToken ? '' : 'disabled'} onclick="deleteBottle('${esc(it.id)}')" title="Delete">×</button>
         </div>
         ${costRetailer ? `<div class="pend-meta">${costRetailer}</div>` : ''}
+        ${it.orderNumber ? `<div class="pend-meta">order #${esc(it.orderNumber)}</div>` : ''}
         ${it.orderLink ? `<div class="pend-meta"><a href="${esc(it.orderLink)}" target="_blank" rel="noopener noreferrer">View order ↗</a></div>` : ''}
         ${addedDate ? `<div class="pend-meta"><span>ordered ${addedDate}</span></div>` : ''}
         <div class="steps">${steps}</div>
@@ -1580,6 +1585,7 @@
         bottle,
         cost,
         retailer: get('bottle-retailer-in').value.trim(),
+        orderNumber: get('bottle-ordernum-in').value.trim(),
         orderLink: normaliseLink(get('bottle-link-in').value.trim()),
         etaDate: get('bottle-eta-date-in').value || '',
         etaNote: get('bottle-eta-note-in').value.trim(),
@@ -1588,7 +1594,7 @@
       };
       const ok = await commitBottles(d => ({ ...d, items: [...d.items, item] }), `chore: add pending bottle [skip ci]`);
       if (ok) {
-        ['bottle-name-in', 'bottle-cost-in', 'bottle-retailer-in', 'bottle-link-in', 'bottle-eta-date-in', 'bottle-eta-note-in']
+        ['bottle-name-in', 'bottle-cost-in', 'bottle-retailer-in', 'bottle-ordernum-in', 'bottle-link-in', 'bottle-eta-date-in', 'bottle-eta-note-in']
           .forEach(id => { get(id).value = ''; });
       }
     } finally {
