@@ -210,7 +210,7 @@
     <div class="hdr-stats" id="hdr-stats"></div>
     <div class="hdr-actions">
       <button class="btn primary btn-primary sm" id="run-now-btn" onclick="triggerRun()" style="display:none">▶ Run now</button>
-      <button class="btn sm" onclick="openScheduleModal()">Schedules</button>
+      <button class="btn sm" onclick="openScheduleModal()">⚙ Control Panel</button>
       <button class="btn ghost sm" onclick="promptToken()">Token</button>
       <button class="btn ghost sm" onclick="promptWebhook()">Webhook</button>
       <select class="btn ghost" id="theme-select" onchange="setTheme(this.value)" title="Color scheme"></select>
@@ -300,12 +300,24 @@
   <div class="modal-overlay" id="schedule-modal" onclick="handleModalOverlayClick(event)">
     <div class="modal" style="width:480px">
       <div class="modal-header">
-        <h3 id="sched-modal-title">⚙ Manage Schedules</h3>
+        <h3 id="sched-modal-title">⚙ Control Panel</h3>
         <button class="modal-close" onclick="closeScheduleModal()">✕</button>
       </div>
 
       <!-- ── List view ── -->
       <div class="modal-body" id="sched-view-list">
+        <div>
+          <div class="sched-section-label">Retailers <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.7rem">(used by Pending Bottles)</span></div>
+          <div class="sched-list" id="retailer-list"></div>
+          <div class="sched-add-form" style="margin-top:.45rem">
+            <div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">Add retailer</div>
+            <div class="form-row">
+              <input type="text" id="retailer-new-name" placeholder="Retailer name (e.g. Total Wine)" maxlength="80" onkeydown="if(event.key==='Enter')addRetailer()" />
+            </div>
+            <div class="sched-add-err" id="retailer-add-err"></div>
+            <button class="btn btn-primary" style="align-self:flex-start" onclick="addRetailer()">Add</button>
+          </div>
+        </div>
         <div>
           <div class="sched-section-label">Named schedules <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.7rem">(time-based, editable)</span></div>
           <div class="sched-list" id="sched-named-list"></div>
@@ -410,13 +422,15 @@
                onkeydown="if(event.key==='Enter')addBottle()" />
         <div class="row2">
           <input class="in" type="text" id="bottle-cost-in" placeholder="Cost $" inputmode="decimal" />
-          <input class="in" type="text" id="bottle-retailer-in" placeholder="Retailer" maxlength="80" />
+          <select class="in" id="bottle-retailer-in" title="Retailer"></select>
         </div>
         <div class="row2">
           <input class="in" type="date" id="bottle-eta-date-in" title="ETA date" />
           <input class="in" type="text" id="bottle-eta-note-in" placeholder="ETA note" maxlength="80"
                  onkeydown="if(event.key==='Enter')addBottle()" />
         </div>
+        <input class="in" type="url" id="bottle-link-in" placeholder="Order link (URL)" maxlength="500"
+               onkeydown="if(event.key==='Enter')addBottle()" />
         <button class="btn primary sm" id="bottle-add-btn" onclick="addBottle()">+ Add to pending</button>
       </div>
       <div id="bottle-list">
@@ -610,8 +624,9 @@
   function showSchedListView() {
     document.getElementById('sched-view-list').style.display = '';
     document.getElementById('sched-view-edit').style.display = 'none';
-    document.getElementById('sched-modal-title').textContent = '⚙ Manage Schedules';
+    document.getElementById('sched-modal-title').textContent = '⚙ Control Panel';
     renderScheduleModal();
+    renderRetailerList();
   }
 
   function renderScheduleModal() {
@@ -1114,7 +1129,7 @@
   let ignored = {};
   let schedules = {};
   let reminders = { items: [] };
-  let pendingBottles = { items: [] };
+  let pendingBottles = { items: [], retailers: [] };
   let lastLoadedAt = null;
   let isRefreshing = false;
 
@@ -1207,8 +1222,8 @@
       catch { reminders = { items: [] }; }
     }
     if (bottlesText) {
-      try { const b = JSON.parse(bottlesText); pendingBottles = { items: Array.isArray(b.items) ? b.items : [] }; }
-      catch { pendingBottles = { items: [] }; }
+      try { const b = JSON.parse(bottlesText); pendingBottles = { items: Array.isArray(b.items) ? b.items : [], retailers: Array.isArray(b.retailers) ? b.retailers : [] }; }
+      catch { pendingBottles = { items: [], retailers: [] }; }
     }
 
     lastLoadedAt = Date.now();
@@ -1391,6 +1406,29 @@
 
   // ── Pending Bottles rail ─────────────────────────────────────────────────────
   const BOTTLE_STEPS = ['ordered', 'shipped', 'delivered'];
+  // Built-in retailers always available in the dropdown; custom ones live in
+  // pending_bottles.json (`retailers`) so they sync across devices.
+  const DEFAULT_RETAILERS = ['Shared Pour', 'Fountain Inn'];
+  function effectiveRetailers() {
+    const custom = Array.isArray(pendingBottles.retailers) ? pendingBottles.retailers : [];
+    const seen = new Set();
+    const out = [];
+    for (const r of [...DEFAULT_RETAILERS, ...custom]) {
+      const name = String(r || '').trim();
+      const key = name.toLowerCase();
+      if (name && !seen.has(key)) { seen.add(key); out.push(name); }
+    }
+    return out;
+  }
+  function populateRetailerSelect() {
+    const sel = document.getElementById('bottle-retailer-in');
+    if (!sel) return;
+    const current = sel.value;
+    const opts = ['<option value="">Retailer…</option>']
+      .concat(effectiveRetailers().map(r => `<option value="${esc(r)}">${esc(r)}</option>`));
+    sel.innerHTML = opts.join('');
+    if (current && effectiveRetailers().some(r => r === current)) sel.value = current;
+  }
   // Normalise legacy stage names from old data
   function normaliseBottleStatus(s) {
     if (s === 'to_buy') return 'ordered';
@@ -1426,8 +1464,9 @@
     const hasToken = !!_sessionToken;
     const addBox = document.getElementById('bottle-add');
     const hint = document.getElementById('bottle-tokenhint');
-    if (addBox) addBox.querySelectorAll('input, button').forEach(el => { el.disabled = !hasToken; });
+    if (addBox) addBox.querySelectorAll('input, select, button').forEach(el => { el.disabled = !hasToken; });
     if (hint) hint.style.display = hasToken ? 'none' : 'block';
+    populateRetailerSelect();
 
     const items = sortedBottles();
 
@@ -1464,6 +1503,7 @@
           <button style="background:none;border:none;color:var(--faint);cursor:pointer;font-size:13px;line-height:1;padding:0 2px;flex-shrink:0" ${hasToken ? '' : 'disabled'} onclick="deleteBottle('${esc(it.id)}')" title="Delete">×</button>
         </div>
         ${costRetailer ? `<div class="pend-meta">${costRetailer}</div>` : ''}
+        ${it.orderLink ? `<div class="pend-meta"><a href="${esc(it.orderLink)}" target="_blank" rel="noopener noreferrer">View order ↗</a></div>` : ''}
         ${addedDate ? `<div class="pend-meta"><span>ordered ${addedDate}</span></div>` : ''}
         <div class="steps">${steps}</div>
         ${eta && status !== 'delivered' ? `<div class="pend-eta${status === 'shipped' ? ' shipped' : ''}">▸ ${eta}</div>` : ''}
@@ -1471,7 +1511,8 @@
     }).join('');
   }
 
-  // Fetch pending_bottles.json, apply mutator(items)->items, PUT back. Re-render on success.
+  // Fetch pending_bottles.json, apply mutate(data)->data (data = {items, retailers}),
+  // PUT back. Re-render on success.
   async function commitBottles(mutate, commitMessage) {
     const token = _sessionToken;
     if (!token) { alert('Add a GitHub token to edit bottles.'); return false; }
@@ -1480,18 +1521,19 @@
         const res = await fetch(`${API_BASE}/contents/pending_bottles.json`, {
           headers: { Authorization: `token ${token}` },
         });
-        let sha = null, current = { items: [] };
+        let sha = null, current = { items: [], retailers: [] };
         if (res.ok) {
           const data = await res.json();
           sha = data.sha;
-          try { const p = JSON.parse(safeAtob(data.content.replace(/\n/g, ''))); current = { items: Array.isArray(p.items) ? p.items : [] }; }
-          catch { current = { items: [] }; }
+          try { const p = JSON.parse(safeAtob(data.content.replace(/\n/g, ''))); current = { items: Array.isArray(p.items) ? p.items : [], retailers: Array.isArray(p.retailers) ? p.retailers : [] }; }
+          catch { current = { items: [], retailers: [] }; }
         } else if (res.status !== 404) {
           alert(`Could not fetch pending_bottles.json (${res.status})`);
           return false;
         }
 
-        const next = { items: mutate([...current.items]) };
+        const mutated = mutate({ items: [...current.items], retailers: [...current.retailers] });
+        const next = { items: mutated.items || [], retailers: mutated.retailers || [] };
         const putRes = await fetch(`${API_BASE}/contents/pending_bottles.json`, {
           method: 'PUT',
           headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
@@ -1516,6 +1558,13 @@
     return false;
   }
 
+  // Prepend https:// when the user omits a scheme so target=_blank links don't
+  // resolve against the dashboard origin.
+  function normaliseLink(url) {
+    if (!url) return '';
+    return /^https?:\/\//i.test(url) ? url : `https://${url}`;
+  }
+
   async function addBottle() {
     const get = id => document.getElementById(id);
     const bottle = get('bottle-name-in').value.trim();
@@ -1531,14 +1580,15 @@
         bottle,
         cost,
         retailer: get('bottle-retailer-in').value.trim(),
+        orderLink: normaliseLink(get('bottle-link-in').value.trim()),
         etaDate: get('bottle-eta-date-in').value || '',
         etaNote: get('bottle-eta-note-in').value.trim(),
         status: 'ordered',
         createdAt: new Date().toISOString(),
       };
-      const ok = await commitBottles(items => [...items, item], `chore: add pending bottle [skip ci]`);
+      const ok = await commitBottles(d => ({ ...d, items: [...d.items, item] }), `chore: add pending bottle [skip ci]`);
       if (ok) {
-        ['bottle-name-in', 'bottle-cost-in', 'bottle-retailer-in', 'bottle-eta-date-in', 'bottle-eta-note-in']
+        ['bottle-name-in', 'bottle-cost-in', 'bottle-retailer-in', 'bottle-link-in', 'bottle-eta-date-in', 'bottle-eta-note-in']
           .forEach(id => { get(id).value = ''; });
       }
     } finally {
@@ -1547,12 +1597,53 @@
   }
 
   async function setBottleStage(id, status) {
-    await commitBottles(items => items.map(it => it.id === id ? { ...it, status } : it),
+    await commitBottles(d => ({ ...d, items: d.items.map(it => it.id === id ? { ...it, status } : it) }),
       `chore: update bottle stage [skip ci]`);
   }
   async function deleteBottle(id) {
     if (!confirm('Delete this bottle?')) return;
-    await commitBottles(items => items.filter(it => it.id !== id), `chore: delete pending bottle [skip ci]`);
+    await commitBottles(d => ({ ...d, items: d.items.filter(it => it.id !== id) }), `chore: delete pending bottle [skip ci]`);
+  }
+
+  // ── Retailers (managed in Control Panel, stored in pending_bottles.json) ──────
+  function renderRetailerList() {
+    const el = document.getElementById('retailer-list');
+    if (!el) return;
+    const hasToken = !!_sessionToken;
+    const custom = Array.isArray(pendingBottles.retailers) ? pendingBottles.retailers : [];
+    const builtins = DEFAULT_RETAILERS.map(r =>
+      `<div class="sched-item builtin"><span class="sched-label">${esc(r)}</span><span class="sched-value">built-in</span></div>`
+    ).join('');
+    const customRows = custom.map((r, i) =>
+      `<div class="sched-item">
+        <span class="sched-label">${esc(r)}</span>
+        ${hasToken ? `<button class="btn-icon" title="Delete" onclick="deleteRetailer(${i})">✕</button>` : ''}
+      </div>`
+    ).join('');
+    el.innerHTML = builtins + customRows;
+  }
+
+  async function addRetailer() {
+    const input = document.getElementById('retailer-new-name');
+    const errEl = document.getElementById('retailer-add-err');
+    const name = input.value.trim();
+    if (!name) { errEl.textContent = 'Retailer name is required.'; errEl.style.display = 'block'; return; }
+    if (effectiveRetailers().some(r => r.toLowerCase() === name.toLowerCase())) {
+      errEl.textContent = 'That retailer already exists.'; errEl.style.display = 'block'; return;
+    }
+    errEl.style.display = 'none';
+    const ok = await commitBottles(d => ({ ...d, retailers: [...(d.retailers || []), name] }),
+      `chore: add retailer [skip ci]`);
+    if (ok) { input.value = ''; renderRetailerList(); }
+  }
+
+  async function deleteRetailer(index) {
+    const name = (pendingBottles.retailers || [])[index];
+    if (name == null) return;
+    if (!confirm(`Delete retailer "${name}"? Existing bottles keep their retailer text.`)) return;
+    const ok = await commitBottles(d => ({ ...d, retailers: (d.retailers || []).filter((_, i) => i !== index) }),
+      `chore: delete retailer [skip ci]`);
+    if (ok) renderRetailerList();
   }
 
   // ── Render ───────────────────────────────────────────────────────────────────
