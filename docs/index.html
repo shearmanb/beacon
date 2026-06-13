@@ -137,50 +137,9 @@
     .sandbox-summary { font-size: .85rem; color: var(--muted); margin: .75rem 0 .5rem; padding: .4rem .6rem; background: var(--surface); border-radius: 6px; }
     .sandbox-error { color: var(--red); font-size: .875rem; padding: .5rem 0; }
     .sandbox-loading { color: var(--muted); font-size: .875rem; padding: .75rem 0; }
-    /* ── Drop Reminders rail (left) ── */
-    .drop-sb-add { padding: 0 0 .75rem; margin-bottom: .6rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: .45rem; }
-    .drop-sb-add .row { display: flex; gap: .4rem; }
-    .drop-sb-add input[type=date] { flex: 1; }
-    .drop-sb-add input[type=time] { width: 96px; }
-    .drop-sb-add input[type=date], .drop-sb-add input[type=time], .drop-sb-add input[type=text] { padding: .35rem .5rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: .8rem; }
-    .drop-sb-add input[type=text] { width: 100%; }
-    .drop-sb-add .add-controls { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-    .drop-sb-add .prio-check { display: flex; align-items: center; gap: .3rem; font-size: .75rem; color: var(--muted); cursor: pointer; user-select: none; }
-    .drop-sb-add button { padding: .35rem .8rem; border-radius: 6px; border: none; background: var(--blue); color: #fff; font-size: .8rem; cursor: pointer; }
-    .drop-sb-add button:hover { opacity: .88; }
-    .drop-sb-add button:disabled { opacity: .4; cursor: not-allowed; }
-    .drop-sb-list { display: flex; flex-direction: column; gap: .35rem; }
-    .drop-item { display: flex; align-items: flex-start; gap: .45rem; padding: .45rem .5rem; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--border); font-size: .8rem; }
-    .drop-item.prio { border-left-color: var(--red); }
-    .drop-item.done { opacity: .5; }
-    .drop-item.done .drop-text { text-decoration: line-through; }
-    .drop-item .drop-check { margin-top: .15rem; cursor: pointer; accent-color: var(--green); flex-shrink: 0; }
-    .drop-item .drop-star { background: none; border: none; cursor: pointer; font-size: .9rem; line-height: 1; padding: 0; flex-shrink: 0; color: var(--muted); }
-    .drop-item.prio .drop-star { color: var(--red); }
-    .drop-item .drop-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .12rem; }
-    .drop-item .drop-date { font-size: .68rem; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
-    .drop-item .drop-date .drop-time { color: var(--blue); }
-    .drop-item .drop-text { word-break: break-word; line-height: 1.35; }
-    .drop-item .drop-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0 .15rem; flex-shrink: 0; }
-    .drop-item .drop-del:hover { color: var(--red); }
-    .drop-sb-empty { color: var(--muted); font-size: .8rem; font-style: italic; padding: 1rem .5rem; text-align: center; }
-    .drop-sb-tokenhint { color: var(--muted); font-size: .72rem; padding: .5rem 0; border-top: 1px solid var(--border); }
-    /* ── Pending Bottles rail (right) ── */
-    .bottle-sb-totals { font-size: .72rem; color: var(--muted); padding: 0 0 .55rem; margin-bottom: .6rem; border-bottom: 1px solid var(--border); }
-    .rail.right .drop-sb-add .row input[type=text] { flex: 1; min-width: 0; width: auto; }
-    .rail.right .drop-sb-add input[type=date] { min-width: 0; }
-    .bottle-item { display: flex; align-items: flex-start; gap: .45rem; padding: .45rem .5rem; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--blue); font-size: .8rem; }
-    .bottle-item.to_buy { border-left-color: var(--yellow); }
-    .bottle-item.received { border-left-color: var(--border); opacity: .5; }
-    .bottle-item.received .bottle-name { text-decoration: line-through; }
-    .bottle-stage { background: none; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; font-size: .78rem; line-height: 1; padding: .2rem .3rem; flex-shrink: 0; }
-    .bottle-stage:hover { border-color: var(--blue); }
-    .bottle-stage:disabled { cursor: not-allowed; }
-    .bottle-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .12rem; }
-    .bottle-name { font-weight: 600; word-break: break-word; line-height: 1.3; }
-    .bottle-meta { font-size: .7rem; color: var(--muted); line-height: 1.35; word-break: break-word; }
-    .bottle-meta .bottle-cost { color: var(--green); font-weight: 600; }
-    .bottle-eta { font-size: .7rem; color: var(--blue); }
+    /* ── Rails — only additions on top of ui.css ── */
+    .rem-t.soon { color: var(--warn); }
+    .rem-tokenhint { color: var(--muted); font-size: .72rem; padding: .5rem 0; border-top: 1px solid var(--line); }
   </style>
 </head>
 <body>
@@ -199,23 +158,23 @@
 <div id="app" class="app">
   <div class="glance" id="glance-strip"></div>
   <aside class="rail" id="left-rail">
-    <div class="rail-hd"><h3>📅 Drop Reminders</h3><span class="cnt" id="drop-count" style="display:none"></span></div>
-    <div class="drop-sb-add" id="drop-sb-add">
-      <div class="row">
-        <input type="date" id="drop-date" />
-        <input type="time" id="drop-time" />
+    <div class="rail-hd"><h3>Drop Reminders</h3><span class="cnt" id="drop-count" style="display:none"></span></div>
+    <div class="rail-form" id="drop-sb-add">
+      <div class="row2">
+        <input class="in" type="date" id="drop-date" />
+        <input class="in" type="time" id="drop-time" />
       </div>
-      <input type="text" id="drop-text" placeholder="What to remember…" maxlength="240"
+      <input class="in" type="text" id="drop-text" placeholder="What to remember…" maxlength="240"
              onkeydown="if(event.key==='Enter')addReminder()" />
-      <div class="add-controls">
-        <label class="prio-check"><input type="checkbox" id="drop-prio" /> ★ Priority</label>
-        <button id="drop-add-btn" onclick="addReminder()">Add</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);cursor:pointer;white-space:nowrap"><input type="checkbox" id="drop-prio" /> ★ Priority</label>
+        <button class="btn primary sm" id="drop-add-btn" onclick="addReminder()" style="flex:1">+ Add reminder</button>
       </div>
     </div>
-    <div class="drop-sb-list" id="drop-sb-list">
-      <div class="drop-sb-empty">Loading…</div>
+    <div id="drop-sb-list">
+      <div class="empty">Loading…</div>
     </div>
-    <div class="drop-sb-tokenhint" id="drop-sb-tokenhint" style="display:none">GitHub token required to add or edit reminders</div>
+    <div id="drop-sb-tokenhint" class="rem-tokenhint" style="display:none">GitHub token required to add or edit reminders</div>
   </aside>
   <main class="main">
   <header class="hdr">
@@ -415,33 +374,35 @@
   </section>
   </main>
   <aside class="rail right" id="right-rail">
-    <div class="rail-hd"><h3>🍾 Pending Bottles</h3></div>
-    <div class="bottle-sb-totals" id="bottle-totals" style="display:none"></div>
-    <div class="drop-sb-add" id="bottle-add">
-      <input type="text" id="bottle-name-in" placeholder="Bottle *" maxlength="120"
-             onkeydown="if(event.key==='Enter')addBottle()" />
-      <div class="row">
-        <input type="text" id="bottle-brand-in" placeholder="Brand" maxlength="80" />
-        <input type="text" id="bottle-line-in" placeholder="Line" maxlength="80" />
-      </div>
-      <div class="row">
-        <input type="text" id="bottle-cost-in" placeholder="Cost $" inputmode="decimal" style="flex:0 0 80px" />
-        <input type="text" id="bottle-retailer-in" placeholder="Retailer" maxlength="80" />
-      </div>
-      <div class="row">
-        <input type="date" id="bottle-eta-date-in" title="ETA date" />
-        <input type="text" id="bottle-eta-note-in" placeholder="ETA note" maxlength="80"
+    <div class="rtabs">
+      <button class="act" id="tab-btn-pending" onclick="switchBottleTab('pending')">PENDING · <span id="pending-tab-cnt">—</span></button>
+      <button id="tab-btn-coll" onclick="switchBottleTab('coll')">COLLECTION · 0</button>
+    </div>
+    <!-- Pending pane -->
+    <div id="bottle-pending-pane">
+      <div class="rail-form" id="bottle-add">
+        <input class="in" type="text" id="bottle-name-in" placeholder="Bottle *" maxlength="120"
                onkeydown="if(event.key==='Enter')addBottle()" />
+        <div class="row2">
+          <input class="in" type="text" id="bottle-cost-in" placeholder="Cost $" inputmode="decimal" />
+          <input class="in" type="text" id="bottle-retailer-in" placeholder="Retailer" maxlength="80" />
+        </div>
+        <div class="row2">
+          <input class="in" type="date" id="bottle-eta-date-in" title="ETA date" />
+          <input class="in" type="text" id="bottle-eta-note-in" placeholder="ETA note" maxlength="80"
+                 onkeydown="if(event.key==='Enter')addBottle()" />
+        </div>
+        <button class="btn primary sm" id="bottle-add-btn" onclick="addBottle()">+ Add to pending</button>
       </div>
-      <div class="add-controls">
-        <span style="font-size:.7rem;color:var(--muted)">Added as 📦 Ordered</span>
-        <button id="bottle-add-btn" onclick="addBottle()">Add</button>
+      <div id="bottle-list">
+        <div class="empty">Loading…</div>
       </div>
+      <div id="bottle-tokenhint" class="rem-tokenhint" style="display:none">GitHub token required to add or edit bottles</div>
     </div>
-    <div class="drop-sb-list" id="bottle-list">
-      <div class="drop-sb-empty">Loading…</div>
+    <!-- Collection pane -->
+    <div id="bottle-coll-pane" style="display:none">
+      <div class="empty" style="padding:32px 0">Collection tracking coming soon.</div>
     </div>
-    <div class="drop-sb-tokenhint" id="bottle-tokenhint" style="display:none">GitHub token required to add or edit bottles</div>
   </aside>
 </div>
 
@@ -1254,6 +1215,8 @@
     });
   }
 
+  const REM_MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
   function renderSidebar() {
     const hasToken = !!_sessionToken;
     const addBox = document.getElementById('drop-sb-add');
@@ -1270,26 +1233,38 @@
     const list = document.getElementById('drop-sb-list');
     if (!list) return;
     const items = sortedReminders();
-    const cnt = document.getElementById('drop-count');
     const active = items.filter(it => !it.done).length;
+    const cnt = document.getElementById('drop-count');
     cnt.style.display = active ? '' : 'none';
     cnt.textContent = active;
+
     if (!items.length) {
-      list.innerHTML = '<div class="drop-sb-empty">No reminders yet.<br>Add a drop date above.</div>';
+      list.innerHTML = '<div class="empty">No reminders yet.<br>Add a drop date above.</div>';
       return;
     }
+
+    const today = new Date(); today.setHours(0, 0, 0, 0);
     list.innerHTML = items.map(it => {
-      const cls = ['drop-item'];
-      if (it.priority) cls.push('prio');
+      const cls = ['rem-item'];
+      if (it.priority) cls.push('pri');
       if (it.done) cls.push('done');
-      return `<div class="${cls.join(' ')}">
-        <input type="checkbox" class="drop-check" ${it.done ? 'checked' : ''} ${hasToken ? '' : 'disabled'} onchange="toggleReminderDone('${esc(it.id)}')" title="Mark done" />
-        <button class="drop-star" ${hasToken ? '' : 'disabled'} onclick="toggleReminderPriority('${esc(it.id)}')" title="Toggle priority">${it.priority ? '★' : '☆'}</button>
-        <div class="drop-main">
-          <div class="drop-date">${fmtReminderDate(it.date, it.time)}</div>
-          <div class="drop-text">${esc(it.text)}</div>
-        </div>
-        <button class="drop-del" ${hasToken ? '' : 'disabled'} onclick="deleteReminder('${esc(it.id)}')" title="Delete">×</button>
+
+      const [y, m, d] = (it.date || '').split('-').map(Number);
+      const dateLbl = (y && m && d) ? REM_MONTHS[m - 1] + ' ' + String(d).padStart(2, '0') : (it.date || '—');
+
+      const target = (y && m && d) ? new Date(y, m - 1, d) : null;
+      const daysAway = target ? Math.ceil((target - today) / 86400000) : null;
+      const soon = !it.done && daysAway !== null && daysAway <= 2;
+      const tLabel = it.done ? 'done' : daysAway === null ? '—' : daysAway < 0 ? `T+${Math.abs(daysAway)}d` : `T-${daysAway}d`;
+
+      const jumpLink = it.siteId
+        ? ` <button class="rem-link" onclick="event.stopPropagation();document.querySelector('[data-screen-label=\\'Sites\\']')?.scrollIntoView({behavior:'smooth',block:'start'})" title="Jump to Sites">↗ Sites</button>`
+        : '';
+
+      return `<div class="${cls.join(' ')}" style="cursor:pointer" onclick="toggleReminderDone('${esc(it.id)}')" title="${it.done ? 'Mark undone' : 'Mark done'}">
+        <span class="rem-date">${dateLbl}</span>
+        <span class="rem-label">${esc(it.text)}${jumpLink}</span>
+        <span class="rem-t${soon ? ' soon' : ''}">${tLabel}</span>
       </div>`;
     }).join('');
   }
@@ -1372,15 +1347,26 @@
   }
 
   // ── Pending Bottles rail ─────────────────────────────────────────────────────
-  const BOTTLE_STAGES = {
-    to_buy:   { icon: '🛒', label: 'To buy',   next: 'ordered' },
-    ordered:  { icon: '📦', label: 'Ordered',  next: 'received' },
-    received: { icon: '✅', label: 'Received', next: 'to_buy' },
-  };
+  const BOTTLE_STEPS = ['ordered', 'shipped', 'delivered'];
+  // Normalise legacy stage names from old data
+  function normaliseBottleStatus(s) {
+    if (s === 'to_buy') return 'ordered';
+    if (s === 'received') return 'delivered';
+    return BOTTLE_STEPS.includes(s) ? s : 'ordered';
+  }
 
-  // Active bottles first (soonest ETA → undated → oldest added); received sink to the bottom.
+  let _bottleTab = 'pending';
+  function switchBottleTab(tab) {
+    _bottleTab = tab;
+    document.getElementById('tab-btn-pending').classList.toggle('act', tab === 'pending');
+    document.getElementById('tab-btn-coll').classList.toggle('act', tab === 'coll');
+    document.getElementById('bottle-pending-pane').style.display = tab === 'pending' ? '' : 'none';
+    document.getElementById('bottle-coll-pane').style.display = tab === 'coll' ? '' : 'none';
+  }
+
+  // Active bottles first (soonest ETA → undated → oldest added); delivered sink to the bottom.
   function sortedBottles() {
-    const rank = it => it.status === 'received' ? 1 : 0;
+    const rank = it => normaliseBottleStatus(it.status) === 'delivered' ? 1 : 0;
     return [...(pendingBottles.items || [])].sort((a, b) => {
       if (rank(a) !== rank(b)) return rank(a) - rank(b);
       const ad = a.etaDate || '', bd = b.etaDate || '';
@@ -1402,44 +1388,39 @@
 
     const items = sortedBottles();
 
-    const totals = document.getElementById('bottle-totals');
-    if (totals) {
-      const sum = status => items.filter(it => it.status === status)
-        .reduce((s, it) => s + (Number(it.cost) || 0), 0);
-      const parts = [];
-      const ordered = sum('ordered'), toBuy = sum('to_buy');
-      if (ordered) parts.push(`📦 $${ordered.toLocaleString()} on order`);
-      if (toBuy) parts.push(`🛒 $${toBuy.toLocaleString()} to buy`);
-      totals.textContent = parts.join(' · ');
-      totals.style.display = parts.length ? 'block' : 'none';
-    }
+    // Update tab counter
+    const activeCount = items.filter(it => normaliseBottleStatus(it.status) !== 'delivered').length;
+    const cntEl = document.getElementById('pending-tab-cnt');
+    if (cntEl) cntEl.textContent = activeCount;
 
     const list = document.getElementById('bottle-list');
     if (!list) return;
     if (!items.length) {
-      list.innerHTML = '<div class="drop-sb-empty">No pending bottles.<br>Add one above.</div>';
+      list.innerHTML = '<div class="empty">No pending bottles.<br>Add one above.</div>';
       return;
     }
     list.innerHTML = items.map(it => {
-      const stage = BOTTLE_STAGES[it.status] || BOTTLE_STAGES.ordered;
-      const brandLine = [it.brand, it.line].filter(Boolean).join(' · ');
+      const status = normaliseBottleStatus(it.status);
+      const idx = BOTTLE_STEPS.indexOf(status);
       const costRetailer = [
-        it.cost != null && it.cost !== '' ? `<span class="bottle-cost">$${esc(it.cost)}</span>` : '',
+        it.cost != null && it.cost !== '' ? `<span class="num">$${esc(String(it.cost))}</span>` : '',
         it.retailer ? esc(it.retailer) : '',
       ].filter(Boolean).join(' · ');
       const eta = [
-        it.etaDate ? fmtReminderDate(it.etaDate, '') : '',
+        it.etaDate ? it.etaDate : '',
         it.etaNote ? esc(it.etaNote) : '',
-      ].filter(Boolean).join(' — ');
-      return `<div class="bottle-item ${esc(it.status)}">
-        <button class="bottle-stage" ${hasToken ? '' : 'disabled'} onclick="cycleBottleStage('${esc(it.id)}')" title="${stage.label} — click for ${BOTTLE_STAGES[stage.next].label}">${stage.icon}</button>
-        <div class="bottle-main">
-          <div class="bottle-name">${esc(it.bottle)}</div>
-          ${brandLine ? `<div class="bottle-meta">${esc(brandLine)}</div>` : ''}
-          ${costRetailer ? `<div class="bottle-meta">${costRetailer}</div>` : ''}
-          ${eta ? `<div class="bottle-eta">ETA: ${eta}</div>` : ''}
-        </div>
-        <button class="drop-del" ${hasToken ? '' : 'disabled'} onclick="deleteBottle('${esc(it.id)}')" title="Delete">×</button>
+      ].filter(Boolean).join(' · ');
+      const steps = BOTTLE_STEPS.map((st, j) => {
+        const cls = 'step' + (j <= idx ? ' on' : '') + (j === idx ? ' cur' : '');
+        return `<button class="${cls}" ${hasToken ? '' : 'disabled'} onclick="setBottleStage('${esc(it.id)}','${st}')" title="Mark ${st}">${st}</button>`;
+      }).join('');
+      const addedDate = it.ordered || (it.createdAt ? it.createdAt.slice(0, 10) : '');
+      return `<div class="pend-item">
+        <div class="nm">${esc(it.bottle || it.name || '')}</div>
+        ${costRetailer ? `<div class="pend-meta">${costRetailer}</div>` : ''}
+        ${addedDate ? `<div class="pend-meta"><span>ordered ${addedDate}</span></div>` : ''}
+        <div class="steps">${steps}</div>
+        ${eta && status !== 'delivered' ? `<div class="pend-eta${status === 'shipped' ? ' shipped' : ''}">▸ ${eta}</div>` : ''}
       </div>`;
     }).join('');
   }
@@ -1502,8 +1483,6 @@
       const item = {
         id: `b_${Date.now()}`,
         bottle,
-        brand: get('bottle-brand-in').value.trim(),
-        line: get('bottle-line-in').value.trim(),
         cost,
         retailer: get('bottle-retailer-in').value.trim(),
         etaDate: get('bottle-eta-date-in').value || '',
@@ -1513,7 +1492,7 @@
       };
       const ok = await commitBottles(items => [...items, item], `chore: add pending bottle [skip ci]`);
       if (ok) {
-        ['bottle-name-in', 'bottle-brand-in', 'bottle-line-in', 'bottle-cost-in', 'bottle-retailer-in', 'bottle-eta-date-in', 'bottle-eta-note-in']
+        ['bottle-name-in', 'bottle-cost-in', 'bottle-retailer-in', 'bottle-eta-date-in', 'bottle-eta-note-in']
           .forEach(id => { get(id).value = ''; });
       }
     } finally {
@@ -1521,10 +1500,9 @@
     }
   }
 
-  async function cycleBottleStage(id) {
-    await commitBottles(items => items.map(it => it.id === id
-      ? { ...it, status: (BOTTLE_STAGES[it.status] || BOTTLE_STAGES.ordered).next }
-      : it), `chore: update bottle stage [skip ci]`);
+  async function setBottleStage(id, status) {
+    await commitBottles(items => items.map(it => it.id === id ? { ...it, status } : it),
+      `chore: update bottle stage [skip ci]`);
   }
   async function deleteBottle(id) {
     if (!confirm('Delete this bottle?')) return;
