@@ -755,23 +755,11 @@
       "etag": "\"page_cache:45343637659:ProductListController:5db35c5b2a261f2e94c4ebeb2db0038f\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 3,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T18:02:52.685Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-12T18:08:48.823Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-12T18:14:42.272Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T18:20:31.967Z",
         "ok": true
@@ -1159,11 +1147,25 @@
       {
         "ts": "2026-06-13T16:55:43.001Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-13T17:01:12.415Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-13T17:02:34.266Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-13T17:03:58.489Z",
+        "ok": false
       }
-    ]
+    ],
+    "lastError": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-13T17:03:58.489Z"
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-13T16:53:34.933Z",
+    "lastChecked": "2026-06-13T17:00:05.947Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1178,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T18:01:44.837Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T18:07:36.306Z",
         "ok": true
@@ -1575,6 +1573,10 @@
       {
         "ts": "2026-06-13T16:53:34.933Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-13T17:00:05.947Z",
+        "ok": true
       }
     ]
   },
@@ -1621,23 +1623,11 @@
       "etag": "\"page_cache:66506555478:ProductListController:5037049a72672fe0e95493a912d6c59c\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 3,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T18:04:16.032Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-12T18:10:03.094Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-12T18:15:56.566Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T18:21:52.361Z",
         "ok": true
@@ -2025,8 +2015,22 @@
       {
         "ts": "2026-06-13T16:55:49.129Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-13T17:01:23.764Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-13T17:02:47.555Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-13T17:04:10.463Z",
+        "ok": false
       }
-    ]
+    ],
+    "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-13T17:04:10.463Z"
   },
   "bourbon_concierge": {
     "lastChecked": "2026-06-13T16:57:58.426Z",
@@ -2192,15 +2196,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:32d0d18debe2a9e50abf5cff10ca7e9e\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 1,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T17:57:00.459Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T18:03:01.307Z",
         "ok": true
@@ -2596,8 +2596,14 @@
       {
         "ts": "2026-06-13T16:57:58.426Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-13T17:04:21.030Z",
+        "ok": false
       }
-    ]
+    ],
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-13T17:04:21.030Z"
   },
   "reveries_official": {
     "lastChecked": "2026-06-12T14:07:54.772Z",
@@ -3047,7 +3053,7 @@
     "lastErrorAt": "2026-06-12T18:25:17.291Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-13T16:46:55.914Z",
+    "lastChecked": "2026-06-13T17:04:25.982Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3061,10 +3067,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T14:30:46.440Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T14:47:11.312Z",
         "ok": true
@@ -3459,6 +3461,10 @@
       },
       {
         "ts": "2026-06-13T16:46:55.914Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T17:04:25.982Z",
         "ok": true
       }
     ]
