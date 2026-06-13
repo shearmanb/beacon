@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-13T14:11:15.968Z",
+    "lastChecked": "2026-06-13T14:17:46.550Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T15:11:07.197Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T15:17:13.210Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-13T14:11:15.968Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T14:17:46.550Z",
         "ok": true
       }
     ]
@@ -3047,7 +3047,7 @@
     "lastErrorAt": "2026-06-12T18:25:17.291Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-13T14:00:30.681Z",
+    "lastChecked": "2026-06-13T14:17:51.856Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3061,10 +3061,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T11:53:40.966Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T12:09:04.189Z",
         "ok": true
@@ -3459,6 +3455,10 @@
       },
       {
         "ts": "2026-06-13T14:00:30.681Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T14:17:51.856Z",
         "ok": true
       }
     ]
