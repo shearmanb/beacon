@@ -163,6 +163,11 @@ History is hard-capped at 250 entries in `alert_history.json`. When entry 251 ar
 
 ### Features (new capability)
 
+**Collapsible rails + side-panel display mode for Reveries and Pending Bottles**
+The left (Drop Reminders) and right (Pending/Collection) rails should be independently collapsible via a toggle button on each rail header. Additionally, a new "side panel" display mode should be available so that Reveries tiles and the Pending Bottles list can optionally float as a persistent side list alongside the main content, instead of living only in the fixed-width rails. Possible approach: a per-panel mode toggle (rail / side-list / hidden) persisted in localStorage; the main `.app` grid reflows to accommodate an open side panel.
+- Effort: medium (layout + state management for 3-way mode)
+- Risk: low if purely additive; don't disrupt the fixed rail layout for users who don't opt in
+
 **Imminent mode: sub-60s floor**
 `imminentIntervalMinutes: 2` is currently floored at ~60s by the worker loop. During a drop you want to check every 2 minutes, not every 60s. Two options:
 - *Option A (simple)*: when any enabled site has `imminent: true`, reduce the loop sleep from ~60s to ~10s. All sites still respect `shouldCheck()` so non-imminent sites don't over-check.

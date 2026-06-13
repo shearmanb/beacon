@@ -87,16 +87,6 @@
   --ok: #2c7a3f; --warn: #b07d18; --err: #bf3b2b;
 }
 
-/* Maker's Mark — warm cream, red wax */
-[data-theme="makersmark"] {
-  --display: "IM Fell DW Pica", serif;
-  --bg: #f7f1e3; --bg2: #f1e9d6; --panel: #fcf7ea; --panel2: #ebe1ca;
-  --line: #ded2b5; --line2: #c4b48d;
-  --text: #2d2415; --muted: #7c6f56; --faint: #ad9f83;
-  --accent: #c02227; --accent-dim: rgba(192,34,39,.10);
-  --rev: #8a6d2f; --rev-dim: rgba(138,109,47,.12);
-  --ok: #2c7a3f; --warn: #a5731a; --err: #b8392a;
-}
 
 /* Michter's US★1 — buff label paper, roman caps, shield red & gold */
 [data-theme="michters"] {

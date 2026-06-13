@@ -36,7 +36,12 @@
     #gate button { padding: .6rem 1.2rem; border-radius: 8px; border: none; background: var(--blue); color: #fff; font-size: 1rem; cursor: pointer; }
     #gate .error { color: var(--red); font-size: .875rem; }
     #app { display: none; }
-    .hdr { flex-wrap: wrap; row-gap: 8px; }
+    .hdr { flex-wrap: wrap; row-gap: 8px; align-items: center; }
+    .hdr-left { display: flex; flex-direction: column; gap: 2px; }
+    .hdr-sub { display: flex; align-items: center; gap: 6px; }
+    .hdr-stats { flex: 1; }
+    .hdr-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+    select.btn#theme-select { font-size: 11px; max-width: 150px; appearance: none; padding-right: 8px; }
     .btn-primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
     .btn-primary:hover { opacity: .85; }
     select.btn { appearance: none; max-width: 200px; }
@@ -91,6 +96,13 @@
     .rev-img img.rev-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
     .rev-body .nm a { color: inherit; text-decoration: none; }
     .rev-body .nm a:hover { color: var(--accent); }
+    .rev-card { min-width: 200px; }
+    .rev-card.live.big { min-width: 220px; }
+    .rev-meta { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-top: 5px; display: flex; flex-direction: column; gap: 2px; }
+    .rev-meta span { display: flex; gap: 4px; }
+    .rev-meta .lbl { color: var(--faint); white-space: nowrap; }
+    .rev-registry { display: inline-block; font-family: var(--mono); font-size: 10px; color: var(--accent); text-decoration: none; letter-spacing: .04em; margin-top: 5px; }
+    .rev-registry:hover { text-decoration: underline; }
     /* ── Schedule modal ── */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100; align-items: center; justify-content: center; }
     .modal-overlay.open { display: flex; }
@@ -140,6 +152,15 @@
     /* ── Rails — only additions on top of ui.css ── */
     .rem-t.soon { color: var(--warn); }
     .rem-tokenhint { color: var(--muted); font-size: .72rem; padding: .5rem 0; border-top: 1px solid var(--line); }
+    /* detailed mode: more vertical breathing room */
+    .sites-grid.detailed .site-card { padding: 12px 14px; }
+    .site-cfg { margin-top: 8px; padding-top: 8px; }
+    .cfg-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    .cfg-lbl { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .06em; white-space: nowrap; }
+    /* Tile guide — floating draggable panel (no overlay) */
+    .lg-overlay { position: fixed; inset: 0; z-index: 400; pointer-events: none; }
+    .lg-panel { pointer-events: all; position: fixed; top: 80px; right: 24px; width: 420px; max-height: 80vh; overflow-y: auto; cursor: default; user-select: none; }
+    .lg-hd { cursor: move; }
   </style>
 </head>
 <body>
@@ -179,17 +200,21 @@
   <main class="main">
   <header class="hdr">
     <div class="hdr-strip"></div>
-    <div class="wordmark"><b><span class="beak">▲</span> BEACON</b><span class="label" id="header-version"></span></div>
+    <div class="hdr-left">
+      <div class="wordmark"><b><span class="beak">▲</span> BEACON</b><span class="label" id="header-version"></span></div>
+      <div class="hdr-sub">
+        <span class="status" id="refresh-status">Loading…</span>
+        <button class="btn ghost sm" onclick="loadData()">↻ Refresh</button>
+      </div>
+    </div>
     <div class="hdr-stats" id="hdr-stats"></div>
     <div class="hdr-actions">
-      <span class="status" id="refresh-status">Loading…</span>
-      <button class="btn ghost" onclick="loadData()">Refresh</button>
-      <button class="btn primary btn-primary" id="run-now-btn" onclick="triggerRun()" style="display:none">▶ Run now</button>
-      <button class="btn" onclick="openScheduleModal()">Schedules</button>
-      <button class="btn ghost" onclick="promptToken()">Token</button>
-      <button class="btn ghost" onclick="promptWebhook()">Webhook</button>
-      <select class="btn" id="theme-select" onchange="setTheme(this.value)" title="Color scheme"></select>
-      <button class="btn ghost" id="density-toggle" onclick="toggleDensity()" title="Toggle compact density">▤</button>
+      <button class="btn primary btn-primary sm" id="run-now-btn" onclick="triggerRun()" style="display:none">▶ Run now</button>
+      <button class="btn sm" onclick="openScheduleModal()">Schedules</button>
+      <button class="btn ghost sm" onclick="promptToken()">Token</button>
+      <button class="btn ghost sm" onclick="promptWebhook()">Webhook</button>
+      <select class="btn ghost" id="theme-select" onchange="setTheme(this.value)" title="Color scheme"></select>
+      <button class="btn ghost sm" id="density-toggle" onclick="toggleDensity()" title="Toggle compact density">▤</button>
     </div>
   </header>
 
@@ -424,7 +449,6 @@
     ['heavenhill', 'Heaven Hill — heritage navy'],
     ['willett', 'Willett — purple top / green top'],
     ['weller', 'Weller — the rainbow'],
-    ['makersmark', "Maker's Mark — red wax"],
     ['michters', "Michter's — US★1"],
     ['flightdeck', 'Flightdeck — mission control'],
     ['flightpath', 'Flightpath — purple ops'],
@@ -940,13 +964,16 @@
       : `<span class="qk-wrap" title="Quick cadence: temporarily check every N minutes (Enter to apply)"><span class="cfg-sep">⚡QUICK</span><input class="in" style="width:38px;text-align:center" placeholder="m" inputmode="numeric" onkeydown="if(event.key==='Enter')applyQuickCadence('${esc(site.id)}', this)" /></span>`;
     return `<div class="site-cfg">
       <select class="in" style="flex:1 1 110px" title="Check schedule" onchange="setSchedule('${esc(site.id)}', this.value, this)">${options}</select>
-      <span class="cfg-sep">MON</span>
-      <button class="sw${vm.enabled ? ' on' : ''}" aria-pressed="${vm.enabled}" title="Monitoring on/off" onclick="toggleEnabled('${esc(site.id)}', ${!vm.enabled}, this)"></button>
-      <span class="cfg-sep" title="Imminent mode turns itself off after AUTO-OFF minutes">IMM</span>
-      <button class="sw${site.imminent ? ' on' : ''}" aria-pressed="${!!site.imminent}" title="Imminent mode" onclick="toggleImminent('${esc(site.id)}', ${!site.imminent}, this)"></button>
-      <span class="cfg-sep" title="Imminent mode turns itself off after this many minutes">AUTO-OFF</span>
-      <input class="in" style="width:42px;text-align:center" value="${durMin}" inputmode="numeric" title="auto-off minutes" onchange="setImminentDuration('${esc(site.id)}', this.value, this)" />
-      ${quickCtl}
+      <div class="cfg-row">
+        <span class="cfg-lbl">MON</span>
+        <button class="sw${vm.enabled ? ' on' : ''}" aria-pressed="${vm.enabled}" title="Monitoring on/off" onclick="toggleEnabled('${esc(site.id)}', ${!vm.enabled}, this)"></button>
+        <span class="cfg-lbl" style="margin-left:6px" title="Imminent mode turns itself off after AUTO-OFF minutes">IMM</span>
+        <button class="sw${site.imminent ? ' on' : ''}" aria-pressed="${!!site.imminent}" title="Imminent mode" onclick="toggleImminent('${esc(site.id)}', ${!site.imminent}, this)"></button>
+        <span class="cfg-lbl" style="margin-left:6px" title="Imminent mode auto-off duration">AUTO-OFF</span>
+        <input class="in" style="width:42px;text-align:center" value="${durMin}" inputmode="numeric" title="Imminent auto-off minutes" onchange="setImminentDuration('${esc(site.id)}', this.value, this)" />
+        <span style="flex:1"></span>
+        ${quickCtl}
+      </div>
     </div>`;
   }
 
@@ -1050,9 +1077,23 @@
         R('<span class="pill-rev">R·1</span>', 'Reveries', 'Number of Reveries bottles in stock at this site') +
         R('<span class="mono" style="font-size:9px">↻ 20m</span>', 'Cadence', 'Far-right timer = current check cadence'))}
     </div>`;
-    el.addEventListener('click', e => { if (e.target === el) closeTileGuide(); });
     document.body.appendChild(el);
     document.addEventListener('keydown', _tileGuideEsc);
+    // Drag logic
+    const panel = el.querySelector('.lg-panel');
+    const hd = el.querySelector('.lg-hd');
+    let ox = 0, oy = 0, startX = 0, startY = 0;
+    hd.addEventListener('mousedown', e => {
+      startX = e.clientX; startY = e.clientY;
+      const r = panel.getBoundingClientRect();
+      ox = r.left; oy = r.top;
+      panel.style.right = 'auto';
+      panel.style.left = ox + 'px'; panel.style.top = oy + 'px';
+      const onMove = mv => { panel.style.left = (ox + mv.clientX - startX) + 'px'; panel.style.top = (oy + mv.clientY - startY) + 'px'; };
+      const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
   }
   function _tileGuideEsc(e) { if (e.key === 'Escape') closeTileGuide(); }
   function closeTileGuide() {
@@ -1416,7 +1457,10 @@
       }).join('');
       const addedDate = it.ordered || (it.createdAt ? it.createdAt.slice(0, 10) : '');
       return `<div class="pend-item">
-        <div class="nm">${esc(it.bottle || it.name || '')}</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:4px">
+          <div class="nm" style="flex:1">${esc(it.bottle || it.name || '')}</div>
+          <button style="background:none;border:none;color:var(--faint);cursor:pointer;font-size:13px;line-height:1;padding:0 2px;flex-shrink:0" ${hasToken ? '' : 'disabled'} onclick="deleteBottle('${esc(it.id)}')" title="Delete">×</button>
+        </div>
         ${costRetailer ? `<div class="pend-meta">${costRetailer}</div>` : ''}
         ${addedDate ? `<div class="pend-meta"><span>ordered ${addedDate}</span></div>` : ''}
         <div class="steps">${steps}</div>
@@ -1788,11 +1832,16 @@
       const chip = p.available
         ? '<span class="chip stock"><span class="dot ok"></span>In stock</span>'
         : '<span class="chip out">Sold out</span>';
+      const registryUrl = `https://www.reveriesregistry.com/bottles/${esc(p.handle || '')}`;
+      const distiller = p.vendor ? esc(p.vendor) : '';
+      const metaRows = distiller ? `<div class="rev-meta"><span><span class="lbl">Distiller</span>${distiller}</span></div>` : '';
       return `<div class="${cls}">
         ${img}
         <div class="rev-body">
           <div style="display:flex;justify-content:space-between;gap:8px">${chip}</div>
           <div class="nm"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></div>
+          ${metaRows}
+          <a class="rev-registry" href="${registryUrl}" target="_blank" rel="noopener" title="Look up on Reveries Registry">↗ Registry</a>
           <div class="rev-foot">
             <span class="site">${esc(p.siteName)}</span>
             ${p.minPrice != null ? `<span class="pr num">${fmt$(p.minPrice)}</span>` : ''}
