@@ -65,6 +65,14 @@
     .site-banner { font-family: var(--mono); font-size: 10px; padding: 3px 7px; border-radius: 4px; margin-top: 5px; line-height: 1.45; }
     .site-banner.warn { background: color-mix(in srgb, var(--warn) 10%, transparent); color: var(--warn); }
     .site-banner.err { background: color-mix(in srgb, var(--err) 10%, transparent); color: var(--err); }
+    .errlog-btn { font-family: var(--mono); font-size: 10px; margin-top: 5px; padding: 2px 7px; border-radius: 4px; cursor: pointer; border: 1px solid color-mix(in srgb, var(--err) 35%, transparent); background: color-mix(in srgb, var(--err) 8%, transparent); color: var(--err); line-height: 1.4; }
+    .errlog-btn:hover { background: color-mix(in srgb, var(--err) 16%, transparent); }
+    .errlog-panel { margin-top: 4px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .errlog-row { display: flex; gap: 7px; padding: 4px 7px; font-size: 10.5px; line-height: 1.45; border-top: 1px solid var(--border); }
+    .errlog-row:first-child { border-top: none; }
+    .errlog-when { font-family: var(--mono); font-size: 9.5px; color: var(--faint); white-space: nowrap; flex: 0 0 auto; padding-top: 1px; }
+    .errlog-msg { color: var(--text); display: flex; flex-direction: column; gap: 1px; }
+    .errlog-raw { font-family: var(--mono); font-size: 9px; color: var(--faint); word-break: break-all; }
     table { width: 100%; border-collapse: collapse; font-size: .875rem; }
     th { text-align: left; padding: .5rem .75rem; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); }
     td { padding: .5rem .75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
@@ -853,6 +861,48 @@
   const SITES_VIEW_KEY = 'beacon.sitesView';
   const SITES_COLLAPSED_KEY = 'beacon.sitesCollapsed';
   const _openCards = new Set(); // cards with settings expanded in compact view
+  const _openErrorLogs = new Set(); // tiles whose error log panel is expanded
+
+  function toggleErrorLog(siteId) {
+    if (_openErrorLogs.has(siteId)) _openErrorLogs.delete(siteId); else _openErrorLogs.add(siteId);
+    renderSiteCards();
+  }
+
+  // Turn a raw worker error string into a one-line plain-English explanation.
+  function explainError(message, statusCode) {
+    const m = String(message || '');
+    const code = statusCode ?? (m.match(/HTTP (\d{3})/)?.[1] && Number(m.match(/HTTP (\d{3})/)[1]));
+    if (code === 503) return "The store's server was temporarily unavailable (503) — usually a brief outage or its CDN throttling automated requests. Normally clears on its own.";
+    if (code === 429) return "The store rate-limited us (429, too many requests) — we're checking too often or the store is busy. The worker backs off automatically.";
+    if (code === 403) return "The store blocked the request (403, forbidden) — usually bot protection or the CDN blocking the worker's IP, even though the page loads in a browser.";
+    if (code === 404) return "Page not found (404) — the collection or store URL may have changed.";
+    if (code === 401) return "Unauthorized (401) — the page now wants a login or password.";
+    if (typeof code === 'number' && code >= 500) return `The store's server returned an error (${code}) — a problem on their end, not ours.`;
+    if (typeof code === 'number' && code >= 400) return `The store rejected the request (HTTP ${code}).`;
+    if (/deadline exceeded|idle timeout|timed? ?out/i.test(m)) return "The request timed out — the store was too slow to respond.";
+    if (/collection.*null|Storefront API returned unexpected/i.test(m)) return "The Storefront API returned no collection — the hardcoded collection ID may have changed.";
+    if (/unexpected token|in JSON|JSON\.parse|not valid JSON/i.test(m)) return "The store returned something we couldn't read as product data — likely an error or bot-challenge page instead of the product feed.";
+    if (/ENOTFOUND|EAI_AGAIN|getaddrinfo/i.test(m)) return "Couldn't resolve the store's domain (DNS) — the site may be down or the URL is wrong.";
+    if (/ECONNREFUSED|ECONNRESET|socket hang up|EPIPE|ETIMEDOUT/i.test(m)) return "Couldn't connect to the store — it may be down or refusing connections.";
+    if (/redirect loop/i.test(m)) return "The store kept redirecting in a loop — likely a misconfigured URL.";
+    if (/certificate|self.signed|CERT_/i.test(m)) return "The store's HTTPS certificate couldn't be verified.";
+    return m || "Unknown error.";
+  }
+
+  function renderErrorLog(vm) {
+    const log = vm.s.errorLog || [];
+    const errCount = vm.s.consecutiveErrors ?? 0;
+    // Surface the log once a site is genuinely failing (3+ checks in a row).
+    if (!vm.enabled || errCount < 3 || log.length === 0) return '';
+    const open = _openErrorLogs.has(vm.site.id);
+    const btn = `<button class="errlog-btn" onclick="toggleErrorLog('${esc(vm.site.id)}')" title="Show what's failing, in plain English">🔍 error log (${log.length})${open ? ' ▴' : ' ▾'}</button>`;
+    if (!open) return btn;
+    const rows = log.slice().reverse().map(e => {
+      const when = e.ts ? fmtAgoShort(new Date(e.ts).getTime()) + ' ago' : '—';
+      return `<div class="errlog-row"><span class="errlog-when" title="${esc(e.ts || '')}">${esc(when)}</span><span class="errlog-msg">${esc(explainError(e.message, e.statusCode))}<span class="errlog-raw" title="Raw error">${esc(e.message || '')}</span></span></div>`;
+    }).join('');
+    return `${btn}<div class="errlog-panel">${rows}</div>`;
+  }
 
   function sitesView() {
     const v = localStorage.getItem(SITES_VIEW_KEY);
@@ -1021,6 +1071,7 @@
         ${badges}
       </div>
       ${renderSiteBanners(vm)}
+      ${renderErrorLog(vm)}
       ${renderCheckTimeline(vm)}
       ${showSettings ? renderSiteSettings(vm) : ''}${expander}
     </div>`;
@@ -1081,6 +1132,9 @@
         R('<span style="display:inline-block;width:8px;height:8px;border-radius:50%;border:2px solid var(--err)"></span>', 'Fail', 'This check errored (site down, blocked, timeout)') +
         R('<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>', 'Now', 'Right edge = now; pulses while a check is in flight') +
         R('<span class="mono" style="font-size:9px">4✓ 1◆ 0✗</span>', 'Tally', 'Checks · finds · fails in the last hour (left side of the line under the track)'))}
+      ${G('When a site is failing',
+        R('<span class="site-banner err" style="font-size:9px">⚠️ 3 consecutive errors</span>', 'Error banner', 'Shown while checks are failing — the count and the latest raw error') +
+        R('<span class="errlog-btn">🔍 error log (3) ▾</span>', 'Error log', 'Appears after 3 straight failures — click to list each recent error in plain English (with the raw message underneath)'))}
       ${G('Meta line (right side)',
         R('<span class="mono" style="font-size:9px">every 20m</span>', 'Cadence', 'How often this site is being checked right now (amber + ⚡ = quick override active)') +
         R('<span class="mono" style="font-size:9px">6:39 PM</span>', 'Last check', 'Clock time of the most recent check') +

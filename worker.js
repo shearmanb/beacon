@@ -516,6 +516,14 @@ async function run() {
       }
 
       const checkHistory = [...(prev.checkHistory ?? []), { ts: new Date().toISOString(), ok: false }].slice(-100);
+      // Per-failure error log (capped). Accumulates over a failure streak so the
+      // dashboard can show what's actually going wrong in plain English. The
+      // success path drops it (state is rebuilt from the strategy's fresh
+      // state), so each new streak starts with a clean log.
+      const errorLog = [
+        ...(prev.errorLog ?? []),
+        { ts: new Date().toISOString(), message: err.message, statusCode: err.statusCode ?? null },
+      ].slice(-25);
       globalState[site.id] = {
         ...prev,
         consecutiveErrors,
@@ -523,6 +531,7 @@ async function run() {
         lastErrorAt: new Date().toISOString(),
         errorAlertSent: alreadyAlerted || shouldAlert,
         checkHistory,
+        errorLog,
         ...cooldown,
       };
       stateChanged = true;
