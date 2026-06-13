@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-13T23:26:39.516Z",
+    "lastChecked": "2026-06-13T23:49:25.289Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-13T13:05:33.662Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-13T13:11:48.762Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-13T23:26:39.516Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T23:49:25.289Z",
         "ok": true
       }
     ]
@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-13T23:29:45.344Z",
+    "lastChecked": "2026-06-13T23:52:23.831Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-13T13:17:13.473Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-13T13:23:38.818Z",
         "ok": true
@@ -2025,13 +2021,17 @@
       {
         "ts": "2026-06-13T23:29:45.345Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-13T23:52:23.831Z",
+        "ok": true
       }
     ],
     "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
     "lastErrorAt": "2026-06-13T21:56:47.664Z"
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-13T23:36:06.886Z",
+    "lastChecked": "2026-06-13T23:55:32.937Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2199,10 +2199,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-13T13:27:51.217Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-13T13:33:20.407Z",
         "ok": true
@@ -2597,6 +2593,10 @@
       },
       {
         "ts": "2026-06-13T23:36:06.886Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-13T23:55:32.937Z",
         "ok": true
       }
     ]
