@@ -1134,6 +1134,11 @@
   let schedules = {};
   let reminders = { items: [] };
   let pendingBottles = { items: [], retailers: [] };
+  // Set to Date.now()+window on a confirmed write; loadData won't overwrite
+  // these from the lagging raw CDN until the window passes.
+  const RAW_DIRTY_WINDOW_MS = 120_000;
+  let _bottlesDirtyUntil  = 0;
+  let _remindersDirtyUntil = 0;
   let lastLoadedAt = null;
   let isRefreshing = false;
 
@@ -1221,11 +1226,14 @@
     if (configText)    config.sites = (JSON.parse(configText).sites ?? []);
     if (schedulesText) schedules    = JSON.parse(schedulesText);
     ignored = JSON.parse(ignoredText);
-    if (remindersText) {
+    if (remindersText && Date.now() >= _remindersDirtyUntil) {
       try { const r = JSON.parse(remindersText); reminders = { items: Array.isArray(r.items) ? r.items : [] }; }
       catch { reminders = { items: [] }; }
     }
-    if (bottlesText) {
+    // raw.githubusercontent.com lags the API by up to ~2 min after a write, so
+    // skip overwriting locally-confirmed data inside the post-write dirty window
+    // (otherwise a stale raw read makes just-added bottles "disappear").
+    if (bottlesText && Date.now() >= _bottlesDirtyUntil) {
       try { const b = JSON.parse(bottlesText); pendingBottles = { items: Array.isArray(b.items) ? b.items : [], retailers: Array.isArray(b.retailers) ? b.retailers : [] }; }
       catch { pendingBottles = { items: [], retailers: [] }; }
     }
@@ -1366,6 +1374,7 @@
         if (!putRes.ok) { alert(`Failed to save reminders: ${putRes.status}`); return false; }
 
         reminders = next;   // write confirmed
+        _remindersDirtyUntil = Date.now() + RAW_DIRTY_WINDOW_MS;
         renderSidebar();
         return true;
       } catch (err) {
@@ -1553,6 +1562,7 @@
         if (!putRes.ok) { alert(`Failed to save bottles: ${putRes.status}`); return false; }
 
         pendingBottles = next;   // write confirmed
+        _bottlesDirtyUntil = Date.now() + RAW_DIRTY_WINDOW_MS;
         renderBottleSidebar();
         return true;
       } catch (err) {
