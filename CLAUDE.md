@@ -33,7 +33,7 @@ Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. Optional: `H
 - `shopify_storefront` — queries the Shopify Storefront GraphQL API using a public access token and collection GID. Used for `reveries_official` because the Reveries shop embed on thereveries.co uses a Shopify Buy Button backed by a collection that is only published to the Buy Button channel (not Online Store), making the REST `/products.json` API return empty.
 - `site_status_monitor` — lightweight Squarespace frontend monitor. Fetches the page HTML and checks for reset signals (`sqs-pw-form`, "coming soon", "enter password", HTTP 401/403). Fires `site_reset` once when transitioning open → blocked; clears silently when the page comes back. Intentionally decoupled from inventory tracking — used alongside `shopify_storefront` for `reveries_official` so both the Shopify backend and the Squarespace frontend are watched independently.
 
-**State persistence**: `worker.js` pushes `state.json` to GitHub via the Contents API (`lib/github.js`) after each changed run. Uses the file's SHA for optimistic concurrency. On 409 conflict it re-fetches the remote state and **merges** — entries the worker touched this loop keep the worker's value (fresher), entries it didn't touch keep the remote value (so a concurrent writer is not silently overwritten).
+**State persistence**: `worker.js` pushes `state.json` to GitHub via the Contents API (`lib/github.js`) after a changed run. Uses the file's SHA for optimistic concurrency. On 409 conflict it re-fetches the remote state and **merges** — entries the worker touched this loop keep the worker's value (fresher), entries it didn't touch keep the remote value (so a concurrent writer is not silently overwritten). **State-push throttle**: not every changed loop commits. If anything noteworthy happened (any alert/baseline/error/recovery — i.e. `newHistory` is non-empty) the push is immediate; if the only change was routine `checkHistory`/`lastChecked` ticking over, the push is held in memory and flushed at most once per `STATE_PUSH_MIN_INTERVAL_MS` (5 min). Nothing is lost — state always lives in memory; only the dashboard's view lags up to ~5 min (well inside its >10/>20 min "worker late" thresholds). This is the main lever that cut the old per-loop commit spam.
 
 **Check history (PulseStrip data)**: Each site state entry carries a `checkHistory` array of `{ ts, ok }` records — one per check attempt, success or failure — capped at the most recent 100 entries. Populated by `worker.js` on both the success path (`ok: true`) and the error path (`ok: false`). Consumed by the dashboard's per-tile PulseStrip to render the last 60 minutes of activity.
 
@@ -47,7 +47,7 @@ Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. Optional: `H
 
 **Ignored products**: `ignored_products.json` — a flat object keyed by product handle (`{ "some-handle": true }`). The worker filters matching products from alerts before Discord/history. Ignored products still exist in `state.json` so unignoring never triggers a false "new product" alert. The dashboard writes this file via the GitHub API.
 
-**Scheduling**: `worker.js` loops every ~60 s on Railway; `shouldCheck()` in `lib/schedule.js` gates whether a site is actually fetched. Fixed schedules (`"5"`, `"15"`, `"20"`, `"30"`, `"60"`) parse directly to minutes. Named schedules (e.g. `"working_hours_heavy"`) are resolved by looking up the key in `schedules.json` and evaluating the `rules` array in order (time windows checked against ET hour, first match wins, `defaultInterval` catches everything else). Time windows support midnight-crossing ranges — `{ fromHour: 22, toHour: 9 }` correctly matches 10 pm–9 am. Falls back to `intervalMinutes` if `schedule` is absent or unresolvable. `imminentIntervalMinutes` overrides everything when `imminent: true`.
+**Scheduling**: `worker.js` loops every ~60 s on Railway; `shouldCheck()` in `lib/schedule.js` gates whether a site is actually fetched. Fixed schedules (`"5"`, `"15"`, `"20"`, `"30"`, `"60"`) parse directly to minutes. Named schedules (e.g. `"working_hours_heavy"`) are resolved by looking up the key in `schedules.json` and evaluating the `rules` array in order (time windows checked against ET hour, first match wins, `defaultInterval` catches everything else). Time windows support midnight-crossing ranges — `{ fromHour: 22, toHour: 9 }` correctly matches 10 pm–9 am. Falls back to `intervalMinutes` if `schedule` is absent or unresolvable. `imminentIntervalMinutes` overrides everything when `imminent: true`. The loop itself tightens from ~60 s to `IMMINENT_LOOP_MS` (~10 s) whenever any enabled site is in imminent mode, so `imminentIntervalMinutes` below 1 minute is actually achievable (the loop is the floor). `schedules.json` is also validated each loop (`validateSchedules`) — malformed definitions are dropped with a once-per-start Discord warning and the valid ones still load.
 
 **Named schedule definitions** (`schedules.json`): A repo-level JSON file mapping schedule IDs to definitions. Each definition has a `label`, optional `builtin: true`, and a `rules` array. Rules are evaluated top-to-bottom; a rule is either a time window `{ fromHour, toHour, interval }` (ET, 24h, supports midnight-crossing) or a default `{ defaultInterval }`. Written by the dashboard via GitHub API; read fresh on every worker loop so schedule changes take effect within ~60 s without a redeploy. Example:
 ```json
@@ -65,7 +65,7 @@ Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. Optional: `H
 }
 ```
 
-**Alerts**: Discord webhook with rich embeds. Color coded: blue = new product, green = restock, red = sold out, orange = site reset, dark orange = site error, teal = site recovered, purple = site changed. Rate limit retries are built into `notifiers/discord.js` (429 → parse `retry_after` with JSON fallback → sleep → retry up to 4 times).
+**Alerts**: Discord webhook with rich embeds. Color coded: blue = new product, green = restock, red = sold out, orange = site reset (🌊 — the Reveries password/"coming soon" wall fires *this*), dark orange = site error, teal = site recovered, yellow = imminent timed out. `purple = site changed` is a **reserved** type with a color/label defined but **not currently emitted by any strategy** — kept for a future "page content changed" signal. Rate limit retries are built into `notifiers/discord.js` (429 → parse `retry_after` with JSON fallback → sleep → retry up to 4 times).
 
 ## Current monitored sites
 
@@ -154,10 +154,8 @@ The dashboard already sends a Discord embed when a product is ignored or unignor
 - Open dashboard → click **Discord Webhook** in the header → paste the same URL that's in the `DISCORD_WEBHOOK_URL` Railway env var → Save
 - One-time per browser. That's it.
 
-**Alert history archiving**
-History is hard-capped at 250 entries in `alert_history.json`. When entry 251 arrives, entry 1 is permanently gone. Fix: when trimming, append the evicted entries to `alert_history_archive.json` (separate file, never trimmed, dashboard ignores it).
-- Effort: ~30 min (small change in `appendAndPushHistory()` in `worker.js`)
-- Risk: none — additive change, archive file starts empty
+**~~Alert history archiving~~** ✅ Done (2026-06-13)
+`MAX_HISTORY` is now 500. When `appendAndPushHistory()` trims, the evicted oldest entries are appended to `alert_history_archive.json` (a `MAX_ARCHIVE`-capped 5000-entry file, written best-effort — a failure there logs but never blocks the main history write). The dashboard ignores the archive file.
 
 ---
 
@@ -168,12 +166,8 @@ The left (Drop Reminders) and right (Pending/Collection) rails should be indepen
 - Effort: medium (layout + state management for 3-way mode)
 - Risk: low if purely additive; don't disrupt the fixed rail layout for users who don't opt in
 
-**Imminent mode: sub-60s floor**
-`imminentIntervalMinutes: 2` is currently floored at ~60s by the worker loop. During a drop you want to check every 2 minutes, not every 60s. Two options:
-- *Option A (simple)*: when any enabled site has `imminent: true`, reduce the loop sleep from ~60s to ~10s. All sites still respect `shouldCheck()` so non-imminent sites don't over-check.
-- *Option B (precise)*: inner fast-loop that only runs imminent sites; outer loop handles everything else. More code, more precise.
-- Recommendation: Option A first — it's one line change in `startLoop()` and gets you to ~10s effective floor with no new complexity.
-- Risk: low. The 10s floor only applies when at least one site is in imminent mode.
+**~~Imminent mode: sub-60s floor~~** ✅ Done (2026-06-13, Option A)
+`run()` sets `anyImminentActive` from the live config each loop; `startLoop()` then sleeps `IMMINENT_LOOP_MS` (~10 s ± 2 s) instead of ~60 s whenever any enabled site is `imminent: true`, and ~60 s otherwise. Non-imminent sites stay gated by `shouldCheck()`, so they don't over-check during the fast loop.
 
 ---
 
@@ -183,11 +177,11 @@ The left (Drop Reminders) and right (Pending/Collection) rails should be indepen
 `DASH_PASSWORD = 'beam'` is hardcoded in the public GitHub Pages HTML. Anyone who can read the HTML source has the password. The real risk is the GitHub PAT stored in `localStorage` — accessible to anyone with DevTools access on a shared machine.
 - Best option: Cloudflare Access (free for personal use) with Google login. Put the dashboard behind a Cloudflare proxy or move it to Cloudflare Pages. 5-minute setup once Cloudflare is wired up.
 - Alternative: move dashboard to own webspace with HTTP basic auth
-- Alternative (minimal): stop storing the PAT in localStorage; require it to be pasted each session — eliminates the main risk with zero infra change
+- ~~Alternative (minimal): stop storing the PAT in localStorage~~ ✅ Done (2026-06-13) — the PAT now lives in `sessionStorage` (cleared on tab/browser close), and any token left in `localStorage` by an older build is migrated to `sessionStorage` and purged on first load. The hardcoded `DASH_PASSWORD = 'beam'` and the Cloudflare Access option remain open.
 - Note: Brian's own webspace and Google Workspace are available if hosting needs to move
 
-**Move primary state off GitHub**
-`state.json` is written to GitHub ~every 60s by the worker (one commit per loop when anything ran). This pollutes commit history, creates 409 conflict risk when the dashboard also writes, and adds ~200–300ms GitHub API latency to every loop.
+**Move primary state off GitHub** *(partially mitigated 2026-06-13 — see state-push throttle in Architecture)*
+`state.json` is written to GitHub by the worker whenever a site is actually checked. The **state-push throttle** now cuts most of the commit spam: routine checks that only tick `checkHistory`/`lastChecked` are held in memory and flushed at most every `STATE_PUSH_MIN_INTERVAL_MS` (5 min); anything noteworthy (alerts/errors/recovery → `newHistory` non-empty) still pushes immediately. This is a stopgap, not the real fix — full migration options below.
 - *Option A (simplest)*: Railway Volume — SQLite or a JSON file on persistent disk. Worker reads/writes directly. Syncs a read-only copy to GitHub every N loops (e.g. every 5 min) for the dashboard. No new services.
 - *Option B*: Railway Postgres (free tier) — proper relational storage. More setup but enables future features like query-based history.
 - *Option C*: Upstash Redis (free tier) — key-value, very fast, no Railway dependency for storage.
@@ -199,8 +193,17 @@ The left (Drop Reminders) and right (Pending/Collection) rails should be indepen
 
 ### Nice-to-have / future research
 
-**Alert history cap increase**
-Current cap is 250. Raising to 500 costs nothing — each entry is ~300 bytes, total file stays under 200 KB. Do at the same time as the archiving feature above.
+**~~Alert history cap increase~~** ✅ Done (2026-06-13) — cap raised 250 → 500 alongside the archiving feature.
+
+**HTTP client consolidation (plan — not yet done)**
+Four hand-rolled `node:https` clients (`lib/fetch.js`, `lib/github.js`, `sites/shopify_storefront.js`, `notifiers/discord.js`) with inconsistent timeout/retry. `shopify_storefront.js` notably lacks the wall-clock deadline the others have.
+- *Plan*: extract a shared `lib/http.js` exposing `httpRequest({ method, url, headers, body, deadlineMs, retry })` that owns the wall-clock-deadline + socket-timeout pattern. Migrate in order of least risk: storefront (smallest, currently disabled) → github → discord (keep its 429/`retry_after` logic) → fetch (keep its browser-identity/profile + conditional-GET layer on top). `lib/fetch.js` stays the "browser-like GET" wrapper; the others become thin callers.
+- *Risk*: medium — touches the most load-bearing code; do incrementally, one client per commit, verifying each.
+
+**Decouple datastore from deploy source (plan — not yet done)**
+Root cause behind the commit spam, 409 risk, and single-dependency blast radius: GitHub is simultaneously the repo, the config store, and the live DB.
+- *Plan, phased*: (1) **done** — state-push throttle (above) removes most routine commits cheaply. (2) Move `state.json` + `alert_history*.json` to a Railway Volume (JSON or SQLite); worker reads/writes the volume directly. (3) Sync a read-only snapshot to GitHub every ~5 min purely for the dashboard's raw-URL reads — dashboard code unchanged. (4) Keep `config.json`/`schedules.json`/`ignored_products.json`/`reminders.json`/`pending_bottles.json` on GitHub (they're human-edited and low-frequency). Net: GitHub stays the editing surface, the volume becomes the hot datastore.
+- *Risk*: medium; gated on Railway being confirmed stable. Don't start before phase-1 throttle is proven in production.
 
 **Google Workspace / webspace integration**
 - Own webspace could host the dashboard with proper server-side auth (nginx basic auth, or behind Cloudflare)
@@ -242,6 +245,13 @@ These were completed during the Phase 1 / Phase 2 sessions. Listed so future Cla
 | ✅ | Conditional GET (ETag/If-Modified-Since → 304) in `site_status_monitor` + single-page `shopify_collection` |
 | ✅ | Stable per-host browser identity (6–24 h) replacing per-request profile rotation |
 | ✅ | Deterministic ±jitter (0.9–1.15×) on effective intervals in `shouldCheck()` |
+| ✅ | Alert history archiving (`alert_history_archive.json`) + cap raised 250→500 (2026-06-13) |
+| ✅ | GitHub-down / token-expiry detection — skips healthcheck + pages Discord after 3 failed config reads (R4, 2026-06-13) |
+| ✅ | `schedules.json` validation — malformed definitions dropped + once-per-start Discord warning (2026-06-13) |
+| ✅ | Imminent sub-60s floor — loop tightens to ~10s when any site is imminent (2026-06-13) |
+| ✅ | State-push throttle — routine `checkHistory`-only changes flushed ≤ every 5 min, noteworthy pushes immediate (2026-06-13) |
+| ✅ | Dashboard PAT moved from `localStorage` → `sessionStorage` (cleared on tab close; legacy token migrated + purged) (2026-06-13) |
+| ✅ | Storefront API `2024-01`→`2025-01`; `historyFileSha` localized; stale `reveries_squarespace` sandbox value renamed; `handoff/` dir removed (2026-06-13) |
 
 
 ## Known quirks
@@ -263,8 +273,8 @@ If `state.json` is corrupt or missing at startup, the worker runs with empty sta
 **R3 — Railway down = complete monitoring blackout** *(mitigated 2026-06-12)*
 Still no backup runner, but two independent detectors now exist: (1) the worker pings `HEALTHCHECK_URL` after every loop — configure a healthchecks.io check (~2 min period, ~5 min grace) and the external service alerts when pings stop, even if the worker is fully dead; (2) the dashboard's worker chip turns "worker late/stalled" when the earliest-due site check is >10/>20 min overdue, schedule-aware. **Setup required**: create the healthchecks.io check and set `HEALTHCHECK_URL` on Railway.
 
-**R4 — GH_TOKEN expiration = silent total failure**
-If the fine-grained PAT expires, every `readFile`/`writeFile` call throws. The worker increments `consecutiveErrors` per site and eventually fires `site_error` alerts — but those alerts can't update state either. Worker continues running but is fully broken. No specific token-expiry detection. Check token expiry proactively. (The healthcheck ping still succeeds in this scenario — it only proves the loop is alive, not that GitHub writes work.)
+**R4 — GH_TOKEN expiration = silent total failure** *(mitigated 2026-06-13)*
+If the fine-grained PAT expires, every `readFile`/`writeFile` call throws and the worker can't read config or persist state. Detection now exists: the worker counts consecutive loops where the top-of-`run()` config read fails (`githubFailureStreak`), and once it hits `GITHUB_FAILURE_THRESHOLD` (3) it (1) **skips the healthcheck ping** so the external dead-man fires — closing the old "healthcheck still green while blind" gap — and (2) **pages Discord directly** (the webhook needs no GH_TOKEN, so it works precisely when GitHub auth is the broken thing). The page is sent once per outage (`githubFailureAlerted`); both flags reset on the first successful config read. Still no auto-recovery of the token itself — rotate the PAT and the worker recovers on the next good read. Check token expiry proactively.
 
 ---
 
@@ -274,11 +284,10 @@ These are not in the main backlog but should be done. Safe to batch into one com
 
 | Item | File | What | Risk |
 |------|------|------|------|
-| D1 | `docs/index.html:374` | Remove dead `reveries_squarespace` sandbox option — strategy was deleted | None |
-| D2 | `schedules.json` | `weekend_light_20_mins` is a named schedule whose only rule is `defaultInterval: 20` — identical to the fixed `"20"` preset. Replace with `"schedule": "20"` on the 4 sites that use it, delete the entry. | None |
-| D3 | `schedules.json` | `bar_schedule_fi` has an unreachable `defaultInterval` rule — the midnight-crossing window above it matches all remaining hours. Remove the dead rule. | None |
-| D4 | `lib/schedule.js:1` | Stale comment references deleted `checker.js` | None |
-| D5 | `worker.js:21` | Module-level `historyFileSha` is dead state — `appendAndPushHistory` always re-fetches fresh SHA and never reads this var. Remove it. | None |
+| ~~D1~~ | `docs/index.html` | ✅ Done (2026-06-13) — the stale `reveries_squarespace` sandbox `<option>` value was renamed to `squarespace`. It was never a worker fallback: the sandbox branch only checks `=== 'shopify_collection'`, so any other value routes to the (still-useful) Squarespace fetch path. | — |
+| D2/D3 | `schedules.json` | `weekend_light_20_mins` and `bar_schedule_fi` are now orphaned (no site references them) but are **kept intentionally** for possible future use. As of 2026-06-13 every named schedule (built-in included) is deletable from the dashboard Control Panel, so prune them there if/when no longer wanted. | None |
+| ~~D4~~ | `lib/schedule.js` | ✅ Done — stale `checker.js` comment removed. | — |
+| ~~D5~~ | `worker.js` | ✅ Done (2026-06-13) — `historyFileSha` is now a local in `appendAndPushHistory`. | — |
 | ~~D6~~ | `notifiers/discord.js` | ✅ Done — `postWebhook` has a 10s socket timeout and a 15s wall-clock deadline | — |
-| D7 | `shopify_storefront.js:4` | Shopify API version is `2024-01` — aging. Bump to `2025-01` and verify response shape unchanged. | Low |
-| D8 | `state.json` / `shopify_collection.js` | Product `tags` arrays stored in state add ~30% file size but are never used post-storage (filters run pre-state). Consider stripping tags from the product map before storing. Verify dashboard doesn't display tags before doing this. | Low |
+| ~~D7~~ | `shopify_storefront.js` | ✅ Done (2026-06-13) — Storefront API bumped `2024-01` → `2025-01` (query uses only stable fields; `reveries_official` is currently disabled). | — |
+| D8 | `state.json` / `shopify_collection.js` | Product `tags` arrays stored in state add ~30% file size but are never used post-storage (filters run pre-state). **Still open** — verify the dashboard Products table doesn't display tags before stripping them from the product map. | Low |

@@ -2,7 +2,7 @@ import { request } from "node:https";
 import { diff } from "../lib/diff.js";
 import { emptyFetchGuard } from "../lib/empty_guard.js";
 
-const API_VERSION = "2024-01";
+const API_VERSION = "2025-01";
 
 function storefrontPost(domain, token, query) {
   return new Promise((resolve, reject) => {

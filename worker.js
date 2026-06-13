@@ -12,9 +12,21 @@ import { https } from "./lib/fetch.js";
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
 const HEALTHCHECK_URL = process.env.HEALTHCHECK_URL; // optional dead-man ping
 const LOOP_BASE_MS = 60_000;
-const MAX_HISTORY = 250;
+const IMMINENT_LOOP_MS = 10_000; // tighter loop floor when any site is imminent
+const MAX_HISTORY = 500;
+const MAX_ARCHIVE = 5000; // hard ceiling on the archive so it can't grow unbounded
 const ERROR_ALERT_THRESHOLD = 5; // consecutive failures before paging Discord
 const DEFAULT_IMMINENT_DURATION_MIN = 20;
+// Routine state changes (just checkHistory/lastChecked ticking over) don't need
+// a GitHub commit every loop — that's the main source of commit spam and 409s.
+// Push immediately when something noteworthy happened (alerts/errors); otherwise
+// hold and push at most this often. State always lives in memory so nothing is
+// lost — only the dashboard's view of it lags slightly.
+const STATE_PUSH_MIN_INTERVAL_MS = 5 * 60_000;
+// Consecutive loops where the GitHub reads at the top of run() all failed.
+// Past this we assume GitHub is unreachable or GH_TOKEN expired (R4) and stop
+// pretending we're healthy — see startLoop().
+const GITHUB_FAILURE_THRESHOLD = 3;
 // Escalating per-site cooldown after a 429/403 — back off immediately when a
 // site pushes back instead of re-hitting it on the normal schedule.
 const COOLDOWN_STEPS_MIN = [5, 15, 60];
@@ -23,7 +35,10 @@ const COOLDOWN_STEPS_MIN = [5, 15, 60];
 
 let globalState = {};
 let stateFileSha = null;
-let historyFileSha = null;
+let lastStatePushAt = 0;          // 2e: throttle routine state pushes
+let anyImminentActive = false;    // 2d: drives the loop-sleep floor
+let githubFailureStreak = 0;      // 2b: consecutive GitHub-read failures
+let githubFailureAlerted = false; // 2b: suppress repeat token-down pages
 
 async function loadStartupState() {
   console.log("[startup] Fetching state.json from GitHub...");
@@ -75,26 +90,63 @@ async function appendAndPushHistory(events) {
   // entries pushed by a concurrent writer.
   for (let attempt = 0; attempt < 2; attempt++) {
     const res = await readFile("alert_history.json");
-    historyFileSha = res.sha;
+    const historyFileSha = res.sha;
     let history = [];
     if (res.content) {
       try { history = JSON.parse(res.content); } catch { /* start fresh */ }
     }
     history.push(...events);
-    if (history.length > MAX_HISTORY) history = history.slice(history.length - MAX_HISTORY);
+    // When trimming, the evicted oldest entries aren't dropped — they're moved
+    // to alert_history_archive.json (never trimmed by the dashboard) so the
+    // full alert record is never permanently lost.
+    let evicted = [];
+    if (history.length > MAX_HISTORY) {
+      evicted = history.slice(0, history.length - MAX_HISTORY);
+      history = history.slice(history.length - MAX_HISTORY);
+    }
     try {
-      const newSha = await writeFile(
+      await writeFile(
         "alert_history.json",
         JSON.stringify(history, null, 2),
         historyFileSha,
         "chore: update history [skip ci]"
       );
-      if (newSha) historyFileSha = newSha;
+      if (evicted.length) await appendToArchive(evicted);
       return;
     } catch (err) {
       if (err.message.includes("409") && attempt === 0) continue;
       throw err;
     }
+  }
+}
+
+// Appends evicted history entries to alert_history_archive.json. Best-effort:
+// a failure here is logged but never blocks the main history write above.
+async function appendToArchive(evicted) {
+  try {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const res = await readFile("alert_history_archive.json");
+      let archive = [];
+      if (res.content) {
+        try { archive = JSON.parse(res.content); } catch { /* start fresh */ }
+      }
+      archive.push(...evicted);
+      if (archive.length > MAX_ARCHIVE) archive = archive.slice(archive.length - MAX_ARCHIVE);
+      try {
+        await writeFile(
+          "alert_history_archive.json",
+          JSON.stringify(archive, null, 2),
+          res.sha,
+          "chore: archive history [skip ci]"
+        );
+        return;
+      } catch (err) {
+        if (err.message.includes("409") && attempt === 0) continue;
+        throw err;
+      }
+    }
+  } catch (err) {
+    console.error(`[archive] Failed to append ${evicted.length} evicted entries: ${err.message}`);
   }
 }
 
@@ -125,6 +177,58 @@ async function fetchJsonFile(path) {
   const res = await readFile(path);
   if (!res.content) return null;
   try { return JSON.parse(res.content); } catch { return null; }
+}
+
+// ── Schedule validation ───────────────────────────────────────────────────────
+// schedules.json is hand/dashboard-edited. A malformed definition would
+// otherwise fail soft (resolveNamedSchedule returns null → site silently falls
+// back to intervalMinutes). Drop malformed definitions, warn once per start,
+// and keep the valid ones so one bad entry can't take out the rest.
+const invalidSchedulesAlerted = new Set();
+
+function scheduleDefError(def) {
+  if (!def || typeof def !== "object") return "not an object";
+  if (!Array.isArray(def.rules) || def.rules.length === 0) return "missing rules array";
+  for (const rule of def.rules) {
+    if (rule == null || typeof rule !== "object") return "rule is not an object";
+    const isDefault = rule.defaultInterval != null;
+    const isWindow = rule.fromHour != null || rule.toHour != null || rule.interval != null;
+    if (isDefault) {
+      if (!Number.isFinite(rule.defaultInterval) || rule.defaultInterval < 1) return "bad defaultInterval";
+    } else if (isWindow) {
+      if (!Number.isFinite(rule.fromHour) || !Number.isFinite(rule.toHour)) return "window missing fromHour/toHour";
+      if (!Number.isFinite(rule.interval) || rule.interval < 1) return "window missing valid interval";
+    } else {
+      return "rule is neither a window nor a default";
+    }
+  }
+  return null;
+}
+
+async function validateSchedules(schedules) {
+  const valid = {};
+  for (const [key, def] of Object.entries(schedules ?? {})) {
+    const reason = scheduleDefError(def);
+    if (reason === null) { valid[key] = def; continue; }
+    const alertKey = `${key}: ${reason}`;
+    console.error(`[schedules] Dropping malformed schedule "${key}" — ${reason}`);
+    if (DISCORD_WEBHOOK && !invalidSchedulesAlerted.has(alertKey)) {
+      invalidSchedulesAlerted.add(alertKey);
+      try {
+        await sendDiscordAlert(DISCORD_WEBHOOK, "schedules.json", {
+          type: "site_error",
+          product: {
+            title: `Invalid schedule: ${key}`,
+            url: "https://github.com",
+            note: `schedules.json validation failed (${reason}) — definition dropped. Sites using it fall back to intervalMinutes.`,
+          },
+        });
+      } catch (err) {
+        console.error(`[schedules] Discord invalid-schedule alert failed: ${err.message}`);
+      }
+    }
+  }
+  return valid;
 }
 
 // ── Config validation ─────────────────────────────────────────────────────────
@@ -214,18 +318,27 @@ async function run() {
     config = c;
     ignored = i ?? {};
     schedules = s ?? {};
+    // config.json is the one file that must be present — a null here means the
+    // read failed (network/404/token), not just an empty optional file.
+    if (config) { githubFailureStreak = 0; githubFailureAlerted = false; }
+    else githubFailureStreak++;
   } catch (err) {
     console.error("[run] Failed to fetch config/ignored/schedules:", err.message);
+    githubFailureStreak++;
   }
   if (!config?.sites?.length) {
     console.error("[run] No sites in config.json — skipping run.");
     return;
   }
+  schedules = await validateSchedules(schedules);
   config.sites = await filterValidSites(config.sites);
   if (!config.sites.length) {
     console.error("[run] No valid sites after config validation — skipping run.");
     return;
   }
+  // Drives the loop-sleep floor in startLoop(): a tighter ~10 s cadence while
+  // any enabled site is in imminent mode, normal ~60 s otherwise.
+  anyImminentActive = config.sites.some((s) => s.enabled && s.imminent);
 
   const newHistory = [];
   const touchedSiteIds = [];
@@ -439,11 +552,22 @@ async function run() {
   }
 
   if (stateChanged) {
-    try {
-      await pushState(touchedSiteIds);
-      console.log("[run] State pushed to GitHub.");
-    } catch (err) {
-      console.error("[run] Failed to push state:", err.message);
+    // Push immediately when something noteworthy happened this loop (any alert,
+    // baseline, error, or recovery all land in newHistory). Otherwise this was
+    // a routine check that only ticked checkHistory/lastChecked — hold it and
+    // let the throttle window batch it, to cut commit spam and 409 contention.
+    const noteworthy = newHistory.length > 0;
+    const due = Date.now() - lastStatePushAt >= STATE_PUSH_MIN_INTERVAL_MS;
+    if (noteworthy || due) {
+      try {
+        await pushState(touchedSiteIds);
+        lastStatePushAt = Date.now();
+        console.log("[run] State pushed to GitHub.");
+      } catch (err) {
+        console.error("[run] Failed to push state:", err.message);
+      }
+    } else {
+      console.log("[run] State changed (routine) — holding; in-memory only until the next push window.");
     }
   }
 
@@ -478,21 +602,52 @@ async function startLoop() {
     } catch (err) {
       console.error("[loop] Uncaught run error:", err.message);
     }
+    // GitHub-down / token-expiry detection (R4). When GitHub reads have failed
+    // for several loops straight, the worker is alive but blind — it can't read
+    // config or write state, and the healthcheck ping below would otherwise
+    // keep reporting "healthy" and mask the outage. So once we cross the
+    // threshold we (1) deliberately skip the healthcheck so the external
+    // dead-man fires, and (2) page Discord directly — the webhook needs no
+    // GH_TOKEN, so it still works when GitHub auth is the thing that's broken.
+    const githubDown = githubFailureStreak >= GITHUB_FAILURE_THRESHOLD;
+    if (githubDown && !githubFailureAlerted) {
+      githubFailureAlerted = true;
+      console.error(`[loop] GitHub reads failing (${githubFailureStreak} loops) — paging Discord, suppressing healthcheck.`);
+      if (DISCORD_WEBHOOK) {
+        try {
+          await sendDiscordAlert(DISCORD_WEBHOOK, "Beacon worker", {
+            type: "site_error",
+            product: {
+              title: "GitHub API unreachable",
+              url: "https://github.com",
+              note: `config.json reads have failed ${githubFailureStreak} loops in a row. GH_TOKEN may be expired or GitHub may be down — the worker is running but can't read config or persist state.`,
+            },
+          });
+        } catch (err) {
+          console.error(`[loop] Discord github-down page failed: ${err.message}`);
+        }
+      }
+    }
+
     // Dead-man's switch: ping healthchecks.io (or similar) after every loop.
     // If the worker dies, the missed pings trigger an external alert — the
     // one failure mode Discord alerts can't cover, since a dead worker can't
-    // send them.
-    if (HEALTHCHECK_URL) {
+    // send them. Skipped while GitHub is down so the dead-man fires for the
+    // "alive but blind" case too.
+    if (HEALTHCHECK_URL && !githubDown) {
       try {
         await https(HEALTHCHECK_URL);
       } catch (err) {
         console.error("[loop] Healthcheck ping failed:", err.message);
       }
     }
-    // Loop every ~60 s ± 5 s so subsequent runs never land on the exact same
-    // clock second.
-    const wait = jitter(LOOP_BASE_MS, 5000);
-    console.log(`[loop] Next run in ${Math.round(wait / 1000)}s`);
+    // Loop every ~60 s ± 5 s normally; tighten to ~10 s while any site is in
+    // imminent mode so imminentIntervalMinutes can actually drive sub-minute
+    // checks (the loop is the floor). Non-imminent sites stay gated by
+    // shouldCheck(), so they don't over-check during the fast loop.
+    const base = anyImminentActive ? IMMINENT_LOOP_MS : LOOP_BASE_MS;
+    const wait = jitter(base, anyImminentActive ? 2000 : 5000);
+    console.log(`[loop] Next run in ${Math.round(wait / 1000)}s${anyImminentActive ? " (imminent)" : ""}`);
     await sleep(wait);
   }
 }

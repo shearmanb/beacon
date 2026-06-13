@@ -2,12 +2,17 @@ import { request } from "node:https";
 import { URL } from "node:url";
 import { sleep } from "../lib/utils.js";
 
+// site_changed (purple) is a reserved store-page-change alert. NOTE: no
+// strategy currently emits it — the Reveries password/"coming soon" wall is
+// detected by site_status_monitor and fires site_reset (🌊 Wave Reset), not
+// site_changed. Kept here intentionally so a future "page content changed"
+// signal has a color/label ready; do not delete.
 const COLORS = {
   new_product: 0x3498db,    // blue
   restock: 0x2ecc71,        // green
   sold_out: 0xe74c3c,       // red
-  site_reset: 0xf39c12,     // orange
-  site_changed: 0x9b59b6,   // purple
+  site_reset: 0xf39c12,     // orange  ← password/coming-soon wall (Reveries)
+  site_changed: 0x9b59b6,   // purple  ← reserved; not currently emitted
   site_error: 0xe67e22,     // dark orange
   site_recovered: 0x16a085, // teal
   imminent_timeout: 0xf1c40f, // yellow
