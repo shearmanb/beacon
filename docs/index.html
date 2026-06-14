@@ -42,6 +42,17 @@
     .hdr-stats { flex: 1; }
     .hdr-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
     select.btn#theme-select { font-size: 11px; max-width: 150px; appearance: none; padding-right: 8px; }
+    /* Phone: the sticky .glance strip already shows sites/stock/sync, so drop the
+       redundant header stat block and tuck set-once chrome (theme/density) to keep
+       the header to a tight couple of rows and cut the scroll to the first site. */
+    @media (max-width: 640px) {
+      .hdr { padding-top: 12px; padding-bottom: 10px; row-gap: 6px; }
+      .hdr-stats { display: none; }
+      #theme-select, #density-toggle { display: none; }
+      .hdr-actions { gap: 5px; }
+      .hdr-actions .btn { padding: 6px 10px; }
+      .sect { margin-top: 18px; }
+    }
     .btn-primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
     .btn-primary:hover { opacity: .85; }
     select.btn { appearance: none; max-width: 200px; }
@@ -906,7 +917,11 @@
 
   function sitesView() {
     const v = localStorage.getItem(SITES_VIEW_KEY);
-    return ['mini', 'compact', 'detailed'].includes(v) ? v : 'detailed';
+    if (['mini', 'compact', 'detailed'].includes(v)) return v;
+    // No explicit choice yet: phones default to the denser compact view to cut
+    // scrolling; wider screens keep the full detailed cards. An explicit pick
+    // via the mini/compact/detailed toggle is stored and always wins.
+    return window.matchMedia('(max-width: 640px)').matches ? 'compact' : 'detailed';
   }
   function setSitesView(v) { localStorage.setItem(SITES_VIEW_KEY, v); renderSiteCards(); }
   function sitesCollapsed() { return localStorage.getItem(SITES_COLLAPSED_KEY) === '1'; }
