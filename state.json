@@ -1163,12 +1163,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-14T07:57:46.214Z",
+    "lastChecked": "2026-06-14T09:59:07.559Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:490d4bd2f910ff66e109335535da1bc3\"",
+      "etag": "\"page_cache:45343637659:ProductListController:5fc5f3a02795ff7399774fc1769aeba3\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-13T13:55:05.299Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-13T14:00:26.555Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-14T07:57:46.214Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-14T09:59:07.559Z",
         "ok": true
       }
     ]
