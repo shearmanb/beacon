@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-14T01:18:12.880Z",
+    "lastChecked": "2026-06-14T01:40:00.528Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-13T13:35:31.059Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-13T13:41:06.477Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-14T01:18:12.880Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-14T01:40:00.528Z",
         "ok": true
       }
     ]
@@ -2031,7 +2031,7 @@
     "lastErrorAt": "2026-06-13T21:56:47.664Z"
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-14T01:26:35.956Z",
+    "lastChecked": "2026-06-14T01:48:34.386Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2199,10 +2199,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-13T13:57:14.292Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-13T14:02:34.048Z",
         "ok": true
@@ -2597,6 +2593,10 @@
       },
       {
         "ts": "2026-06-14T01:26:35.956Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-14T01:48:34.386Z",
         "ok": true
       }
     ]
@@ -3049,7 +3049,7 @@
     "lastErrorAt": "2026-06-12T18:25:17.291Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-14T01:23:31.711Z",
+    "lastChecked": "2026-06-14T01:40:05.422Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3063,10 +3063,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-12T23:00:19.529Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-12T23:14:57.919Z",
         "ok": true
@@ -3461,6 +3457,10 @@
       },
       {
         "ts": "2026-06-14T01:23:31.711Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-14T01:40:05.422Z",
         "ok": true
       }
     ]
