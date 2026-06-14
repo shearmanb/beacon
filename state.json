@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-14T21:53:41.290Z",
+    "lastChecked": "2026-06-14T21:59:02.195Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T01:31:45.214Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T01:54:38.924Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-14T21:53:41.290Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-14T21:59:02.195Z",
         "ok": true
       }
     ]
@@ -2029,7 +2029,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-14T21:51:40.578Z",
+    "lastChecked": "2026-06-14T21:58:00.721Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2189,7 +2189,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:d54bfcbeb8ede0197d1552ef267488c0\"",
+      "etag": "\"page_cache:57076547742:ProductListController:90e5c6418aca6bb446d8d052d9198ae2\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T01:26:35.956Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T01:48:34.386Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-14T21:51:40.578Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-14T21:58:00.721Z",
         "ok": true
       }
     ]
@@ -3047,7 +3047,7 @@
     "lastErrorAt": "2026-06-12T18:25:17.291Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-14T21:47:25.931Z",
+    "lastChecked": "2026-06-14T22:04:07.118Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3061,10 +3061,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-13T19:46:44.418Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-13T20:02:10.396Z",
         "ok": true
@@ -3459,6 +3455,10 @@
       },
       {
         "ts": "2026-06-14T21:47:25.931Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-14T22:04:07.118Z",
         "ok": true
       }
     ]
