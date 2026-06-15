@@ -37,18 +37,6 @@
       "createdAt": "2026-06-13T04:47:48.158Z"
     },
     {
-      "id": "b_1781326084411",
-      "bottle": "Raven V",
-      "cost": 125,
-      "retailer": "Fountain Inn",
-      "orderNumber": "",
-      "orderLink": "",
-      "etaDate": "",
-      "etaNote": "",
-      "status": "pickup",
-      "createdAt": "2026-06-13T04:48:04.411Z"
-    },
-    {
       "id": "b_1781327690381",
       "bottle": "Bourbon Retriever Rye",
       "cost": 124,
@@ -62,5 +50,19 @@
     }
   ],
   "retailers": [],
-  "collection": []
+  "collection": [
+    {
+      "id": "b_1781326084411",
+      "bottle": "Raven V",
+      "cost": 125,
+      "retailer": "Fountain Inn",
+      "orderNumber": "",
+      "orderLink": "",
+      "etaDate": "",
+      "etaNote": "",
+      "status": "delivered",
+      "createdAt": "2026-06-13T04:48:04.411Z",
+      "collectedAt": "2026-06-15T23:07:22.878Z"
+    }
+  ]
 }
