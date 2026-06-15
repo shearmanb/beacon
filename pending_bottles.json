@@ -45,7 +45,7 @@
       "orderLink": "",
       "etaDate": "",
       "etaNote": "",
-      "status": "ordered",
+      "status": "pickup",
       "createdAt": "2026-06-13T04:48:04.411Z"
     },
     {
@@ -61,5 +61,6 @@
       "createdAt": "2026-06-13T05:14:50.381Z"
     }
   ],
-  "retailers": []
+  "retailers": [],
+  "collection": []
 }
