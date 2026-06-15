@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-15T13:37:16.443Z",
+    "lastChecked": "2026-06-15T13:43:43.241Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-14T14:43:21.371Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-14T14:49:07.318Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-15T13:37:16.444Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-15T13:43:43.241Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-15T13:42:26.881Z",
+    "lastChecked": "2026-06-15T13:47:54.001Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T14:46:46.476Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T14:52:21.375Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-15T13:42:26.881Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-15T13:47:54.001Z",
         "ok": true
       }
     ]
@@ -3047,7 +3047,7 @@
     "lastErrorAt": "2026-06-12T18:25:17.291Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-15T13:28:18.488Z",
+    "lastChecked": "2026-06-15T13:43:48.163Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3061,10 +3061,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T11:21:59.968Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T11:36:09.463Z",
         "ok": true
@@ -3459,6 +3455,10 @@
       },
       {
         "ts": "2026-06-15T13:28:18.488Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-15T13:43:48.163Z",
         "ok": true
       }
     ]
