@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-15T19:23:11.669Z",
+    "lastChecked": "2026-06-15T19:29:32.364Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -529,7 +529,7 @@
           "xmas-2025"
         ],
         "minPrice": 159.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/NETA_Bicuixe_Jabali_Aficionados_x_T8KE.jpg?v=1757451767",
         "url": "https://sharedpour.com/products/agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez"
       },
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:83636d312e64e2c3fb1443f190c910b5\"",
+      "etag": "\"page_cache:45343637659:ProductListController:7cfe195375d54508eb77944ead71da19\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T20:23:00.694Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T20:28:26.903Z",
         "ok": true
@@ -1159,16 +1155,20 @@
       {
         "ts": "2026-06-15T19:23:11.669Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-15T19:29:32.364Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-15T19:22:08.540Z",
+    "lastChecked": "2026-06-15T19:27:36.520Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:7e83dbb7f51f1dda478bb545ea729e8e\"",
+      "etag": "\"page_cache:45343637659:ProductListController:8942aed9beed924a990d40d754508b2c\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T20:23:04.857Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T20:28:32.654Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-15T19:22:08.540Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-15T19:27:36.520Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-15T19:23:16.459Z",
+    "lastChecked": "2026-06-15T19:29:35.483Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T20:28:37.914Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T20:34:06.349Z",
         "ok": true
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-15T19:23:16.459Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-15T19:29:35.483Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-15T19:26:28.300Z",
+    "lastChecked": "2026-06-15T19:31:36.696Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2189,7 +2189,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:81f89ac0e4a3196b7050c7714c70bc5c\"",
+      "etag": "\"page_cache:57076547742:ProductListController:72392c0bda32c1148c0d45c148b8c310\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T20:25:20.496Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T20:31:54.569Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-15T19:26:28.300Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-15T19:31:36.696Z",
         "ok": true
       }
     ]
