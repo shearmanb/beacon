@@ -48,5 +48,32 @@
         "defaultInterval": 20
       }
     ]
+  },
+  "hours_weekend": {
+    "label": "⏰ Hours + Weekend",
+    "builtin": true,
+    "rules": [
+      {
+        "days": ["mon", "tue", "wed", "thu", "fri"],
+        "fromHour": 9,
+        "toHour": 18,
+        "interval": 5
+      },
+      {
+        "days": ["mon", "tue", "wed", "thu", "fri"],
+        "fromHour": 18,
+        "toHour": 22,
+        "interval": 20
+      },
+      {
+        "days": ["sat", "sun"],
+        "fromHour": 0,
+        "toHour": 24,
+        "interval": 15
+      },
+      {
+        "defaultInterval": 120
+      }
+    ]
   }
 }

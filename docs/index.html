@@ -586,20 +586,48 @@
         { defaultInterval: 300 },
       ],
     },
+    hours_weekend: {
+      label: '⏰ Hours + Weekend',
+      builtin: true,
+      rules: [
+        { days: ['mon', 'tue', 'wed', 'thu', 'fri'], fromHour: 9,  toHour: 18, interval: 5 },
+        { days: ['mon', 'tue', 'wed', 'thu', 'fri'], fromHour: 18, toHour: 22, interval: 20 },
+        { days: ['sat', 'sun'], fromHour: 0, toHour: 24, interval: 15 },
+        { defaultInterval: 120 },
+      ],
+    },
   };
 
   function fmtHour(h) {
     if (h === 0)  return '12am';
+    if (h === 24) return 'midnight';
     if (h === 12) return '12pm';
     return h < 12 ? `${h}am` : `${h - 12}pm`;
   }
 
+  // Day-scope presets for schedule rules (ET weekdays). A rule with no `days`
+  // applies every day (matches the worker's resolveNamedSchedule).
+  const WEEKDAYS = ['mon', 'tue', 'wed', 'thu', 'fri'];
+  const WEEKENDS = ['sat', 'sun'];
+  function daysScope(days) {
+    if (!Array.isArray(days) || !days.length) return 'all';
+    const s = [...days].sort().join();
+    if (s === [...WEEKENDS].sort().join()) return 'weekends';
+    if (s === [...WEEKDAYS].sort().join()) return 'weekdays';
+    return 'custom';
+  }
+  function scopeToDays(scope) {
+    return scope === 'weekdays' ? [...WEEKDAYS] : scope === 'weekends' ? [...WEEKENDS] : null;
+  }
+
   function formatScheduleRules(rules) {
-    return rules.map(r =>
-      r.defaultInterval != null
-        ? `${r.defaultInterval}min default`
-        : `${r.interval}min ${fmtHour(r.fromHour)}–${fmtHour(r.toHour)}`
-    ).join(' · ');
+    return rules.map(r => {
+      const scope = daysScope(r.days);
+      const tag = scope === 'weekends' ? ' wknd' : scope === 'weekdays' ? ' wkdy' : scope === 'custom' ? ' (days)' : '';
+      return r.defaultInterval != null
+        ? `${r.defaultInterval}min default${tag}`
+        : `${r.interval}min ${fmtHour(r.fromHour)}–${fmtHour(r.toHour)}${tag}`;
+    }).join(' · ');
   }
 
   function getNamedSchedules() {
@@ -742,8 +770,12 @@
     document.getElementById('sched-rules-list').innerHTML = _editRules.length
       ? _editRules.map((rule, i) => {
           const fromOpts = Array.from({length:24},(_,h)=>`<option value="${h}"${h===rule.fromHour?' selected':''}>${fmtHour(h)}</option>`).join('');
-          const toOpts   = Array.from({length:24},(_,h)=>`<option value="${h}"${h===rule.toHour?' selected':''}>${fmtHour(h)}</option>`).join('');
-          return `<div class="sched-rule-row">
+          const toOpts   = Array.from({length:25},(_,h)=>`<option value="${h}"${h===rule.toHour?' selected':''}>${fmtHour(h)}</option>`).join('');
+          const scope = daysScope(rule.days);
+          const dayOpts = [['all','Every day'],['weekdays','Weekdays'],['weekends','Weekends'],...(scope==='custom'?[['custom','Custom']]:[])]
+            .map(([v,l])=>`<option value="${v}"${v===scope?' selected':''}>${l}</option>`).join('');
+          return `<div class="sched-rule-row" style="flex-wrap:wrap">
+            <select class="sched-rule-sel" title="Days this window applies" onchange="setRuleDays(${i}, this.value)">${dayOpts}</select>
             <select class="sched-rule-sel" onchange="_editRules[${i}].fromHour=+this.value">${fromOpts}</select>
             <span style="color:var(--muted);font-size:.78rem">to</span>
             <select class="sched-rule-sel" onchange="_editRules[${i}].toHour=+this.value">${toOpts}</select>
@@ -765,6 +797,13 @@
   function removeSchedRule(i) {
     _editRules.splice(i, 1);
     renderRulesList();
+  }
+
+  // Apply a day-scope preset to a window rule. 'all' clears `days` (every day);
+  // 'custom' (hand-edited array) is left untouched so it isn't clobbered.
+  function setRuleDays(i, scope) {
+    if (scope === 'all') delete _editRules[i].days;
+    else if (scope !== 'custom') _editRules[i].days = scopeToDays(scope);
   }
 
   function autoSlugEditId() {
@@ -798,7 +837,10 @@
     const updated = { ...getNamedSchedules() };
     const existing = updated[_editingKey || id];
     const rules = [
-      ..._editRules.map(r => ({ fromHour: r.fromHour, toHour: r.toHour, interval: r.interval })),
+      ..._editRules.map(r => ({
+        ...(Array.isArray(r.days) && r.days.length ? { days: r.days } : {}),
+        fromHour: r.fromHour, toHour: r.toHour, interval: r.interval,
+      })),
       ...(!isNaN(defaultInterval) ? [{ defaultInterval }] : []),
     ];
     updated[id] = { label, ...(existing?.builtin ? { builtin: true } : {}), rules };
@@ -857,7 +899,9 @@
       const hour = parseInt(
         new Date().toLocaleString('en-US', { timeZone: 'America/New_York', hour: 'numeric', hour12: false }), 10
       );
+      const day = new Date().toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short' }).toLowerCase();
       for (const rule of def.rules) {
+        if (Array.isArray(rule.days) && !rule.days.includes(day)) continue;
         if (rule.defaultInterval != null) return rule.defaultInterval;
         if (rule.fromHour != null) {
           const matches = rule.fromHour <= rule.toHour
@@ -868,6 +912,32 @@
       }
     }
     return site.intervalMinutes;
+  }
+
+  // Short label for the schedule window currently in effect — shown on tiles so
+  // a shared named schedule is transparent ("5m · weekend"). Display-only; the
+  // worker is unaffected.
+  function activeRuleLabel(site) {
+    const { schedule } = site;
+    if (!schedule || !isNaN(parseInt(schedule, 10))) return '';
+    const def = getNamedSchedules()[schedule];
+    if (!def?.rules) return '';
+    const hour = parseInt(
+      new Date().toLocaleString('en-US', { timeZone: 'America/New_York', hour: 'numeric', hour12: false }), 10
+    );
+    const day = new Date().toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short' }).toLowerCase();
+    for (const rule of def.rules) {
+      if (Array.isArray(rule.days) && !rule.days.includes(day)) continue;
+      const scope = daysScope(rule.days);
+      if (rule.defaultInterval != null) return scope === 'weekends' ? 'weekend' : scope === 'weekdays' ? 'weekday' : 'default';
+      if (rule.fromHour != null) {
+        const matches = rule.fromHour <= rule.toHour
+          ? hour >= rule.fromHour && hour < rule.toHour
+          : hour >= rule.fromHour || hour < rule.toHour;
+        if (matches) return scope === 'weekends' ? 'weekend' : `${fmtHour(rule.fromHour)}–${fmtHour(rule.toHour)}`;
+      }
+    }
+    return '';
   }
 
   // ── Sites section: view modes, cards, check timeline ─────────────────────────
@@ -997,6 +1067,7 @@
       total: products.length,
       quick: site.scheduleBeforeQuick != null,
       cadence: fmtCadence(effInterval),
+      window: activeRuleLabel(site),
       lastCheckedTxt: lastMs ? new Date(lastMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : 'never',
       lastChangeTxt: lastChangeMs ? fmtAgoShort(lastChangeMs) + ' ago' : '—',
     };
@@ -1084,7 +1155,7 @@
     const stats = [
       `<div class="site-stat" title="In stock / tracked"><span class="k">stock</span><span class="val${vm.inStock === 0 ? ' zero' : ''}"><b>${vm.inStock}</b><span class="dim">/${vm.total}</span></span></div>`,
       `<div class="site-stat" title="Next check"><span class="k">next</span><span class="val"${vm.checking ? ' style="color:var(--accent)"' : ''}>${esc(nextTxt)}</span></div>`,
-      `<div class="site-stat" title="Check cadence"><span class="k">every</span><span class="val"${vm.quick ? ' style="color:var(--warn)"' : ''}>${esc(vm.cadence)}${vm.quick ? '⚡' : ''}</span></div>`,
+      `<div class="site-stat" title="Check cadence${vm.window ? ' · active window: ' + esc(vm.window) : ''}"><span class="k">every</span><span class="val"${vm.quick ? ' style="color:var(--warn)"' : ''}>${esc(vm.cadence)}${vm.quick ? '⚡' : ''}</span>${(!vm.quick && vm.window) ? `<span class="k" style="margin-left:5px">· ${esc(vm.window)}</span>` : ''}</div>`,
       `<div class="site-stat" title="Last checked"><span class="k">last</span><span class="val">${esc(vm.lastCheckedTxt)}</span></div>`,
     ];
     if (vm.revStock > 0) stats.push(`<div class="site-stat" title="Reveries in stock"><span class="k">reveries</span><span class="val" style="color:var(--rev)">${vm.revStock}</span></div>`);
