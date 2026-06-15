@@ -111,12 +111,14 @@
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .empty { color: var(--muted); font-size: .875rem; padding: 1rem 0; }
-    /* Reveries hero: real product image fills the ui.css .rev-img container */
-    .rev-img img.rev-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Reveries hero: show the whole bottle on a neutral field. object-fit:contain
+       (not cover) so a portrait product photo is never cropped to a horizontal
+       sliver — that crop, plus uneven live/sold-out tile heights, is what made
+       these tiles look broken. */
+    .rev-img img.rev-photo { width: 100%; height: 100%; object-fit: contain; display: block; padding: 6px; }
     .rev-body .nm a { color: inherit; text-decoration: none; }
     .rev-body .nm a:hover { color: var(--accent); }
-    .rev-card { min-width: 200px; }
-    .rev-card.live.big { min-width: 220px; }
+    .rev-card { min-width: 0; }
     .rev-meta { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-top: 5px; display: flex; flex-direction: column; gap: 2px; }
     .rev-meta span { display: flex; gap: 4px; }
     .rev-meta .lbl { color: var(--faint); white-space: nowrap; }
@@ -172,7 +174,7 @@
     .rem-t.soon { color: var(--warn); }
     .rem-tokenhint { color: var(--muted); font-size: .72rem; padding: .5rem 0; border-top: 1px solid var(--line); }
     /* detailed mode: more vertical breathing room */
-    .sites-grid.detailed .site-card { padding: 12px 14px; }
+    .sites-grid.detailed .site-card { padding: 14px 16px; }
     .site-cfg { margin-top: 8px; padding-top: 8px; }
     .cfg-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
     .cfg-lbl { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .06em; white-space: nowrap; }
@@ -1006,17 +1008,17 @@
     const finds = vm.found.map(m => `<div class="ev-found" style="left:${pos(m)}%" title="${Math.round(m)}m ago — new bottle found"></div>`).join('');
     const failMarks = vm.fails.map(m => `<div class="ev-fail" style="left:${pos(m)}%" title="${Math.round(m)}m ago — check failed"></div>`).join('');
     return `<div class="tl${vm.checking ? ' live' : ''}">
-      <div class="track">
-        <div class="rail-line"></div>${ticks}${finds}${failMarks}
-        <div class="now-dot"></div>
-      </div>
-      <div class="tl-line">
-        <span class="tl-tally" title="Last hour: checks · finds · fails">
+      <div class="tl-head">
+        <span class="tl-cap">${vm.checking ? 'checking…' : 'last 60 min'}</span>
+        <span class="tl-tally" title="Last hour — checks · finds · fails">
           <span>${vm.checks.length}✓</span>
           <span${vm.found.length ? ' class="f"' : ''}>${vm.found.length}◆</span>
           <span${vm.fails.length ? ' class="x"' : ''}>${vm.fails.length}✗</span>
         </span>
-        <span class="tl-cad" title="Cadence · last check · last find">every <b${vm.quick ? ' class="qk"' : ''}>${esc(vm.cadence)}</b>${vm.quick ? '⚡' : ''} · ${vm.checking ? 'checking…' : esc(vm.lastCheckedTxt)} · find ${esc(vm.lastChangeTxt)}</span>
+      </div>
+      <div class="track">
+        <div class="rail-line"></div>${ticks}${finds}${failMarks}
+        <div class="now-dot"></div>
       </div>
     </div>`;
   }
@@ -1077,16 +1079,24 @@
     const expander = view === 'compact'
       ? `<button class="btn ghost sm" style="margin-top:5px;width:100%;padding:2px 0" onclick="toggleCardOpen('${esc(site.id)}')">${open ? '▴' : '▾'}</button>`
       : '';
+    // Key facts broken out into discrete labeled blocks instead of being
+    // crammed into the header and the timeline's mono meta line.
+    const stats = [
+      `<div class="site-stat" title="In stock / tracked"><span class="k">stock</span><span class="val${vm.inStock === 0 ? ' zero' : ''}"><b>${vm.inStock}</b><span class="dim">/${vm.total}</span></span></div>`,
+      `<div class="site-stat" title="Next check"><span class="k">next</span><span class="val"${vm.checking ? ' style="color:var(--accent)"' : ''}>${esc(nextTxt)}</span></div>`,
+      `<div class="site-stat" title="Check cadence"><span class="k">every</span><span class="val"${vm.quick ? ' style="color:var(--warn)"' : ''}>${esc(vm.cadence)}${vm.quick ? '⚡' : ''}</span></div>`,
+      `<div class="site-stat" title="Last checked"><span class="k">last</span><span class="val">${esc(vm.lastCheckedTxt)}</span></div>`,
+    ];
+    if (vm.revStock > 0) stats.push(`<div class="site-stat" title="Reveries in stock"><span class="k">reveries</span><span class="val" style="color:var(--rev)">${vm.revStock}</span></div>`);
     return `<div class="site-card${vm.checking ? ' checking' : ''}${vm.enabled ? '' : ' off'}">
       <div class="site-hd">
         <span class="dot ${vm.dot}"></span>
         <span class="name">${nameHtml}</span>
-        <span class="sc-stat${vm.inStock === 0 ? ' zero' : ''}" title="In stock / tracked"><span class="sc-lbl">stock</span><b>${vm.inStock}</b><span class="sc-dim">/${vm.total}</span></span>
-        <span class="sc-stat" title="Next check"><span class="sc-lbl">next</span><span${vm.checking ? ' style="color:var(--accent)"' : ''}>${nextTxt}</span></span>
         ${badges}
       </div>
       ${renderSiteBanners(vm)}
       ${renderErrorLog(vm)}
+      <div class="site-stats">${stats.join('')}</div>
       ${renderCheckTimeline(vm)}
       ${showSettings ? renderSiteSettings(vm) : ''}${expander}
     </div>`;
@@ -1758,13 +1768,37 @@
   }
 
   // Returns {level, ago} for one site, or null if disabled.
+  // The dashboard's view of `lastChecked` lags real worker activity: the worker
+  // holds routine state in memory and flushes it at most every 5 min
+  // (STATE_PUSH_MIN_INTERVAL_MS), raw.githubusercontent.com lags writes by ~2 min,
+  // and the dashboard itself only reloads every 2 min. So a perfectly healthy
+  // site — especially on a short (5 min) working-hours interval — can look
+  // several minutes stale here even though every check succeeded. STALE_GRACE_MIN
+  // absorbs that known infrastructure lag before we ever call a site "late",
+  // which is why a healthy worker no longer reads as e.g. "2/5 ok".
+  const STALE_GRACE_MIN = 8;
+
   function getSiteHealth(site, siteState) {
     if (!site.enabled) return null;
-    if (!siteState?.lastChecked) return { level: 'unknown', ago: 'never' };
-    const minsAgo = (Date.now() - new Date(siteState.lastChecked).getTime()) / 60_000;
+    const st = siteState || {};
+    if (!st.lastChecked) return { level: 'unknown', ago: 'never' };
+    const minsAgo = (Date.now() - new Date(st.lastChecked).getTime()) / 60_000;
     const interval = getEffectiveInterval(site) || 5;
     const ago = minsAgo < 1 ? '<1m' : minsAgo < 90 ? `${Math.round(minsAgo)}m` : `${(minsAgo / 60).toFixed(1)}h`;
-    const level = minsAgo <= interval * 2 ? 'ok' : minsAgo <= interval * 4 ? 'warn' : 'critical';
+
+    // Actual failure state outranks recency: the worker fires a site_error alert
+    // at 5 consecutive failures and cools a site down after a 429/403. Either is
+    // a genuine problem, regardless of how recently we last heard from it.
+    const errs = st.consecutiveErrors ?? 0;
+    const cooling = st.cooldownUntil && new Date(st.cooldownUntil).getTime() > Date.now();
+    if (errs >= 5 || cooling) return { level: 'critical', ago };
+    if (errs >= 2)            return { level: 'warn', ago };
+
+    // Otherwise classify on recency, with the infra-lag grace added so healthy
+    // short-interval sites don't flap to amber purely from the state-push delay.
+    const okBy   = interval * 2 + STALE_GRACE_MIN;
+    const warnBy = interval * 4 + STALE_GRACE_MIN;
+    const level = minsAgo <= okBy ? 'ok' : minsAgo <= warnBy ? 'warn' : 'critical';
     return { level, ago };
   }
 
@@ -1799,10 +1833,12 @@
       const due = new Date(st.lastChecked).getTime() + (getEffectiveInterval(site) || 5) * 60_000;
       if (due < nextDue) nextDue = due;
     }
+    // Same infra-lag grace as getSiteHealth: a flush can be 5 min behind, plus
+    // ~2 min CDN + ~2 min reload, so don't cry "late" until we're past that.
     const lateMin = nextDue === Infinity ? 0 : (Date.now() - nextDue) / 60_000;
-    if (lateMin > 20) {
+    if (lateMin > 20 + STALE_GRACE_MIN) {
       level = 'critical'; icon = '🔴'; label = `worker stalled ${Math.round(lateMin)}m`;
-    } else if (lateMin > 10 && level === 'ok') {
+    } else if (lateMin > 10 + STALE_GRACE_MIN && level === 'ok') {
       level = 'warn'; icon = '🟡'; label = `worker late ${Math.round(lateMin)}m`;
     }
 
@@ -2013,7 +2049,7 @@
     countEl.style.color = liveCount ? 'var(--ok)' : 'var(--faint)';
 
     grid.innerHTML = items.map(p => {
-      const cls = p.available ? 'rev-card live big' : 'rev-card dimmed';
+      const cls = p.available ? 'rev-card live' : 'rev-card dimmed';
       const img = p.image
         ? `<div class="rev-img"><img class="rev-photo" src="${esc(p.image)}" alt="" loading="lazy" /></div>`
         : `<div class="rev-img"><span>${p.available ? 'BOTTLE IMG' : 'IMG'}</span></div>`;
