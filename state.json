@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-15T17:14:15.410Z",
+    "lastChecked": "2026-06-15T17:19:37.290Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:b9928b418b5d90c646ba517d0489a6b4\"",
+      "etag": "\"page_cache:45343637659:ProductListController:7cfc2e55d225512c8c677521ad1899c7\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T18:16:05.401Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T18:21:34.485Z",
         "ok": true
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-15T17:14:15.410Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-15T17:19:37.290Z",
         "ok": true
       }
     ]
@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-15T17:12:54.189Z",
+    "lastChecked": "2026-06-15T17:19:41.010Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T18:23:53.910Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T18:29:28.165Z",
         "ok": true
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-15T17:12:54.189Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-15T17:19:41.010Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-15T17:18:32.404Z",
+    "lastChecked": "2026-06-15T17:23:49.904Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T18:21:49.535Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T18:27:15.358Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-15T17:18:32.404Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-15T17:23:49.904Z",
         "ok": true
       }
     ]
