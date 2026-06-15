@@ -134,10 +134,13 @@
 .filters .search { flex: 1; min-width: 180px; }
 
 /* pending status stepper */
-.steps { display: flex; gap: 4px; margin-top: 7px; }
+.steps { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
 .step { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; padding: 2.5px 8px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--faint); }
 .step.on { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, transparent); }
 .step.cur { background: color-mix(in srgb, var(--ok) 10%, transparent); font-weight: 600; }
+.step.cellar { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); margin-left: auto; }
+.step.cellar:hover:not(:disabled) { background: var(--accent-dim); }
+.step:disabled { cursor: default; opacity: .55; }
 
 /* reminders extras */
 .rem-link { display: block; font-family: var(--mono); font-size: 10px; color: var(--accent); background: none; border: none; padding: 2px 0 0; cursor: pointer; letter-spacing: .04em; }
@@ -199,10 +202,13 @@
 .pend-item .nm { font-size: 12.5px; font-weight: 600; line-height: 1.35; margin-bottom: 6px; }
 .pend-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
 .pend-eta { margin-top: 6px; font-family: var(--mono); font-size: 10.5px; color: var(--warn); }
-.pend-eta.shipped { color: var(--ok); }
+.pend-eta.pickup { color: var(--ok); }
 .coll-item { display: flex; align-items: baseline; gap: 8px; padding: 8px 4px; border-bottom: 1px solid var(--line); }
 .coll-item .nm { font-size: 12.5px; flex: 1; line-height: 1.35; }
 .coll-item .pf { font-family: var(--mono); font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+.coll-x { background: none; border: none; color: var(--faint); cursor: pointer; font-size: 13px; line-height: 1; padding: 0 2px; flex-shrink: 0; }
+.coll-x:hover:not(:disabled) { color: var(--err); }
+.coll-x:disabled { cursor: default; opacity: .5; }
 .coll-total { display: flex; justify-content: space-between; padding: 10px 4px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
 .coll-total b { color: var(--text); }
 .empty { text-align: center; color: var(--faint); font-size: 12px; padding: 18px 0; font-style: italic; }

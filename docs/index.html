@@ -434,7 +434,7 @@
   <aside class="rail right" id="right-rail">
     <div class="rtabs">
       <button class="act" id="tab-btn-pending" onclick="switchBottleTab('pending')">PENDING · <span id="pending-tab-cnt">—</span></button>
-      <button id="tab-btn-coll" onclick="switchBottleTab('coll')">COLLECTION · 0</button>
+      <button id="tab-btn-coll" onclick="switchBottleTab('coll')">COLLECTION · <span id="coll-tab-cnt">0</span></button>
     </div>
     <!-- Pending pane -->
     <div id="bottle-pending-pane">
@@ -1222,7 +1222,7 @@
   let ignored = {};
   let schedules = {};
   let reminders = { items: [] };
-  let pendingBottles = { items: [], retailers: [] };
+  let pendingBottles = { items: [], retailers: [], collection: [] };
   // Set to Date.now()+window on a confirmed write; loadData won't overwrite
   // these from the lagging raw CDN until the window passes.
   const RAW_DIRTY_WINDOW_MS = 120_000;
@@ -1323,8 +1323,8 @@
     // skip overwriting locally-confirmed data inside the post-write dirty window
     // (otherwise a stale raw read makes just-added bottles "disappear").
     if (bottlesText && Date.now() >= _bottlesDirtyUntil) {
-      try { const b = JSON.parse(bottlesText); pendingBottles = { items: Array.isArray(b.items) ? b.items : [], retailers: Array.isArray(b.retailers) ? b.retailers : [] }; }
-      catch { pendingBottles = { items: [], retailers: [] }; }
+      try { const b = JSON.parse(bottlesText); pendingBottles = { items: Array.isArray(b.items) ? b.items : [], retailers: Array.isArray(b.retailers) ? b.retailers : [], collection: Array.isArray(b.collection) ? b.collection : [] }; }
+      catch { pendingBottles = { items: [], retailers: [], collection: [] }; }
     }
 
     lastLoadedAt = Date.now();
@@ -1507,7 +1507,10 @@
   }
 
   // ── Pending Bottles rail ─────────────────────────────────────────────────────
-  const BOTTLE_STEPS = ['ordered', 'shipped', 'delivered'];
+  // Most bottles are picked up in person, so the middle stage is "pickup"
+  // (legacy "shipped" data maps onto it). After delivery a bottle can be pushed
+  // to the cellar (collection), which moves it out of pending.
+  const BOTTLE_STEPS = ['ordered', 'pickup', 'delivered'];
   // Built-in retailers always available in the dropdown; custom ones live in
   // pending_bottles.json (`retailers`) so they sync across devices.
   const DEFAULT_RETAILERS = ['Shared Pour', 'Fountain Inn'];
@@ -1534,6 +1537,7 @@
   // Normalise legacy stage names from old data
   function normaliseBottleStatus(s) {
     if (s === 'to_buy') return 'ordered';
+    if (s === 'shipped') return 'pickup';   // legacy stage renamed
     if (s === 'received') return 'delivered';
     return BOTTLE_STEPS.includes(s) ? s : 'ordered';
   }
@@ -1608,10 +1612,40 @@
         ${it.orderNumber ? `<div class="pend-meta">order #${esc(it.orderNumber)}</div>` : ''}
         ${it.orderLink ? `<div class="pend-meta"><a href="${esc(it.orderLink)}" target="_blank" rel="noopener noreferrer">View order ↗</a></div>` : ''}
         ${addedDate ? `<div class="pend-meta"><span>ordered ${addedDate}</span></div>` : ''}
-        <div class="steps">${steps}</div>
-        ${eta && status !== 'delivered' ? `<div class="pend-eta${status === 'shipped' ? ' shipped' : ''}">▸ ${eta}</div>` : ''}
+        <div class="steps">${steps}<button class="step cellar" ${hasToken ? '' : 'disabled'} onclick="addToCellar('${esc(it.id)}')" title="Move to cellar (collection)">→ cellar</button></div>
+        ${eta && status !== 'delivered' ? `<div class="pend-eta${status === 'pickup' ? ' pickup' : ''}">▸ ${eta}</div>` : ''}
       </div>`;
     }).join('');
+    renderCollection();
+  }
+
+  // Collection / "cellar" — bottles you actually own. Rendered into the
+  // Collection tab pane; total value summed across all entries.
+  function renderCollection() {
+    const pane = document.getElementById('bottle-coll-pane');
+    const coll = Array.isArray(pendingBottles.collection) ? pendingBottles.collection : [];
+    const cntEl = document.getElementById('coll-tab-cnt');
+    if (cntEl) cntEl.textContent = coll.length;
+    if (!pane) return;
+    const hasToken = !!_sessionToken;
+    if (!coll.length) {
+      pane.innerHTML = '<div class="empty" style="padding:32px 0">Cellar is empty.<br>Push a bottle from Pending with “→ cellar”.</div>';
+      return;
+    }
+    const sorted = [...coll].sort((a, b) => (b.collectedAt || '') < (a.collectedAt || '') ? -1 : 1);
+    const total = coll.reduce((s, it) => s + (Number(it.cost) || 0), 0);
+    pane.innerHTML = sorted.map(it => {
+      const pf = [
+        it.cost != null && it.cost !== '' ? `$${esc(String(it.cost))}` : '',
+        it.retailer ? esc(it.retailer) : '',
+      ].filter(Boolean).join(' · ');
+      return `<div class="coll-item">
+        <span class="nm">${esc(it.bottle || it.name || '')}</span>
+        ${pf ? `<span class="pf">${pf}</span>` : ''}
+        <button class="coll-x" ${hasToken ? '' : 'disabled'} onclick="removeFromCellar('${esc(it.id)}')" title="Remove from cellar">×</button>
+      </div>`;
+    }).join('') +
+      `<div class="coll-total"><span>${coll.length} bottle${coll.length === 1 ? '' : 's'}</span><b>$${total.toLocaleString()}</b></div>`;
   }
 
   // Fetch pending_bottles.json, apply mutate(data)->data (data = {items, retailers}),
@@ -1624,19 +1658,19 @@
         const res = await fetch(`${API_BASE}/contents/pending_bottles.json`, {
           headers: { Authorization: `token ${token}` },
         });
-        let sha = null, current = { items: [], retailers: [] };
+        let sha = null, current = { items: [], retailers: [], collection: [] };
         if (res.ok) {
           const data = await res.json();
           sha = data.sha;
-          try { const p = JSON.parse(safeAtob(data.content.replace(/\n/g, ''))); current = { items: Array.isArray(p.items) ? p.items : [], retailers: Array.isArray(p.retailers) ? p.retailers : [] }; }
-          catch { current = { items: [], retailers: [] }; }
+          try { const p = JSON.parse(safeAtob(data.content.replace(/\n/g, ''))); current = { items: Array.isArray(p.items) ? p.items : [], retailers: Array.isArray(p.retailers) ? p.retailers : [], collection: Array.isArray(p.collection) ? p.collection : [] }; }
+          catch { current = { items: [], retailers: [], collection: [] }; }
         } else if (res.status !== 404) {
           alert(`Could not fetch pending_bottles.json (${res.status})`);
           return false;
         }
 
-        const mutated = mutate({ items: [...current.items], retailers: [...current.retailers] });
-        const next = { items: mutated.items || [], retailers: mutated.retailers || [] };
+        const mutated = mutate({ items: [...current.items], retailers: [...current.retailers], collection: [...current.collection] });
+        const next = { items: mutated.items || [], retailers: mutated.retailers || [], collection: mutated.collection || [] };
         const putRes = await fetch(`${API_BASE}/contents/pending_bottles.json`, {
           method: 'PUT',
           headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
@@ -1708,6 +1742,26 @@
   async function deleteBottle(id) {
     if (!confirm('Delete this bottle?')) return;
     await commitBottles(d => ({ ...d, items: d.items.filter(it => it.id !== id) }), `chore: delete pending bottle [skip ci]`);
+  }
+
+  // Move a pending bottle into the cellar (collection): it leaves the pending
+  // list and is recorded with a collectedAt timestamp.
+  async function addToCellar(id) {
+    await commitBottles(d => {
+      const it = (d.items || []).find(b => b.id === id);
+      if (!it) return d;
+      const entry = { ...it, status: 'delivered', collectedAt: new Date().toISOString() };
+      return {
+        ...d,
+        items: d.items.filter(b => b.id !== id),
+        collection: [...(d.collection || []), entry],
+      };
+    }, `chore: move bottle to cellar [skip ci]`);
+  }
+  async function removeFromCellar(id) {
+    if (!confirm('Remove this bottle from the cellar?')) return;
+    await commitBottles(d => ({ ...d, collection: (d.collection || []).filter(it => it.id !== id) }),
+      `chore: remove bottle from cellar [skip ci]`);
   }
 
   // ── Retailers (managed in Control Panel, stored in pending_bottles.json) ──────
