@@ -1603,10 +1603,11 @@
   }
 
   // ── Pending Bottles rail ─────────────────────────────────────────────────────
-  // Most bottles are picked up in person, so the middle stage is "pickup"
-  // (legacy "shipped" data maps onto it). After delivery a bottle can be pushed
-  // to the cellar (collection), which moves it out of pending.
-  const BOTTLE_STEPS = ['ordered', 'pickup', 'delivered'];
+  // Most bottles are picked up in person, so "pickup" is the terminal stage: it
+  // means "done — I have the bottle" (legacy "shipped"/"received"/"delivered"
+  // data folds onto it). From there a bottle can be pushed to the cellar
+  // (collection), which moves it out of pending.
+  const BOTTLE_STEPS = ['ordered', 'pickup'];
   // Built-in retailers always available in the dropdown; custom ones live in
   // pending_bottles.json (`retailers`) so they sync across devices.
   const DEFAULT_RETAILERS = ['Shared Pour', 'Fountain Inn'];
@@ -1630,11 +1631,12 @@
     sel.innerHTML = opts.join('');
     if (current && effectiveRetailers().some(r => r === current)) sel.value = current;
   }
-  // Normalise legacy stage names from old data
+  // Normalise legacy stage names from old data. "pickup" is now the terminal
+  // "I have it" stage, so the old "delivered"/"received" both fold into it.
   function normaliseBottleStatus(s) {
     if (s === 'to_buy') return 'ordered';
-    if (s === 'shipped') return 'pickup';   // legacy stage renamed
-    if (s === 'received') return 'delivered';
+    if (s === 'shipped') return 'pickup';                       // legacy stage renamed
+    if (s === 'received' || s === 'delivered') return 'pickup'; // "have it" → pickup is terminal now
     return BOTTLE_STEPS.includes(s) ? s : 'ordered';
   }
 
@@ -1647,9 +1649,9 @@
     document.getElementById('bottle-coll-pane').style.display = tab === 'coll' ? '' : 'none';
   }
 
-  // Active bottles first (soonest ETA → undated → oldest added); delivered sink to the bottom.
+  // Active bottles first (soonest ETA → undated → oldest added); picked-up sink to the bottom.
   function sortedBottles() {
-    const rank = it => normaliseBottleStatus(it.status) === 'delivered' ? 1 : 0;
+    const rank = it => normaliseBottleStatus(it.status) === 'pickup' ? 1 : 0;
     return [...(pendingBottles.items || [])].sort((a, b) => {
       if (rank(a) !== rank(b)) return rank(a) - rank(b);
       const ad = a.etaDate || '', bd = b.etaDate || '';
@@ -1673,7 +1675,7 @@
     const items = sortedBottles();
 
     // Update tab counter
-    const activeCount = items.filter(it => normaliseBottleStatus(it.status) !== 'delivered').length;
+    const activeCount = items.filter(it => normaliseBottleStatus(it.status) !== 'pickup').length;
     const cntEl = document.getElementById('pending-tab-cnt');
     if (cntEl) cntEl.textContent = activeCount;
 
@@ -1709,7 +1711,7 @@
         ${it.orderLink ? `<div class="pend-meta"><a href="${esc(it.orderLink)}" target="_blank" rel="noopener noreferrer">View order ↗</a></div>` : ''}
         ${addedDate ? `<div class="pend-meta"><span>ordered ${addedDate}</span></div>` : ''}
         <div class="steps">${steps}<button class="step cellar" ${hasToken ? '' : 'disabled'} onclick="addToCellar('${esc(it.id)}')" title="Move to cellar (collection)">→ cellar</button></div>
-        ${eta && status !== 'delivered' ? `<div class="pend-eta${status === 'pickup' ? ' pickup' : ''}">▸ ${eta}</div>` : ''}
+        ${eta && status !== 'pickup' ? `<div class="pend-eta">▸ ${eta}</div>` : ''}
       </div>`;
     }).join('');
     renderCollection();
@@ -1846,7 +1848,7 @@
     await commitBottles(d => {
       const it = (d.items || []).find(b => b.id === id);
       if (!it) return d;
-      const entry = { ...it, status: 'delivered', collectedAt: new Date().toISOString() };
+      const entry = { ...it, status: 'pickup', collectedAt: new Date().toISOString() };
       return {
         ...d,
         items: d.items.filter(b => b.id !== id),
