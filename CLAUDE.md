@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Beacon is a personal stock-monitoring bot owned by Brian (McLean, VA). It watches whiskey/spirits product pages and sends Discord alerts when new products appear or items come back in stock. There is no build step, no test suite, and no dependencies — pure Node.js ESM using only built-ins.
+Beacon is a personal stock-monitoring bot owned by Brad (McLean, VA). It watches whiskey/spirits product pages and sends Discord alerts when new products appear or items come back in stock. There is no build step, no test suite, and no dependencies — pure Node.js ESM using only built-ins.
 
 ## Running the worker
 
@@ -178,7 +178,7 @@ The left (Drop Reminders) and right (Pending/Collection) rails should be indepen
 - Best option: Cloudflare Access (free for personal use) with Google login. Put the dashboard behind a Cloudflare proxy or move it to Cloudflare Pages. 5-minute setup once Cloudflare is wired up.
 - Alternative: move dashboard to own webspace with HTTP basic auth
 - Alternative (minimal): ~~stop storing the PAT in localStorage~~ — tried 2026-06-13 (sessionStorage, session-only) but **reverted 2026-06-15**: re-entering the token every session was too much friction for a personal dashboard, so the PAT is again remembered in `localStorage` (`beacon_gh_token`) until cleared, same as the webhook (a token left in `sessionStorage` by the old build is migrated to `localStorage` on first load). The header **Token** button now shows "🔑 Token ✓" in green when a token is loaded and "🔑 Add token" in amber when not, so it's obvious whether the dashboard has it. The hardcoded `DASH_PASSWORD = 'beam'` and the Cloudflare Access option (the real shared-machine fix — don't re-do the sessionStorage stopgap, do this instead) remain open.
-- Note: Brian's own webspace and Google Workspace are available if hosting needs to move
+- Note: Brad's own webspace and Google Workspace are available if hosting needs to move
 
 **Move primary state off GitHub** *(partially mitigated 2026-06-13 — see state-push throttle in Architecture)*
 `state.json` is written to GitHub by the worker whenever a site is actually checked. The **state-push throttle** now cuts most of the commit spam: routine checks that only tick `checkHistory`/`lastChecked` are held in memory and flushed at most every `STATE_PUSH_MIN_INTERVAL_MS` (5 min); anything noteworthy (alerts/errors/recovery → `newHistory` non-empty) still pushes immediately. This is a stopgap, not the real fix — full migration options below.
