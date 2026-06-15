@@ -232,7 +232,7 @@
     <div class="hdr-actions">
       <button class="btn primary btn-primary sm" id="run-now-btn" onclick="triggerRun()" style="display:none">▶ Run now</button>
       <button class="btn sm" onclick="openScheduleModal()">⚙ Control Panel</button>
-      <button class="btn ghost sm" onclick="promptToken()">Token</button>
+      <button class="btn ghost sm" id="token-btn" onclick="promptToken()">🔑 Token</button>
       <button class="btn ghost sm" onclick="promptWebhook()">Webhook</button>
       <select class="btn ghost" id="theme-select" onchange="setTheme(this.value)" title="Color scheme"></select>
       <button class="btn ghost sm" id="density-toggle" onclick="toggleDensity()" title="Toggle compact density">▤</button>
@@ -1203,18 +1203,43 @@
   const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
   const TOKEN_KEY   = 'beacon_gh_token';
   const WEBHOOK_KEY = 'beacon_webhook_url';
-  // The PAT lives in sessionStorage, not localStorage: it's cleared when the
-  // tab/browser closes, so it can't be read off a shared machine in a later
-  // session. Migrate (and purge) any token left in localStorage by older
-  // builds on first load.
+  // The PAT is remembered on this device (localStorage) until cleared — the same
+  // as the Discord webhook below — so it survives closing the tab instead of
+  // having to be re-entered every session. (Session-only storage was too much
+  // friction for a personal dashboard; the real shared-machine fix is Cloudflare
+  // Access — see CLAUDE.md.) Carry over a token left in sessionStorage by the
+  // previous session-only build so it isn't lost on the first load after this.
   let _sessionToken = (() => {
-    const inSession = sessionStorage.getItem(TOKEN_KEY);
-    if (inSession) return inSession;
-    const legacy = localStorage.getItem(TOKEN_KEY);
-    if (legacy) { sessionStorage.setItem(TOKEN_KEY, legacy); localStorage.removeItem(TOKEN_KEY); return legacy; }
+    const stored = localStorage.getItem(TOKEN_KEY);
+    if (stored) return stored;
+    const legacy = sessionStorage.getItem(TOKEN_KEY);
+    if (legacy) { localStorage.setItem(TOKEN_KEY, legacy); sessionStorage.removeItem(TOKEN_KEY); return legacy; }
     return null;
   })();
   let _sessionWebhook = localStorage.getItem(WEBHOOK_KEY) || null;
+
+  // Single source of truth for saving/clearing the token + refreshing the
+  // header button so it's always obvious whether a token is loaded.
+  function setSessionToken(token) {
+    _sessionToken = token || null;
+    if (_sessionToken) localStorage.setItem(TOKEN_KEY, _sessionToken);
+    else localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY); // never leave a stale session copy
+    updateTokenButton();
+  }
+  function updateTokenButton() {
+    const btn = document.getElementById('token-btn');
+    if (!btn) return;
+    const has = !!_sessionToken;
+    btn.textContent = has ? '🔑 Token ✓' : '🔑 Add token';
+    btn.style.color = has ? 'var(--ok)' : 'var(--warn)';
+    btn.style.borderColor = has
+      ? 'color-mix(in srgb, var(--ok) 45%, transparent)'
+      : 'color-mix(in srgb, var(--warn) 45%, transparent)';
+    btn.title = has
+      ? 'GitHub token loaded (saved on this device) — click to change or clear'
+      : 'No GitHub token — click to add. Required to save changes from the dashboard.';
+  }
 
   let state = {};
   let history = [];
@@ -1814,6 +1839,7 @@
     updateSiteFilter();
     renderSidebar();
     renderBottleSidebar();
+    updateTokenButton();
     const token = _sessionToken;
     document.getElementById('run-now-btn').style.display = token ? 'inline-block' : 'none';
     renderWorkerHealth();
@@ -2142,21 +2168,17 @@
 
   // ── GitHub actions (require token) ───────────────────────────────────────────
   function promptToken() {
-    const val = prompt('GitHub fine-grained PAT (Contents write):\nKept for this browser session only — cleared when you close the tab.\nLeave blank to clear.', _sessionToken || '');
+    const val = prompt('GitHub fine-grained PAT (Contents read/write on the beacon repo):\nRemembered on this device until you clear it — you only enter it once.\nLeave blank to clear.', _sessionToken || '');
     if (val === null) return;
     const trimmed = val.trim();
     if (trimmed) {
       if (!trimmed.startsWith('ghp_') && !trimmed.startsWith('github_pat_')) {
         if (!confirm('This doesn\'t look like a GitHub token (should start with ghp_ or github_pat_). Save anyway?')) return;
       }
-      _sessionToken = trimmed;
-      sessionStorage.setItem(TOKEN_KEY, trimmed);
-      localStorage.removeItem(TOKEN_KEY); // ensure no persistent copy lingers
-      alert('Token saved for this browser session.');
+      setSessionToken(trimmed);
+      alert('Token saved — remembered on this device until you clear it.');
     } else {
-      _sessionToken = null;
-      sessionStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(TOKEN_KEY);
+      setSessionToken(null);
       alert('Token cleared.');
     }
     renderAll();

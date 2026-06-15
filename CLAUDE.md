@@ -177,7 +177,7 @@ The left (Drop Reminders) and right (Pending/Collection) rails should be indepen
 `DASH_PASSWORD = 'beam'` is hardcoded in the public GitHub Pages HTML. Anyone who can read the HTML source has the password. The real risk is the GitHub PAT stored in `localStorage` — accessible to anyone with DevTools access on a shared machine.
 - Best option: Cloudflare Access (free for personal use) with Google login. Put the dashboard behind a Cloudflare proxy or move it to Cloudflare Pages. 5-minute setup once Cloudflare is wired up.
 - Alternative: move dashboard to own webspace with HTTP basic auth
-- ~~Alternative (minimal): stop storing the PAT in localStorage~~ ✅ Done (2026-06-13) — the PAT now lives in `sessionStorage` (cleared on tab/browser close), and any token left in `localStorage` by an older build is migrated to `sessionStorage` and purged on first load. The hardcoded `DASH_PASSWORD = 'beam'` and the Cloudflare Access option remain open.
+- Alternative (minimal): ~~stop storing the PAT in localStorage~~ — tried 2026-06-13 (sessionStorage, session-only) but **reverted 2026-06-15**: re-entering the token every session was too much friction for a personal dashboard, so the PAT is again remembered in `localStorage` (`beacon_gh_token`) until cleared, same as the webhook (a token left in `sessionStorage` by the old build is migrated to `localStorage` on first load). The header **Token** button now shows "🔑 Token ✓" in green when a token is loaded and "🔑 Add token" in amber when not, so it's obvious whether the dashboard has it. The hardcoded `DASH_PASSWORD = 'beam'` and the Cloudflare Access option (the real shared-machine fix — don't re-do the sessionStorage stopgap, do this instead) remain open.
 - Note: Brian's own webspace and Google Workspace are available if hosting needs to move
 
 **Move primary state off GitHub** *(partially mitigated 2026-06-13 — see state-push throttle in Architecture)*
@@ -250,7 +250,7 @@ These were completed during the Phase 1 / Phase 2 sessions. Listed so future Cla
 | ✅ | `schedules.json` validation — malformed definitions dropped + once-per-start Discord warning (2026-06-13) |
 | ✅ | Imminent sub-60s floor — loop tightens to ~10s when any site is imminent (2026-06-13) |
 | ✅ | State-push throttle — routine `checkHistory`-only changes flushed ≤ every 5 min, noteworthy pushes immediate (2026-06-13) |
-| ✅ | Dashboard PAT moved from `localStorage` → `sessionStorage` (cleared on tab close; legacy token migrated + purged) (2026-06-13) |
+| ✅ | Dashboard PAT moved from `localStorage` → `sessionStorage` (2026-06-13) — **reverted 2026-06-15** back to persistent `localStorage` (re-entry every session was too much friction); header Token button now shows loaded/missing state |
 | ✅ | Storefront API `2024-01`→`2025-01`; `historyFileSha` localized; stale `reveries_squarespace` sandbox value renamed; `handoff/` dir removed (2026-06-13) |
 
 
