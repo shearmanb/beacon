@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-15T17:39:04.872Z",
+    "lastChecked": "2026-06-15T17:45:43.418Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:d7a5f5f664ee5f7b9fc01c64586a5603\"",
+      "etag": "\"page_cache:45343637659:ProductListController:01912ef47b15cc1d02926dcf6f0a3052\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T18:38:02.906Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T18:43:22.014Z",
         "ok": true
@@ -1159,16 +1155,20 @@
       {
         "ts": "2026-06-15T17:39:04.872Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-15T17:45:43.418Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-15T17:36:56.989Z",
+    "lastChecked": "2026-06-15T17:42:23.531Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:2d826276067b025dc46c5bbc61c50ba3\"",
+      "etag": "\"page_cache:45343637659:ProductListController:d110da11fdc42808eb79632bb71ed038\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T18:40:15.351Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T18:45:36.597Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-15T17:36:56.989Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-15T17:42:23.531Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-15T17:37:01.879Z",
+    "lastChecked": "2026-06-15T17:42:27.774Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T18:46:37.595Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T18:52:05.601Z",
         "ok": true
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-15T17:37:01.879Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-15T17:42:27.774Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-15T17:41:15.198Z",
+    "lastChecked": "2026-06-15T17:46:47.447Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T18:44:28.057Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T18:50:52.215Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-15T17:41:15.198Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-15T17:46:47.447Z",
         "ok": true
       }
     ]
@@ -3047,7 +3047,7 @@
     "lastErrorAt": "2026-06-12T18:25:17.291Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-15T17:25:04.624Z",
+    "lastChecked": "2026-06-15T17:42:32.279Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3061,10 +3061,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T15:14:47.325Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T15:28:57.358Z",
         "ok": true
@@ -3459,6 +3455,10 @@
       },
       {
         "ts": "2026-06-15T17:25:04.624Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-15T17:42:32.280Z",
         "ok": true
       }
     ]
