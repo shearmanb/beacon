@@ -50,7 +50,12 @@
       "etaNote": "",
       "status": "delivered",
       "createdAt": "2026-06-13T04:48:04.411Z",
-      "collectedAt": "2026-06-15T23:07:22.878Z"
+      "collectedAt": "2026-06-15T23:07:22.878Z",
+      "cellarPushedAt": "2026-06-16T19:26:55.274Z",
+      "cellarBottleId": null,
+      "cellarPendingId": 2,
+      "cellarStatus": "pending",
+      "cellarError": null
     },
     {
       "id": "b_1781327690381",
