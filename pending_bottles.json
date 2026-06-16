@@ -35,18 +35,6 @@
       "etaNote": "",
       "status": "ordered",
       "createdAt": "2026-06-13T04:47:48.158Z"
-    },
-    {
-      "id": "b_1781327690381",
-      "bottle": "Bourbon Retriever Rye",
-      "cost": 124,
-      "retailer": "",
-      "orderNumber": "",
-      "orderLink": "",
-      "etaDate": "",
-      "etaNote": "",
-      "status": "ordered",
-      "createdAt": "2026-06-13T05:14:50.381Z"
     }
   ],
   "retailers": [],
@@ -63,6 +51,24 @@
       "status": "delivered",
       "createdAt": "2026-06-13T04:48:04.411Z",
       "collectedAt": "2026-06-15T23:07:22.878Z"
+    },
+    {
+      "id": "b_1781327690381",
+      "bottle": "Bourbon Retriever Rye",
+      "cost": 124,
+      "retailer": "",
+      "orderNumber": "",
+      "orderLink": "",
+      "etaDate": "",
+      "etaNote": "",
+      "status": "pickup",
+      "createdAt": "2026-06-13T05:14:50.381Z",
+      "collectedAt": "2026-06-16T19:19:19.223Z",
+      "cellarPushedAt": "2026-06-16T19:19:19.039Z",
+      "cellarBottleId": null,
+      "cellarPendingId": 1,
+      "cellarStatus": "pending",
+      "cellarError": null
     }
   ]
 }
