@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-16T18:55:56.499Z",
+    "lastChecked": "2026-06-16T19:00:42.094Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-15T19:54:22.519Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-15T19:59:50.749Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-16T18:55:56.499Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-16T19:00:42.094Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-16T18:57:10.576Z",
+    "lastChecked": "2026-06-16T19:03:12.433Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-15T20:00:59.768Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-15T20:07:24.783Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-16T18:57:10.576Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-16T19:03:12.433Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-16T18:57:15.331Z",
+    "lastChecked": "2026-06-16T19:03:17.223Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-15T19:56:40.864Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-15T20:02:03.403Z",
         "ok": true
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-16T18:57:15.331Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-16T19:03:17.223Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-16T18:54:41.169Z",
+    "lastChecked": "2026-06-16T19:00:52.306Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-15T19:48:16.695Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-15T19:54:32.688Z",
         "ok": true
@@ -2596,6 +2592,10 @@
       {
         "ts": "2026-06-16T18:54:41.169Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-16T19:00:52.306Z",
+        "ok": true
       }
     ]
   },
@@ -2639,29 +2639,9 @@
     },
     "emptyStreak": 142,
     "emptyAlertSent": true,
-    "consecutiveErrors": 387,
+    "consecutiveErrors": 392,
     "errorAlertSent": true,
     "checkHistory": [
-      {
-        "ts": "2026-06-16T17:01:56.257Z",
-        "ok": false
-      },
-      {
-        "ts": "2026-06-16T17:02:59.407Z",
-        "ok": false
-      },
-      {
-        "ts": "2026-06-16T17:04:11.194Z",
-        "ok": false
-      },
-      {
-        "ts": "2026-06-16T17:05:22.268Z",
-        "ok": false
-      },
-      {
-        "ts": "2026-06-16T17:06:33.095Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-16T17:07:44.802Z",
         "ok": false
@@ -3041,36 +3021,31 @@
       {
         "ts": "2026-06-16T18:58:22.058Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-16T18:59:33.094Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-16T19:00:58.269Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-16T19:02:06.424Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-16T19:03:22.270Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-16T19:04:31.684Z",
+        "ok": false
       }
     ],
     "lastError": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-    "lastErrorAt": "2026-06-16T18:58:22.058Z",
+    "lastErrorAt": "2026-06-16T19:04:31.684Z",
     "errorLog": [
-      {
-        "ts": "2026-06-16T18:30:07.697Z",
-        "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-        "statusCode": null
-      },
-      {
-        "ts": "2026-06-16T18:31:10.914Z",
-        "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-        "statusCode": null
-      },
-      {
-        "ts": "2026-06-16T18:32:30.582Z",
-        "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-        "statusCode": null
-      },
-      {
-        "ts": "2026-06-16T18:33:43.881Z",
-        "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-        "statusCode": null
-      },
-      {
-        "ts": "2026-06-16T18:34:52.807Z",
-        "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
-        "statusCode": null
-      },
       {
         "ts": "2026-06-16T18:35:53.880Z",
         "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
@@ -3168,6 +3143,31 @@
       },
       {
         "ts": "2026-06-16T18:58:22.058Z",
+        "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
+        "statusCode": null
+      },
+      {
+        "ts": "2026-06-16T18:59:33.095Z",
+        "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
+        "statusCode": null
+      },
+      {
+        "ts": "2026-06-16T19:00:58.269Z",
+        "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
+        "statusCode": null
+      },
+      {
+        "ts": "2026-06-16T19:02:06.424Z",
+        "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
+        "statusCode": null
+      },
+      {
+        "ts": "2026-06-16T19:03:22.270Z",
+        "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
+        "statusCode": null
+      },
+      {
+        "ts": "2026-06-16T19:04:31.684Z",
         "message": "Storefront API returned unexpected structure: {\"data\":{\"collection\":null},\"extensions\":{\"cost\":{\"requestedQueryCost\":30}}}",
         "statusCode": null
       }
