@@ -120,7 +120,7 @@
     {
       "name": "The Reveries Official Shop",
       "id": "reveries_official",
-      "enabled": true,
+      "enabled": false,
       "strategy": "shopify_storefront",
       "url": "https://www.thereveries.co/shop",
       "storefrontDomain": "shared-pour.myshopify.com",
