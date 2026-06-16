@@ -1163,12 +1163,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-16T00:24:17.043Z",
+    "lastChecked": "2026-06-16T00:46:46.788Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:7b102627457f15c6691e918647e0215a\"",
+      "etag": "\"page_cache:45343637659:ProductListController:fe9d54503d5d448137303a1899a0aeee\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-15T13:00:33.754Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-15T13:06:58.243Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-16T00:24:17.043Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-16T00:46:46.788Z",
         "ok": true
       }
     ]
@@ -3047,7 +3047,7 @@
     "lastErrorAt": "2026-06-12T18:25:17.291Z"
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-16T00:24:20.508Z",
+    "lastChecked": "2026-06-16T00:41:38.941Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3061,10 +3061,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-14T22:04:07.118Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-14T22:20:39.794Z",
         "ok": true
@@ -3459,6 +3455,10 @@
       },
       {
         "ts": "2026-06-16T00:24:20.508Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-16T00:41:38.941Z",
         "ok": true
       }
     ]
