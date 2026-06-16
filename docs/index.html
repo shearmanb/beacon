@@ -133,6 +133,15 @@
     .modal-close { background: none; border: none; color: var(--muted); font-size: 1.25rem; cursor: pointer; line-height: 1; padding: .1rem .3rem; border-radius: 4px; }
     .modal-close:hover { color: var(--text); background: rgba(255,255,255,.07); }
     .modal-body { padding: 1rem 1.25rem; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 1.1rem; }
+    /* ── RickHouse app launcher ── */
+    .rh-list { display: flex; flex-direction: column; gap: .5rem; }
+    .rh-app { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .6rem .8rem; border-radius: 9px; background: var(--bg); border: 1px solid var(--border); text-decoration: none; transition: border-color .15s; }
+    .rh-app:hover { border-color: var(--accent); }
+    .rh-app .rh-name { font-weight: 600; color: var(--text); font-size: .92rem; }
+    .rh-app .rh-tag { font-family: var(--mono); font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .rh-app.current { cursor: default; border-style: dashed; opacity: .7; }
+    .rh-app.current:hover { border-color: var(--border); }
+    .rh-app.current .rh-tag::after { content: ' · here'; color: var(--accent); }
     .sched-section-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 700; margin-bottom: .4rem; }
     .sched-list { display: flex; flex-direction: column; gap: .35rem; }
     .sched-item { display: flex; align-items: center; gap: .5rem; padding: .35rem .55rem; border-radius: 7px; background: var(--bg); border: 1px solid var(--border); font-size: .82rem; }
@@ -232,6 +241,7 @@
     <div class="hdr-actions">
       <button class="btn primary btn-primary sm" id="run-now-btn" onclick="triggerRun()" style="display:none">▶ Run now</button>
       <button class="btn sm" onclick="openScheduleModal()">⚙ Control Panel</button>
+      <button class="btn sm" onclick="openRickHouseMenu()" title="Jump to another RickHouse app">🏠 RickHouse</button>
       <button class="btn ghost sm" id="token-btn" onclick="promptToken()">🔑 Token</button>
       <button class="btn ghost sm" id="cellar-btn" onclick="promptCellar()">🍾 Cellar</button>
       <button class="btn ghost sm" onclick="promptWebhook()">Webhook</button>
@@ -388,6 +398,24 @@
             <button class="btn btn-primary" onclick="saveNamedSchedule()">Save schedule</button>
             <button class="btn" onclick="showSchedListView()">Cancel</button>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RickHouse app launcher modal -->
+  <div class="modal-overlay" id="rickhouse-modal" onclick="handleRickHouseOverlayClick(event)">
+    <div class="modal" style="width:340px">
+      <div class="modal-header">
+        <h3>🏠 RickHouse</h3>
+        <button class="modal-close" onclick="closeRickHouseMenu()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="rh-list">
+          <div class="rh-app current"><span class="rh-name">Beacon</span><span class="rh-tag">Tracking</span></div>
+          <a class="rh-app" href="https://shearmanb.github.io/drop-tracker/"><span class="rh-name">Unicorn Slayer</span><span class="rh-tag">Hunting</span></a>
+          <a class="rh-app" href="https://cellar-production-1ba7.up.railway.app/bottles"><span class="rh-name">Cellar</span><span class="rh-tag">Bottle DB</span></a>
+          <a class="rh-app" href="https://finish-production-0ad6.up.railway.app/"><span class="rh-name">Finish</span><span class="rh-tag">Tasting</span></a>
         </div>
       </div>
     </div>
@@ -673,6 +701,18 @@
 
   function handleModalOverlayClick(e) {
     if (e.target === document.getElementById('schedule-modal')) closeScheduleModal();
+  }
+
+  function openRickHouseMenu() {
+    document.getElementById('rickhouse-modal').classList.add('open');
+  }
+
+  function closeRickHouseMenu() {
+    document.getElementById('rickhouse-modal').classList.remove('open');
+  }
+
+  function handleRickHouseOverlayClick(e) {
+    if (e.target === document.getElementById('rickhouse-modal')) closeRickHouseMenu();
   }
 
   function showSchedListView() {
