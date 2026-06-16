@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-16T04:07:03.244Z",
+    "lastChecked": "2026-06-16T06:20:11.492Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1618,7 +1618,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:66506555478:ProductListController:9ae7a6bea7cdeda420807a77cd5f3d51\"",
+      "etag": "\"page_cache:66506555478:ProductListController:a6801453709ba8b012be7c7cd0f1df77\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-15T13:36:12.265Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-15T13:42:32.259Z",
         "ok": true
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-16T04:07:03.244Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-16T06:20:11.492Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-16T03:57:39.151Z",
+    "lastChecked": "2026-06-16T06:11:57.994Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2189,7 +2189,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:1b5e2b25a272256a735e6f1e422471a9\"",
+      "etag": "\"page_cache:57076547742:ProductListController:b2b1337a393c25e25c077be092a7b123\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-15T13:31:49.000Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-15T13:37:24.515Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-16T03:57:39.151Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-16T06:11:57.995Z",
         "ok": true
       }
     ]
