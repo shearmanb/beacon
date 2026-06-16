@@ -233,6 +233,7 @@
       <button class="btn primary btn-primary sm" id="run-now-btn" onclick="triggerRun()" style="display:none">▶ Run now</button>
       <button class="btn sm" onclick="openScheduleModal()">⚙ Control Panel</button>
       <button class="btn ghost sm" id="token-btn" onclick="promptToken()">🔑 Token</button>
+      <button class="btn ghost sm" id="cellar-btn" onclick="promptCellar()">🍾 Cellar</button>
       <button class="btn ghost sm" onclick="promptWebhook()">Webhook</button>
       <select class="btn ghost" id="theme-select" onchange="setTheme(this.value)" title="Color scheme"></select>
       <button class="btn ghost sm" id="density-toggle" onclick="toggleDensity()" title="Toggle compact density">▤</button>
@@ -1312,6 +1313,35 @@
       : 'No GitHub token — click to add. Required to save changes from the dashboard.';
   }
 
+  // ── Cellar integration ───────────────────────────────────────────────────────
+  // Pushing a bottle to "→ cellar" registers it in the Cellar master bottle
+  // database (POST {url}/api/pending, Bearer token) in addition to moving it into
+  // the local Collection. Both the base URL and the CELLAR_API_TOKEN are kept on
+  // this device (localStorage), same as the GitHub PAT — never committed.
+  const CELLAR_URL_KEY   = 'beacon_cellar_url';
+  const CELLAR_TOKEN_KEY = 'beacon_cellar_token';
+  let _cellarUrl   = (localStorage.getItem(CELLAR_URL_KEY) || '').replace(/\/+$/, '') || null;
+  let _cellarToken = localStorage.getItem(CELLAR_TOKEN_KEY) || null;
+  function cellarConfigured() { return !!(_cellarUrl && _cellarToken); }
+  function setCellarConfig(url, token) {
+    _cellarUrl   = (url || '').replace(/\/+$/, '') || null;
+    _cellarToken = token || null;
+    if (_cellarUrl)   localStorage.setItem(CELLAR_URL_KEY, _cellarUrl);     else localStorage.removeItem(CELLAR_URL_KEY);
+    if (_cellarToken) localStorage.setItem(CELLAR_TOKEN_KEY, _cellarToken); else localStorage.removeItem(CELLAR_TOKEN_KEY);
+    updateCellarButton();
+  }
+  function updateCellarButton() {
+    const btn = document.getElementById('cellar-btn');
+    if (!btn) return;
+    const has = cellarConfigured();
+    btn.textContent = has ? '🍾 Cellar ✓' : '🍾 Cellar';
+    btn.style.color = has ? 'var(--ok)' : '';
+    btn.style.borderColor = has ? 'color-mix(in srgb, var(--ok) 45%, transparent)' : '';
+    btn.title = has
+      ? `Cellar integration on (${_cellarUrl}) — “→ cellar” also registers bottles in the master DB. Click to change or clear.`
+      : 'Cellar integration off — click to add the Cellar URL + token so “→ cellar” registers bottles in the master database.';
+  }
+
   let state = {};
   let history = [];
   let config = { sites: [] };
@@ -1740,10 +1770,29 @@
       return `<div class="coll-item">
         <span class="nm">${esc(it.bottle || it.name || '')}</span>
         ${pf ? `<span class="pf">${pf}</span>` : ''}
+        ${cellarStatusBadge(it, hasToken)}
         <button class="coll-x" ${hasToken ? '' : 'disabled'} onclick="removeFromCellar('${esc(it.id)}')" title="Remove from cellar">×</button>
       </div>`;
     }).join('') +
       `<div class="coll-total"><span>${coll.length} bottle${coll.length === 1 ? '' : 's'}</span><b>$${total.toLocaleString()}</b></div>`;
+  }
+
+  // A compact badge showing where a collection bottle stands in the Cellar master
+  // DB: green 🍾 #id = a real master bottle; amber ⏳ = queued in Cellar's pending
+  // review (approve it there to mint the bottle); otherwise a (re)try button.
+  function cellarStatusBadge(it, hasToken) {
+    if (it.cellarBottleId != null) {
+      return `<span class="pf" style="color:var(--ok)" title="In the Cellar master DB (bottle #${esc(String(it.cellarBottleId))})">🍾 #${esc(String(it.cellarBottleId))}</span>`;
+    }
+    if (it.cellarPendingId != null) {
+      return `<span class="pf" style="color:var(--warn)" title="Submitted to Cellar's pending queue (id ${esc(String(it.cellarPendingId))}) — approve it in Cellar to create the master bottle.">⏳ queued</span>`;
+    }
+    const canSync = cellarConfigured() && hasToken;
+    const failed = !!it.cellarError;
+    const title = failed
+      ? `Cellar push failed: ${esc(String(it.cellarError))}. Click to retry.`
+      : (cellarConfigured() ? 'Register this bottle in the Cellar master DB.' : 'Add the Cellar URL + token (🍾 Cellar) to enable.');
+    return `<button class="pf" ${canSync ? '' : 'disabled'} onclick="syncCollectionItemToCellar('${esc(it.id)}')" title="${title}" style="cursor:pointer;background:none;border:1px solid var(--line);border-radius:4px;color:${failed ? 'var(--warn)' : 'var(--faint)'}">${failed ? '⚠ retry cellar' : '↑ cellar'}</button>`;
   }
 
   // Fetch pending_bottles.json, apply mutate(data)->data (data = {items, retailers}),
@@ -1842,13 +1891,66 @@
     await commitBottles(d => ({ ...d, items: d.items.filter(it => it.id !== id) }), `chore: delete pending bottle [skip ci]`);
   }
 
-  // Move a pending bottle into the cellar (collection): it leaves the pending
-  // list and is recorded with a collectedAt timestamp.
+  // Derive a stable Cellar handle from the bottle name. Cellar dedupes on
+  // (store, handle), so the same name + retailer maps to the same pending row —
+  // re-pushing is idempotent rather than creating duplicates.
+  function cellarHandle(name) {
+    return String(name || '').toLowerCase().trim()
+      .replace(/&/g, ' and ')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 120) || 'bottle';
+  }
+
+  // Register a bottle in the Cellar master database via POST {url}/api/pending.
+  // Resolves to { ok, bottleId?, pendingId?, status?, error? } and never throws,
+  // so a Cellar outage can't block the local collection move.
+  async function pushToCellar(item) {
+    if (!cellarConfigured()) return { ok: false, error: 'not-configured' };
+    const title = (item.bottle || item.name || '').trim();
+    if (!title) return { ok: false, error: 'no bottle name' };
+    const body = { store: (item.retailer || '').trim() || 'Beacon', handle: cellarHandle(title), title };
+    if (item.orderLink) body.url = item.orderLink;
+    if (item.cost != null && item.cost !== '' && Number.isFinite(Number(item.cost))) body.price = Number(item.cost);
+    try {
+      const res = await fetch(`${_cellarUrl}/api/pending`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_cellarToken}` },
+        body: JSON.stringify(body),
+      });
+      let data = {};
+      try { data = await res.json(); } catch {}
+      if (!res.ok) return { ok: false, error: data.error || `HTTP ${res.status}` };
+      if (data.status === 'already-mapped') return { ok: true, bottleId: data.bottleId, status: 'already-mapped' };
+      return { ok: true, pendingId: data.id, status: data.status || 'pending' };
+    } catch (err) {
+      return { ok: false, error: err.message || 'network error' };
+    }
+  }
+
+  // Fields stamped onto a collection entry to record the result of a Cellar push.
+  function cellarMeta(cellar) {
+    const base = { cellarPushedAt: new Date().toISOString(), cellarBottleId: null, cellarPendingId: null, cellarStatus: null, cellarError: null };
+    if (!cellar || !cellar.ok) return { ...base, cellarError: (cellar && cellar.error) || 'unknown error' };
+    return { ...base, cellarBottleId: cellar.bottleId ?? null, cellarPendingId: cellar.pendingId ?? null, cellarStatus: cellar.status || null };
+  }
+
+  // Move a pending bottle into the cellar (collection): register it in the Cellar
+  // master DB (best-effort), then move it out of pending into the local
+  // collection, stamped with a collectedAt timestamp and the Cellar result.
   async function addToCellar(id) {
+    const it = (pendingBottles.items || []).find(b => b.id === id);
+    if (!it) return;
+    let meta = {};
+    if (cellarConfigured()) {
+      const cellar = await pushToCellar(it);
+      if (!cellar.ok && !confirm(`Couldn't register "${it.bottle || it.name || 'this bottle'}" in the Cellar master DB:\n${cellar.error}\n\nMove it to your collection anyway? You can retry the Cellar push from the Collection tab.`)) return;
+      meta = cellarMeta(cellar);
+    }
     await commitBottles(d => {
-      const it = (d.items || []).find(b => b.id === id);
-      if (!it) return d;
-      const entry = { ...it, status: 'pickup', collectedAt: new Date().toISOString() };
+      const item = (d.items || []).find(b => b.id === id);
+      if (!item) return d;
+      const entry = { ...item, status: 'pickup', collectedAt: new Date().toISOString(), ...meta };
       return {
         ...d,
         items: d.items.filter(b => b.id !== id),
@@ -1856,6 +1958,20 @@
       };
     }, `chore: move bottle to cellar [skip ci]`);
   }
+
+  // Retry / first-time push for a bottle already in the collection (e.g. one
+  // added before Cellar was configured, or whose earlier push failed).
+  async function syncCollectionItemToCellar(id) {
+    if (!cellarConfigured()) { alert('Add the Cellar URL + token first (🍾 Cellar in the header).'); return; }
+    const it = (pendingBottles.collection || []).find(b => b.id === id);
+    if (!it) return;
+    const cellar = await pushToCellar(it);
+    if (!cellar.ok) alert(`Cellar push failed: ${cellar.error}`);
+    const meta = cellarMeta(cellar);
+    await commitBottles(d => ({ ...d, collection: (d.collection || []).map(b => b.id === id ? { ...b, ...meta } : b) }),
+      `chore: sync bottle to cellar [skip ci]`);
+  }
+
   async function removeFromCellar(id) {
     if (!confirm('Remove this bottle from the cellar?')) return;
     await commitBottles(d => ({ ...d, collection: (d.collection || []).filter(it => it.id !== id) }),
@@ -1913,6 +2029,7 @@
     renderSidebar();
     renderBottleSidebar();
     updateTokenButton();
+    updateCellarButton();
     const token = _sessionToken;
     document.getElementById('run-now-btn').style.display = token ? 'inline-block' : 'none';
     renderWorkerHealth();
@@ -2270,6 +2387,21 @@
       localStorage.removeItem(WEBHOOK_KEY);
       alert('Discord webhook cleared.');
     }
+  }
+
+  function promptCellar() {
+    const url = prompt('Cellar API base URL (e.g. https://cellar.up.railway.app):\nUsed to register bottles in the Cellar master database when you push “→ cellar”.\nRemembered on this device until cleared. Leave blank to clear the integration.', _cellarUrl || '');
+    if (url === null) return;
+    const u = url.trim().replace(/\/+$/, '');
+    if (!u) { setCellarConfig(null, null); alert('Cellar integration cleared.'); renderAll(); return; }
+    if (!/^https?:\/\//i.test(u)) { alert('Cellar URL must start with http:// or https://'); return; }
+    const tok = prompt('Cellar API token (the CELLAR_API_TOKEN value — sent as a Bearer token):\nRemembered on this device until cleared.', _cellarToken || '');
+    if (tok === null) return;
+    const t = tok.trim();
+    if (!t) { alert('A Cellar token is required to push bottles. Nothing saved.'); return; }
+    setCellarConfig(u, t);
+    alert('Cellar integration saved on this device.\n“→ cellar” will now also register bottles in the master DB.');
+    renderAll();
   }
 
   async function sendIgnoreToDiscord(handle, shouldIgnore) {
