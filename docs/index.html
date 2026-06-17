@@ -161,6 +161,22 @@
     .sched-rule-row { display: flex; align-items: center; gap: .4rem; padding: .3rem .5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; font-size: .8rem; flex-wrap: wrap; }
     .sched-rule-sel { padding: .25rem .35rem; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .8rem; }
     .sched-rule-num { width: 58px; padding: .25rem .35rem; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .8rem; }
+    /* ── Shared Pour import modal ── */
+    .sp-help { font-size: .85rem; color: var(--text); line-height: 1.5; }
+    .sp-help-sub { font-size: .76rem; color: var(--muted); margin-top: .4rem; }
+    .sp-bm { display: inline-block; padding: .25rem .6rem; border: 1px solid var(--accent); border-radius: 7px; color: var(--accent); text-decoration: none; font-weight: 600; cursor: grab; white-space: nowrap; }
+    .sp-linkbtn { background: none; border: none; color: var(--accent); cursor: pointer; text-decoration: underline; font-size: inherit; padding: 0; }
+    .sp-code { width: 100%; font-family: var(--mono); font-size: .68rem; padding: .35rem .5rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--muted); }
+    .sp-text { width: 100%; box-sizing: border-box; font-family: var(--mono); font-size: .72rem; padding: .45rem .6rem; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--text); resize: vertical; }
+    .sp-check { display: flex; align-items: center; gap: .4rem; font-size: .8rem; color: var(--muted); }
+    .sp-preview { display: flex; flex-direction: column; gap: .15rem; max-height: 240px; overflow-y: auto; }
+    .sp-sum { font-size: .8rem; color: var(--muted); margin-bottom: .35rem; }
+    .sp-grp { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; margin-top: .5rem; margin-bottom: .2rem; }
+    .sp-row { display: flex; justify-content: space-between; gap: .6rem; padding: .25rem .45rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-size: .8rem; }
+    .sp-row .sp-nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sp-row .sp-st { color: var(--muted); white-space: nowrap; font-size: .74rem; }
+    .sp-empty { font-size: .8rem; color: var(--muted); padding: .3rem 0; }
+    .sp-chip { display: inline-block; font-size: .68rem; font-weight: 600; padding: .05rem .4rem; border-radius: 10px; background: rgba(52,152,219,.14); color: var(--accent); }
     /* ── Worker health chip (inline in Sites header) ── */
     .worker-chip { display: inline-flex; align-items: center; gap: .3rem; font-size: .74rem; font-weight: 600; padding: .18rem .55rem; border-radius: 20px; white-space: nowrap; cursor: default; }
     .worker-chip.ok       { background: rgba(46,204,113,.12); color: var(--green); }
@@ -421,6 +437,34 @@
     </div>
   </div>
 
+  <!-- Shared Pour order import modal -->
+  <div class="modal-overlay" id="sharedpour-modal" onclick="handleSharedPourOverlayClick(event)">
+    <div class="modal" style="width:560px">
+      <div class="modal-header">
+        <h3>⤵ Import Shared Pour orders</h3>
+        <button class="modal-close" onclick="closeSharedPourModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="sp-help">
+          One-time setup: drag this to your bookmarks bar →
+          <a id="sp-bm-link" class="sp-bm" href="#" onclick="return false">⤵ Beacon: import orders</a>
+          <div class="sp-help-sub">Then, while logged in on your Shared Pour <b>Orders</b> page, click the bookmark — it sends your orders straight here. Can't drag? <button class="sp-linkbtn" onclick="copySharedPourBookmarklet()">Copy the code</button> and make a bookmark whose URL is that code.</div>
+        </div>
+        <input id="sp-bm-code" class="sp-code" type="text" readonly onclick="this.select()" />
+        <div>
+          <div class="sched-field-label">Or paste the orders page text</div>
+          <textarea id="sp-paste" class="sp-text" rows="4" placeholder="Paste here (the bookmarklet fills this in automatically)…" oninput="previewSharedPourImport()"></textarea>
+        </div>
+        <label class="sp-check"><input type="checkbox" id="sp-include-terminal" onchange="previewSharedPourImport()" /> Also add already picked-up / delivered orders</label>
+        <div id="sp-preview" class="sp-preview"></div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn btn-primary" id="sp-import-btn" onclick="runSharedPourImport()" disabled>Import</button>
+          <button class="btn" onclick="closeSharedPourModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <section class="sec-history">
     <div class="section-header" onclick="toggleSection('history')">
       <h2><span class="sec-icon">🔔</span> Alert History</h2>
@@ -471,6 +515,7 @@
     </div>
     <!-- Pending pane -->
     <div id="bottle-pending-pane">
+      <button class="btn ghost sm" style="width:100%;margin-bottom:.5rem" onclick="openSharedPourModal()" title="Import your Shared Pour orders into the pending feed">⤵ Import Shared Pour orders</button>
       <div class="rail-form" id="bottle-add">
         <input class="in" type="text" id="bottle-name-in" placeholder="Bottle *" maxlength="120"
                onkeydown="if(event.key==='Enter')addBottle()" />
@@ -1398,6 +1443,14 @@
   const RAW_DIRTY_WINDOW_MS = 120_000;
   let _bottlesDirtyUntil  = 0;
   let _remindersDirtyUntil = 0;
+  // A bookmarklet on the Shared Pour orders page can hand its order list here via
+  // #beaconimport=<base64>. Capture + clear it now; it's processed after unlock.
+  let _pendingImport = (() => {
+    const m = location.hash.match(/^#beaconimport=(.+)$/);
+    if (!m) return null;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; }
+  })();
   let lastLoadedAt = null;
   let isRefreshing = false;
 
@@ -1456,7 +1509,7 @@
       document.getElementById('pw-input').value = '';
       document.getElementById('gate').style.display = 'none';
       document.getElementById('app').style.display = 'grid';
-      loadData();
+      loadData().then(() => maybeRunPendingImport());
       setInterval(loadData, 120_000);
     } else {
       document.getElementById('pw-error').style.display = 'block';
@@ -1781,6 +1834,7 @@
           <button style="background:none;border:none;color:var(--faint);cursor:pointer;font-size:13px;line-height:1;padding:0 2px;flex-shrink:0" ${hasToken ? '' : 'disabled'} onclick="deleteBottle('${esc(it.id)}')" title="Delete">×</button>
         </div>
         ${costRetailer ? `<div class="pend-meta">${costRetailer}</div>` : ''}
+        ${it.spStatus && status !== 'pickup' ? `<div class="pend-meta"><span class="sp-chip">${esc(it.spStatus)}</span></div>` : ''}
         ${it.orderNumber ? `<div class="pend-meta">order #${esc(it.orderNumber)}</div>` : ''}
         ${it.orderLink ? `<div class="pend-meta"><a href="${esc(it.orderLink)}" target="_blank" rel="noopener noreferrer">View order ↗</a></div>` : ''}
         ${addedDate ? `<div class="pend-meta"><span>ordered ${addedDate}</span></div>` : ''}
@@ -1933,6 +1987,211 @@
   async function deleteBottle(id) {
     if (!confirm('Delete this bottle?')) return;
     await commitBottles(d => ({ ...d, items: d.items.filter(it => it.id !== id) }), `chore: delete pending bottle [skip ci]`);
+  }
+
+  // ── Shared Pour order import ──────────────────────────────────────────────────
+  // Orders live behind Shopify's customer-account login, so the worker can't
+  // reach them. Instead a bookmarklet run on the logged-in orders page hands the
+  // page's visible text here (via #beaconimport= or paste); we parse it into
+  // pending bottles. Re-running it advances existing bottles' status
+  // (ordered → pickup) and adds newly-placed active orders, matching on order
+  // number + name so it never duplicates. No credentials touch the worker or the
+  // bookmarklet — the dashboard's own token does the pending_bottles.json write.
+  function spNormOrder(s) {
+    return String(s || '').toLowerCase().replace(/order/g, '').replace(/[^a-z0-9]/g, '');
+  }
+  function spNormName(s) {
+    return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+  function spMapStatus(raw) {
+    const t = String(raw || '').toLowerCase();
+    if (t.includes('picked up'))        return { stage: 'pickup',  label: 'Picked up',        active: false };
+    if (t.includes('delivered'))        return { stage: 'pickup',  label: 'Delivered',        active: false };
+    if (t.includes('ready for pickup')) return { stage: 'ordered', label: 'Ready for pickup', active: true  };
+    if (t.includes('out for delivery')) return { stage: 'ordered', label: 'Out for delivery', active: true  };
+    if (t.includes('on its way'))       return { stage: 'ordered', label: 'On its way',       active: true  };
+    return { stage: 'ordered', label: String(raw || '').trim(), active: true };
+  }
+  // "A, B, and 2 more products" → ['A','B'] (drops the "N more" placeholder).
+  // Products are joined with ", ", but a name can carry an internal comma inside
+  // parens (e.g. "Bourbon (123.6 Proof, II.I)"), so re-merge fragments while a
+  // preceding piece has an unclosed "(".
+  function spSplitProducts(s) {
+    const parts = String(s || '').split(/,\s*/);
+    const merged = [];
+    for (const part of parts) {
+      const prev = merged[merged.length - 1];
+      if (prev !== undefined && (prev.match(/\(/g) || []).length > (prev.match(/\)/g) || []).length) {
+        merged[merged.length - 1] = prev + ', ' + part;
+      } else {
+        merged.push(part);
+      }
+    }
+    return merged
+      .map(p => p.replace(/^and\s+/i, '').trim())
+      .filter(p => p && !/^(and\s+)?\d+\s+more\s+products?$/i.test(p));
+  }
+  // Pull {orderNumber, products, status, total} blocks out of the orders-page text.
+  function spParseOrders(text) {
+    const lines = String(text || '').split('\n').map(l => l.trim());
+    const orders = [];
+    for (let i = 0; i < lines.length; i++) {
+      const head = lines[i].match(/^Order\s+#(\S+)$/i);
+      if (!head) continue;
+      let products = '', total = null, statusLine = '', totalsIdx = -1;
+      for (let j = i + 1; j < lines.length && j < i + 10; j++) {
+        const inc = lines[j].match(/^Order includes\s+(.+)$/i);
+        if (inc) { products = inc[1]; continue; }
+        if (/^#/.test(lines[j])) {
+          const tot = lines[j].match(/\$([\d,]+(?:\.\d+)?)\s*USD/i);
+          if (tot) { total = parseFloat(tot[1].replace(/,/g, '')); totalsIdx = j; break; }
+        }
+      }
+      if (totalsIdx === -1) continue;
+      for (let k = totalsIdx - 1; k > i; k--) {
+        if (lines[k] && !/^Order includes/i.test(lines[k]) && lines[k] !== products) { statusLine = lines[k]; break; }
+      }
+      orders.push({ orderNumber: head[1], products, status: statusLine, total });
+      i = totalsIdx;
+    }
+    return orders;
+  }
+  // Accept the bookmarklet's base64 {text,url}, a discovery dump {bodyText}, or
+  // raw pasted order text — return the order-page text either way.
+  function spExtractText(raw) {
+    const s = String(raw || '').trim();
+    if (!s) return '';
+    for (const decode of [() => safeAtob(s), () => s]) {
+      try {
+        const j = JSON.parse(decode());
+        if (j && typeof j === 'object') return String(j.text || j.bodyText || '');
+      } catch (e) {}
+    }
+    return s;
+  }
+  function spSameBottle(it, orderNumber, name) {
+    const io = spNormOrder(it.orderNumber);
+    if (!io || io !== spNormOrder(orderNumber)) return false;
+    const a = spNormName(it.bottle || it.name), b = spNormName(name);
+    return !!a && !!b && (a === b || a.includes(b) || b.includes(a));
+  }
+  // Pure planner: parsed orders + current bottle data → next items array plus a
+  // summary of what changed. Used for both the preview and the actual write, so
+  // the preview can't drift from what gets committed.
+  function spPlanImport(orders, data, includeTerminal) {
+    const items = (data.items || []).map(x => ({ ...x }));
+    const collection = data.collection || [];
+    const matched = new Set();
+    const adds = [], updates = [];
+    let owned = 0, skipped = 0, addCounter = 0;
+    for (const o of orders) {
+      const st = spMapStatus(o.status);
+      for (const name of spSplitProducts(o.products)) {
+        const idx = items.findIndex(it => !matched.has(it.id) && spSameBottle(it, o.orderNumber, name));
+        if (idx >= 0) {
+          const it = items[idx];
+          matched.add(it.id);
+          if (it.status !== st.stage || it.spStatus !== st.label) {
+            updates.push({ name: it.bottle || name, from: it.spStatus || it.status, to: st.label });
+            items[idx] = { ...it, status: st.stage, spStatus: st.label,
+              retailer: it.retailer || 'Shared Pour', orderNumber: it.orderNumber || o.orderNumber,
+              source: it.source || 'sharedpour' };
+          }
+          continue;
+        }
+        if (collection.some(it => spSameBottle(it, o.orderNumber, name))) { owned++; continue; }
+        if (!st.active && !includeTerminal) { skipped++; continue; }
+        items.push({
+          id: `b_${Date.now()}_${addCounter++}`,
+          bottle: name, cost: null, retailer: 'Shared Pour',
+          orderNumber: o.orderNumber, orderLink: '', etaDate: '', etaNote: '',
+          status: st.stage, spStatus: st.label, source: 'sharedpour',
+          createdAt: new Date().toISOString(),
+        });
+        adds.push({ name, status: st.label });
+      }
+    }
+    return { nextItems: items, adds, updates, owned, skipped };
+  }
+
+  let _spPlan = null;
+  function previewSharedPourImport() {
+    const ta = document.getElementById('sp-paste');
+    const includeTerminal = !!document.getElementById('sp-include-terminal')?.checked;
+    const out = document.getElementById('sp-preview');
+    const btn = document.getElementById('sp-import-btn');
+    const orders = spParseOrders(spExtractText(ta ? ta.value : ''));
+    if (!orders.length) {
+      _spPlan = null;
+      if (btn) btn.disabled = true;
+      if (out) out.innerHTML = (ta && ta.value.trim())
+        ? '<div class="sp-empty">Couldn’t find any orders in that text — paste the full Orders page, or re-run the bookmarklet.</div>'
+        : '';
+      return;
+    }
+    const plan = spPlanImport(orders, pendingBottles, includeTerminal);
+    _spPlan = { orders, includeTerminal };
+    if (btn) btn.disabled = (plan.adds.length === 0 && plan.updates.length === 0);
+    const rows = [`<div class="sp-sum">Found <b>${orders.length}</b> orders · <b>${plan.adds.length}</b> new · <b>${plan.updates.length}</b> status update${plan.updates.length === 1 ? '' : 's'} · ${plan.owned} owned · ${plan.skipped} past skipped</div>`];
+    if (plan.adds.length) rows.push('<div class="sp-grp">➕ New</div>' + plan.adds.map(a => `<div class="sp-row"><span class="sp-nm">${esc(a.name)}</span><span class="sp-st">${esc(a.status)}</span></div>`).join(''));
+    if (plan.updates.length) rows.push('<div class="sp-grp">↑ Status updates</div>' + plan.updates.map(u => `<div class="sp-row"><span class="sp-nm">${esc(u.name)}</span><span class="sp-st">${esc(u.from || '—')} → ${esc(u.to)}</span></div>`).join(''));
+    if (!plan.adds.length && !plan.updates.length) rows.push('<div class="sp-empty">Everything is already up to date.</div>');
+    if (out) out.innerHTML = rows.join('');
+  }
+  async function runSharedPourImport() {
+    if (!_spPlan) return;
+    const { orders, includeTerminal } = _spPlan;
+    const btn = document.getElementById('sp-import-btn');
+    if (btn) btn.disabled = true;
+    const ok = await commitBottles(
+      d => ({ ...d, items: spPlanImport(orders, d, includeTerminal).nextItems }),
+      'chore: import Shared Pour orders [skip ci]'
+    );
+    if (ok) { closeSharedPourModal(); switchBottleTab('pending'); }
+    else if (btn) { btn.disabled = false; }
+  }
+
+  // Built fresh from the current dashboard URL so it always points back here.
+  function sharedPourBookmarklet() {
+    const dash = location.origin + location.pathname;
+    return "javascript:(function(){try{var t=document.body.innerText;var u=location.href;" +
+      "var p=encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({text:t,url:u})))));" +
+      "var d=" + JSON.stringify(dash) + ";var w=window.open(d+'#beaconimport='+p,'_blank');" +
+      "if(!w){if(navigator.clipboard)navigator.clipboard.writeText(t);alert('Popup blocked \\u2014 order text copied. Open Beacon \\u2192 Import Shared Pour \\u2192 paste.');}" +
+      "}catch(e){alert('Beacon import failed: '+e);}})();";
+  }
+  function spFillBookmarklet() {
+    const code = sharedPourBookmarklet();
+    const link = document.getElementById('sp-bm-link'); if (link) link.href = code;
+    const input = document.getElementById('sp-bm-code'); if (input) input.value = code;
+  }
+  function openSharedPourModal() {
+    spFillBookmarklet();
+    document.getElementById('sharedpour-modal').classList.add('open');
+    previewSharedPourImport();
+  }
+  function closeSharedPourModal() {
+    document.getElementById('sharedpour-modal').classList.remove('open');
+  }
+  function handleSharedPourOverlayClick(e) {
+    if (e.target === document.getElementById('sharedpour-modal')) closeSharedPourModal();
+  }
+  function copySharedPourBookmarklet() {
+    const input = document.getElementById('sp-bm-code');
+    if (!input) return;
+    input.select();
+    if (navigator.clipboard) navigator.clipboard.writeText(input.value);
+    else document.execCommand('copy');
+  }
+  // Called after unlock when the bookmarklet opened the dashboard with order data.
+  function maybeRunPendingImport() {
+    if (!_pendingImport) return;
+    const data = _pendingImport; _pendingImport = null;
+    spFillBookmarklet();
+    const ta = document.getElementById('sp-paste'); if (ta) ta.value = data;
+    document.getElementById('sharedpour-modal').classList.add('open');
+    previewSharedPourImport();
+    if (!_sessionToken) alert('Orders received — add a GitHub token (🔑 Token) to import them.');
   }
 
   // Derive a stable Cellar handle from the bottle name. Cellar dedupes on
