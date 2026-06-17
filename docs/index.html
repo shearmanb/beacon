@@ -2560,7 +2560,7 @@
   // a value that isn't actually saved.
   // Keep in sync with the strategies map in lib/strategies.js. A bad write
   // here would make the worker skip the site, so refuse it client-side too.
-  const KNOWN_STRATEGIES = ['shopify_collection', 'shopify_storefront', 'site_status_monitor'];
+  const KNOWN_STRATEGIES = ['shopify_collection', 'shopify_storefront', 'site_status_monitor', 'purchasable_state_monitor'];
 
   function configValidationError(cfg) {
     if (!Array.isArray(cfg?.sites) || !cfg.sites.length) return 'config has no sites';
