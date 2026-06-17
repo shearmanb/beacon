@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-17T15:57:49.429Z",
+    "lastChecked": "2026-06-17T16:03:19.357Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-16T16:59:33.475Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-16T17:05:18.504Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-17T15:57:49.429Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-17T16:03:19.357Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-17T15:57:53.252Z",
+    "lastChecked": "2026-06-17T16:03:23.239Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-16T17:07:34.215Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-16T17:13:16.700Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-17T15:57:53.252Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-17T16:03:23.239Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-17T15:53:27.821Z",
+    "lastChecked": "2026-06-17T15:59:05.551Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-16T16:55:04.640Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-16T17:00:43.933Z",
         "ok": true
@@ -2025,6 +2021,10 @@
       {
         "ts": "2026-06-17T15:53:27.821Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-17T15:59:05.551Z",
+        "ok": true
       }
     ]
   },
@@ -2192,15 +2192,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:dff338fdb6d0cacd8571fc0d3b2cc97e\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 1,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-16T16:52:35.762Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-16T16:58:27.409Z",
         "ok": true
@@ -2596,6 +2592,19 @@
       {
         "ts": "2026-06-17T15:58:03.123Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-17T16:03:34.120Z",
+        "ok": false
+      }
+    ],
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-17T16:03:34.121Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-17T16:03:34.120Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+        "statusCode": 503
       }
     ]
   },
@@ -3174,7 +3183,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-17T15:46:51.282Z",
+    "lastChecked": "2026-06-17T16:02:10.764Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3188,10 +3197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-16T13:25:43.283Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-16T13:40:56.997Z",
         "ok": true
@@ -3586,6 +3591,10 @@
       },
       {
         "ts": "2026-06-17T15:46:51.282Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-17T16:02:10.764Z",
         "ok": true
       }
     ]
