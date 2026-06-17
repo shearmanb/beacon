@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-17T01:07:31.581Z",
+    "lastChecked": "2026-06-17T01:27:51.736Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-16T13:19:14.098Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-16T13:24:42.163Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-17T01:07:31.582Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-17T01:27:51.736Z",
         "ok": true
       }
     ]
@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-17T01:07:36.060Z",
+    "lastChecked": "2026-06-17T01:30:59.867Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-16T13:18:05.090Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-16T13:23:38.003Z",
         "ok": true
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-17T01:07:36.060Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-17T01:30:59.867Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-17T01:07:45.392Z",
+    "lastChecked": "2026-06-17T01:31:07.876Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-16T13:05:57.965Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-16T13:11:32.033Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-17T01:07:45.392Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-17T01:31:07.876Z",
         "ok": true
       }
     ]
