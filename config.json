@@ -136,6 +136,59 @@
       "filters": {},
       "imminentSince": null,
       "scheduleBeforeImminent": null
+    },
+    {
+      "name": "Wild Turkey Limited",
+      "id": "wild_turkey_limited",
+      "enabled": false,
+      "strategy": "purchasable_state_monitor",
+      "url": "https://www.wildturkeybourbon.com/en-us/products/",
+      "intervalMinutes": 30,
+      "schedule": "30",
+      "imminentIntervalMinutes": 5,
+      "imminent": false,
+      "alertOnNewProduct": true,
+      "alertOnRestock": true,
+      "alertOnSoldOut": false,
+      "filters": {
+        "titleContains": [
+          "Gold Foil",
+          "Generations",
+          "Keep"
+        ],
+        "titleExcludes": [],
+        "vendorIs": [],
+        "productType": [],
+        "tags": [],
+        "minPriceDollars": null,
+        "maxPriceDollars": null,
+        "availableOnly": false
+      }
+    },
+    {
+      "name": "Russell's Reserve Limited",
+      "id": "russells_reserve_limited",
+      "enabled": false,
+      "strategy": "purchasable_state_monitor",
+      "url": "https://www.russellsreserve.com/en-us/our-products/",
+      "intervalMinutes": 30,
+      "schedule": "30",
+      "imminentIntervalMinutes": 5,
+      "imminent": false,
+      "alertOnNewProduct": true,
+      "alertOnRestock": true,
+      "alertOnSoldOut": false,
+      "useCollectionSchema": true,
+      "filters": {
+        "titleContains": [],
+        "titleExcludes": [],
+        "vendorIs": [],
+        "productType": [],
+        "tags": [],
+        "minPriceDollars": null,
+        "maxPriceDollars": null,
+        "availableOnly": false
+      }
     }
   ]
 }

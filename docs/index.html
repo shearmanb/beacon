@@ -442,10 +442,14 @@
       <div class="sandbox-form">
         <div class="sandbox-form-row">
           <input type="url" id="sandbox-url" placeholder="https://store.example.com/collections/whiskey" style="flex:2" />
-          <select id="sandbox-strategy">
+          <select id="sandbox-strategy" onchange="onSandboxStrategyChange()">
             <option value="shopify_collection">Shopify collection</option>
             <option value="squarespace">Squarespace</option>
+            <option value="purchasable_state_monitor">Wild Turkey / Russell's (paste HTML)</option>
           </select>
+        </div>
+        <div class="sandbox-form-row" id="sandbox-html-row" style="display:none">
+          <textarea id="sandbox-html" rows="6" placeholder="Paste the product page's View Source HTML here — the page blocks cross-origin fetch, so a live fetch won't work. Parses sn_btn product cards (Add to cart = buyable, See details / Discover more = info-only) the same way the worker does." style="flex:1;width:100%;font-family:monospace;font-size:.78rem"></textarea>
         </div>
         <div class="sandbox-form-row">
           <input type="text" id="sandbox-filter" placeholder="Title filter — optional, comma-separated (e.g. T8KE, Reveries)" />
@@ -2742,6 +2746,15 @@
   initSections();
 
   // ── Sandbox / test tab ───────────────────────────────────────────────────────
+  // The Campari strategy can't be fetched cross-origin (WordPress + Incapsula),
+  // so it swaps the URL field for a paste-HTML textarea.
+  function onSandboxStrategyChange() {
+    const isHtml = document.getElementById('sandbox-strategy').value === 'purchasable_state_monitor';
+    document.getElementById('sandbox-html-row').style.display = isHtml ? '' : 'none';
+    document.getElementById('sandbox-url').style.display = isHtml ? 'none' : '';
+  }
+  onSandboxStrategyChange();
+
   async function runSandboxTest() {
     const rawUrl = document.getElementById('sandbox-url').value.trim();
     const strategy = document.getElementById('sandbox-strategy').value;
@@ -2749,6 +2762,27 @@
     const titleFilter = rawFilter ? rawFilter.split(',').map(s => s.trim()).filter(Boolean) : [];
 
     const results = document.getElementById('sandbox-results');
+
+    // Campari paste-HTML mode: parse the textarea locally, no network.
+    if (strategy === 'purchasable_state_monitor') {
+      const html = document.getElementById('sandbox-html').value;
+      if (!html.trim()) { results.innerHTML = '<div class="sandbox-error">Paste the page HTML first.</div>'; return; }
+      const btn = document.getElementById('sandbox-run-btn');
+      const clearBtn = document.getElementById('sandbox-clear-btn');
+      btn.disabled = true;
+      clearBtn.style.display = 'none';
+      results.innerHTML = '<div class="sandbox-loading">⏳ Parsing…</div>';
+      try {
+        renderSandboxResults(sandboxParseCampari(html, titleFilter), titleFilter, '(pasted HTML)');
+      } catch (err) {
+        results.innerHTML = `<div class="sandbox-error">⚠️ ${esc(err.message)}</div>`;
+      } finally {
+        btn.disabled = false;
+        clearBtn.style.display = '';
+      }
+      return;
+    }
+
     if (!rawUrl) { results.innerHTML = '<div class="sandbox-error">Enter a URL first.</div>'; return; }
 
     let url;
@@ -2833,6 +2867,81 @@
     });
   }
 
+  // Faithful browser port of sites/purchasable_state_monitor.js::parseProductCards
+  // (the worker copy stays authoritative — there's no build step to share one).
+  // Schema overlay is always on here so the preview shows what the RR config sees.
+  function sandboxParseCampari(html, titleFilter) {
+    const PURCHASE = /\b(?:add to (?:cart|bag)|buy now|buy online|shop now|order now|pre-?order)\b/i;
+    const INFO = /\b(?:see details|discover more|where to buy|learn more|notify me|coming soon|sold out|out of stock|read more)\b/i;
+    const decode = (s) => s
+      .replace(/&#0*38;|&amp;/gi, '&').replace(/&#0*39;|&apos;|&rsquo;|&#8217;/gi, "'")
+      .replace(/&quot;|&#0*34;/gi, '"').replace(/&nbsp;|&#0*160;/gi, ' ')
+      .replace(/&#8211;|&ndash;/gi, '–').replace(/&#8212;|&mdash;/gi, '—');
+    const clean = (s) => decode(s.replace(/<[^>]*>/g, ' ')).replace(/[‘’]/g, "'").replace(/\s+/g, ' ').trim();
+
+    const canon = html.match(/<link[^>]+rel=["']canonical["'][^>]*href=["']([^"']+)["']/i)
+      || html.match(/property=["']og:url["'][^>]*content=["']([^"']+)["']/i);
+    const baseUrl = canon ? canon[1] : 'https://example.com';
+    const slugOf = (href) => {
+      try {
+        const u = new URL(href, baseUrl);
+        const m = u.pathname.match(/\/(?:our-products|products)\/([^/?#]+)\/?$/i);
+        if (!m) return null;
+        const slug = m[1];
+        if (!slug || slug.toLowerCase() === 'products' || slug.toLowerCase() === 'our-products') return null;
+        return { slug, url: u.href };
+      } catch { return null; }
+    };
+
+    const schemaItems = [];
+    const sre = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+    let sm;
+    while ((sm = sre.exec(html)) !== null) {
+      let data; try { data = JSON.parse(sm[1].trim()); } catch { continue; }
+      const nodes = Array.isArray(data) ? data : (Array.isArray(data['@graph']) ? data['@graph'] : [data]);
+      for (const n of nodes) {
+        if (!n || n['@type'] !== 'CollectionPage') continue;
+        const els = n.mainEntity && n.mainEntity.itemListElement;
+        if (!Array.isArray(els)) continue;
+        for (const el of els) if (el && el.url && el.name) schemaItems.push({ url: el.url, name: String(el.name) });
+      }
+    }
+
+    const dom = html.replace(/<!--[\s\S]*?-->/g, ' ')
+      .replace(/<script\b[\s\S]*?<\/script>/gi, ' ').replace(/<style\b[\s\S]*?<\/style>/gi, ' ');
+
+    const h3s = [];
+    const h3re = /<h3\b[^>]*>([\s\S]*?)<\/h3>/gi;
+    let hm;
+    while ((hm = h3re.exec(dom)) !== null) h3s.push({ index: hm.index, text: clean(hm[1]) });
+    const titleBefore = (pos) => { let best = null; for (const h of h3s) { if (h.index >= pos) break; if (h.text) best = h.text; } return best; };
+
+    const map = new Map();
+    const are = /<a\b([^>]*?)>([\s\S]*?)<\/a>/gi;
+    let am;
+    while ((am = are.exec(dom)) !== null) {
+      const cls = (am[1].match(/class\s*=\s*["']([^"']*)["']/i) || [])[1];
+      if (!cls || !/\bsn_btn\b/.test(cls)) continue;
+      const href = (am[1].match(/href\s*=\s*["']([^"']*)["']/i) || [])[1];
+      if (!href) continue;
+      const info = slugOf(href);
+      if (!info || map.has(info.slug)) continue;
+      const cta = clean(am[2]);
+      const available = PURCHASE.test(cta) && !INFO.test(cta);
+      map.set(info.slug, { title: titleBefore(am.index) || info.slug, vendor: null, minPrice: null, available, image: null, url: info.url, statusLabel: `${available ? 'Buyable' : 'Info only'} · "${cta}"` });
+    }
+    for (const it of schemaItems) {
+      const info = slugOf(it.url);
+      if (!info || map.has(info.slug)) continue;
+      const title = decode(it.name).replace(/^\s*Protected:\s*/i, '').trim();
+      map.set(info.slug, { title: title || info.slug, vendor: null, minPrice: null, available: false, image: null, url: info.url, statusLabel: 'Info only · (schema-only / staged)' });
+    }
+
+    let list = [...map.values()];
+    if (titleFilter.length) list = list.filter(p => titleFilter.some(t => p.title.toLowerCase().includes(t.toLowerCase())));
+    return list;
+  }
+
   function renderSandboxResults(products, titleFilter, url) {
     const results = document.getElementById('sandbox-results');
     if (!products.length) {
@@ -2854,7 +2963,7 @@
               ${p.vendor ? `<br><span style="color:var(--muted);font-size:.75rem">${esc(p.vendor)}</span>` : ''}
             </td>
             <td>${p.minPrice != null ? '$' + p.minPrice.toFixed(2) : '—'}</td>
-            <td class="${p.available ? 'avail-yes' : 'avail-no'}">${p.available ? 'In Stock' : 'Sold Out'}</td>
+            <td class="${p.available ? 'avail-yes' : 'avail-no'}">${esc(p.statusLabel || (p.available ? 'In Stock' : 'Sold Out'))}</td>
           </tr>`).join('')}
         </tbody>
       </table>`;
