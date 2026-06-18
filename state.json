@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-18T21:54:25.329Z",
+    "lastChecked": "2026-06-18T21:59:51.781Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T03:43:11.131Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T05:46:09.186Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-18T21:54:25.329Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T21:59:51.781Z",
         "ok": true
       }
     ]
@@ -2029,7 +2029,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-18T21:52:23.813Z",
+    "lastChecked": "2026-06-18T21:58:43.080Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T06:21:57.218Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T08:39:23.311Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-18T21:52:23.813Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T21:58:43.080Z",
         "ok": true
       }
     ]
@@ -3174,7 +3174,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-18T21:51:12.030Z",
+    "lastChecked": "2026-06-18T22:08:19.221Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3188,10 +3188,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T19:40:54.558Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T19:57:09.630Z",
         "ok": true
@@ -3587,11 +3583,15 @@
       {
         "ts": "2026-06-18T21:51:12.030Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T22:08:19.221Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-18T21:54:28.783Z",
+    "lastChecked": "2026-06-18T22:08:23.640Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3766,6 +3766,10 @@
       },
       {
         "ts": "2026-06-18T21:54:28.784Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T22:08:23.640Z",
         "ok": true
       }
     ]
