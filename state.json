@@ -1163,12 +1163,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-18T14:49:20.018Z",
+    "lastChecked": "2026-06-18T14:54:40.796Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:cd21ecef7946077471a9952b79975afe\"",
+      "etag": "\"page_cache:45343637659:ProductListController:fea9b05ded81d876fed661f9e86b95b4\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T15:52:27.327Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T15:57:53.252Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-18T14:49:20.018Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T14:54:40.796Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-18T14:51:28.428Z",
+    "lastChecked": "2026-06-18T14:56:42.303Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T16:04:52.221Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-17T16:06:23.644Z",
         "ok": false
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-18T14:51:28.428Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T14:56:42.303Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-18T14:47:16.398Z",
+    "lastChecked": "2026-06-18T14:52:35.299Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T16:15:08.829Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T16:20:31.559Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-18T14:47:16.399Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T14:52:35.299Z",
         "ok": true
       }
     ]
