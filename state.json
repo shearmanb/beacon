@@ -3589,5 +3589,145 @@
         "ok": true
       }
     ]
+  },
+  "russells_reserve_limited": {
+    "lastChecked": "2026-06-18T19:21:43.163Z",
+    "productCount": 12,
+    "products": {
+      "10-year-old-bourbon": {
+        "handle": "10-year-old-bourbon",
+        "title": "10 Year Old Bourbon",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": true,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/10-year-old-bourbon/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "6-year-old-rye": {
+        "handle": "6-year-old-rye",
+        "title": "6 Year Old Rye",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": true,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/6-year-old-rye/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "10-year-old-bourbon-and-6-year-old-rye": {
+        "handle": "10-year-old-bourbon-and-6-year-old-rye",
+        "title": "10 Year Old Bourbon & 6 Year Old rye",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": true,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/10-year-old-bourbon-and-6-year-old-rye/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "single-barrel-bourbon": {
+        "handle": "single-barrel-bourbon",
+        "title": "Single Barrel Bourbon",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": true,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/single-barrel-bourbon/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "single-barrel-rye": {
+        "handle": "single-barrel-rye",
+        "title": "Single Barrel Rye",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": true,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/single-barrel-rye/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "private-barrel-bourbon": {
+        "handle": "private-barrel-bourbon",
+        "title": "Private Barrel Selection #1",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": true,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/private-barrel-bourbon/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "private-barrel-bourbon-2": {
+        "handle": "private-barrel-bourbon-2",
+        "title": "Private Barrel Selection #2",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": true,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/private-barrel-bourbon-2/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "private-barrel-selection-3": {
+        "handle": "private-barrel-selection-3",
+        "title": "Private Barrel Selection #3",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": true,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/private-barrel-selection-3/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "13-year-old-bourbon": {
+        "handle": "13-year-old-bourbon",
+        "title": "13 Year Old Bourbon",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": false,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/13-year-old-bourbon/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "15-year-old-bourbon": {
+        "handle": "15-year-old-bourbon",
+        "title": "15 Year Old Bourbon",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": false,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/15-year-old-bourbon/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "single-rickhouse": {
+        "handle": "single-rickhouse",
+        "title": "Single Rickhouse",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": false,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/single-rickhouse/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      },
+      "15-year-old-bourbon-13-year-old-bourbon": {
+        "handle": "15-year-old-bourbon-13-year-old-bourbon",
+        "title": "15 Year Old Bourbon & 13 Year Old Bourbon",
+        "vendor": "Russell's Reserve Limited",
+        "minPrice": null,
+        "available": false,
+        "image": null,
+        "url": "https://www.russellsreserve.com/en-us/our-products/15-year-old-bourbon-13-year-old-bourbon/",
+        "firstSeen": "2026-06-18T19:21:43.163Z"
+      }
+    },
+    "httpValidators": {
+      "etag": "\"26129de2\"",
+      "lastModified": "Thu, 18 Jun 2026 18:22:30 GMT"
+    },
+    "consecutiveErrors": 0,
+    "errorAlertSent": false,
+    "cooldownLevel": 0,
+    "cooldownUntil": null,
+    "checkHistory": [
+      {
+        "ts": "2026-06-18T19:21:43.163Z",
+        "ok": true
+      }
+    ]
   }
 }
