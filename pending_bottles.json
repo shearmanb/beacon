@@ -69,20 +69,6 @@
       "spStatus": "Ready for pickup",
       "source": "sharedpour",
       "createdAt": "2026-06-18T19:22:41.132Z"
-    },
-    {
-      "id": "b_1781810561133_2",
-      "bottle": "THE REVERIES 10 Year Single Barrel \"Sinister Glee\" T8KE Reserve Cask Strength Selection",
-      "cost": null,
-      "retailer": "Shared Pour",
-      "orderNumber": "25-144115-SP",
-      "orderLink": "",
-      "etaDate": "",
-      "etaNote": "",
-      "status": "pickup",
-      "spStatus": "On its way",
-      "source": "sharedpour",
-      "createdAt": "2026-06-18T19:22:41.133Z"
     }
   ],
   "retailers": [],
@@ -160,6 +146,26 @@
       "cellarPushedAt": "2026-06-18T19:22:57.046Z",
       "cellarBottleId": null,
       "cellarPendingId": 4,
+      "cellarStatus": "pending",
+      "cellarError": null
+    },
+    {
+      "id": "b_1781810561133_2",
+      "bottle": "THE REVERIES 10 Year Single Barrel \"Sinister Glee\" T8KE Reserve Cask Strength Selection",
+      "cost": null,
+      "retailer": "Shared Pour",
+      "orderNumber": "25-144115-SP",
+      "orderLink": "",
+      "etaDate": "",
+      "etaNote": "",
+      "status": "pickup",
+      "spStatus": "On its way",
+      "source": "sharedpour",
+      "createdAt": "2026-06-18T19:22:41.133Z",
+      "collectedAt": "2026-06-18T19:23:11.045Z",
+      "cellarPushedAt": "2026-06-18T19:23:10.914Z",
+      "cellarBottleId": null,
+      "cellarPendingId": 5,
       "cellarStatus": "pending",
       "cellarError": null
     }
