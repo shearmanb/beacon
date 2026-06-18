@@ -172,7 +172,7 @@
       "strategy": "purchasable_state_monitor",
       "url": "https://www.russellsreserve.com/en-us/our-products/",
       "intervalMinutes": 30,
-      "schedule": "30",
+      "schedule": "15",
       "imminentIntervalMinutes": 5,
       "imminent": false,
       "alertOnNewProduct": true,
