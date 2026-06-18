@@ -10,7 +10,9 @@
       "etaDate": "2026-06-03",
       "etaNote": "",
       "status": "ordered",
-      "createdAt": "2026-06-13T04:46:30.646Z"
+      "createdAt": "2026-06-13T04:46:30.646Z",
+      "spStatus": "Ready for pickup",
+      "source": "sharedpour"
     },
     {
       "id": "b_1781326047684",
@@ -22,7 +24,9 @@
       "etaDate": "2026-06-02",
       "etaNote": "",
       "status": "ordered",
-      "createdAt": "2026-06-13T04:47:27.684Z"
+      "createdAt": "2026-06-13T04:47:27.684Z",
+      "spStatus": "Ready for pickup",
+      "source": "sharedpour"
     },
     {
       "id": "b_1781326068158",
@@ -34,7 +38,79 @@
       "etaDate": "2026-06-02",
       "etaNote": "",
       "status": "ordered",
-      "createdAt": "2026-06-13T04:47:48.158Z"
+      "createdAt": "2026-06-13T04:47:48.158Z",
+      "spStatus": "Ready for pickup",
+      "source": "sharedpour"
+    },
+    {
+      "id": "b_1781810561132_0",
+      "bottle": "Striped Pig '2TEN90 & Women of Whiskeys' Single Barrel Barrel Strength Bourbon Selection",
+      "cost": null,
+      "retailer": "Shared Pour",
+      "orderNumber": "25-155018-SP",
+      "orderLink": "",
+      "etaDate": "",
+      "etaNote": "",
+      "status": "ordered",
+      "spStatus": "Ready for pickup",
+      "source": "sharedpour",
+      "createdAt": "2026-06-18T19:22:41.132Z"
+    },
+    {
+      "id": "b_1781810561132_1",
+      "bottle": "T8KE x Green River Distilling Single Barrel Barrel Strength Bourbon (123.6 Proof, II.I)",
+      "cost": null,
+      "retailer": "Shared Pour",
+      "orderNumber": "25-154807-SP",
+      "orderLink": "",
+      "etaDate": "",
+      "etaNote": "",
+      "status": "ordered",
+      "spStatus": "Ready for pickup",
+      "source": "sharedpour",
+      "createdAt": "2026-06-18T19:22:41.132Z"
+    },
+    {
+      "id": "b_1781810561133_2",
+      "bottle": "THE REVERIES 10 Year Single Barrel \"Sinister Glee\" T8KE Reserve Cask Strength Selection",
+      "cost": null,
+      "retailer": "Shared Pour",
+      "orderNumber": "25-144115-SP",
+      "orderLink": "",
+      "etaDate": "",
+      "etaNote": "",
+      "status": "ordered",
+      "spStatus": "On its way",
+      "source": "sharedpour",
+      "createdAt": "2026-06-18T19:22:41.133Z"
+    },
+    {
+      "id": "b_1781810561133_3",
+      "bottle": "THE REVERIES 9 Year Single Barrel Straight Bourbon \"ABYSSAL\" T8KE Reserve Cask",
+      "cost": null,
+      "retailer": "Shared Pour",
+      "orderNumber": "25-140537-SP",
+      "orderLink": "",
+      "etaDate": "",
+      "etaNote": "",
+      "status": "ordered",
+      "spStatus": "On its way",
+      "source": "sharedpour",
+      "createdAt": "2026-06-18T19:22:41.133Z"
+    },
+    {
+      "id": "b_1781810561133_4",
+      "bottle": "Pinhook Bourbon 10 Year Single Barrel Bourbon T8KE Private Select",
+      "cost": null,
+      "retailer": "Shared Pour",
+      "orderNumber": "25-135897-SP",
+      "orderLink": "",
+      "etaDate": "",
+      "etaNote": "",
+      "status": "ordered",
+      "spStatus": "On its way",
+      "source": "sharedpour",
+      "createdAt": "2026-06-18T19:22:41.133Z"
     }
   ],
   "retailers": [],
