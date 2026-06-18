@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-18T17:52:21.023Z",
+    "lastChecked": "2026-06-18T17:57:47.585Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-17T19:06:09.641Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-17T19:11:52.746Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-18T17:52:21.023Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T17:57:47.585Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-18T17:55:29.773Z",
+    "lastChecked": "2026-06-18T18:01:02.640Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T19:02:49.166Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T19:08:15.920Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-18T17:55:29.773Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T18:01:02.641Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-18T17:53:31.725Z",
+    "lastChecked": "2026-06-18T17:59:58.116Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T18:59:42.125Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T19:05:06.545Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-18T17:53:31.725Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T17:59:58.116Z",
         "ok": true
       }
     ]
@@ -3174,7 +3174,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-18T17:41:24.810Z",
+    "lastChecked": "2026-06-18T17:57:50.760Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3188,10 +3188,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T15:30:37.937Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T15:46:51.282Z",
         "ok": true
@@ -3586,6 +3582,10 @@
       },
       {
         "ts": "2026-06-18T17:41:24.810Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T17:57:50.760Z",
         "ok": true
       }
     ]
