@@ -168,7 +168,7 @@
     {
       "name": "Russell's Reserve Limited",
       "id": "russells_reserve_limited",
-      "enabled": false,
+      "enabled": true,
       "strategy": "purchasable_state_monitor",
       "url": "https://www.russellsreserve.com/en-us/our-products/",
       "intervalMinutes": 30,
