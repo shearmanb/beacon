@@ -65,7 +65,7 @@
       "orderLink": "",
       "etaDate": "",
       "etaNote": "",
-      "status": "ordered",
+      "status": "pickup",
       "spStatus": "Ready for pickup",
       "source": "sharedpour",
       "createdAt": "2026-06-18T19:22:41.132Z"
