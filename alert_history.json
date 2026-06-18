@@ -3730,5 +3730,22 @@
       "url": "https://www.russellsreserve.com/en-us/our-products/",
       "note": "First check with no prior state — 12 existing product(s) baselined without alerts."
     }
+  },
+  {
+    "timestamp": "2026-06-18T23:39:47.026Z",
+    "siteId": "fountain_inn_dc",
+    "siteName": "Fountain Inn DC",
+    "type": "restock",
+    "product": {
+      "handle": "reveries-the-raven-batch-v",
+      "title": "Reveries: The Raven Batch V",
+      "vendor": "Bottle Shop at The Fountain Inn",
+      "productType": "",
+      "tags": [],
+      "minPrice": 170,
+      "available": true,
+      "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5766.heic?v=1780435180",
+      "url": "https://shop.fountaininndc.com/products/reveries-the-raven-batch-v"
+    }
   }
 ]
