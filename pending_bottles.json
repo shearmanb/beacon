@@ -97,20 +97,6 @@
       "spStatus": "On its way",
       "source": "sharedpour",
       "createdAt": "2026-06-18T19:22:41.133Z"
-    },
-    {
-      "id": "b_1781810561133_4",
-      "bottle": "Pinhook Bourbon 10 Year Single Barrel Bourbon T8KE Private Select",
-      "cost": null,
-      "retailer": "Shared Pour",
-      "orderNumber": "25-135897-SP",
-      "orderLink": "",
-      "etaDate": "",
-      "etaNote": "",
-      "status": "ordered",
-      "spStatus": "On its way",
-      "source": "sharedpour",
-      "createdAt": "2026-06-18T19:22:41.133Z"
     }
   ],
   "retailers": [],
@@ -148,6 +134,26 @@
       "cellarPushedAt": "2026-06-16T19:19:19.039Z",
       "cellarBottleId": null,
       "cellarPendingId": 1,
+      "cellarStatus": "pending",
+      "cellarError": null
+    },
+    {
+      "id": "b_1781810561133_4",
+      "bottle": "Pinhook Bourbon 10 Year Single Barrel Bourbon T8KE Private Select",
+      "cost": null,
+      "retailer": "Shared Pour",
+      "orderNumber": "25-135897-SP",
+      "orderLink": "",
+      "etaDate": "",
+      "etaNote": "",
+      "status": "pickup",
+      "spStatus": "On its way",
+      "source": "sharedpour",
+      "createdAt": "2026-06-18T19:22:41.133Z",
+      "collectedAt": "2026-06-18T19:22:51.769Z",
+      "cellarPushedAt": "2026-06-18T19:22:51.674Z",
+      "cellarBottleId": null,
+      "cellarPendingId": 3,
       "cellarStatus": "pending",
       "cellarError": null
     }
