@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-18T14:51:24.593Z",
+    "lastChecked": "2026-06-18T14:57:45.453Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:45f2936e84efca79ce74da2c377b2ec2\"",
+      "etag": "\"page_cache:45343637659:ProductListController:346595afa0c021abea7813df77e33aa6\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T16:03:19.357Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T16:09:18.935Z",
         "ok": true
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-18T14:51:24.593Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T14:57:45.453Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-18T14:54:40.796Z",
+    "lastChecked": "2026-06-18T15:01:00.961Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T15:57:53.252Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T16:03:23.239Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-18T14:54:40.796Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T15:01:00.961Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-18T14:56:42.303Z",
+    "lastChecked": "2026-06-18T15:02:08.066Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T16:06:23.644Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-17T16:07:54.204Z",
         "ok": false
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-18T14:56:42.303Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T15:02:08.066Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-18T14:52:35.299Z",
+    "lastChecked": "2026-06-18T14:58:49.075Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2189,7 +2189,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:c4746c8e6b805683c80ba4ddc02f4ff3\"",
+      "etag": "\"page_cache:57076547742:ProductListController:9b6a1306aafb9b2a19fdcca1e9a18b03\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T16:20:31.559Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T16:27:07.802Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-18T14:52:35.299Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T14:58:49.076Z",
         "ok": true
       }
     ]
@@ -3174,7 +3174,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-18T14:48:17.609Z",
+    "lastChecked": "2026-06-18T15:02:11.907Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3188,10 +3188,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T12:33:24.587Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T12:47:28.976Z",
         "ok": true
@@ -3586,6 +3582,10 @@
       },
       {
         "ts": "2026-06-18T14:48:17.609Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T15:02:11.908Z",
         "ok": true
       }
     ]
