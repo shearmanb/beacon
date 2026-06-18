@@ -177,6 +177,7 @@
     .sp-row .sp-st { color: var(--muted); white-space: nowrap; font-size: .74rem; }
     .sp-empty { font-size: .8rem; color: var(--muted); padding: .3rem 0; }
     .sp-chip { display: inline-block; font-size: .68rem; font-weight: 600; padding: .05rem .4rem; border-radius: 10px; background: rgba(52,152,219,.14); color: var(--accent); }
+    .sp-synced { font-size: .68rem; color: var(--muted); }
     /* ── Worker health chip (inline in Sites header) ── */
     .worker-chip { display: inline-flex; align-items: center; gap: .3rem; font-size: .74rem; font-weight: 600; padding: .18rem .55rem; border-radius: 20px; white-space: nowrap; cursor: default; }
     .worker-chip.ok       { background: rgba(46,204,113,.12); color: var(--green); }
@@ -1834,7 +1835,7 @@
           <button style="background:none;border:none;color:var(--faint);cursor:pointer;font-size:13px;line-height:1;padding:0 2px;flex-shrink:0" ${hasToken ? '' : 'disabled'} onclick="deleteBottle('${esc(it.id)}')" title="Delete">×</button>
         </div>
         ${costRetailer ? `<div class="pend-meta">${costRetailer}</div>` : ''}
-        ${it.spStatus && status !== 'pickup' ? `<div class="pend-meta"><span class="sp-chip">${esc(it.spStatus)}</span></div>` : ''}
+        ${status !== 'pickup' && (it.spStatus || it.syncedAt) ? `<div class="pend-meta" style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap">${it.spStatus ? `<span class="sp-chip">${esc(it.spStatus)}</span>` : ''}${it.syncedAt ? `<span class="sp-synced">synced ${fmtAgoShort(new Date(it.syncedAt).getTime())} ago</span>` : ''}</div>` : ''}
         ${it.orderNumber ? `<div class="pend-meta">order #${esc(it.orderNumber)}</div>` : ''}
         ${it.orderLink ? `<div class="pend-meta"><a href="${esc(it.orderLink)}" target="_blank" rel="noopener noreferrer">View order ↗</a></div>` : ''}
         ${addedDate ? `<div class="pend-meta"><span>ordered ${addedDate}</span></div>` : ''}
@@ -2082,7 +2083,8 @@
     const items = (data.items || []).map(x => ({ ...x }));
     const collection = data.collection || [];
     const matched = new Set();
-    const adds = [], updates = [];
+    const adds = [], updates = [], readyAlerts = [];
+    const now = new Date().toISOString();
     let owned = 0, skipped = 0, addCounter = 0;
     for (const o of orders) {
       const st = spMapStatus(o.status);
@@ -2093,7 +2095,14 @@
           matched.add(it.id);
           if (it.status !== st.stage || it.spStatus !== st.label) {
             updates.push({ name: it.bottle || name, from: it.spStatus || it.status, to: st.label });
-            items[idx] = { ...it, status: st.stage, spStatus: st.label,
+            // A genuine flip into "Ready for pickup" (it had a prior, different
+            // synced status) is worth a Discord ping. A first-ever sync with no
+            // prior spStatus is treated as baseline — like the worker's
+            // startup-quiet mode — so the initial import doesn't flood.
+            if (st.label === 'Ready for pickup' && it.spStatus && it.spStatus !== 'Ready for pickup') {
+              readyAlerts.push({ name: it.bottle || name, orderNumber: it.orderNumber || o.orderNumber });
+            }
+            items[idx] = { ...it, status: st.stage, spStatus: st.label, syncedAt: now,
               retailer: it.retailer || 'Shared Pour', orderNumber: it.orderNumber || o.orderNumber,
               source: it.source || 'sharedpour' };
           }
@@ -2106,12 +2115,12 @@
           bottle: name, cost: null, retailer: 'Shared Pour',
           orderNumber: o.orderNumber, orderLink: '', etaDate: '', etaNote: '',
           status: st.stage, spStatus: st.label, source: 'sharedpour',
-          createdAt: new Date().toISOString(),
+          syncedAt: now, createdAt: now,
         });
         adds.push({ name, status: st.label });
       }
     }
-    return { nextItems: items, adds, updates, owned, skipped };
+    return { nextItems: items, adds, updates, owned, skipped, readyAlerts };
   }
 
   let _spPlan = null;
@@ -2143,12 +2152,43 @@
     const { orders, includeTerminal } = _spPlan;
     const btn = document.getElementById('sp-import-btn');
     if (btn) btn.disabled = true;
-    const ok = await commitBottles(
-      d => ({ ...d, items: spPlanImport(orders, d, includeTerminal).nextItems }),
-      'chore: import Shared Pour orders [skip ci]'
-    );
-    if (ok) { closeSharedPourModal(); switchBottleTab('pending'); }
-    else if (btn) { btn.disabled = false; }
+    let readyAlerts = [];
+    const ok = await commitBottles(d => {
+      const plan = spPlanImport(orders, d, includeTerminal);
+      readyAlerts = plan.readyAlerts;   // captured from the committed computation
+      return { ...d, items: plan.nextItems };
+    }, 'chore: import Shared Pour orders [skip ci]');
+    if (ok) {
+      for (const a of readyAlerts) await notifyBottleReady(a.name, a.orderNumber);
+      closeSharedPourModal();
+      switchBottleTab('pending');
+    } else if (btn) { btn.disabled = false; }
+  }
+
+  // Fire a Discord embed when a tracked bottle flips to Ready for pickup. Uses
+  // the dashboard's stored webhook (same one the ignore/unignore notices use);
+  // silently no-ops if no webhook is set. The worker can't see these orders, so
+  // this is the only place the transition is observed.
+  async function notifyBottleReady(name, orderNumber) {
+    const webhookUrl = _sessionWebhook;
+    if (!webhookUrl) return;
+    const embed = {
+      title: '🥃 Ready for pickup',
+      color: 0x2ecc71,
+      description: `**${name}**`,
+      fields: [
+        ...(orderNumber ? [{ name: 'Order', value: `#${orderNumber}`, inline: true }] : []),
+        { name: 'Retailer', value: 'Shared Pour', inline: true },
+      ],
+      timestamp: new Date().toISOString(),
+    };
+    try {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'Beacon', embeds: [embed] }),
+      });
+    } catch { /* non-fatal */ }
   }
 
   // Built fresh from the current dashboard URL so it always points back here.
