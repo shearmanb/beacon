@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-18T16:29:06.018Z",
+    "lastChecked": "2026-06-18T16:34:40.306Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:f01d30f5885ea0f8ce04dc0e38d952b0\"",
+      "etag": "\"page_cache:45343637659:ProductListController:641c6bac8a1d5845ad4bf7a4c08a918d\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T17:39:48.740Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T17:45:14.574Z",
         "ok": true
@@ -1159,16 +1155,20 @@
       {
         "ts": "2026-06-18T16:29:06.018Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T16:34:40.306Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-18T16:31:16.666Z",
+    "lastChecked": "2026-06-18T16:36:53.517Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:2234d88a6e09905146e4319d36857482\"",
+      "etag": "\"page_cache:45343637659:ProductListController:3b7c035e7add6b4ff0d7f18ca623a695\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T17:32:13.384Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T17:37:41.714Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-18T16:31:16.666Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T16:36:53.517Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-18T16:27:01.668Z",
+    "lastChecked": "2026-06-18T16:32:30.511Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1618,7 +1618,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:66506555478:ProductListController:9f6a1d220872801bde40c2001f435912\"",
+      "etag": "\"page_cache:66506555478:ProductListController:79c2ad42cddf3a25ffdee4f22dd2a216\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T17:30:03.679Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T17:35:34.796Z",
         "ok": true
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-18T16:27:01.668Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T16:32:30.511Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-18T16:31:26.228Z",
+    "lastChecked": "2026-06-18T16:37:01.237Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2189,7 +2189,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:0574f1dd8df93936ed620d88a567c389\"",
+      "etag": "\"page_cache:57076547742:ProductListController:8b70436b23dcf9e58fb0527d1ee4b9ee\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T17:51:50.314Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T17:57:22.160Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-18T16:31:26.228Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T16:37:01.237Z",
         "ok": true
       }
     ]
@@ -3174,7 +3174,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-18T16:17:59.154Z",
+    "lastChecked": "2026-06-18T16:34:46.468Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3188,10 +3188,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T14:11:23.518Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T14:26:30.836Z",
         "ok": true
@@ -3586,6 +3582,10 @@
       },
       {
         "ts": "2026-06-18T16:17:59.154Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T16:34:46.469Z",
         "ok": true
       }
     ]
