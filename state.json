@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-17T23:44:37.012Z",
+    "lastChecked": "2026-06-18T00:03:50.709Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T12:06:17.703Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T13:00:45.118Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-17T23:44:37.012Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T00:03:50.709Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-17T23:40:17.499Z",
+    "lastChecked": "2026-06-18T00:02:41.548Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T11:54:03.742Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T13:00:51.772Z",
         "ok": true
@@ -2025,11 +2021,15 @@
       {
         "ts": "2026-06-17T23:40:17.499Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T00:02:41.548Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-17T23:43:33.964Z",
+    "lastChecked": "2026-06-18T00:06:58.529Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T13:12:57.553Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T13:18:11.477Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-17T23:43:33.964Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T00:06:58.529Z",
         "ok": true
       }
     ]
@@ -3174,7 +3174,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-17T23:49:37.951Z",
+    "lastChecked": "2026-06-18T00:04:53.877Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3188,10 +3188,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-16T21:38:14.843Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-16T21:55:51.262Z",
         "ok": true
@@ -3586,6 +3582,10 @@
       },
       {
         "ts": "2026-06-17T23:49:37.951Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T00:04:53.877Z",
         "ok": true
       }
     ]
