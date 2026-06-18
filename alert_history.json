@@ -3719,5 +3719,16 @@
       "url": "https://thebourbonconcierge.com",
       "note": "Checks are succeeding again."
     }
+  },
+  {
+    "timestamp": "2026-06-18T19:21:43.163Z",
+    "siteId": "russells_reserve_limited",
+    "siteName": "Russell's Reserve Limited",
+    "type": "baseline",
+    "product": {
+      "title": "Russell's Reserve Limited",
+      "url": "https://www.russellsreserve.com/en-us/our-products/",
+      "note": "First check with no prior state — 12 existing product(s) baselined without alerts."
+    }
   }
 ]
