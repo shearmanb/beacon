@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-18T14:40:32.401Z",
+    "lastChecked": "2026-06-18T14:45:58.674Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:db30f7e0e360a98b97862e7ac44408d0\"",
+      "etag": "\"page_cache:45343637659:ProductListController:45f2936e84efca79ce74da2c377b2ec2\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T15:52:21.781Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T15:57:49.429Z",
         "ok": true
@@ -1159,25 +1155,20 @@
       {
         "ts": "2026-06-18T14:40:32.401Z",
         "ok": true
-      }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-18T13:36:12.192Z",
-    "errorLog": [
+      },
       {
-        "ts": "2026-06-18T13:36:12.192Z",
-        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-        "statusCode": 503
+        "ts": "2026-06-18T14:45:58.674Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-18T14:37:29.536Z",
+    "lastChecked": "2026-06-18T14:42:53.435Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:23821328b4940d8d972e104b2d849218\"",
+      "etag": "\"page_cache:45343637659:ProductListController:30437895680a2b1e1715237bdf6bf860\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1185,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T15:40:26.347Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T15:45:44.756Z",
         "ok": true
@@ -1584,20 +1571,15 @@
       {
         "ts": "2026-06-18T14:37:29.536Z",
         "ok": true
-      }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-18T13:29:02.913Z",
-    "errorLog": [
+      },
       {
-        "ts": "2026-06-18T13:29:02.913Z",
-        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-        "statusCode": 503
+        "ts": "2026-06-18T14:42:53.435Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-18T14:40:38.112Z",
+    "lastChecked": "2026-06-18T14:46:02.341Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T15:53:27.821Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T15:59:05.551Z",
         "ok": true
@@ -2043,11 +2021,15 @@
       {
         "ts": "2026-06-18T14:40:38.112Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-18T14:46:02.341Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-18T14:36:25.196Z",
+    "lastChecked": "2026-06-18T14:41:45.766Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2207,7 +2189,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:484beb5d0b3187debd120cc8dd599e14\"",
+      "etag": "\"page_cache:57076547742:ProductListController:c4746c8e6b805683c80ba4ddc02f4ff3\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2215,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T16:08:07.523Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-17T16:09:49.318Z",
         "ok": true
@@ -2613,6 +2591,10 @@
       },
       {
         "ts": "2026-06-18T14:36:25.196Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T14:41:45.766Z",
         "ok": true
       }
     ]
