@@ -2029,7 +2029,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-19T01:56:00.481Z",
+    "lastChecked": "2026-06-19T04:09:57.038Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2189,7 +2189,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:a4f98f251687454c468c15ed773c4d6a\"",
+      "etag": "\"page_cache:57076547742:ProductListController:a4a1a2d1934becfdb41844136c227c7a\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T13:33:41.812Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-18T13:34:56.255Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-19T01:56:00.481Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T04:09:57.038Z",
         "ok": true
       }
     ]
@@ -3174,7 +3174,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-19T03:58:40.850Z",
+    "lastChecked": "2026-06-19T04:14:03.417Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3188,10 +3188,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T01:38:37.322Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T01:55:41.553Z",
         "ok": true
@@ -3586,6 +3582,10 @@
       },
       {
         "ts": "2026-06-19T03:58:40.850Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T04:14:03.417Z",
         "ok": true
       }
     ]
