@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-19T00:50:09.726Z",
+    "lastChecked": "2026-06-19T01:09:18.569Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:1bf8544fb0b2cec5f54715903a1dd398\"",
+      "etag": "\"page_cache:45343637659:ProductListController:dbb80b36ac465cb1f0c3c97c9634c209\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T13:18:10.417Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T13:24:44.422Z",
         "ok": true
@@ -1159,16 +1155,20 @@
       {
         "ts": "2026-06-19T00:50:09.726Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-19T01:09:18.569Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-19T00:43:44.501Z",
+    "lastChecked": "2026-06-19T01:05:24.756Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:4d1a282e1f79e87eb1bc2b1de56bb7dd\"",
+      "etag": "\"page_cache:45343637659:ProductListController:00c084fab96aec93abfbb06c48d53538\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T13:23:33.430Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T13:29:02.913Z",
         "ok": false
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-19T00:43:44.501Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T01:05:24.756Z",
         "ok": true
       }
     ]
@@ -3174,7 +3174,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-19T00:45:53.948Z",
+    "lastChecked": "2026-06-19T01:03:20.301Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3188,10 +3188,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T22:35:19.733Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T22:49:54.805Z",
         "ok": true
@@ -3586,6 +3582,10 @@
       },
       {
         "ts": "2026-06-19T00:45:53.948Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T01:03:20.301Z",
         "ok": true
       }
     ]
