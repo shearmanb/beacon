@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-19T00:05:42.493Z",
+    "lastChecked": "2026-06-19T00:28:18.484Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:f7148e984f4fa58066dbceb5506bf149\"",
+      "etag": "\"page_cache:45343637659:ProductListController:1bf8544fb0b2cec5f54715903a1dd398\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T13:06:12.060Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T13:12:51.776Z",
         "ok": true
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-19T00:05:42.493Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T00:28:18.484Z",
         "ok": true
       }
     ]
@@ -2029,7 +2029,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-19T00:10:58.213Z",
+    "lastChecked": "2026-06-19T00:30:27.886Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2189,7 +2189,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:3286f0c973b9808c9f7ea3d887efba32\"",
+      "etag": "\"page_cache:57076547742:ProductListController:083f8abc31cb3a337bacbf73a07135e4\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2197,10 +2197,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T13:18:25.510Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T13:23:41.678Z",
         "ok": true
@@ -2595,6 +2591,10 @@
       },
       {
         "ts": "2026-06-19T00:10:58.213Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T00:30:27.886Z",
         "ok": true
       }
     ]
@@ -3591,7 +3591,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-19T00:14:10.812Z",
+    "lastChecked": "2026-06-19T00:28:23.590Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3802,6 +3802,10 @@
       },
       {
         "ts": "2026-06-19T00:14:10.812Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T00:28:23.591Z",
         "ok": true
       }
     ]
