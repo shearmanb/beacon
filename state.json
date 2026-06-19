@@ -2048,7 +2048,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-19T17:51:15.306Z",
+    "lastChecked": "2026-06-19T18:05:58.786Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2208,18 +2208,14 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:131b21edacc015393ef49c6ed4a250cc\"",
+      "etag": "\"page_cache:57076547742:ProductListController:9f7a4470fe3de72747a5c4693dddd826\"",
       "lastModified": null
     },
-    "consecutiveErrors": 5,
-    "errorAlertSent": true,
+    "consecutiveErrors": 0,
+    "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T19:40:09.413Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T19:45:29.232Z",
         "ok": true
@@ -2615,35 +2611,10 @@
       {
         "ts": "2026-06-19T18:04:31.937Z",
         "ok": false
-      }
-    ],
-    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=5",
-    "lastErrorAt": "2026-06-19T18:04:31.937Z",
-    "errorLog": [
-      {
-        "ts": "2026-06-19T17:58:00.094Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-        "statusCode": 503
       },
       {
-        "ts": "2026-06-19T17:59:44.546Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-19T18:01:28.591Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-19T18:02:58.335Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-19T18:04:31.937Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=5",
-        "statusCode": 503
+        "ts": "2026-06-19T18:05:58.787Z",
+        "ok": true
       }
     ]
   },
