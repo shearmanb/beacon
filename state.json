@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-19T21:59:32.572Z",
+    "lastChecked": "2026-06-19T22:22:40.916Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:4ff3d0add41f96d51a1fbdc8915c2827\"",
+      "etag": "\"page_cache:45343637659:ProductListController:6e214e878ba89f3f61899c9bf48ef45f\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T13:00:29.429Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T13:06:11.036Z",
         "ok": true
@@ -1159,30 +1155,20 @@
       {
         "ts": "2026-06-19T21:59:32.572Z",
         "ok": true
-      }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-19T21:51:56.441Z",
-    "errorLog": [
-      {
-        "ts": "2026-06-19T21:50:11.017Z",
-        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-        "statusCode": 503
       },
       {
-        "ts": "2026-06-19T21:51:56.441Z",
-        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-        "statusCode": 503
+        "ts": "2026-06-19T22:22:40.916Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-19T21:58:29.004Z",
+    "lastChecked": "2026-06-19T22:21:33.259Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:6ec041a14be7f6601ffbb7ae52f0ed52\"",
+      "etag": "\"page_cache:45343637659:ProductListController:4f595dd426531b7bd0bb0a1d71bfbc21\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1190,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T09:39:27.572Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T11:44:47.160Z",
         "ok": true
@@ -1589,15 +1571,10 @@
       {
         "ts": "2026-06-19T21:58:29.004Z",
         "ok": true
-      }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-19T21:50:23.902Z",
-    "errorLog": [
+      },
       {
-        "ts": "2026-06-19T21:50:23.902Z",
-        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-        "statusCode": 503
+        "ts": "2026-06-19T22:21:33.259Z",
+        "ok": true
       }
     ]
   },
@@ -3633,7 +3610,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-19T22:13:01.348Z",
+    "lastChecked": "2026-06-19T22:28:48.352Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3758,18 +3735,14 @@
       }
     },
     "httpValidators": {
-      "etag": "\"e644ad9f\"",
-      "lastModified": "Fri, 19 Jun 2026 16:20:32 GMT"
+      "etag": "\"7b107c1a\"",
+      "lastModified": "Fri, 19 Jun 2026 16:19:40 GMT"
     },
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T20:01:52.290Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T20:19:08.426Z",
         "ok": true
@@ -4164,6 +4137,10 @@
       },
       {
         "ts": "2026-06-19T22:13:01.348Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T22:28:48.352Z",
         "ok": true
       }
     ]
