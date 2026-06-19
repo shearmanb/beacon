@@ -755,27 +755,11 @@
       "etag": "\"page_cache:45343637659:ProductListController:ef9295c412ade728a0a73d6a9522a6d7\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 4,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T14:11:16.396Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-18T14:17:55.088Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-18T14:23:18.336Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-18T14:28:36.433Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T14:35:11.942Z",
         "ok": true
@@ -1159,6 +1143,46 @@
       {
         "ts": "2026-06-19T13:06:11.036Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-19T13:13:10.335Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-19T13:14:30.511Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-19T13:15:55.278Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-19T13:17:19.132Z",
+        "ok": false
+      }
+    ],
+    "lastError": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-19T13:17:19.132Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-19T13:13:10.335Z",
+        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-19T13:14:30.511Z",
+        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-19T13:15:55.278Z",
+        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-19T13:17:19.132Z",
+        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+        "statusCode": 503
       }
     ]
   },
@@ -1171,15 +1195,11 @@
       "etag": "\"page_cache:45343637659:ProductListController:ebc8a9671e2a27f11c8c3760cb6523ae\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 1,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T14:25:40.004Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T14:31:55.721Z",
         "ok": true
@@ -1575,6 +1595,19 @@
       {
         "ts": "2026-06-19T13:11:43.706Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-19T13:17:30.283Z",
+        "ok": false
+      }
+    ],
+    "lastError": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-19T13:17:30.283Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-19T13:17:30.283Z",
+        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
+        "statusCode": 503
       }
     ]
   },
@@ -1621,15 +1654,11 @@
       "etag": "\"page_cache:66506555478:ProductListController:ac4031e07068458b92e18f655f4f3bdc\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 1,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T14:13:38.498Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T14:19:15.481Z",
         "ok": true
@@ -2025,6 +2054,19 @@
       {
         "ts": "2026-06-19T13:11:51.245Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-19T13:17:42.949Z",
+        "ok": false
+      }
+    ],
+    "lastError": "HTTP 502 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-19T13:17:42.949Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-19T13:17:42.949Z",
+        "message": "HTTP 502 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
+        "statusCode": 502
       }
     ]
   },
@@ -2192,27 +2234,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:b548365a62aa7ba54ef12f6e9793bf57\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 4,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T14:01:59.987Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-18T14:07:05.592Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-18T14:12:20.355Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-18T14:18:04.675Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T14:24:31.976Z",
         "ok": true
@@ -2596,6 +2622,46 @@
       {
         "ts": "2026-06-19T13:06:27.776Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-19T13:13:21.317Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-19T13:14:40.853Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-19T13:16:07.608Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-19T13:18:00.235Z",
+        "ok": false
+      }
+    ],
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=4",
+    "lastErrorAt": "2026-06-19T13:18:00.235Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-19T13:13:21.317Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-19T13:14:40.853Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-19T13:16:07.608Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-19T13:18:00.235Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=4",
+        "statusCode": 503
       }
     ]
   },
