@@ -2211,15 +2211,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:131b21edacc015393ef49c6ed4a250cc\"",
       "lastModified": null
     },
-    "consecutiveErrors": 4,
-    "errorAlertSent": false,
+    "consecutiveErrors": 5,
+    "errorAlertSent": true,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T19:34:58.904Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T19:40:09.413Z",
         "ok": true
@@ -2615,10 +2611,14 @@
       {
         "ts": "2026-06-19T18:02:58.335Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-19T18:04:31.937Z",
+        "ok": false
       }
     ],
-    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
-    "lastErrorAt": "2026-06-19T18:02:58.335Z",
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=5",
+    "lastErrorAt": "2026-06-19T18:04:31.937Z",
     "errorLog": [
       {
         "ts": "2026-06-19T17:58:00.094Z",
@@ -2638,6 +2638,11 @@
       {
         "ts": "2026-06-19T18:02:58.335Z",
         "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-19T18:04:31.937Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=5",
         "statusCode": 503
       }
     ]
