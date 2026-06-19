@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-19T08:01:37.293Z",
+    "lastChecked": "2026-06-19T10:01:34.748Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-18T13:48:58.649Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-18T13:54:25.956Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-19T08:01:37.293Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T10:01:34.748Z",
         "ok": true
       }
     ]
@@ -3174,7 +3174,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-19T09:33:22.115Z",
+    "lastChecked": "2026-06-19T09:48:26.316Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3188,10 +3188,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T07:18:22.409Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T07:35:31.154Z",
         "ok": true
@@ -3587,11 +3583,15 @@
       {
         "ts": "2026-06-19T09:33:22.115Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-19T09:48:26.316Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-19T09:45:25.635Z",
+    "lastChecked": "2026-06-19T10:01:38.900Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3946,6 +3946,10 @@
       },
       {
         "ts": "2026-06-19T09:45:25.635Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T10:01:38.900Z",
         "ok": true
       }
     ]
