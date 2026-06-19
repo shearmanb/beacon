@@ -3786,5 +3786,32 @@
       "url": "https://thebourbonconcierge.com",
       "note": "Checks are succeeding again."
     }
+  },
+  {
+    "timestamp": "2026-06-19T16:32:49.393Z",
+    "siteId": "sharedpour_t8ke",
+    "siteName": "SharedPour T8KE",
+    "type": "sold_out",
+    "product": {
+      "handle": "augusta-buckners-13-year-t8ke-single-barrel-select-25-3637-straight-bourbon",
+      "title": "Augusta Buckner's 13 Year T8KE Single Barrel Select #26-22 Straight Bourbon",
+      "vendor": "Augusta Distillery",
+      "productType": "Bourbon",
+      "tags": [
+        "200-300",
+        "American-Bourbon",
+        "augusta-distillery",
+        "bourbon",
+        "Bourbon Whiskey",
+        "over-10",
+        "Single Barrel",
+        "single barrel selections",
+        "t8ke"
+      ],
+      "minPrice": 229.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/c2458521-2c19-f705-e77d-8808e2520a01.jpg?v=1775395350",
+      "url": "https://sharedpour.com/products/augusta-buckners-13-year-t8ke-single-barrel-select-25-3637-straight-bourbon"
+    }
   }
 ]
