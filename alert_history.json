@@ -3764,5 +3764,16 @@
       "image": "https://cdn.shopify.com/s/files/1/0665/0655/5478/files/IMG_5766.heic?v=1780435180",
       "url": "https://shop.fountaininndc.com/products/reveries-the-raven-batch-v"
     }
+  },
+  {
+    "timestamp": "2026-06-19T13:19:36.510Z",
+    "siteId": "bourbon_concierge",
+    "siteName": "Bourbon Concierge",
+    "type": "site_error",
+    "product": {
+      "title": "Bourbon Concierge",
+      "url": "https://thebourbonconcierge.com",
+      "note": "5 consecutive failures. Last error: HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2"
+    }
   }
 ]
