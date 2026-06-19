@@ -1163,12 +1163,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-18T23:43:52.805Z",
+    "lastChecked": "2026-06-19T00:02:36.087Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:8c9395627e73d66cf997ce435cf51188\"",
+      "etag": "\"page_cache:45343637659:ProductListController:c74b5e655dfbe5aa87bd05fed3ee39f3\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T13:06:15.337Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T13:11:38.816Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-18T23:43:52.805Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-19T00:02:36.087Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-18T23:39:47.026Z",
+    "lastChecked": "2026-06-19T00:02:40.325Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1618,7 +1618,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:66506555478:ProductListController:5e6f1597c429f801f668e7bc41938889\"",
+      "etag": "\"page_cache:66506555478:ProductListController:7584468120e7a744a99ebebf2c8238f9\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T12:24:55.962Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T13:00:58.018Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-18T23:39:47.026Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T00:02:40.325Z",
         "ok": true
       }
     ]
@@ -3174,7 +3174,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-18T23:42:52.542Z",
+    "lastChecked": "2026-06-18T23:59:28.498Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3188,10 +3188,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-17T21:31:19.937Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-17T21:46:29.712Z",
         "ok": true
@@ -3586,6 +3582,10 @@
       },
       {
         "ts": "2026-06-18T23:42:52.542Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-18T23:59:28.498Z",
         "ok": true
       }
     ]
