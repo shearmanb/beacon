@@ -1163,23 +1163,19 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-19T13:11:43.706Z",
+    "lastChecked": "2026-06-19T13:20:45.433Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:ebc8a9671e2a27f11c8c3760cb6523ae\"",
+      "etag": "\"page_cache:45343637659:ProductListController:3295545987a70cae837db4d891900c9d\"",
       "lastModified": null
     },
-    "consecutiveErrors": 2,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T14:37:29.536Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T14:42:53.435Z",
         "ok": true
@@ -1575,20 +1571,10 @@
       {
         "ts": "2026-06-19T13:19:17.668Z",
         "ok": false
-      }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-19T13:19:17.668Z",
-    "errorLog": [
-      {
-        "ts": "2026-06-19T13:17:30.283Z",
-        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-        "statusCode": 503
       },
       {
-        "ts": "2026-06-19T13:19:17.668Z",
-        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-        "statusCode": 503
+        "ts": "2026-06-19T13:20:45.433Z",
+        "ok": true
       }
     ]
   },
@@ -2052,7 +2038,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-19T13:06:27.776Z",
+    "lastChecked": "2026-06-19T13:21:09.639Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2215,15 +2201,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:b548365a62aa7ba54ef12f6e9793bf57\"",
       "lastModified": null
     },
-    "consecutiveErrors": 5,
-    "errorAlertSent": true,
+    "consecutiveErrors": 0,
+    "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T14:30:46.828Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T14:36:25.196Z",
         "ok": true
@@ -2619,35 +2601,10 @@
       {
         "ts": "2026-06-19T13:19:36.510Z",
         "ok": false
-      }
-    ],
-    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
-    "lastErrorAt": "2026-06-19T13:19:36.510Z",
-    "errorLog": [
-      {
-        "ts": "2026-06-19T13:13:21.317Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-        "statusCode": 503
       },
       {
-        "ts": "2026-06-19T13:14:40.853Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-19T13:16:07.608Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-19T13:18:00.235Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=4",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-19T13:19:36.510Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
-        "statusCode": 503
+        "ts": "2026-06-19T13:21:09.639Z",
+        "ok": true
       }
     ]
   },
