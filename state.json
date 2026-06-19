@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-19T16:27:19.061Z",
+    "lastChecked": "2026-06-19T16:32:49.392Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -441,7 +441,7 @@
           "t8ke"
         ],
         "minPrice": 229.99,
-        "available": true,
+        "available": false,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/c2458521-2c19-f705-e77d-8808e2520a01.jpg?v=1775395350",
         "url": "https://sharedpour.com/products/augusta-buckners-13-year-t8ke-single-barrel-select-25-3637-straight-bourbon"
       },
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:a60b40798255ca9eb07fa94a53683847\"",
+      "etag": "\"page_cache:45343637659:ProductListController:9edbb610896ca162f5c0360a2a03771b\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T17:46:46.870Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T17:52:21.023Z",
         "ok": true
@@ -1159,16 +1155,20 @@
       {
         "ts": "2026-06-19T16:27:19.061Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-19T16:32:49.392Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-19T16:27:24.785Z",
+    "lastChecked": "2026-06-19T16:32:54.931Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:2e05ea68b192a7b3144a1cf085fd12c5\"",
+      "etag": "\"page_cache:45343637659:ProductListController:670e852ef48631c9257a7eebf48a8a64\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T17:50:02.144Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T17:55:29.773Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-19T16:27:24.785Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T16:32:54.931Z",
         "ok": true
       }
     ]
@@ -2038,7 +2038,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-19T16:27:32.519Z",
+    "lastChecked": "2026-06-19T16:33:04.932Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2206,10 +2206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T17:43:31.568Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T17:50:11.912Z",
         "ok": true
@@ -2604,6 +2600,10 @@
       },
       {
         "ts": "2026-06-19T16:27:32.519Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T16:33:04.932Z",
         "ok": true
       }
     ]
