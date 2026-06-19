@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-19T23:16:04.273Z",
+    "lastChecked": "2026-06-19T23:39:25.675Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T13:00:39.595Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T13:06:20.246Z",
         "ok": true
@@ -2025,6 +2021,10 @@
       {
         "ts": "2026-06-19T23:16:04.273Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-19T23:39:25.675Z",
+        "ok": true
       }
     ],
     "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
@@ -2048,7 +2048,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-19T23:17:17.967Z",
+    "lastChecked": "2026-06-19T23:39:36.162Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2216,10 +2216,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T13:27:40.293Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T13:33:05.888Z",
         "ok": true
@@ -2614,6 +2610,10 @@
       },
       {
         "ts": "2026-06-19T23:17:17.967Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T23:39:36.162Z",
         "ok": true
       }
     ]
@@ -3610,7 +3610,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-19T23:31:30.439Z",
+    "lastChecked": "2026-06-19T23:47:36.559Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3743,10 +3743,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T21:22:55.267Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T21:40:22.312Z",
         "ok": true
@@ -4141,6 +4137,10 @@
       },
       {
         "ts": "2026-06-19T23:31:30.439Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T23:47:36.559Z",
         "ok": true
       }
     ]
