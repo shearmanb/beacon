@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-19T13:06:11.036Z",
+    "lastChecked": "2026-06-19T13:19:04.550Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,18 +752,14 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:ef9295c412ade728a0a73d6a9522a6d7\"",
+      "etag": "\"page_cache:45343637659:ProductListController:7ff945881e22c164853f923db84781f4\"",
       "lastModified": null
     },
-    "consecutiveErrors": 4,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T14:35:11.942Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T14:40:32.401Z",
         "ok": true
@@ -1159,30 +1155,10 @@
       {
         "ts": "2026-06-19T13:17:19.132Z",
         "ok": false
-      }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-19T13:17:19.132Z",
-    "errorLog": [
-      {
-        "ts": "2026-06-19T13:13:10.335Z",
-        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-        "statusCode": 503
       },
       {
-        "ts": "2026-06-19T13:14:30.511Z",
-        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-19T13:15:55.278Z",
-        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-19T13:17:19.132Z",
-        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
-        "statusCode": 503
+        "ts": "2026-06-19T13:19:04.550Z",
+        "ok": true
       }
     ]
   },
@@ -1195,15 +1171,11 @@
       "etag": "\"page_cache:45343637659:ProductListController:ebc8a9671e2a27f11c8c3760cb6523ae\"",
       "lastModified": null
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 2,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T14:31:55.721Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T14:37:29.536Z",
         "ok": true
@@ -1599,20 +1571,29 @@
       {
         "ts": "2026-06-19T13:17:30.283Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-19T13:19:17.668Z",
+        "ok": false
       }
     ],
     "lastError": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-19T13:17:30.283Z",
+    "lastErrorAt": "2026-06-19T13:19:17.668Z",
     "errorLog": [
       {
         "ts": "2026-06-19T13:17:30.283Z",
+        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-19T13:19:17.668Z",
         "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
         "statusCode": 503
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-19T13:11:51.245Z",
+    "lastChecked": "2026-06-19T13:19:25.997Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1654,15 +1635,11 @@
       "etag": "\"page_cache:66506555478:ProductListController:ac4031e07068458b92e18f655f4f3bdc\"",
       "lastModified": null
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T14:19:15.481Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T14:24:24.675Z",
         "ok": true
@@ -2058,6 +2035,10 @@
       {
         "ts": "2026-06-19T13:17:42.949Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-19T13:19:25.997Z",
+        "ok": true
       }
     ],
     "lastError": "HTTP 502 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
@@ -2234,15 +2215,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:b548365a62aa7ba54ef12f6e9793bf57\"",
       "lastModified": null
     },
-    "consecutiveErrors": 4,
-    "errorAlertSent": false,
+    "consecutiveErrors": 5,
+    "errorAlertSent": true,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T14:24:31.976Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T14:30:46.828Z",
         "ok": true
@@ -2638,10 +2615,14 @@
       {
         "ts": "2026-06-19T13:18:00.235Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-19T13:19:36.510Z",
+        "ok": false
       }
     ],
-    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=4",
-    "lastErrorAt": "2026-06-19T13:18:00.235Z",
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
+    "lastErrorAt": "2026-06-19T13:19:36.510Z",
     "errorLog": [
       {
         "ts": "2026-06-19T13:13:21.317Z",
@@ -2661,6 +2642,11 @@
       {
         "ts": "2026-06-19T13:18:00.235Z",
         "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=4",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-19T13:19:36.510Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
         "statusCode": 503
       }
     ]
@@ -3240,13 +3226,13 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-19T13:04:04.360Z",
+    "lastChecked": "2026-06-19T13:19:41.942Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
     "resetReason": null,
     "httpValidators": {
-      "etag": "W/\"03485366d015fd5340f5f7dea4be024e--gzip\"",
+      "etag": "W/\"2970dea294dd91e7d03f52baa7c6f75d--gzip\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -3254,10 +3240,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T10:49:08.994Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T11:02:58.274Z",
         "ok": true
@@ -3652,6 +3634,10 @@
       },
       {
         "ts": "2026-06-19T13:04:04.360Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-19T13:19:41.942Z",
         "ok": true
       }
     ]
