@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-20T21:54:16.601Z",
+    "lastChecked": "2026-06-20T21:59:37.810Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T09:49:12.310Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T12:05:55.106Z",
         "ok": true
@@ -1593,11 +1589,15 @@
       {
         "ts": "2026-06-20T21:54:16.601Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T21:59:37.810Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-20T21:53:13.796Z",
+    "lastChecked": "2026-06-20T21:58:29.859Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T05:38:00.598Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T07:56:20.630Z",
         "ok": true
@@ -2042,6 +2038,10 @@
       },
       {
         "ts": "2026-06-20T21:53:13.796Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T21:58:29.859Z",
         "ok": true
       }
     ]
@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-20T21:54:29.183Z",
+    "lastChecked": "2026-06-20T22:09:42.431Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T19:38:29.203Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T19:53:29.708Z",
         "ok": true
@@ -3605,11 +3601,15 @@
       {
         "ts": "2026-06-20T21:54:29.183Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T22:09:42.431Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-20T21:42:30.119Z",
+    "lastChecked": "2026-06-20T21:58:35.875Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T19:20:19.095Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T19:35:11.457Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-20T21:42:30.119Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T21:58:35.875Z",
         "ok": true
       }
     ]
