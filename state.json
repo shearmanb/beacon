@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-20T22:19:03.018Z",
+    "lastChecked": "2026-06-20T22:40:45.557Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-20T09:34:57.856Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-20T11:31:44.171Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-20T22:19:03.018Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T22:40:45.557Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-20T22:22:08.263Z",
+    "lastChecked": "2026-06-20T22:43:54.893Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T13:00:13.668Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T13:05:38.159Z",
         "ok": true
@@ -1592,6 +1588,10 @@
       },
       {
         "ts": "2026-06-20T22:22:08.263Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T22:43:54.893Z",
         "ok": true
       }
     ]
@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-20T22:25:07.419Z",
+    "lastChecked": "2026-06-20T22:41:50.594Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T20:07:37.713Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T20:22:01.501Z",
         "ok": true
@@ -3604,6 +3600,10 @@
       },
       {
         "ts": "2026-06-20T22:25:07.419Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T22:41:50.594Z",
         "ok": true
       }
     ]
