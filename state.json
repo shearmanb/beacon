@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-20T23:04:26.041Z",
+    "lastChecked": "2026-06-20T23:23:57.383Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-20T13:00:08.992Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-20T13:05:33.802Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-20T23:04:26.041Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T23:23:57.383Z",
         "ok": true
       }
     ]
@@ -1597,7 +1597,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-20T23:00:21.753Z",
+    "lastChecked": "2026-06-20T23:24:02.703Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T13:00:16.806Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T13:05:42.886Z",
         "ok": true
@@ -2042,6 +2038,10 @@
       },
       {
         "ts": "2026-06-20T23:00:21.753Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T23:24:02.703Z",
         "ok": true
       }
     ]
@@ -3609,7 +3609,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-20T23:08:30.314Z",
+    "lastChecked": "2026-06-20T23:24:08.237Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3734,18 +3734,14 @@
       }
     },
     "httpValidators": {
-      "etag": "\"f8aaf1d5\"",
-      "lastModified": "Sat, 20 Jun 2026 13:21:14 GMT"
+      "etag": "\"15fbea84\"",
+      "lastModified": "Sat, 20 Jun 2026 23:23:38 GMT"
     },
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T20:37:10.276Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T20:52:11.538Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-20T23:08:30.314Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T23:24:08.237Z",
         "ok": true
       }
     ]
