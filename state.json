@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-20T15:37:10.520Z",
+    "lastChecked": "2026-06-20T15:47:15.741Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,18 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-19T17:00:56.579Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T17:07:34.161Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T17:12:55.176Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-19T17:18:15.946Z",
         "ok": true
       },
@@ -1159,11 +1147,37 @@
       {
         "ts": "2026-06-20T15:37:10.520Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:43:42.410Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:45:29.913Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:47:15.741Z",
+        "ok": true
+      }
+    ],
+    "lastError": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-20T15:45:29.913Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-20T15:43:42.410Z",
+        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T15:45:29.913Z",
+        "message": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
+        "statusCode": 503
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-20T15:33:43.905Z",
+    "lastChecked": "2026-06-20T15:45:37.701Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1186,22 +1200,14 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:1a49fe0c8b90dc99ce86dcb35e7b8c8c\"",
+      "etag": "\"page_cache:45343637659:ProductListController:8dd9653ac34b1f77effd9d0dd94ea8e1\"",
       "lastModified": null
     },
-    "consecutiveErrors": 3,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T17:01:01.957Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T17:06:18.947Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:11:40.292Z",
         "ok": true
@@ -1593,30 +1599,19 @@
       {
         "ts": "2026-06-20T15:42:05.406Z",
         "ok": false
-      }
-    ],
-    "lastError": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-20T15:42:05.406Z",
-    "errorLog": [
-      {
-        "ts": "2026-06-20T15:39:29.991Z",
-        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-        "statusCode": 503
       },
       {
-        "ts": "2026-06-20T15:40:34.647Z",
-        "message": "HTTP 502 for https://sharedpour.com/products.json?limit=250&page=1",
-        "statusCode": 502
+        "ts": "2026-06-20T15:43:53.184Z",
+        "ok": false
       },
       {
-        "ts": "2026-06-20T15:42:05.406Z",
-        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
-        "statusCode": 503
+        "ts": "2026-06-20T15:45:37.701Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-20T15:35:57.218Z",
+    "lastChecked": "2026-06-20T15:47:22.181Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1658,23 +1653,11 @@
       "etag": "\"page_cache:66506555478:ProductListController:12c754e6dc037f6a20d39dcf77c8da8c\"",
       "lastModified": null
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T16:54:30.533Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T17:01:06.971Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T17:07:39.359Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:14:04.648Z",
         "ok": true
@@ -2062,13 +2045,35 @@
       {
         "ts": "2026-06-20T15:42:15.618Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:44:05.092Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:45:50.871Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:47:22.181Z",
+        "ok": true
       }
     ],
     "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-20T15:42:15.618Z",
+    "lastErrorAt": "2026-06-20T15:45:50.871Z",
     "errorLog": [
       {
         "ts": "2026-06-20T15:42:15.618Z",
+        "message": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T15:44:05.092Z",
+        "message": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T15:45:50.871Z",
         "message": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
         "statusCode": 503
       }
@@ -2238,23 +2243,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:25f64a97238bc64f4b76176f138c441b\"",
       "lastModified": null
     },
-    "consecutiveErrors": 2,
-    "errorAlertSent": false,
+    "consecutiveErrors": 5,
+    "errorAlertSent": true,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T17:29:13.998Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T17:34:58.128Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T17:40:21.405Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:45:46.894Z",
         "ok": true
@@ -2642,10 +2635,22 @@
       {
         "ts": "2026-06-20T15:42:26.050Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:44:21.077Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:46:06.384Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:47:45.684Z",
+        "ok": false
       }
     ],
-    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-20T15:42:26.050Z",
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=6",
+    "lastErrorAt": "2026-06-20T15:47:45.684Z",
     "errorLog": [
       {
         "ts": "2026-06-20T15:40:48.041Z",
@@ -2655,6 +2660,21 @@
       {
         "ts": "2026-06-20T15:42:26.050Z",
         "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T15:44:21.077Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T15:46:06.384Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=3",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T15:47:45.684Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=6",
         "statusCode": 503
       }
     ]
@@ -3234,7 +3254,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-20T15:30:27.249Z",
+    "lastChecked": "2026-06-20T15:46:11.181Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3248,10 +3268,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T13:19:41.942Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T13:34:14.660Z",
         "ok": true
@@ -3646,6 +3662,10 @@
       },
       {
         "ts": "2026-06-20T15:30:27.249Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:46:11.181Z",
         "ok": true
       }
     ]
