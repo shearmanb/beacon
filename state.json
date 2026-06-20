@@ -3610,7 +3610,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-20T04:14:59.585Z",
+    "lastChecked": "2026-06-20T04:32:03.339Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3743,10 +3743,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T02:05:30.119Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T02:21:28.776Z",
         "ok": true
@@ -4141,6 +4137,10 @@
       },
       {
         "ts": "2026-06-20T04:14:59.585Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T04:32:03.339Z",
         "ok": true
       }
     ]
