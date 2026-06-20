@@ -1163,12 +1163,30 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-20T09:49:12.310Z",
-    "productCount": 0,
-    "products": {},
+    "lastChecked": "2026-06-20T12:05:55.106Z",
+    "productCount": 1,
+    "products": {
+      "the-reveries-mash-journey-27454": {
+        "handle": "the-reveries-mash-journey-27454",
+        "title": "THE REVERIES 7 Year Single Barrel #27454 \"GAMBIT\" Kentucky Straight Bourbon T8KE Select",
+        "vendor": "The Reveries",
+        "productType": "Bourbon",
+        "tags": [
+          "50-100",
+          "bourbon",
+          "over-10",
+          "the-reveries"
+        ],
+        "minPrice": 79.99,
+        "available": true,
+        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/GAMBIT.png?v=1780671568",
+        "url": "https://sharedpour.com/products/the-reveries-mash-journey-27454",
+        "firstSeen": "2026-06-20T12:05:55.106Z"
+      }
+    },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:f17741f5d40086204032dda4a8ef809f\"",
+      "etag": "\"page_cache:45343637659:ProductListController:18defb4837706ae6dfe2924bcac9c881\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T14:01:16.659Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T14:06:54.859Z",
         "ok": true
@@ -1575,11 +1589,15 @@
       {
         "ts": "2026-06-20T09:49:12.310Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T12:05:55.106Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-20T09:50:14.991Z",
+    "lastChecked": "2026-06-20T12:05:58.503Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T14:01:22.150Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T14:06:58.482Z",
         "ok": true
@@ -2024,6 +2038,10 @@
       },
       {
         "ts": "2026-06-20T09:50:14.991Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T12:05:58.503Z",
         "ok": true
       }
     ]
@@ -3591,7 +3609,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-20T11:47:51.648Z",
+    "lastChecked": "2026-06-20T12:06:02.841Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3724,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T09:30:16.606Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T09:45:25.635Z",
         "ok": true
@@ -4122,6 +4136,10 @@
       },
       {
         "ts": "2026-06-20T11:47:51.648Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T12:06:02.841Z",
         "ok": true
       }
     ]
