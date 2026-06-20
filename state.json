@@ -1163,12 +1163,12 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-20T01:19:53.801Z",
+    "lastChecked": "2026-06-20T01:39:47.484Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:4f595dd426531b7bd0bb0a1d71bfbc21\"",
+      "etag": "\"page_cache:45343637659:ProductListController:2b606798d76d44de2f37c72acdb3ee28\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T13:31:54.351Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T13:38:32.627Z",
         "ok": true
@@ -1575,11 +1571,15 @@
       {
         "ts": "2026-06-20T01:19:53.801Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T01:39:47.484Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-20T01:22:01.106Z",
+    "lastChecked": "2026-06-20T01:40:57.203Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T13:31:59.768Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T13:37:22.196Z",
         "ok": true
@@ -2024,6 +2020,10 @@
       },
       {
         "ts": "2026-06-20T01:22:01.106Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T01:40:57.203Z",
         "ok": true
       }
     ],
@@ -3610,7 +3610,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-20T01:19:57.559Z",
+    "lastChecked": "2026-06-20T01:37:39.159Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3743,10 +3743,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T23:10:58.579Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T23:25:40.008Z",
         "ok": true
@@ -4141,6 +4137,10 @@
       },
       {
         "ts": "2026-06-20T01:19:57.559Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T01:37:39.159Z",
         "ok": true
       }
     ]
