@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-20T15:31:35.249Z",
+    "lastChecked": "2026-06-20T15:37:10.520Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:b64d3c7035b4b7f2cba5a6b652409cbd\"",
+      "etag": "\"page_cache:45343637659:ProductListController:eea5b1508ef1de5a44fd94e6e1aac96a\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T16:55:43.408Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:00:56.579Z",
         "ok": true
@@ -1159,6 +1155,10 @@
       {
         "ts": "2026-06-20T15:31:35.250Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:37:10.520Z",
+        "ok": true
       }
     ]
   },
@@ -1189,23 +1189,11 @@
       "etag": "\"page_cache:45343637659:ProductListController:1a49fe0c8b90dc99ce86dcb35e7b8c8c\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 3,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T16:43:45.023Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T16:49:06.824Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T16:54:26.732Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:01:01.957Z",
         "ok": true
@@ -1593,6 +1581,37 @@
       {
         "ts": "2026-06-20T15:33:43.905Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:39:29.991Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:40:34.647Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:42:05.406Z",
+        "ok": false
+      }
+    ],
+    "lastError": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-20T15:42:05.406Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-20T15:39:29.991Z",
+        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T15:40:34.647Z",
+        "message": "HTTP 502 for https://sharedpour.com/products.json?limit=250&page=1",
+        "statusCode": 502
+      },
+      {
+        "ts": "2026-06-20T15:42:05.406Z",
+        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
+        "statusCode": 503
       }
     ]
   },
@@ -1639,15 +1658,11 @@
       "etag": "\"page_cache:66506555478:ProductListController:12c754e6dc037f6a20d39dcf77c8da8c\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 1,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T16:49:11.135Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T16:54:30.533Z",
         "ok": true
@@ -2043,6 +2058,19 @@
       {
         "ts": "2026-06-20T15:35:57.218Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:42:15.618Z",
+        "ok": false
+      }
+    ],
+    "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-20T15:42:15.618Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-20T15:42:15.618Z",
+        "message": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
+        "statusCode": 503
       }
     ]
   },
@@ -2210,19 +2238,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:25f64a97238bc64f4b76176f138c441b\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 2,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T17:18:23.895Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T17:23:41.215Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:29:13.998Z",
         "ok": true
@@ -2614,6 +2634,28 @@
       {
         "ts": "2026-06-20T15:34:48.637Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:40:48.041Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T15:42:26.050Z",
+        "ok": false
+      }
+    ],
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-20T15:42:26.050Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-20T15:40:48.041Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T15:42:26.050Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+        "statusCode": 503
       }
     ]
   },
