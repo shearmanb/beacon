@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-20T00:51:58.863Z",
+    "lastChecked": "2026-06-20T01:14:50.397Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-19T13:30:46.885Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-19T13:36:21.776Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-20T00:51:58.863Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T01:14:50.397Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-20T00:58:15.609Z",
+    "lastChecked": "2026-06-20T01:19:53.801Z",
     "productCount": 0,
     "products": {},
     "pageCount": 1,
@@ -1176,10 +1176,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T13:26:34.080Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T13:31:54.351Z",
         "ok": true
@@ -1574,6 +1570,10 @@
       },
       {
         "ts": "2026-06-20T00:58:15.609Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T01:19:53.801Z",
         "ok": true
       }
     ]
@@ -3610,7 +3610,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-20T01:04:26.409Z",
+    "lastChecked": "2026-06-20T01:19:57.559Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3743,10 +3743,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-18T22:55:21.314Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-18T23:10:58.579Z",
         "ok": true
@@ -4141,6 +4137,10 @@
       },
       {
         "ts": "2026-06-20T01:04:26.409Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T01:19:57.559Z",
         "ok": true
       }
     ]
