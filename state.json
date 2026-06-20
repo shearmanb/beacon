@@ -1579,7 +1579,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-20T03:42:09.220Z",
+    "lastChecked": "2026-06-20T05:38:00.598Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1618,7 +1618,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:66506555478:ProductListController:ebe55d56158def5df2ac64a176a9c306\"",
+      "etag": "\"page_cache:66506555478:ProductListController:12c754e6dc037f6a20d39dcf77c8da8c\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1626,10 +1626,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T13:43:47.692Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T13:49:06.619Z",
         "ok": true
@@ -2025,25 +2021,10 @@
       {
         "ts": "2026-06-20T03:42:09.220Z",
         "ok": true
-      }
-    ],
-    "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-19T17:59:26.882Z",
-    "errorLog": [
-      {
-        "ts": "2026-06-19T17:56:36.987Z",
-        "message": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-        "statusCode": 503
       },
       {
-        "ts": "2026-06-19T17:57:47.939Z",
-        "message": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-19T17:59:26.882Z",
-        "message": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-        "statusCode": 503
+        "ts": "2026-06-20T05:38:00.598Z",
+        "ok": true
       }
     ]
   },
@@ -3193,7 +3174,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-20T05:23:37.573Z",
+    "lastChecked": "2026-06-20T05:39:59.407Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3207,10 +3188,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T03:11:42.571Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T03:28:08.346Z",
         "ok": true
@@ -3606,11 +3583,15 @@
       {
         "ts": "2026-06-20T05:23:37.573Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T05:39:59.407Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-20T05:34:58.136Z",
+    "lastChecked": "2026-06-20T05:50:50.228Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3743,10 +3724,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T03:21:53.135Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T03:36:25.318Z",
         "ok": true
@@ -4141,6 +4118,10 @@
       },
       {
         "ts": "2026-06-20T05:34:58.136Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T05:50:50.228Z",
         "ok": true
       }
     ]
