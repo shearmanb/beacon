@@ -2080,7 +2080,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-20T15:34:48.637Z",
+    "lastChecked": "2026-06-20T15:49:01.771Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2243,15 +2243,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:25f64a97238bc64f4b76176f138c441b\"",
       "lastModified": null
     },
-    "consecutiveErrors": 5,
-    "errorAlertSent": true,
+    "consecutiveErrors": 0,
+    "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T17:45:46.894Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:51:15.306Z",
         "ok": true
@@ -2647,35 +2643,10 @@
       {
         "ts": "2026-06-20T15:47:45.684Z",
         "ok": false
-      }
-    ],
-    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=6",
-    "lastErrorAt": "2026-06-20T15:47:45.684Z",
-    "errorLog": [
-      {
-        "ts": "2026-06-20T15:40:48.041Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
-        "statusCode": 503
       },
       {
-        "ts": "2026-06-20T15:42:26.050Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-20T15:44:21.077Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=2",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-20T15:46:06.384Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=3",
-        "statusCode": 503
-      },
-      {
-        "ts": "2026-06-20T15:47:45.684Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=6",
-        "statusCode": 503
+        "ts": "2026-06-20T15:49:01.771Z",
+        "ok": true
       }
     ]
   },
