@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-20T19:57:49.941Z",
+    "lastChecked": "2026-06-20T20:04:18.208Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:010099bb46fffcac62b3cced4f2f1056\"",
+      "etag": "\"page_cache:45343637659:ProductListController:886390deac7b3c2535b1354679286509\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T21:26:23.148Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T21:31:46.764Z",
         "ok": true
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-20T19:57:49.941Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T20:04:18.208Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-20T19:55:47.514Z",
+    "lastChecked": "2026-06-20T20:02:13.872Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1186,7 +1186,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:0e949f497bd67c407526a3e243d2e7d1\"",
+      "etag": "\"page_cache:45343637659:ProductListController:481fbb333b331b2e381474ad3010cdf0\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T21:27:28.643Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T21:32:55.953Z",
         "ok": true
@@ -1593,11 +1589,15 @@
       {
         "ts": "2026-06-20T19:55:47.514Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T20:02:13.872Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-20T19:53:48.570Z",
+    "lastChecked": "2026-06-20T20:04:23.916Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,14 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T21:11:55.470Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T21:18:25.802Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T21:23:59.002Z",
         "ok": true
@@ -2043,11 +2035,19 @@
       {
         "ts": "2026-06-20T19:53:48.570Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T19:58:55.081Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T20:04:23.916Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-20T19:52:43.360Z",
+    "lastChecked": "2026-06-20T20:04:30.607Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2207,7 +2207,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:22747704da96d34ee10d2c6dbcbaf036\"",
+      "etag": "\"page_cache:57076547742:ProductListController:5ee923dde5c70988929659381b9893c9\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2215,14 +2215,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T21:52:28.949Z",
-        "ok": false
-      },
-      {
-        "ts": "2026-06-19T21:53:50.011Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-19T21:55:05.847Z",
         "ok": true
@@ -2613,6 +2605,14 @@
       },
       {
         "ts": "2026-06-20T19:52:43.360Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T19:59:04.325Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T20:04:30.607Z",
         "ok": true
       }
     ]
@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-20T19:49:23.659Z",
+    "lastChecked": "2026-06-20T20:04:36.528Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T17:32:37.007Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:48:57.104Z",
         "ok": true
@@ -3604,6 +3600,10 @@
       },
       {
         "ts": "2026-06-20T19:49:23.659Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T20:04:36.528Z",
         "ok": true
       }
     ]
