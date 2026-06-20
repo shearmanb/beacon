@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-20T19:30:00.967Z",
+    "lastChecked": "2026-06-20T19:35:52.561Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-19T20:58:50.438Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-19T21:04:15.732Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-20T19:30:00.968Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T19:35:52.561Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-20T19:25:42.588Z",
+    "lastChecked": "2026-06-20T19:33:11.491Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,14 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T20:53:22.550Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T20:58:55.058Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T21:04:20.687Z",
         "ok": true
@@ -1593,11 +1585,28 @@
       {
         "ts": "2026-06-20T19:25:42.588Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T19:31:34.468Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T19:33:11.491Z",
+        "ok": true
+      }
+    ],
+    "lastError": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-20T19:31:34.468Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-20T19:31:34.468Z",
+        "message": "HTTP 503 for https://sharedpour.com/products.json?limit=250&page=1",
+        "statusCode": 503
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-20T19:25:46.463Z",
+    "lastChecked": "2026-06-20T19:31:41.384Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1653,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T20:42:31.760Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T20:48:49.909Z",
         "ok": true
@@ -2043,6 +2048,10 @@
       {
         "ts": "2026-06-20T19:25:46.463Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T19:31:41.384Z",
+        "ok": true
       }
     ]
   },
@@ -2210,27 +2219,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:32fbdfac28da7d5158eeef0fc2ddd7a5\"",
       "lastModified": null
     },
-    "consecutiveErrors": 1,
-    "errorAlertSent": false,
+    "consecutiveErrors": 5,
+    "errorAlertSent": true,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T21:08:28.439Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T21:14:04.445Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T21:19:33.103Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-19T21:25:13.666Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T21:31:55.726Z",
         "ok": true
@@ -2614,14 +2607,50 @@
       {
         "ts": "2026-06-20T19:30:18.756Z",
         "ok": false
+      },
+      {
+        "ts": "2026-06-20T19:32:02.600Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T19:33:23.685Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T19:34:44.894Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-20T19:36:09.947Z",
+        "ok": false
       }
     ],
-    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=6",
-    "lastErrorAt": "2026-06-20T19:30:18.756Z",
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=5",
+    "lastErrorAt": "2026-06-20T19:36:09.947Z",
     "errorLog": [
       {
         "ts": "2026-06-20T19:30:18.756Z",
         "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=6",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T19:32:02.600Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=4",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T19:33:23.685Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T19:34:44.894Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+        "statusCode": 503
+      },
+      {
+        "ts": "2026-06-20T19:36:09.947Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=5",
         "statusCode": 503
       }
     ]
@@ -3201,7 +3230,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-20T19:15:50.770Z",
+    "lastChecked": "2026-06-20T19:33:29.093Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3215,10 +3244,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T16:59:50.599Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:16:12.759Z",
         "ok": true
@@ -3614,11 +3639,15 @@
       {
         "ts": "2026-06-20T19:15:50.770Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T19:33:29.093Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-20T19:20:13.923Z",
+    "lastChecked": "2026-06-20T19:34:48.326Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3751,10 +3780,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T16:58:50.762Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:15:11.632Z",
         "ok": true
@@ -4149,6 +4174,10 @@
       },
       {
         "ts": "2026-06-20T19:20:13.923Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T19:34:48.326Z",
         "ok": true
       }
     ]
