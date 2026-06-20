@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-20T15:52:05.941Z",
+    "lastChecked": "2026-06-20T15:57:47.239Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-19T17:24:47.459Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-19T17:30:17.909Z",
         "ok": true
       },
@@ -1159,6 +1155,10 @@
       {
         "ts": "2026-06-20T15:52:05.941Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:57:47.239Z",
+        "ok": true
       }
     ],
     "lastError": "HTTP 503 for https://sharedpour.com/collections/t8ke/products.json?limit=250&page=1",
@@ -1177,7 +1177,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-20T15:51:04.305Z",
+    "lastChecked": "2026-06-20T15:56:32.421Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1208,10 +1208,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T17:17:12.650Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:22:31.621Z",
         "ok": true
@@ -1607,11 +1603,15 @@
       {
         "ts": "2026-06-20T15:51:04.305Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:56:32.421Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-20T15:53:17.437Z",
+    "lastChecked": "2026-06-20T15:59:43.619Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1658,10 +1658,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T17:20:27.186Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:25:55.341Z",
         "ok": true
@@ -2056,6 +2052,10 @@
       },
       {
         "ts": "2026-06-20T15:53:17.437Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:59:43.619Z",
         "ok": true
       }
     ],
