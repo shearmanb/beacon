@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-20T15:14:34.572Z",
+    "lastChecked": "2026-06-20T15:19:53.635Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:adedb53d8403a3787eade4b291328e28\"",
+      "etag": "\"page_cache:45343637659:ProductListController:b3db7f048b352c9cc9f8d66b20abbee6\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T16:38:24.739Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T16:43:38.764Z",
         "ok": true
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-20T15:14:34.572Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:19:53.635Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-20T15:11:08.905Z",
+    "lastChecked": "2026-06-20T15:16:39.006Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1186,7 +1186,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:a99a6b1d022f4e9ed2a205faad1c7dba\"",
+      "etag": "\"page_cache:45343637659:ProductListController:a08a92d1418b2a005521ee5bad89a5a2\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T16:22:12.879Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T16:27:24.785Z",
         "ok": true
@@ -1593,11 +1589,15 @@
       {
         "ts": "2026-06-20T15:11:08.905Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:16:39.006Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-20T15:12:15.825Z",
+    "lastChecked": "2026-06-20T15:17:42.846Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T16:26:12.194Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T16:31:40.615Z",
         "ok": true
@@ -2043,11 +2039,15 @@
       {
         "ts": "2026-06-20T15:12:15.825Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:17:42.846Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-20T15:12:23.488Z",
+    "lastChecked": "2026-06-20T15:17:51.047Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2215,10 +2215,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T16:54:37.774Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T17:01:16.401Z",
         "ok": true
@@ -2613,6 +2609,10 @@
       },
       {
         "ts": "2026-06-20T15:12:23.489Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:17:51.047Z",
         "ok": true
       }
     ]
@@ -3609,7 +3609,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-20T15:03:37.967Z",
+    "lastChecked": "2026-06-20T15:18:54.310Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T12:40:23.080Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T12:54:28.678Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-20T15:03:37.967Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-20T15:18:54.310Z",
         "ok": true
       }
     ]
