@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-21T14:20:47.309Z",
+    "lastChecked": "2026-06-21T14:27:11.999Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-20T15:37:10.520Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-20T15:43:42.410Z",
         "ok": false
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-21T14:20:47.309Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T14:27:11.999Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T14:25:08.982Z",
+    "lastChecked": "2026-06-21T14:30:34.007Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1186,7 +1186,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:573b8c4b58eb51dc47deba9e2af5ff5c\"",
+      "etag": "\"page_cache:45343637659:ProductListController:322f3631e84c6694d7c8b6ef347a36e8\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T15:43:53.184Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-20T15:45:37.701Z",
         "ok": true
@@ -1593,11 +1589,15 @@
       {
         "ts": "2026-06-21T14:25:08.982Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T14:30:34.007Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-21T14:21:50.491Z",
+    "lastChecked": "2026-06-21T14:27:17.216Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T15:42:15.618Z",
-        "ok": false
-      },
       {
         "ts": "2026-06-20T15:44:05.092Z",
         "ok": false
@@ -2043,11 +2039,15 @@
       {
         "ts": "2026-06-21T14:21:50.491Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T14:27:17.216Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T14:23:00.647Z",
+    "lastChecked": "2026-06-21T14:29:32.528Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2215,10 +2215,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T16:00:53.771Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T16:06:40.314Z",
         "ok": true
@@ -2613,6 +2609,10 @@
       },
       {
         "ts": "2026-06-21T14:23:00.647Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T14:29:32.528Z",
         "ok": true
       }
     ]
@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T14:12:33.829Z",
+    "lastChecked": "2026-06-21T14:28:23.530Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T12:00:46.723Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T12:18:12.126Z",
         "ok": true
@@ -3605,11 +3601,15 @@
       {
         "ts": "2026-06-21T14:12:33.829Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T14:28:23.530Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T14:16:52.048Z",
+    "lastChecked": "2026-06-21T14:30:38.346Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T11:47:51.648Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T12:06:02.841Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-21T14:16:52.048Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T14:30:38.346Z",
         "ok": true
       }
     ]
