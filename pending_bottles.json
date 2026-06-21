@@ -15,20 +15,6 @@
       "source": "sharedpour"
     },
     {
-      "id": "b_1781810561132_0",
-      "bottle": "Striped Pig '2TEN90 & Women of Whiskeys' Single Barrel Barrel Strength Bourbon Selection",
-      "cost": null,
-      "retailer": "Shared Pour",
-      "orderNumber": "25-155018-SP",
-      "orderLink": "",
-      "etaDate": "",
-      "etaNote": "",
-      "status": "ordered",
-      "spStatus": "Ready for pickup",
-      "source": "sharedpour",
-      "createdAt": "2026-06-18T19:22:41.132Z"
-    },
-    {
       "id": "b_1781810561132_1",
       "bottle": "T8KE x Green River Distilling Single Barrel Barrel Strength Bourbon (123.6 Proof, II.I)",
       "cost": null,
@@ -178,6 +164,26 @@
       "cellarPushedAt": "2026-06-21T02:44:58.465Z",
       "cellarBottleId": null,
       "cellarPendingId": 7,
+      "cellarStatus": "pending",
+      "cellarError": null
+    },
+    {
+      "id": "b_1781810561132_0",
+      "bottle": "Striped Pig '2TEN90 & Women of Whiskeys' Single Barrel Barrel Strength Bourbon Selection",
+      "cost": null,
+      "retailer": "Shared Pour",
+      "orderNumber": "25-155018-SP",
+      "orderLink": "",
+      "etaDate": "",
+      "etaNote": "",
+      "status": "pickup",
+      "spStatus": "Ready for pickup",
+      "source": "sharedpour",
+      "createdAt": "2026-06-18T19:22:41.132Z",
+      "collectedAt": "2026-06-21T02:45:03.002Z",
+      "cellarPushedAt": "2026-06-21T02:45:02.918Z",
+      "cellarBottleId": null,
+      "cellarPendingId": 8,
       "cellarStatus": "pending",
       "cellarError": null
     }
