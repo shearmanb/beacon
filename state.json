@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T03:36:30.285Z",
+    "lastChecked": "2026-06-21T05:51:42.038Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1186,7 +1186,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:166140259c3bcc514ddaf15add8449ef\"",
+      "etag": "\"page_cache:45343637659:ProductListController:368ec4b3e6c6d875e9a96c745ed5a0e5\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T14:01:24.051Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T14:06:48.769Z",
         "ok": true
@@ -1592,6 +1588,10 @@
       },
       {
         "ts": "2026-06-21T03:36:30.285Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T05:51:42.038Z",
         "ok": true
       }
     ]
@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T05:30:38.944Z",
+    "lastChecked": "2026-06-21T05:44:39.906Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T03:16:37.143Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T03:32:55.114Z",
         "ok": true
@@ -3604,6 +3600,10 @@
       },
       {
         "ts": "2026-06-21T05:30:38.944Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T05:44:39.906Z",
         "ok": true
       }
     ]
