@@ -2047,7 +2047,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T03:51:47.640Z",
+    "lastChecked": "2026-06-21T05:53:53.191Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2207,7 +2207,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:9132ab62982a2172c04c6815a055cb48\"",
+      "etag": "\"page_cache:57076547742:ProductListController:e76d3ad856f17c1deab223841f0708bc\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2215,10 +2215,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T14:21:04.462Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T14:26:44.028Z",
         "ok": true
@@ -2613,6 +2609,10 @@
       },
       {
         "ts": "2026-06-21T03:51:47.640Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T05:53:53.192Z",
         "ok": true
       }
     ]
@@ -3609,7 +3609,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T05:41:38.889Z",
+    "lastChecked": "2026-06-21T05:59:02.636Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T03:09:24.519Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T03:25:43.750Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-21T05:41:38.889Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T05:59:02.636Z",
         "ok": true
       }
     ]
