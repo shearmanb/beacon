@@ -1,20 +1,6 @@
 {
   "items": [
     {
-      "id": "b_1781325990646",
-      "bottle": "Southern Collective Single Barrel 11yr Bourbon “Hack & Mack Selection - Nashville Buttercake”",
-      "cost": 100,
-      "retailer": "Shared Pour",
-      "orderNumber": "#25-153496-SP",
-      "orderLink": "https://shopify.com/45343637659/account/orders/6298736296091",
-      "etaDate": "2026-06-03",
-      "etaNote": "",
-      "status": "pickup",
-      "createdAt": "2026-06-13T04:46:30.646Z",
-      "spStatus": "Ready for pickup",
-      "source": "sharedpour"
-    },
-    {
       "id": "b_1781810561132_1",
       "bottle": "T8KE x Green River Distilling Single Barrel Barrel Strength Bourbon (123.6 Proof, II.I)",
       "cost": null,
@@ -184,6 +170,26 @@
       "cellarPushedAt": "2026-06-21T02:45:02.918Z",
       "cellarBottleId": null,
       "cellarPendingId": 8,
+      "cellarStatus": "pending",
+      "cellarError": null
+    },
+    {
+      "id": "b_1781325990646",
+      "bottle": "Southern Collective Single Barrel 11yr Bourbon “Hack & Mack Selection - Nashville Buttercake”",
+      "cost": 100,
+      "retailer": "Shared Pour",
+      "orderNumber": "#25-153496-SP",
+      "orderLink": "https://shopify.com/45343637659/account/orders/6298736296091",
+      "etaDate": "2026-06-03",
+      "etaNote": "",
+      "status": "pickup",
+      "createdAt": "2026-06-13T04:46:30.646Z",
+      "spStatus": "Ready for pickup",
+      "source": "sharedpour",
+      "collectedAt": "2026-06-21T02:45:06.140Z",
+      "cellarPushedAt": "2026-06-21T02:45:06.034Z",
+      "cellarBottleId": null,
+      "cellarPendingId": 9,
       "cellarStatus": "pending",
       "cellarError": null
     }
