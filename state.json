@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T05:51:42.038Z",
+    "lastChecked": "2026-06-21T07:52:26.384Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1186,7 +1186,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:368ec4b3e6c6d875e9a96c745ed5a0e5\"",
+      "etag": "\"page_cache:45343637659:ProductListController:ea944dce6e83d7ee55f4fe2be37a6685\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T14:06:48.769Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T14:12:12.441Z",
         "ok": true
@@ -1592,6 +1588,10 @@
       },
       {
         "ts": "2026-06-21T05:51:42.038Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T07:52:26.384Z",
         "ok": true
       }
     ]
@@ -2047,7 +2047,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T05:53:53.191Z",
+    "lastChecked": "2026-06-21T07:51:17.135Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2210,19 +2210,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:e76d3ad856f17c1deab223841f0708bc\"",
       "lastModified": null
     },
-    "consecutiveErrors": 1,
+    "consecutiveErrors": 0,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T14:32:20.274Z",
-        "ok": true
-      },
-      {
-        "ts": "2026-06-20T14:37:51.907Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T14:44:08.296Z",
         "ok": true
@@ -2614,15 +2606,14 @@
       {
         "ts": "2026-06-21T07:48:46.019Z",
         "ok": false
-      }
-    ],
-    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-21T07:48:46.019Z",
-    "errorLog": [
+      },
       {
-        "ts": "2026-06-21T07:48:46.019Z",
-        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
-        "statusCode": 503
+        "ts": "2026-06-21T07:49:58.078Z",
+        "ok": false
+      },
+      {
+        "ts": "2026-06-21T07:51:17.135Z",
+        "ok": true
       }
     ]
   },
@@ -3201,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T07:33:25.784Z",
+    "lastChecked": "2026-06-21T07:51:22.205Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3215,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T05:23:37.573Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T05:39:59.407Z",
         "ok": true
@@ -3614,11 +3601,15 @@
       {
         "ts": "2026-06-21T07:33:25.784Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T07:51:22.205Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T07:36:28.718Z",
+    "lastChecked": "2026-06-21T07:54:31.217Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3751,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T05:02:47.007Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T05:17:38.306Z",
         "ok": true
@@ -4149,6 +4136,10 @@
       },
       {
         "ts": "2026-06-21T07:36:28.718Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T07:54:31.217Z",
         "ok": true
       }
     ]
