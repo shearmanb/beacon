@@ -3902,5 +3902,16 @@
       "url": "https://thebourbonconcierge.com",
       "note": "Checks are succeeding again."
     }
+  },
+  {
+    "timestamp": "2026-06-21T20:14:34.483Z",
+    "siteId": "bourbon_concierge",
+    "siteName": "Bourbon Concierge",
+    "type": "site_error",
+    "product": {
+      "title": "Bourbon Concierge",
+      "url": "https://thebourbonconcierge.com",
+      "note": "5 consecutive failures. Last error: HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1"
+    }
   }
 ]
