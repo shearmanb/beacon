@@ -15,20 +15,6 @@
       "source": "sharedpour"
     },
     {
-      "id": "b_1781326068158",
-      "bottle": "T8KE x NULU W113 8 Year Double Oaked",
-      "cost": 100,
-      "retailer": "Shared Pour",
-      "orderNumber": "Order #25-153258-SP",
-      "orderLink": "https://shopify.com/45343637659/account/orders/6294296658075",
-      "etaDate": "2026-06-02",
-      "etaNote": "",
-      "status": "ordered",
-      "createdAt": "2026-06-13T04:47:48.158Z",
-      "spStatus": "Ready for pickup",
-      "source": "sharedpour"
-    },
-    {
       "id": "b_1781810561132_0",
       "bottle": "Striped Pig '2TEN90 & Women of Whiskeys' Single Barrel Barrel Strength Bourbon Selection",
       "cost": null,
@@ -172,6 +158,26 @@
       "cellarPushedAt": "2026-06-21T02:44:56.646Z",
       "cellarBottleId": null,
       "cellarPendingId": 6,
+      "cellarStatus": "pending",
+      "cellarError": null
+    },
+    {
+      "id": "b_1781326068158",
+      "bottle": "T8KE x NULU W113 8 Year Double Oaked",
+      "cost": 100,
+      "retailer": "Shared Pour",
+      "orderNumber": "Order #25-153258-SP",
+      "orderLink": "https://shopify.com/45343637659/account/orders/6294296658075",
+      "etaDate": "2026-06-02",
+      "etaNote": "",
+      "status": "pickup",
+      "createdAt": "2026-06-13T04:47:48.158Z",
+      "spStatus": "Ready for pickup",
+      "source": "sharedpour",
+      "collectedAt": "2026-06-21T02:44:58.566Z",
+      "cellarPushedAt": "2026-06-21T02:44:58.465Z",
+      "cellarBottleId": null,
+      "cellarPendingId": 7,
       "cellarStatus": "pending",
       "cellarError": null
     }
