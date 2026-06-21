@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T17:41:04.005Z",
+    "lastChecked": "2026-06-21T17:46:36.931Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T18:51:15.912Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T18:56:30.049Z",
         "ok": true
@@ -1593,11 +1589,15 @@
       {
         "ts": "2026-06-21T17:41:04.005Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T17:46:36.931Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-21T17:38:39.967Z",
+    "lastChecked": "2026-06-21T17:44:26.426Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T18:44:42.622Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T18:51:20.944Z",
         "ok": true
@@ -2043,11 +2039,15 @@
       {
         "ts": "2026-06-21T17:38:39.967Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T17:44:26.426Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T17:37:35.568Z",
+    "lastChecked": "2026-06-21T17:43:20.458Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2215,10 +2215,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T19:17:59.376Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T19:23:31.903Z",
         "ok": true
@@ -2613,6 +2609,10 @@
       },
       {
         "ts": "2026-06-21T17:37:35.568Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T17:43:20.458Z",
         "ok": true
       }
     ]
