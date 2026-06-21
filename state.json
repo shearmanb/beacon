@@ -2210,15 +2210,11 @@
       "etag": "\"page_cache:57076547742:ProductListController:e76d3ad856f17c1deab223841f0708bc\"",
       "lastModified": null
     },
-    "consecutiveErrors": 0,
+    "consecutiveErrors": 1,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T14:26:44.028Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T14:32:20.274Z",
         "ok": true
@@ -2614,6 +2610,19 @@
       {
         "ts": "2026-06-21T05:53:53.192Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T07:48:46.019Z",
+        "ok": false
+      }
+    ],
+    "lastError": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+    "lastErrorAt": "2026-06-21T07:48:46.019Z",
+    "errorLog": [
+      {
+        "ts": "2026-06-21T07:48:46.019Z",
+        "message": "HTTP 503 for https://thebourbonconcierge.com/products.json?limit=250&page=1",
+        "statusCode": 503
       }
     ]
   },
@@ -3609,7 +3618,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T07:19:01.934Z",
+    "lastChecked": "2026-06-21T07:36:28.718Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3751,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T04:46:30.866Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T05:02:47.007Z",
         "ok": true
@@ -4140,6 +4145,10 @@
       },
       {
         "ts": "2026-06-21T07:19:01.934Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T07:36:28.718Z",
         "ok": true
       }
     ]
