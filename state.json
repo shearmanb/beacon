@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T00:24:02.468Z",
+    "lastChecked": "2026-06-21T00:43:35.716Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T13:33:50.279Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T13:39:21.324Z",
         "ok": true
@@ -1592,6 +1588,10 @@
       },
       {
         "ts": "2026-06-21T00:24:02.468Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T00:43:35.717Z",
         "ok": true
       }
     ]
@@ -3609,7 +3609,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T00:25:10.587Z",
+    "lastChecked": "2026-06-21T00:39:35.190Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T21:55:09.524Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T22:13:01.348Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-21T00:25:10.587Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T00:39:35.190Z",
         "ok": true
       }
     ]
