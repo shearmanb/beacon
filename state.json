@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T23:14:47.846Z",
+    "lastChecked": "2026-06-21T23:34:28.538Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T10:10:10.915Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T12:09:34.800Z",
         "ok": true
@@ -1592,6 +1588,10 @@
       },
       {
         "ts": "2026-06-21T23:14:47.846Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T23:34:28.538Z",
         "ok": true
       }
     ]
@@ -2061,7 +2061,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T23:15:58.568Z",
+    "lastChecked": "2026-06-21T23:36:45.202Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2229,10 +2229,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T13:00:53.135Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T13:06:10.473Z",
         "ok": true
@@ -2627,6 +2623,10 @@
       },
       {
         "ts": "2026-06-21T23:15:58.568Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T23:36:45.202Z",
         "ok": true
       }
     ]
@@ -3206,7 +3206,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T23:23:12.349Z",
+    "lastChecked": "2026-06-21T23:38:48.789Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3220,10 +3220,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T21:25:50.713Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T21:40:07.602Z",
         "ok": true
@@ -3618,6 +3614,10 @@
       },
       {
         "ts": "2026-06-21T23:23:12.349Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T23:38:48.789Z",
         "ok": true
       }
     ]
