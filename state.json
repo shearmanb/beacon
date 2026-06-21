@@ -2047,7 +2047,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T00:57:47.596Z",
+    "lastChecked": "2026-06-21T01:19:13.813Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2215,10 +2215,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T14:04:45.373Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T14:10:09.617Z",
         "ok": true
@@ -2613,6 +2609,10 @@
       },
       {
         "ts": "2026-06-21T00:57:47.596Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T01:19:13.813Z",
         "ok": true
       }
     ]
@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T01:03:51.753Z",
+    "lastChecked": "2026-06-21T01:19:17.322Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T22:48:32.747Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T23:04:06.144Z",
         "ok": true
@@ -3605,11 +3601,15 @@
       {
         "ts": "2026-06-21T01:03:51.753Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T01:19:17.322Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T00:56:41.641Z",
+    "lastChecked": "2026-06-21T01:11:03.008Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T22:28:48.352Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T22:46:28.017Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-21T00:56:41.641Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T01:11:03.008Z",
         "ok": true
       }
     ]
