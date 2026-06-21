@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T06:33:11.766Z",
+    "lastChecked": "2026-06-21T06:47:32.281Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T04:20:03.001Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T04:36:10.218Z",
         "ok": true
@@ -3604,6 +3600,10 @@
       },
       {
         "ts": "2026-06-21T06:33:11.766Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T06:47:32.281Z",
         "ok": true
       }
     ]
