@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-21T17:23:14.978Z",
+    "lastChecked": "2026-06-21T17:28:55.061Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-20T18:33:56.861Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-20T18:39:24.409Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-21T17:23:14.978Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T17:28:55.061Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T17:23:19.771Z",
+    "lastChecked": "2026-06-21T17:28:59.435Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T18:34:02.673Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T18:40:32.470Z",
         "ok": true
@@ -1593,11 +1589,15 @@
       {
         "ts": "2026-06-21T17:23:19.771Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T17:28:59.435Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-21T17:20:59.424Z",
+    "lastChecked": "2026-06-21T17:26:42.636Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T18:27:29.119Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T18:34:07.300Z",
         "ok": true
@@ -2043,11 +2039,15 @@
       {
         "ts": "2026-06-21T17:20:59.424Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T17:26:42.636Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T17:21:07.712Z",
+    "lastChecked": "2026-06-21T17:26:51.146Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2207,7 +2207,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:ae9f6b30b7142ff0e6b0802fe0a84096\"",
+      "etag": "\"page_cache:57076547742:ProductListController:572f5e00765307331ac275e8ce65e31c\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2215,10 +2215,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T19:00:46.547Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T19:06:18.641Z",
         "ok": true
@@ -2613,6 +2609,10 @@
       },
       {
         "ts": "2026-06-21T17:21:07.712Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T17:26:51.146Z",
         "ok": true
       }
     ]
