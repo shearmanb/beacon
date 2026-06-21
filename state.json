@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-21T20:45:36.574Z",
+    "lastChecked": "2026-06-21T20:52:00.565Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-20T21:52:05.750Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-20T21:57:30.091Z",
         "ok": true
       },
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-21T20:45:36.574Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T20:52:00.565Z",
         "ok": true
       }
     ]
@@ -1597,7 +1597,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-21T20:48:52.392Z",
+    "lastChecked": "2026-06-21T20:54:02.761Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T22:19:08.427Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T22:38:39.854Z",
         "ok": true
@@ -2043,6 +2039,10 @@
       {
         "ts": "2026-06-21T20:48:52.392Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T20:54:02.761Z",
+        "ok": true
       }
     ],
     "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
@@ -2061,7 +2061,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T20:44:35.734Z",
+    "lastChecked": "2026-06-21T20:50:58.946Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2221,7 +2221,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:9185281dcc50929e4f8b72d69ee5e03c\"",
+      "etag": "\"page_cache:57076547742:ProductListController:f015e8d3ca05ebc2d0509b3361198305\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2229,10 +2229,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T22:56:15.874Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T23:18:49.194Z",
         "ok": true
@@ -2627,6 +2623,10 @@
       },
       {
         "ts": "2026-06-21T20:44:35.734Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T20:50:58.946Z",
         "ok": true
       }
     ]
