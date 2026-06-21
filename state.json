@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-21T01:31:34.380Z",
+    "lastChecked": "2026-06-21T01:52:02.922Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:e4cdac1b969af4fcd5143b56286d1280\"",
+      "etag": "\"page_cache:45343637659:ProductListController:724355b95773cf0823a414ccce97883f\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T13:40:33.242Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T13:46:13.952Z",
         "ok": true
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-21T01:31:34.380Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T01:52:02.922Z",
         "ok": true
       }
     ]
@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T01:34:35.325Z",
+    "lastChecked": "2026-06-21T01:52:07.312Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T23:19:20.384Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T23:37:21.681Z",
         "ok": true
@@ -3605,11 +3601,15 @@
       {
         "ts": "2026-06-21T01:34:35.325Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T01:52:07.312Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T01:42:54.139Z",
+    "lastChecked": "2026-06-21T01:57:12.625Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T23:17:23.049Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T23:31:30.439Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-21T01:42:54.139Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T01:57:12.625Z",
         "ok": true
       }
     ]
