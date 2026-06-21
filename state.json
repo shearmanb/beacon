@@ -1597,7 +1597,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-21T08:24:48.072Z",
+    "lastChecked": "2026-06-21T10:21:45.631Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T14:03:34.776Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T14:10:00.443Z",
         "ok": true
@@ -2042,6 +2038,10 @@
       },
       {
         "ts": "2026-06-21T08:24:48.072Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T10:21:45.631Z",
         "ok": true
       }
     ]
@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T09:56:52.920Z",
+    "lastChecked": "2026-06-21T10:11:20.494Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T07:45:58.921Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T08:03:26.027Z",
         "ok": true
@@ -3605,11 +3601,15 @@
       {
         "ts": "2026-06-21T09:56:52.920Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T10:11:20.494Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T10:04:16.686Z",
+    "lastChecked": "2026-06-21T10:21:51.013Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T07:27:51.420Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T07:43:50.510Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-21T10:04:16.686Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T10:21:51.013Z",
         "ok": true
       }
     ]
