@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-21T16:48:29.785Z",
+    "lastChecked": "2026-06-21T16:54:00.364Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-20T17:59:58.768Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-20T18:05:17.229Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-21T16:48:29.785Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T16:54:00.364Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T16:43:14.673Z",
+    "lastChecked": "2026-06-21T16:49:31.288Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T17:55:37.736Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T18:00:59.604Z",
         "ok": true
@@ -1593,11 +1589,15 @@
       {
         "ts": "2026-06-21T16:43:14.673Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T16:49:31.288Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-21T16:46:29.439Z",
+    "lastChecked": "2026-06-21T16:52:58.242Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T17:52:19.736Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T17:57:55.704Z",
         "ok": true
@@ -2043,11 +2039,15 @@
       {
         "ts": "2026-06-21T16:46:29.439Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T16:52:58.242Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T16:45:21.801Z",
+    "lastChecked": "2026-06-21T16:50:46.366Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2215,10 +2215,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T18:25:22.656Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T18:30:50.254Z",
         "ok": true
@@ -2613,6 +2609,10 @@
       },
       {
         "ts": "2026-06-21T16:45:21.802Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T16:50:46.367Z",
         "ok": true
       }
     ]
@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T16:35:31.368Z",
+    "lastChecked": "2026-06-21T16:51:54.427Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T14:26:48.519Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T14:44:11.348Z",
         "ok": true
@@ -3605,11 +3601,15 @@
       {
         "ts": "2026-06-21T16:35:31.368Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T16:51:54.427Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T16:34:20.228Z",
+    "lastChecked": "2026-06-21T16:50:51.212Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T14:14:23.914Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T14:30:05.637Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-21T16:34:20.228Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T16:50:51.212Z",
         "ok": true
       }
     ]
