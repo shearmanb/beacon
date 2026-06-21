@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-21T22:17:03.425Z",
+    "lastChecked": "2026-06-21T22:36:58.869Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -761,10 +761,6 @@
     "cooldownUntil": null,
     "checkHistory": [
       {
-        "ts": "2026-06-21T04:06:13.142Z",
-        "ok": true
-      },
-      {
         "ts": "2026-06-21T06:07:06.591Z",
         "ok": true
       },
@@ -1159,11 +1155,15 @@
       {
         "ts": "2026-06-21T22:17:03.425Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T22:36:58.869Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T22:17:07.192Z",
+    "lastChecked": "2026-06-21T22:35:50.208Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T03:36:30.285Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T05:51:42.038Z",
         "ok": true
@@ -1593,11 +1589,15 @@
       {
         "ts": "2026-06-21T22:17:07.192Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T22:35:50.208Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-21T22:19:10.846Z",
+    "lastChecked": "2026-06-21T22:39:02.142Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T08:24:48.072Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T10:21:45.631Z",
         "ok": true
@@ -2042,6 +2038,10 @@
       },
       {
         "ts": "2026-06-21T22:19:10.846Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T22:39:02.142Z",
         "ok": true
       }
     ],
@@ -3206,7 +3206,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T22:21:22.815Z",
+    "lastChecked": "2026-06-21T22:35:54.348Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3220,10 +3220,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T20:22:19.304Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T20:36:13.304Z",
         "ok": true
@@ -3619,11 +3615,15 @@
       {
         "ts": "2026-06-21T22:21:22.815Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T22:35:54.348Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T22:28:28.292Z",
+    "lastChecked": "2026-06-21T22:45:07.866Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3756,10 +3756,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T20:07:41.130Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T20:23:22.413Z",
         "ok": true
@@ -4154,6 +4150,10 @@
       },
       {
         "ts": "2026-06-21T22:28:28.292Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T22:45:07.867Z",
         "ok": true
       }
     ]
