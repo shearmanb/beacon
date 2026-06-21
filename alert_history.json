@@ -3924,5 +3924,28 @@
       "url": "https://thebourbonconcierge.com",
       "note": "Checks are succeeding again."
     }
+  },
+  {
+    "timestamp": "2026-06-21T20:43:15.909Z",
+    "siteId": "sharedpour_reveries",
+    "siteName": "SharedPour The Reveries",
+    "type": "sold_out",
+    "product": {
+      "handle": "the-reveries-mash-journey-27454",
+      "title": "THE REVERIES 7 Year Single Barrel #27454 \"GAMBIT\" Kentucky Straight Bourbon T8KE Select",
+      "vendor": "The Reveries",
+      "productType": "Bourbon",
+      "tags": [
+        "50-100",
+        "bourbon",
+        "over-10",
+        "the-reveries"
+      ],
+      "minPrice": 79.99,
+      "available": false,
+      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/GAMBIT.png?v=1780671568",
+      "url": "https://sharedpour.com/products/the-reveries-mash-journey-27454",
+      "firstSeen": "2026-06-20T12:05:55.106Z"
+    }
   }
 ]
