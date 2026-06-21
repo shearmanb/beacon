@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T01:03:45.854Z",
+    "lastChecked": "2026-06-21T01:22:23.149Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T13:45:03.760Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T13:50:33.966Z",
         "ok": true
@@ -1593,11 +1589,15 @@
       {
         "ts": "2026-06-21T01:03:45.854Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-21T01:22:23.149Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-21T01:09:02.580Z",
+    "lastChecked": "2026-06-21T01:27:29.451Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T13:33:55.663Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T13:40:37.099Z",
         "ok": true
@@ -2042,6 +2038,10 @@
       },
       {
         "ts": "2026-06-21T01:09:02.580Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T01:27:29.451Z",
         "ok": true
       }
     ]
@@ -3609,7 +3609,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T01:11:03.008Z",
+    "lastChecked": "2026-06-21T01:27:32.650Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-19T22:46:28.017Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-19T23:01:01.703Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-21T01:11:03.008Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T01:27:32.650Z",
         "ok": true
       }
     ]
