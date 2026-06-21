@@ -1163,7 +1163,7 @@
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-21T21:36:50.252Z",
+    "lastChecked": "2026-06-21T21:43:01.926Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1194,10 +1194,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T00:43:35.717Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T01:03:45.854Z",
         "ok": true
@@ -1592,6 +1588,10 @@
       },
       {
         "ts": "2026-06-21T21:36:50.252Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T21:43:01.926Z",
         "ok": true
       }
     ]
@@ -2061,7 +2061,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T21:36:58.868Z",
+    "lastChecked": "2026-06-21T21:43:11.084Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2229,10 +2229,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T03:51:47.640Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T05:53:53.192Z",
         "ok": true
@@ -2627,6 +2623,10 @@
       },
       {
         "ts": "2026-06-21T21:36:58.868Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T21:43:11.084Z",
         "ok": true
       }
     ]
@@ -3623,7 +3623,7 @@
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-21T21:27:13.185Z",
+    "lastChecked": "2026-06-21T21:43:15.749Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3748,18 +3748,14 @@
       }
     },
     "httpValidators": {
-      "etag": "\"eec39d65\"",
-      "lastModified": "Sun, 21 Jun 2026 10:29:39 GMT"
+      "etag": "\"bac026b8\"",
+      "lastModified": "Sun, 21 Jun 2026 21:32:43 GMT"
     },
     "consecutiveErrors": 0,
     "errorAlertSent": false,
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T19:04:04.784Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T19:20:13.923Z",
         "ok": true
@@ -4154,6 +4150,10 @@
       },
       {
         "ts": "2026-06-21T21:27:13.185Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-21T21:43:15.749Z",
         "ok": true
       }
     ]
