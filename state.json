@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-22T17:07:24.289Z",
+    "lastChecked": "2026-06-22T17:12:59.776Z",
     "productCount": 32,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -710,7 +710,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:7e281b9a0cd86b384d36853ce061146e\"",
+      "etag": "\"page_cache:45343637659:ProductListController:c9a0acf19af2f1b8bf11972e6f41ea8e\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -718,10 +718,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T18:10:34.942Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T18:16:03.663Z",
         "ok": true
@@ -1117,11 +1113,15 @@
       {
         "ts": "2026-06-22T17:07:24.289Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-22T17:12:59.776Z",
+        "ok": true
       }
     ]
   },
   "sharedpour_reveries": {
-    "lastChecked": "2026-06-22T17:09:37.428Z",
+    "lastChecked": "2026-06-22T17:15:05.724Z",
     "productCount": 1,
     "products": {
       "the-reveries-mash-journey-27454": {
@@ -1144,7 +1144,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:e99afd4a47cc20b24070de402d6554a2\"",
+      "etag": "\"page_cache:45343637659:ProductListController:071a9f660ec9fcf43f53207410f6b5ae\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1152,10 +1152,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T18:09:24.535Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T18:14:55.930Z",
         "ok": true
@@ -1551,11 +1547,15 @@
       {
         "ts": "2026-06-22T17:09:37.428Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-22T17:15:05.724Z",
+        "ok": true
       }
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-22T17:11:49.133Z",
+    "lastChecked": "2026-06-22T17:17:10.902Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1602,10 +1602,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T18:22:35.609Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T18:28:05.282Z",
         "ok": true
@@ -2001,11 +1997,15 @@
       {
         "ts": "2026-06-22T17:11:49.133Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-22T17:17:10.902Z",
+        "ok": true
       }
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-22T17:11:56.693Z",
+    "lastChecked": "2026-06-22T17:17:21.572Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2173,10 +2173,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T18:25:56.044Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T18:32:46.968Z",
         "ok": true
@@ -2571,6 +2567,10 @@
       },
       {
         "ts": "2026-06-22T17:11:56.693Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-22T17:17:21.572Z",
         "ok": true
       }
     ]
@@ -3150,7 +3150,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-22T16:59:38.246Z",
+    "lastChecked": "2026-06-22T17:14:04.047Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3164,10 +3164,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T14:44:41.988Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T15:00:10.156Z",
         "ok": true
@@ -3562,6 +3558,10 @@
       },
       {
         "ts": "2026-06-22T16:59:38.246Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-22T17:14:04.047Z",
         "ok": true
       }
     ]
