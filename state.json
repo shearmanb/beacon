@@ -1,6 +1,6 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-22T04:04:06.738Z",
+    "lastChecked": "2026-06-22T06:10:41.108Z",
     "productCount": 34,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
@@ -752,7 +752,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:686f3c6c328677efb5de630e0f901311\"",
+      "etag": "\"page_cache:45343637659:ProductListController:f4e56c71521983fea9e46254750f2396\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +760,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T13:35:08.632Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T13:40:37.991Z",
         "ok": true
@@ -1158,6 +1154,10 @@
       },
       {
         "ts": "2026-06-22T04:04:06.738Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-22T06:10:41.108Z",
         "ok": true
       }
     ]
@@ -1597,7 +1597,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-22T04:08:13.454Z",
+    "lastChecked": "2026-06-22T06:10:45.476Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1636,7 +1636,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:66506555478:ProductListController:b11a7a16b6a4e17346bd03d104240e19\"",
+      "etag": "\"page_cache:66506555478:ProductListController:2ac72f83d7e3fc6b88001a4cb8dd3054\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T13:46:12.228Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T13:51:36.514Z",
         "ok": true
@@ -2043,20 +2039,10 @@
       {
         "ts": "2026-06-22T04:08:13.455Z",
         "ok": true
-      }
-    ],
-    "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-    "lastErrorAt": "2026-06-21T20:12:48.641Z",
-    "errorLog": [
-      {
-        "ts": "2026-06-21T20:11:13.783Z",
-        "message": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-        "statusCode": 503
       },
       {
-        "ts": "2026-06-21T20:12:48.641Z",
-        "message": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
-        "statusCode": 503
+        "ts": "2026-06-22T06:10:45.476Z",
+        "ok": true
       }
     ]
   },
