@@ -1,0 +1,23 @@
+{
+  "name": "@beacon/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "start": "tsx src/main.ts",
+    "dev": "tsx watch src/main.ts"
+  },
+  "dependencies": {
+    "@beacon/core": "workspace:*",
+    "@beacon/db": "workspace:*",
+    "@beacon/fetch": "workspace:*",
+    "@beacon/notify": "workspace:*",
+    "@beacon/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
+}

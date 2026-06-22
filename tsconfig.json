@@ -6,6 +6,7 @@
     { "path": "packages/core" },
     { "path": "packages/db" },
     { "path": "packages/notify" },
-    { "path": "apps/migrate" }
+    { "path": "apps/migrate" },
+    { "path": "apps/worker" }
   ]
 }

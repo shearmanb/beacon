@@ -34,6 +34,28 @@ importers:
         specifier: ^4.19.2
         version: 4.22.4
 
+  apps/worker:
+    dependencies:
+      '@beacon/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@beacon/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@beacon/fetch':
+        specifier: workspace:*
+        version: link:../../packages/fetch
+      '@beacon/notify':
+        specifier: workspace:*
+        version: link:../../packages/notify
+      '@beacon/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+    devDependencies:
+      tsx:
+        specifier: ^4.19.2
+        version: 4.22.4
+
   packages/core:
     dependencies:
       '@beacon/fetch':

@@ -11,7 +11,7 @@ import { applyFilters, toProductMap } from "./filter.js";
 import { emptyFetchGuard } from "./empty_guard.js";
 
 export interface SiteState {
-  lastChecked: string;
+  lastChecked: string | null;
   productCount?: number;
   products?: ProductMap;
   pageCount?: number;
