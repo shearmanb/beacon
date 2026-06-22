@@ -13,13 +13,20 @@
 // and toggles BEACON_SEED_ONLY / BEACON_NO_WORKER / BEACON_NO_WEB.
 
 import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 import { openStore } from "@beacon/db";
 import { DiscordChannel } from "@beacon/notify";
 import { startLoop } from "@beacon/worker";
 import { runImport } from "@beacon/migrate";
 
+// Repo root resolved from THIS file (apps/server/src/serve.ts -> ../../..), not
+// from process.cwd() — Railway runs the launcher with cwd = the package dir, so
+// cwd would miss the legacy JSON seed files that live at the repo root.
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+
 const dbUrl = process.env["BEACON_DB_URL"] ?? "file:/data/beacon.db";
-const dataDir = process.env["BEACON_DATA_DIR"] ?? process.cwd();
+const dataDir = process.env["BEACON_DATA_DIR"] ?? repoRoot;
 const seedOnly = process.env["BEACON_SEED_ONLY"] === "1";
 const noWorker = process.env["BEACON_NO_WORKER"] === "1";
 const noWeb = process.env["BEACON_NO_WEB"] === "1";
