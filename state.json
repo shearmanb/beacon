@@ -1597,7 +1597,7 @@
     ]
   },
   "fountain_inn_dc": {
-    "lastChecked": "2026-06-21T23:46:48.062Z",
+    "lastChecked": "2026-06-22T00:07:22.435Z",
     "productCount": 3,
     "products": {
       "reveries-the-raven-batch-v": {
@@ -1644,10 +1644,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T13:06:02.864Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T13:11:16.883Z",
         "ok": true
@@ -2043,6 +2039,10 @@
       {
         "ts": "2026-06-21T23:46:48.062Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-22T00:07:22.435Z",
+        "ok": true
       }
     ],
     "lastError": "HTTP 503 for https://shop.fountaininndc.com/products.json?limit=250&page=1",
@@ -2061,7 +2061,7 @@
     ]
   },
   "bourbon_concierge": {
-    "lastChecked": "2026-06-21T23:57:25.537Z",
+    "lastChecked": "2026-06-22T00:17:33.818Z",
     "productCount": 9,
     "products": {
       "the-reveries-raven-rare-release-batch-v-barrel-strength-bourbon-2026-release": {
@@ -2221,7 +2221,7 @@
     },
     "pageCount": 7,
     "httpValidators": {
-      "etag": "\"page_cache:57076547742:ProductListController:229bfb94d0d4229ffdd27a016db3558e\"",
+      "etag": "\"page_cache:57076547742:ProductListController:6f626475d4d35640ec5db07b041e004a\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -2229,10 +2229,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T13:12:26.241Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T13:17:54.416Z",
         "ok": true
@@ -2627,6 +2623,10 @@
       },
       {
         "ts": "2026-06-21T23:57:25.537Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-22T00:17:33.818Z",
         "ok": true
       }
     ]
@@ -3206,7 +3206,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-21T23:54:10.235Z",
+    "lastChecked": "2026-06-22T00:10:21.205Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3220,10 +3220,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-20T21:54:29.183Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-20T22:09:42.431Z",
         "ok": true
@@ -3618,6 +3614,10 @@
       },
       {
         "ts": "2026-06-21T23:54:10.235Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-22T00:10:21.205Z",
         "ok": true
       }
     ]
