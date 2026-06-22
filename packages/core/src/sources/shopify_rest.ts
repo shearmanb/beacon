@@ -100,6 +100,11 @@ export const shopifyRestAdapter: SourceAdapter = {
       products: all.map((p) => normalize(p, origin)),
       validators,
       pageCount: page,
+      emptyGuardThreshold: 3,
+      emptyGuardNote:
+        "products.json returned 0 products on consecutive checks. Previous products " +
+        "are preserved. If the store is between waves this is expected — otherwise the " +
+        "collection URL may have changed.",
     };
   },
 };

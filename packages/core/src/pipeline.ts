@@ -6,7 +6,7 @@
 import { diff, type Alert, type NormalizedProduct, type ProductMap, type SiteSignal } from "@beacon/shared";
 import type { HttpValidators } from "@beacon/fetch";
 import type { SiteDefinition } from "./schema.js";
-import type { PrevState, SourceAdapter } from "./sources/types.js";
+import type { AdapterDeps, PrevState, SourceAdapter } from "./sources/types.js";
 import { applyFilters, toProductMap } from "./filter.js";
 import { emptyFetchGuard } from "./empty_guard.js";
 
@@ -25,14 +25,19 @@ export interface SiteCheckResult {
   alerts: Alert[];
 }
 
-const EMPTY_GUARD_THRESHOLD = 3;
+const DEFAULT_EMPTY_GUARD_THRESHOLD = 3;
+const DEFAULT_EMPTY_GUARD_NOTE =
+  "Fetch returned 0 products on consecutive checks. Previous products are preserved. " +
+  "If the store is between waves this is expected — otherwise the source URL/collection " +
+  "may have changed.";
 
 export async function runSiteCheck(
   site: SiteDefinition,
   prev: SiteState | undefined,
   adapter: SourceAdapter,
+  deps?: AdapterDeps,
 ): Promise<SiteCheckResult> {
-  const result = await adapter.fetch(site, (prev ?? {}) as PrevState);
+  const result = await adapter.fetch(site, (prev ?? {}) as PrevState, deps);
   const now = new Date().toISOString();
 
   if (result.kind === "not_modified") {
@@ -43,7 +48,7 @@ export async function runSiteCheck(
   }
 
   if (result.kind === "signal") {
-    return runSignal(site, prev, result.signal, now);
+    return runSignal(site, prev, result.signal, result.validators ?? null, now);
   }
 
   const prevProducts: ProductMap = (prev?.products as ProductMap | undefined) ?? {};
@@ -55,11 +60,8 @@ export async function runSiteCheck(
       site,
       prev,
       prevProducts,
-      threshold: EMPTY_GUARD_THRESHOLD,
-      note:
-        "Fetch returned 0 products on consecutive checks. Previous products are " +
-        "preserved. If the store is between waves this is expected — otherwise the " +
-        "source URL/collection may have changed.",
+      threshold: result.emptyGuardThreshold ?? DEFAULT_EMPTY_GUARD_THRESHOLD,
+      note: result.emptyGuardNote ?? DEFAULT_EMPTY_GUARD_NOTE,
     });
     if (guarded) return guarded;
   }
@@ -85,36 +87,36 @@ export async function runSiteCheck(
 }
 
 // ── Signal state machine (page-state probes) ─────────────────────────────────
-// Fires site_reset once on open -> blocked, clears silently on recovery, and
-// re-alerts every `realertEveryHours` while blocked. Ported from
-// site_status_monitor.js's reset lifecycle; the http_status adapter (which emits
-// the signal) lands in a later increment.
-
-const SIGNAL_REALERT_MS = 24 * 3_600_000;
+// Faithful to site_status_monitor.js: fires site_reset ONCE on the open->blocked
+// transition (gated by alerts.onSiteReset), suppresses while it stays blocked,
+// and clears silently on recovery. No periodic re-alert — that's the
+// empty-guard's job, not this probe's.
 
 function runSignal(
   site: SiteDefinition,
   prev: SiteState | undefined,
   signal: SiteSignal,
+  validators: HttpValidators | null,
   now: string,
 ): SiteCheckResult {
-  const wasBlocked = prev?.pageReset === true;
-  const alertSentAt = typeof prev?.resetAlertAt === "string" ? Date.parse(prev.resetAlertAt) : null;
-
   if (signal.kind === "open") {
-    // Recovery (or steady-open): clear silently.
     return {
-      state: { ...(prev ?? {}), lastChecked: now, pageReset: false, resetAlertSent: false, resetAlertAt: null },
+      state: {
+        ...(prev ?? {}),
+        lastChecked: now,
+        products: {},
+        pageReset: false,
+        resetAlertSent: false,
+        resetReason: null,
+        httpValidators: validators,
+      },
       alerts: [],
     };
   }
 
-  // Blocked. Fire once on transition, then re-fire every realert window.
-  const dueForRealert =
-    wasBlocked && alertSentAt != null && Date.now() - alertSentAt >= SIGNAL_REALERT_MS;
-  const fire = !wasBlocked || dueForRealert;
-
-  const alerts: Alert[] = fire && site.alerts.onSiteReset
+  const alreadyAlerted = prev?.resetAlertSent === true;
+  const fire = !alreadyAlerted && site.alerts.onSiteReset;
+  const alerts: Alert[] = fire
     ? [
         {
           type: "site_reset",
@@ -132,9 +134,11 @@ function runSignal(
     state: {
       ...(prev ?? {}),
       lastChecked: now,
+      products: {},
       pageReset: true,
-      resetAlertSent: fire || prev?.resetAlertSent === true,
-      resetAlertAt: fire ? now : (prev?.resetAlertAt ?? null),
+      resetAlertSent: alreadyAlerted || fire,
+      resetReason: signal.reason ?? "blocked",
+      httpValidators: validators,
     },
     alerts,
   };

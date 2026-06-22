@@ -49,6 +49,10 @@ export const shopifyGraphqlSource = z.object({
   accessTokenRef: z.string(),
   collectionId: z.string(),
   apiVersion: z.string().default("2025-01"),
+  /** Public URL products link to (the shop page). Defaults to https://<domain>. */
+  productUrl: z.string().url().optional(),
+  /** Full endpoint override (primarily for testing); derived from domain otherwise. */
+  endpoint: z.string().url().optional(),
   defaults: z
     .object({ vendor: z.string().optional(), productType: z.string().optional() })
     .optional(),
@@ -61,7 +65,9 @@ export const httpStatusSource = z.object({
     bodyMatchesAny: z.array(z.string()).default([]),
     httpStatusIn: z.array(z.number()).default([401, 403]),
   }),
-  realertEveryHours: z.number().default(24),
+  // Note: faithful to site_status_monitor.js — site_reset fires ONCE on the
+  // open->blocked transition and clears silently on recovery (no periodic
+  // re-alert; that's the empty-guard's job, not this probe's).
 });
 
 const textPredicate = z.object({ matchesAny: z.array(z.string()).default([]) });

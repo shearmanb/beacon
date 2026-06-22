@@ -6,6 +6,7 @@
 import type { NormalizedProduct, SiteSignal } from "@beacon/shared";
 import type { HttpValidators } from "@beacon/fetch";
 import type { SiteDefinition, SourceKind } from "../schema.js";
+import type { CustomExtractor } from "../extractors/types.js";
 
 /** Loose view of the previous state entry an adapter may read (validators, paging). */
 export interface PrevState {
@@ -13,6 +14,14 @@ export interface PrevState {
   httpValidators?: HttpValidators | null;
   pageCount?: number;
   [key: string]: unknown;
+}
+
+/** Injected capabilities an adapter may need (secrets, custom extractors). */
+export interface AdapterDeps {
+  /** Resolve a secret reference (e.g. a Storefront token) — never inline in config. */
+  resolveSecret?: (ref: string) => string | null | undefined;
+  /** Look up a registered custom extractor by id. */
+  getExtractor?: (id: string) => CustomExtractor | undefined;
 }
 
 export type FetchResult =
@@ -24,11 +33,14 @@ export type FetchResult =
       products: NormalizedProduct[];
       validators?: HttpValidators | null;
       pageCount?: number;
+      /** Per-source empty-guard tuning (defaults applied by the pipeline). */
+      emptyGuardThreshold?: number;
+      emptyGuardNote?: string;
     }
   // Page-state probe (no products) — feeds the signal state machine.
-  | { kind: "signal"; signal: SiteSignal };
+  | { kind: "signal"; signal: SiteSignal; validators?: HttpValidators | null };
 
 export interface SourceAdapter {
   kind: SourceKind;
-  fetch(site: SiteDefinition, prev: PrevState): Promise<FetchResult>;
+  fetch(site: SiteDefinition, prev: PrevState, deps?: AdapterDeps): Promise<FetchResult>;
 }
