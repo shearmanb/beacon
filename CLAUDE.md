@@ -180,6 +180,10 @@ The dashboard is a single static HTML file fetching raw GitHub files every 2 min
 
 ## Feature backlog & to-do list
 
+> **⚠️ For v2, see `TODO.md` at the repo root** — it's the current, consolidated
+> backlog. The list below is the **legacy v1 backlog**, kept for history; most of
+> it is now done or obsolete after the rebuild.
+
 Items are grouped by effort/type. "Done" section captures what was completed so context isn't lost across sessions.
 
 ---
