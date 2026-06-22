@@ -4,6 +4,7 @@
     { "path": "packages/shared" },
     { "path": "packages/fetch" },
     { "path": "packages/core" },
-    { "path": "packages/db" }
+    { "path": "packages/db" },
+    { "path": "packages/notify" }
   ]
 }
