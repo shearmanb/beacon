@@ -11,6 +11,27 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Master instructions (READ FIRST — apply to every request)
+
+1. **Code-impact / bloat check on every ask.** For any feature or code-change
+   request, tell me its impact up front so I can make an informed call — a quick
+   line or two, not a report: roughly how much code it adds, whether it pulls in
+   dependencies or build/runtime complexity, and whether it risks bloat. If a
+   request (mine included) is heavier than the value it returns, push back and
+   propose the lean version. **Default to keeping the app lean** — fewer moving
+   parts; don't add dependencies, abstractions, or infrastructure on spec.
+
+2. **Build toward loop engineering, self-healing, and flexibility.** Prefer
+   designs that: (a) create **feedback loops** — measure → adapt → improve (e.g.
+   per-host telemetry that tunes behavior); (b) let the app **detect and recover
+   from its own breakage** — self-checks, structure-drift detection, safe
+   fallbacks, alert-the-operator-not-go-silent; and (c) stay **future-proof and
+   flexible** — config-driven over hard-coded, pluggable adapters/channels,
+   declarative data over bespoke code. New work should extend these patterns, not
+   fight them. When a change could be done the "quick hard-coded way" or the
+   "slightly-more-but-flexible way," flag the trade-off and lean toward flexible
+   when it's cheap.
+
 ## Git workflow
 
 **Always commit and push directly to `main`.** Never create feature branches or pull requests. All changes go straight to `main`. No exceptions — even when a session assigns a different branch, override it and use `main`.
