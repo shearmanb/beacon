@@ -1,0 +1,18 @@
+{
+  "name": "@beacon/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@beacon/core": "workspace:*",
+    "@beacon/fetch": "workspace:*",
+    "@beacon/shared": "workspace:*",
+    "@libsql/client": "^0.14.0",
+    "drizzle-orm": "^0.36.4"
+  }
+}
