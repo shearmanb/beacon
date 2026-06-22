@@ -357,3 +357,122 @@ a:hover {
 .star {
   color: var(--warn);
 }
+
+/* ===== polish pass ===== */
+body {
+  background-image: radial-gradient(1100px 500px at 50% -8%, rgba(88, 196, 221, 0.06), transparent 60%);
+  background-attachment: fixed;
+}
+.hdr {
+  border-bottom: 1px solid var(--line2);
+  padding-bottom: 16px;
+}
+.wordmark {
+  font-size: 22px;
+  text-shadow: 0 0 18px rgba(88, 196, 221, 0.25);
+}
+.wordmark .beak {
+  filter: drop-shadow(0 0 8px var(--accent));
+}
+.nav a {
+  transition: color 0.15s, background 0.15s;
+}
+
+/* glance */
+.glance {
+  background: linear-gradient(160deg, var(--panel2), var(--panel));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+.glance .v {
+  color: var(--text);
+}
+.glance .stat:first-child .v {
+  color: var(--accent);
+}
+
+/* site cards — depth + accent edge + hover lift */
+.sites-grid {
+  gap: 12px;
+}
+.site-card {
+  background: linear-gradient(165deg, var(--panel2), var(--panel));
+  border-color: var(--line);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
+}
+.site-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.site-card:hover {
+  border-color: var(--line2);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+.site-card:hover::before {
+  opacity: 0.7;
+}
+.site-card.disabled::before {
+  background: var(--faint);
+}
+
+/* status dots glow by state */
+.dot {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.02);
+}
+.dot.ok {
+  box-shadow: 0 0 9px rgba(62, 207, 142, 0.8);
+}
+.dot.warn {
+  box-shadow: 0 0 9px rgba(232, 177, 63, 0.7);
+}
+.dot.err {
+  box-shadow: 0 0 9px rgba(232, 96, 79, 0.8);
+}
+
+.kind-chip {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+  background: var(--accent-dim);
+}
+
+/* schedule dropdown in the controls row */
+select.in.sched {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 5px 6px;
+  cursor: pointer;
+  max-width: 150px;
+}
+.row .btn,
+.row select.in.sched {
+  height: 28px;
+}
+
+/* buttons — subtle */
+.btn {
+  transition: border-color 0.13s, color 0.13s, background 0.13s;
+}
+.btn.on {
+  background: color-mix(in srgb, var(--ok) 10%, var(--panel2));
+}
+.btn.bolt.on {
+  background: color-mix(in srgb, var(--warn) 12%, var(--panel2));
+}
+
+/* section heads + tables a touch richer */
+.sect-hd h2 {
+  color: var(--text);
+}
+.ptable tr:hover td,
+.ptable tbody tr:hover td {
+  background: var(--panel2);
+}

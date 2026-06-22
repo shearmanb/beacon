@@ -21,6 +21,14 @@ export async function setImminent(siteId: string, imminent: boolean): Promise<vo
   revalidatePath("/");
 }
 
+export async function setSchedule(siteId: string, schedule: string): Promise<void> {
+  const store = await getStore();
+  const site = await store.sites.get(siteId);
+  if (!site) return;
+  await store.sites.upsert({ ...site.definition, schedule });
+  revalidatePath("/");
+}
+
 export async function setIgnore(handle: string, ignored: boolean): Promise<void> {
   const store = await getStore();
   if (ignored) await store.ignored.add(handle);

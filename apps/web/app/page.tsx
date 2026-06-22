@@ -20,6 +20,15 @@ export default async function SitesPage() {
     0,
   );
 
+  const scheduleOptions = [
+    { value: "5", label: "5 min" },
+    { value: "15", label: "15 min" },
+    { value: "20", label: "20 min" },
+    { value: "30", label: "30 min" },
+    { value: "60", label: "60 min" },
+    ...Object.entries(schedules).map(([k, d]) => ({ value: k, label: d.label ?? k })),
+  ];
+
   return (
     <>
       <div className="glance">
@@ -74,10 +83,14 @@ export default async function SitesPage() {
                   <span className="k">Last check</span>
                   <span className="val">{ago(state?.lastChecked)}</span>
                 </div>
-                <div className="site-stat">
-                  <span className="k">Schedule</span>
-                  <span className="val">{String(def.schedule ?? def.intervalMinutes ?? "—")}</span>
-                </div>
+                {def.imminent && (
+                  <div className="site-stat">
+                    <span className="k">Mode</span>
+                    <span className="val" style={{ color: "var(--warn)" }}>
+                      ⚡ imminent
+                    </span>
+                  </div>
+                )}
                 {errors > 0 && (
                   <div className="site-stat">
                     <span className="k">Errors</span>
@@ -92,7 +105,13 @@ export default async function SitesPage() {
                   {String(state?.lastError)}
                 </div>
               )}
-              <SiteControls siteId={row.id} enabled={row.enabled} imminent={def.imminent} />
+              <SiteControls
+                siteId={row.id}
+                enabled={row.enabled}
+                imminent={def.imminent}
+                schedule={String(def.schedule ?? def.intervalMinutes ?? "")}
+                scheduleOptions={scheduleOptions}
+              />
             </div>
           );
         })}
