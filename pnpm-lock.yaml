@@ -34,6 +34,24 @@ importers:
         specifier: ^4.19.2
         version: 4.22.4
 
+  apps/server:
+    dependencies:
+      '@beacon/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@beacon/migrate':
+        specifier: workspace:*
+        version: link:../migrate
+      '@beacon/notify':
+        specifier: workspace:*
+        version: link:../../packages/notify
+      '@beacon/worker':
+        specifier: workspace:*
+        version: link:../worker
+      tsx:
+        specifier: ^4.19.2
+        version: 4.22.4
+
   apps/web:
     dependencies:
       '@beacon/core':

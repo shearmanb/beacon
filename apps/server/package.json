@@ -1,0 +1,17 @@
+{
+  "name": "@beacon/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/serve.ts",
+    "seed": "BEACON_SEED_ONLY=1 tsx src/serve.ts"
+  },
+  "dependencies": {
+    "@beacon/db": "workspace:*",
+    "@beacon/migrate": "workspace:*",
+    "@beacon/notify": "workspace:*",
+    "@beacon/worker": "workspace:*",
+    "tsx": "^4.19.2"
+  }
+}
