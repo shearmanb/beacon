@@ -1,7 +1,7 @@
 {
   "sharedpour_t8ke": {
-    "lastChecked": "2026-06-22T10:19:07.119Z",
-    "productCount": 34,
+    "lastChecked": "2026-06-22T12:16:08.356Z",
+    "productCount": 32,
     "products": {
       "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release": {
         "handle": "penelope-bourbon-f-ck-cancer-limited-edition-cask-strength-2025-release-fall-2025-release",
@@ -155,27 +155,6 @@
         "available": true,
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Barrell_Craft_Spirits_T8KE_Synthesis_II.jpg?v=1757451767",
         "url": "https://sharedpour.com/products/barrell-craft-spirits-x-t8ke-synthesis-ii"
-      },
-      "t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml": {
-        "handle": "t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml",
-        "title": "Barrell Craft Spirits x T8ke Synthesis I, II, III Tasting Kit (3x 200ml)",
-        "vendor": "Barrell Craft Spirits",
-        "productType": "Whiskey",
-        "tags": [
-          "Barrel Pick",
-          "barrel picks",
-          "barrell-craft-spirits",
-          "over-10",
-          "Single Barrel",
-          "single barrel selections",
-          "t8ke",
-          "under-50",
-          "whiskey"
-        ],
-        "minPrice": 30,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1255213e-491a-fec6-72f3-e9e0e63fa29a.png?v=1770052416",
-        "url": "https://sharedpour.com/products/t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml"
       },
       "alambique-serrano-altos-esteres-t8ke-701": {
         "handle": "alambique-serrano-altos-esteres-t8ke-701",
@@ -512,27 +491,6 @@
         "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ea0cec6-1621-ee9c-d16f-368a769082f8.jpg?v=1764513403",
         "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45"
       },
-      "agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez": {
-        "handle": "agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez",
-        "title": "NETA Bicuixe & Jabalin Wilfrido Garcia Sanchez Ensamble Aficionados x T8KE Exclusive Selection",
-        "vendor": "NETA",
-        "productType": "",
-        "tags": [
-          "100-200",
-          "agave-spirits",
-          "bicuixe",
-          "black-friday-2025",
-          "jabalin",
-          "neta",
-          "over-10",
-          "t8ke",
-          "xmas-2025"
-        ],
-        "minPrice": 159.99,
-        "available": false,
-        "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/NETA_Bicuixe_Jabali_Aficionados_x_T8KE.jpg?v=1757451767",
-        "url": "https://sharedpour.com/products/agave-spirits-neta-bicuixe-jabalin-by-wilfrido-garcia-sanchez"
-      },
       "pinhook-vertical-series-10yr-rye-whiskey-single-barrel-selected-by-t8ke": {
         "handle": "pinhook-vertical-series-10yr-rye-whiskey-single-barrel-selected-by-t8ke",
         "title": "Pinhook Vertical Series 10 Year Rye Whiskey Single Barrel - Selected by T8KE - 2026",
@@ -752,7 +710,7 @@
     },
     "pageCount": 1,
     "httpValidators": {
-      "etag": "\"page_cache:45343637659:ProductListController:f4e56c71521983fea9e46254750f2396\"",
+      "etag": "\"page_cache:45343637659:ProductListController:50861b02ebd5edbbc3d7d7c77ce1e426\"",
       "lastModified": null
     },
     "consecutiveErrors": 0,
@@ -760,10 +718,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T13:52:37.969Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T13:57:53.184Z",
         "ok": true
@@ -1158,6 +1112,10 @@
       },
       {
         "ts": "2026-06-22T10:19:07.119Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-22T12:16:08.356Z",
         "ok": true
       }
     ]
@@ -3192,7 +3150,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-22T12:02:38.645Z",
+    "lastChecked": "2026-06-22T12:18:07.379Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3164,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T09:56:52.920Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T10:11:20.494Z",
         "ok": true
@@ -3604,6 +3558,10 @@
       },
       {
         "ts": "2026-06-22T12:02:38.645Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-22T12:18:07.379Z",
         "ok": true
       }
     ]
