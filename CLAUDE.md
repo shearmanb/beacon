@@ -1,5 +1,14 @@
 # CLAUDE.md
 
+> **⚠️ REBUILT (v2 — 2026-06).** Beacon has been rebuilt as a TypeScript monorepo
+> under `packages/` and `apps/`. **That is now the active codebase.** See
+> **`REBUILD.md`** (architecture) and **`DEPLOY.md`** (one-service Railway deploy).
+> The root `worker.js`, `lib/`, `sites/`, `notifiers/`, and `docs/` are the
+> **legacy v1**, kept for reference/fallback only — the live service runs
+> `@beacon/server` per `railway.json`. The root JSON files (`config.json`,
+> `state.json`, …) remain as the one-time migration/seed source. Everything below
+> documents the legacy v1 design.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Git workflow
