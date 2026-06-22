@@ -1,15 +1,22 @@
 {
-  "name": "beacon",
-  "version": "1.0.0",
-  "description": "Personal stock-monitoring bot for whiskey/spirits product pages",
+  "name": "beacon-monorepo",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "main": "worker.js",
-  "scripts": {
-    "start": "node worker.js",
-    "worker": "node worker.js"
-  },
+  "description": "Beacon — declarative stock-monitoring engine (rebuild)",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -b",
+    "build": "tsc -b"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   },
   "license": "MIT"
 }
