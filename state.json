@@ -3192,7 +3192,7 @@
     ]
   },
   "reveries_site_status": {
-    "lastChecked": "2026-06-22T11:11:59.072Z",
+    "lastChecked": "2026-06-22T11:28:51.121Z",
     "products": {},
     "pageReset": false,
     "resetAlertSent": false,
@@ -3206,10 +3206,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T09:07:49.389Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T09:22:59.262Z",
         "ok": true
@@ -3605,11 +3601,15 @@
       {
         "ts": "2026-06-22T11:11:59.072Z",
         "ok": true
+      },
+      {
+        "ts": "2026-06-22T11:28:51.121Z",
+        "ok": true
       }
     ]
   },
   "russells_reserve_limited": {
-    "lastChecked": "2026-06-22T11:23:55.779Z",
+    "lastChecked": "2026-06-22T11:38:46.504Z",
     "productCount": 12,
     "products": {
       "10-year-old-bourbon": {
@@ -3742,10 +3742,6 @@
     "cooldownLevel": 0,
     "cooldownUntil": null,
     "checkHistory": [
-      {
-        "ts": "2026-06-21T08:57:38.095Z",
-        "ok": true
-      },
       {
         "ts": "2026-06-21T09:14:57.268Z",
         "ok": true
@@ -4140,6 +4136,10 @@
       },
       {
         "ts": "2026-06-22T11:23:55.779Z",
+        "ok": true
+      },
+      {
+        "ts": "2026-06-22T11:38:46.504Z",
         "ok": true
       }
     ]
