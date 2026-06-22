@@ -1,7 +1,24 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import type { ScheduleRule } from "@beacon/shared";
 import { getStore } from "../lib/store";
+
+export async function saveSchedule(id: string, label: string, rules: ScheduleRule[]): Promise<void> {
+  const store = await getStore();
+  const trimmed = id.trim();
+  if (!trimmed || rules.length === 0) return;
+  await store.schedules.upsert(trimmed, { label: label.trim() || trimmed, rules });
+  revalidatePath("/schedules");
+  revalidatePath("/");
+}
+
+export async function deleteSchedule(id: string): Promise<void> {
+  const store = await getStore();
+  await store.schedules.remove(id);
+  revalidatePath("/schedules");
+  revalidatePath("/");
+}
 
 export async function runNow(siteId?: string): Promise<void> {
   const store = await getStore();

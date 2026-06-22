@@ -1,6 +1,7 @@
 import { getStore } from "../lib/store";
 import { ago, siteHealth, type Health } from "../lib/health";
 import { SiteControls } from "../components/SiteControls";
+import { PulseStrip } from "../components/PulseStrip";
 import { runNow } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -112,6 +113,9 @@ export default async function SitesPage() {
                 schedule={String(def.schedule ?? def.intervalMinutes ?? "")}
                 scheduleOptions={scheduleOptions}
               />
+              {Array.isArray(state?.checkHistory) && (state!.checkHistory as unknown[]).length > 0 && (
+                <PulseStrip history={state!.checkHistory as { ts: string; ok: boolean }[]} />
+              )}
             </div>
           );
         })}

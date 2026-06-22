@@ -476,3 +476,139 @@ select.in.sched {
 .ptable tbody tr:hover td {
   background: var(--panel2);
 }
+
+/* ===== alternate palettes (variables only — no custom fonts, no per-component
+   overrides, so this stays cheap and stable). Lifted from the old theme.css. ===== */
+:root[data-theme="flightpath"] {
+  --bg: #0c0a14; --bg2: #110e1c; --panel: #151226; --panel2: #1b1730;
+  --line: #272042; --line2: #392f60;
+  --text: #e2def2; --muted: #847ba3; --faint: #534b73;
+  --accent: #a78bfa; --accent-dim: rgba(167, 139, 250, 0.13);
+}
+:root[data-theme="reveries"] {
+  --bg: #070605; --bg2: #0b0a08; --panel: #11100b; --panel2: #171509;
+  --line: #322a12; --line2: #54461e;
+  --text: #f0e6cd; --muted: #a3936c; --faint: #645634;
+  --accent: #dcb45e; --accent-dim: rgba(220, 180, 94, 0.13);
+}
+:root[data-theme="wildturkey"] {
+  --bg: #141416; --bg2: #19191c; --panel: #202023; --panel2: #28282c;
+  --line: #333338; --line2: #47474e;
+  --text: #ececea; --muted: #9c9ca0; --faint: #606066;
+  --accent: #cf2733; --accent-dim: rgba(207, 39, 51, 0.14);
+}
+
+/* theme select in header */
+.hdr select.in {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 5px 8px;
+}
+
+/* ===== activity timeline (PulseStrip) — last 60 min of checks ===== */
+.pulse {
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+.pulse .cap {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.pulse .track {
+  position: relative;
+  height: 14px;
+}
+.pulse .rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 6px;
+  height: 2px;
+  background: var(--line);
+  border-radius: 1px;
+}
+.pulse .pd {
+  position: absolute;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.pulse .pd.ok {
+  background: var(--ok);
+  box-shadow: 0 0 5px color-mix(in srgb, var(--ok) 70%, transparent);
+}
+.pulse .pd.fail {
+  background: transparent;
+  border: 2px solid var(--err);
+}
+.pulse .now {
+  position: absolute;
+  right: -1px;
+  top: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.pulse.empty .cap {
+  color: var(--faint);
+}
+
+/* ===== schedules manager ===== */
+.sched-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.sched-card .top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sched-card .top .lbl {
+  font-weight: 600;
+}
+.sched-card .top .id {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--faint);
+}
+.rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.rule-chip {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+.rule-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 5px 0;
+  flex-wrap: wrap;
+}
+.rule-row .in {
+  width: 72px;
+}
+.rule-row .in.wide {
+  width: 200px;
+}
