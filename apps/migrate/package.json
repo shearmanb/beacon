@@ -1,0 +1,20 @@
+{
+  "name": "@beacon/migrate",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "import": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@beacon/core": "workspace:*",
+    "@beacon/db": "workspace:*",
+    "@beacon/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
+}

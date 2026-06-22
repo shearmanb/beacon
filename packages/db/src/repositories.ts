@@ -128,6 +128,19 @@ function historyRepo(db: DB) {
     async recent(limit = 100) {
       return db.select().from(t.alertHistory).orderBy(desc(t.alertHistory.id)).limit(limit);
     },
+    /** Bulk import historical rows preserving original timestamps (migration). */
+    async import(
+      rows: Array<{ ts: string; siteId: string | null; type: string; handle: string | null; title: string | null; url: string | null; payload: unknown }>,
+    ): Promise<void> {
+      for (let i = 0; i < rows.length; i += 100) {
+        const chunk = rows.slice(i, i + 100);
+        if (chunk.length) await db.insert(t.alertHistory).values(chunk);
+      }
+    },
+    async count(): Promise<number> {
+      const rows = await db.select().from(t.alertHistory);
+      return rows.length;
+    },
   };
 }
 
