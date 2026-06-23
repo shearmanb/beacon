@@ -127,11 +127,18 @@ a:hover {
 .glance {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 24px;
+  align-items: center;
+  gap: 12px 26px;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 12px 16px;
+  padding: 14px 18px;
+}
+.glance.warn {
+  border-color: color-mix(in srgb, var(--warn) 40%, var(--line));
+}
+.glance.err {
+  border-color: color-mix(in srgb, var(--err) 45%, var(--line));
 }
 .glance .stat {
   display: flex;
@@ -148,6 +155,56 @@ a:hover {
   font-family: var(--mono);
   font-size: 18px;
   font-weight: 600;
+}
+/* big at-a-glance status banner (first child of .glance) */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-right: 24px;
+  margin-right: 2px;
+  border-right: 1px solid var(--line);
+}
+.bdot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--ok);
+  box-shadow: 0 0 12px var(--ok);
+}
+.glance.warn .bdot {
+  background: var(--warn);
+  box-shadow: 0 0 12px var(--warn);
+}
+.glance.err .bdot {
+  background: var(--err);
+  box-shadow: 0 0 12px var(--err);
+}
+.btext {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.bnum {
+  font-family: var(--mono);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ok);
+}
+.glance.warn .bnum {
+  color: var(--warn);
+}
+.glance.err .bnum {
+  color: var(--err);
+}
+.blabel {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 /* site cards */
@@ -337,6 +394,27 @@ a:hover {
   font-size: 13px;
   font-family: var(--sans);
 }
+
+/* product filter bar */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.filters .in {
+  font-size: 12px;
+}
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+}
 .card {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -385,9 +463,6 @@ body {
 }
 .glance .v {
   color: var(--text);
-}
-.glance .stat:first-child .v {
-  color: var(--accent);
 }
 
 /* site cards — depth + accent edge + hover lift */

@@ -37,6 +37,7 @@ export function SiteControls({
       <button
         className={`btn bolt ${imminent ? "on" : ""}`}
         disabled={pending}
+        title="Imminent = temporary fast checks that auto-revert to your normal schedule after the timer (default 20 min)."
         onClick={() => start(() => setImminent(siteId, !imminent))}
       >
         {imminent ? "⚡ Imminent" : "⚡ Off"}
