@@ -22,6 +22,14 @@ export interface BeaconStore extends Repositories {
 
 export async function openStore(options: OpenStoreOptions): Promise<BeaconStore> {
   const client = createClient({ url: options.url, authToken: options.authToken });
+  // A local file DB is opened by both the worker and the web app at once. WAL +
+  // a busy timeout let concurrent readers/writers coexist instead of
+  // intermittently throwing "database is locked". Not applicable to Turso
+  // (remote, server-managed) or :memory: (unshared), so file: URLs only.
+  if (options.url.startsWith("file:")) {
+    await client.execute("PRAGMA journal_mode = WAL");
+    await client.execute("PRAGMA busy_timeout = 5000");
+  }
   await initSchema(client);
   const db = drizzle(client, { schema });
   const repos = buildRepositories(db);

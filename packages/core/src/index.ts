@@ -1,4 +1,5 @@
 export * from "./schema.js";
+export * from "./probe.js";
 export * from "./filter.js";
 export * from "./empty_guard.js";
 export * from "./pipeline.js";

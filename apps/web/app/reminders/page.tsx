@@ -23,7 +23,7 @@ export default async function RemindersPage() {
               {r.time ? ` ${r.time}` : ""}
             </span>
             <span>{r.text}</span>
-            <ReminderControls id={r.id} done={r.done} />
+            <ReminderControls id={r.id} done={r.done} priority={r.priority} />
           </div>
         ))}
         {items.length === 0 && <p className="muted">No reminders. Add one above.</p>}

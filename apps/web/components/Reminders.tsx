@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { addReminder, removeReminder, setReminderDone } from "../app/actions";
+import { addReminder, removeReminder, setReminderDone, setReminderPriority } from "../app/actions";
 
 export function AddReminderForm() {
   const [date, setDate] = useState("");
@@ -42,10 +42,18 @@ export function AddReminderForm() {
   );
 }
 
-export function ReminderControls({ id, done }: { id: string; done: boolean }) {
+export function ReminderControls({ id, done, priority }: { id: string; done: boolean; priority: boolean }) {
   const [pending, start] = useTransition();
   return (
     <span style={{ marginLeft: "auto", display: "inline-flex", gap: 6 }}>
+      <button
+        className={`btn ${priority ? "on" : ""}`}
+        disabled={pending}
+        title={priority ? "Unflag priority" : "Flag as priority"}
+        onClick={() => start(() => setReminderPriority(id, !priority))}
+      >
+        ★
+      </button>
       <button className="btn" disabled={pending} onClick={() => start(() => setReminderDone(id, !done))}>
         {done ? "undone" : "done"}
       </button>

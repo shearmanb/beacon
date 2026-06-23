@@ -1,8 +1,18 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import type { ScheduleRule } from "@beacon/shared";
+import type { ScheduleRule, NormalizedProduct } from "@beacon/shared";
+import {
+  applyFilters,
+  buildAdapterDeps,
+  getAdapter,
+  hasAdapter,
+  probeSite as coreProbeSite,
+  validateSite,
+  type ProbeResult,
+} from "@beacon/core";
 import { getStore } from "../lib/store";
+import type { AddResult, PreviewResult } from "../lib/site-forms";
 
 export async function saveSchedule(id: string, label: string, rules: ScheduleRule[]): Promise<void> {
   const store = await getStore();
@@ -75,6 +85,85 @@ export async function setReminderDone(id: string, done: boolean): Promise<void> 
   const store = await getStore();
   await store.reminders.update(id, { done });
   revalidatePath("/reminders");
+}
+
+export async function setReminderPriority(id: string, priority: boolean): Promise<void> {
+  const store = await getStore();
+  await store.reminders.update(id, { priority });
+  revalidatePath("/reminders");
+}
+
+// ── Add-site flow + sandbox ──────────────────────────────────────────────────
+
+/** Probe a URL and suggest a source recipe (thin wrapper over the core probe). */
+export async function probeSite(url: string): Promise<ProbeResult> {
+  return coreProbeSite(url);
+}
+
+/**
+ * Run a candidate definition through the real adapter (prev=undefined) and
+ * report what it would track — the sandbox preview. Validates via the same Zod
+ * schema the worker uses, so a passing preview is a passing config.
+ */
+export async function previewSite(input: unknown): Promise<PreviewResult> {
+  const parsed = validateSite(input);
+  if (!parsed.ok) return { ok: false, error: parsed.error ?? "Invalid site definition" };
+  const def = parsed.site!;
+  if (!hasAdapter(def.source.kind)) {
+    return { ok: false, error: `No adapter implemented for "${def.source.kind}" (the html recipe is declarative-only and not wired up yet).` };
+  }
+  try {
+    const store = await getStore();
+    const deps = buildAdapterDeps(await store.secrets.all());
+    const adapter = getAdapter(def.source.kind);
+    const result = await adapter.fetch(def, {}, deps);
+    if (result.kind === "signal") {
+      const blocked = result.signal.kind === "blocked";
+      return {
+        ok: true,
+        mode: "signal",
+        blocked,
+        detail: blocked
+          ? result.signal.reason ?? "Blocked (password wall / coming-soon / 401-403)."
+          : "Page is open (reachable, not blocked). No site_reset would fire right now.",
+      };
+    }
+    if (result.kind === "not_modified") {
+      return { ok: true, mode: "products", rawCount: 0, filteredCount: 0, sample: [], detail: "Source returned 304 Not Modified — nothing to preview." };
+    }
+    const raw: NormalizedProduct[] = result.products;
+    const filtered = applyFilters(raw, def.filters);
+    return {
+      ok: true,
+      mode: "products",
+      rawCount: raw.length,
+      filteredCount: filtered.length,
+      sample: filtered.slice(0, 50).map((p) => ({
+        title: p.title,
+        available: p.available,
+        minPrice: p.minPrice ?? null,
+        url: p.url,
+        vendor: p.vendor ?? null,
+      })),
+    };
+  } catch (err) {
+    return { ok: false, error: `Fetch / parse failed: ${(err as Error).message}` };
+  }
+}
+
+/** Validate + persist a new site. Refuses to clobber an existing id. */
+export async function addSite(input: unknown): Promise<AddResult> {
+  const parsed = validateSite(input);
+  if (!parsed.ok) return { ok: false, error: parsed.error ?? "Invalid site definition" };
+  const def = parsed.site!;
+  const store = await getStore();
+  if (await store.sites.get(def.id)) {
+    return { ok: false, error: `A site with id "${def.id}" already exists — choose a different id.` };
+  }
+  await store.sites.upsert(def);
+  revalidatePath("/");
+  revalidatePath("/products");
+  return { ok: true, id: def.id };
 }
 
 export async function removeReminder(id: string): Promise<void> {

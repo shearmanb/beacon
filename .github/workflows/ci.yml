@@ -22,5 +22,7 @@ jobs:
         run: pnpm typecheck
       - name: Test
         run: pnpm test
-      - name: Web typecheck + build
+      - name: Web typecheck
         run: pnpm --filter @beacon/web exec tsc --noEmit
+      - name: Web build (next build)
+        run: pnpm --filter @beacon/web build
