@@ -92,6 +92,12 @@ a:hover {
 .spacer {
   flex: 1;
 }
+.hdr .ver {
+  font-size: 10px;
+  color: var(--faint);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
 
 /* section heads */
 .sect-hd {
@@ -728,6 +734,49 @@ select.in.sched {
 .pulse.empty .cap {
   color: var(--faint);
 }
+/* Toggle button sits in place of the old static "last 60 min" caption text. */
+.pulse .pulse-toggle {
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--faint);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.pulse .pulse-toggle:hover {
+  color: var(--muted);
+}
+/* Amber: a recent check failed (but the site isn't stale yet). */
+.pulse.degraded .cap {
+  color: var(--warn);
+}
+.pulse.degraded .rail {
+  background: color-mix(in srgb, var(--warn) 45%, var(--line));
+}
+/* Red + pulse: no successful check within interval × 2.5 — the site is stalled. */
+.pulse.stalled {
+  border-top-color: color-mix(in srgb, var(--err) 55%, var(--line));
+}
+.pulse.stalled .cap,
+.pulse.stalled .pulse-toggle {
+  color: var(--err);
+  font-weight: 600;
+}
+.pulse.stalled .rail {
+  background: color-mix(in srgb, var(--err) 55%, var(--line));
+  animation: pulse-stall 1.6s ease-in-out infinite;
+}
+@keyframes pulse-stall {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
 
 /* ===== worker-liveness banner (R3 dead-worker signal) ===== */
 .worker-banner {
@@ -831,4 +880,26 @@ select.in.sched {
 }
 .rule-row .in.wide {
   width: 200px;
+}
+.day-picker {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 4px;
+}
+.day-picker .day {
+  font-family: var(--mono);
+  font-size: 10px;
+  width: 24px;
+  padding: 3px 0;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--faint);
+  cursor: pointer;
+}
+.day-picker .day.on {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: color-mix(in srgb, var(--accent) 18%, var(--panel));
+  color: var(--text);
 }

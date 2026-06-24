@@ -15,18 +15,56 @@ interface WindowRow {
   from: string;
   to: string;
   interval: string;
+  days: string[];
 }
+
+const DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
+const DAY_LABEL: Record<string, string> = {
+  mon: "Mo",
+  tue: "Tu",
+  wed: "We",
+  thu: "Th",
+  fri: "Fr",
+  sat: "Sa",
+  sun: "Su",
+};
 
 function isWindow(r: ScheduleRule): r is Extract<ScheduleRule, { fromHour: number }> {
   return "fromHour" in r;
 }
 
-function ruleChip(r: ScheduleRule): string {
-  if (isWindow(r)) return `${r.fromHour}:00–${r.toHour}:00 → ${r.interval}m`;
-  return `default → ${r.defaultInterval}m`;
+function ruleDays(r: ScheduleRule): string[] {
+  return Array.isArray((r as { days?: string[] }).days) ? (r as { days: string[] }).days : [];
 }
 
-const blankRow = (): WindowRow => ({ from: "9", to: "18", interval: "5" });
+function ruleChip(r: ScheduleRule): string {
+  const base = isWindow(r) ? `${r.fromHour}:00–${r.toHour}:00 → ${r.interval}m` : `default → ${r.defaultInterval}m`;
+  const days = ruleDays(r);
+  return days.length ? `${base} · ${days.join(",")}` : base;
+}
+
+// 7-button Mon–Sun toggle. Empty selection = applies every day (the common case).
+function DayPicker({ value, onChange }: { value: string[]; onChange: (days: string[]) => void }) {
+  const toggle = (d: string) =>
+    onChange(value.includes(d) ? value.filter((x) => x !== d) : [...value, d]);
+  return (
+    <div className="day-picker" title="Days this rule applies on (none selected = every day)">
+      {DAYS.map((d) => (
+        <button
+          type="button"
+          key={d}
+          className={`day ${value.includes(d) ? "on" : ""}`}
+          onClick={() => toggle(d)}
+          aria-pressed={value.includes(d)}
+        >
+          {DAY_LABEL[d]}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+const blankRow = (): WindowRow => ({ from: "9", to: "18", interval: "5", days: [] });
 
 export function SchedulesManager({ initial }: { initial: ScheduleEntry[] }) {
   const [pending, start] = useTransition();
@@ -34,14 +72,18 @@ export function SchedulesManager({ initial }: { initial: ScheduleEntry[] }) {
   const [label, setLabel] = useState("");
   const [windows, setWindows] = useState<WindowRow[]>([blankRow()]);
   const [def, setDef] = useState("60");
+  const [defDays, setDefDays] = useState<string[]>([]);
 
   const loadForEdit = (e: ScheduleEntry) => {
     setId(e.id);
     setLabel(e.label);
-    const wins = e.rules.filter(isWindow).map((r) => ({ from: String(r.fromHour), to: String(r.toHour), interval: String(r.interval) }));
+    const wins = e.rules
+      .filter(isWindow)
+      .map((r) => ({ from: String(r.fromHour), to: String(r.toHour), interval: String(r.interval), days: ruleDays(r) }));
     setWindows(wins.length ? wins : [blankRow()]);
-    const d = e.rules.find((r) => !isWindow(r)) as { defaultInterval: number } | undefined;
+    const d = e.rules.find((r) => !isWindow(r)) as { defaultInterval: number; days?: string[] } | undefined;
     setDef(d ? String(d.defaultInterval) : "60");
+    setDefDays(d?.days ?? []);
   };
 
   const reset = () => {
@@ -49,6 +91,7 @@ export function SchedulesManager({ initial }: { initial: ScheduleEntry[] }) {
     setLabel("");
     setWindows([blankRow()]);
     setDef("60");
+    setDefDays([]);
   };
 
   const save = () => {
@@ -58,10 +101,10 @@ export function SchedulesManager({ initial }: { initial: ScheduleEntry[] }) {
       const toHour = parseInt(w.to, 10);
       const interval = parseInt(w.interval, 10);
       if ([fromHour, toHour, interval].some(Number.isNaN)) continue;
-      rules.push({ fromHour, toHour, interval });
+      rules.push({ fromHour, toHour, interval, ...(w.days.length ? { days: w.days } : {}) });
     }
     const d = parseInt(def, 10);
-    if (!Number.isNaN(d)) rules.push({ defaultInterval: d });
+    if (!Number.isNaN(d)) rules.push({ defaultInterval: d, ...(defDays.length ? { days: defDays } : {}) });
     if (!id.trim() || rules.length === 0) return;
     start(async () => {
       await saveSchedule(id, label, rules);
@@ -107,7 +150,7 @@ export function SchedulesManager({ initial }: { initial: ScheduleEntry[] }) {
         </div>
 
         <div className="muted mono" style={{ fontSize: 11, margin: "8px 0 4px" }}>
-          Time windows (ET, 24h — supports overnight like 22→9):
+          Time windows (ET, 24h — supports overnight like 22→9; day buttons optional, none = every day):
         </div>
         {windows.map((w, i) => (
           <div className="rule-row" key={i}>
@@ -120,6 +163,10 @@ export function SchedulesManager({ initial }: { initial: ScheduleEntry[] }) {
             <input className="in" type="number" min={1} value={w.interval}
               onChange={(e) => setWindows((ws) => ws.map((x, j) => (j === i ? { ...x, interval: e.target.value } : x)))} />
             <span className="faint">min</span>
+            <DayPicker
+              value={w.days}
+              onChange={(days) => setWindows((ws) => ws.map((x, j) => (j === i ? { ...x, days } : x)))}
+            />
             <button className="btn" onClick={() => setWindows((ws) => ws.filter((_, j) => j !== i))}>
               ✕
             </button>
@@ -133,6 +180,7 @@ export function SchedulesManager({ initial }: { initial: ScheduleEntry[] }) {
           <span className="faint">default every</span>
           <input className="in" type="number" min={1} value={def} onChange={(e) => setDef(e.target.value)} />
           <span className="faint">min (catches all other times)</span>
+          <DayPicker value={defDays} onChange={setDefDays} />
         </div>
 
         <div className="row" style={{ marginTop: 10 }}>

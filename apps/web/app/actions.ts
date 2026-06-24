@@ -7,6 +7,7 @@ import {
   buildAdapterDeps,
   getAdapter,
   hasAdapter,
+  parseCampariCards,
   probeSite as coreProbeSite,
   validateSite,
   type ProbeResult,
@@ -171,6 +172,44 @@ export async function previewSite(input: unknown): Promise<PreviewResult> {
     };
   } catch (err) {
     return { ok: false, error: `Fetch / parse failed: ${(err as Error).message}` };
+  }
+}
+
+/**
+ * Campari card parser sandbox — runs the pure `parseCampariCards` on pasted HTML
+ * (no fetch). Campari sites (Wild Turkey, Russell's Reserve) 403 datacenter IPs,
+ * so the live URL preview can't reach them; this lets you validate the parser
+ * against a real page's source offline. Same code path the worker's custom
+ * `campari_v1` extractor uses, minus the network.
+ */
+export async function previewCampariHtml(
+  html: string,
+  baseUrl: string,
+  useCollectionSchema: boolean,
+): Promise<PreviewResult> {
+  if (!html.trim()) return { ok: false, error: "Paste some page HTML first." };
+  try {
+    const products = parseCampariCards(html, {
+      baseUrl: baseUrl.trim() || "https://example.com",
+      useCollectionSchema,
+    });
+    const buyable = products.filter((p) => p.available).length;
+    return {
+      ok: true,
+      mode: "products",
+      rawCount: products.length,
+      filteredCount: products.length,
+      detail: `Parsed ${products.length} product card${products.length === 1 ? "" : "s"} (${buyable} buyable). Site filters are applied later by the pipeline.`,
+      sample: products.slice(0, 50).map((p) => ({
+        title: p.title,
+        available: p.available,
+        minPrice: p.minPrice ?? null,
+        url: p.url,
+        vendor: p.vendor ?? null,
+      })),
+    };
+  } catch (err) {
+    return { ok: false, error: `Parse failed: ${(err as Error).message}` };
   }
 }
 

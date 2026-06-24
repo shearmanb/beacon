@@ -3,6 +3,7 @@ import { ago, siteHealth, type Health } from "../lib/health";
 import { SiteControls } from "../components/SiteControls";
 import { PulseStrip } from "../components/PulseStrip";
 import { runNow } from "./actions";
+import { getEffectiveInterval } from "@beacon/shared";
 import type { SiteDefinition } from "@beacon/core";
 
 export const dynamic = "force-dynamic";
@@ -271,6 +272,14 @@ export default async function SitesPage() {
           const productCount = Object.keys((state?.products as object | undefined) ?? {}).length;
           const errors = (state?.consecutiveErrors as number | undefined) ?? 0;
           const immLeft = imminentLeft(def);
+          // PulseStrip health overlays. `stalled` reuses siteHealth's staleness
+          // formula (interval × 2.5 + grace) so a red strip lines up with a
+          // non-ok dot; `degraded` flags a recent failure even if not yet stale.
+          const checkHist = (state?.checkHistory as { ts: string; ok: boolean }[] | undefined) ?? [];
+          const lastCheckedStr = state?.lastChecked as string | undefined;
+          const overdueMs = lastCheckedStr ? Date.now() - new Date(lastCheckedStr).getTime() : Infinity;
+          const stalled = row.enabled && overdueMs > (getEffectiveInterval(def, schedules) * 2.5 + 8) * 60_000;
+          const degraded = checkHist.slice(-4).some((h) => !h.ok);
           return (
             <div key={row.id} className={`site-card ${row.enabled ? "" : "disabled"}`}>
               <div className="site-hd">
@@ -331,7 +340,12 @@ export default async function SitesPage() {
                 imminentDuration={def.imminentDurationMinutes ?? null}
               />
               {Array.isArray(state?.checkHistory) && (state!.checkHistory as unknown[]).length > 0 && (
-                <PulseStrip history={state!.checkHistory as { ts: string; ok: boolean }[]} />
+                <PulseStrip
+                  history={state!.checkHistory as { ts: string; ok: boolean }[]}
+                  siteId={row.id}
+                  stalled={stalled}
+                  degraded={degraded}
+                />
               )}
             </div>
           );

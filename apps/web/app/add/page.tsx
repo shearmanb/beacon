@@ -1,6 +1,7 @@
 import { registeredExtractors } from "@beacon/core";
 import { getStore } from "../../lib/store";
 import { AddSiteWizard } from "../../components/AddSiteWizard";
+import { CampariSandbox } from "../../components/CampariSandbox";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,7 @@ export default async function AddSitePage() {
         Probe a URL to auto-detect the recipe, tweak the config, preview what it parses, then save — no code, no redeploy.
       </p>
       <AddSiteWizard scheduleOptions={scheduleOptions} extractors={registeredExtractors()} />
+      <CampariSandbox />
     </>
   );
 }
