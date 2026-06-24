@@ -74,6 +74,33 @@ describe("processSite", () => {
     expect(out.newState.errorAlertSent).toBe(true);
   });
 
+  it("imminent: fires site_error after just 2 failures and flags a block", async () => {
+    const prev: SiteState = { lastChecked: "t", consecutiveErrors: 1 };
+    const out = await processSite({
+      site: site({ imminent: true }),
+      prevState: prev,
+      adapter: fails(new HttpError(403, "https://x.com")),
+      deps,
+      ignored: noneIgnored,
+    });
+    expect(out.newState.consecutiveErrors).toBe(2);
+    expect(out.events.map((e) => e.type)).toEqual(["site_error"]);
+    expect(out.events[0]!.product.note).toContain("blocked");
+  });
+
+  it("non-imminent: 2 failures stays silent (full threshold)", async () => {
+    const prev: SiteState = { lastChecked: "t", consecutiveErrors: 1 };
+    const out = await processSite({
+      site: site(),
+      prevState: prev,
+      adapter: fails(new HttpError(403, "https://x.com")),
+      deps,
+      ignored: noneIgnored,
+    });
+    expect(out.newState.consecutiveErrors).toBe(2);
+    expect(out.events).toEqual([]);
+  });
+
   it("error path: a 403 sets an escalating cooldown", async () => {
     const prev: SiteState = { lastChecked: "t", cooldownLevel: 0 };
     const out = await processSite({ site: site(), prevState: prev, adapter: fails(new HttpError(403, "https://x.com")), deps, ignored: noneIgnored });

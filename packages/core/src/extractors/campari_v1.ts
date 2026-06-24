@@ -14,10 +14,13 @@ import type { NormalizedProduct } from "@beacon/shared";
 import type { CustomExtractor, ExtractorContext, ExtractorOutput } from "./types.js";
 
 // Buyable iff a purchase phrase is present and no info/unavailable phrase is.
+// Kept deliberately broad on the purchase side (limited drops route to varied
+// CTAs — "Buy", "Purchase", "Add to basket", an off-site "Buy on …") and gated
+// by INFO_SIGNALS, which always wins, so "Where to buy" can't read as buyable.
 const PURCHASE_SIGNALS =
-  /\b(?:add to (?:cart|bag)|buy now|buy online|shop now|order now|pre-?order)\b/i;
+  /\b(?:add to (?:cart|bag|basket)|buy(?: now| online| it(?: now)?)?|purchase|shop now|order now|pre-?order|get yours)\b/i;
 const INFO_SIGNALS =
-  /\b(?:see details|discover more|where to buy|learn more|notify me|coming soon|sold out|out of stock|read more)\b/i;
+  /\b(?:see details|discover more|where to (?:buy|find)|learn more|notify me|coming soon|sold out|out of stock|read more|wait\s?list|join the list|raffle|enter to win|store locator|find a store|back (?:soon|in stock)|register)\b/i;
 
 function decodeEntities(s: string): string {
   return s

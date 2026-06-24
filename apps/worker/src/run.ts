@@ -95,8 +95,16 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
 
     const cooldownUntil = prevState?.cooldownUntil ? Date.parse(prevState.cooldownUntil as string) : 0;
     if (cooldownUntil > Date.now()) {
-      log(`[${def.name}] Skipping — rate-limit cooldown`);
-      continue;
+      // The 5/15/60-min circuit breaker would black out a site after a 403/429.
+      // In imminent mode the operator is actively watching a drop, so a single
+      // transient block must not silence the launch window — check anyway. Cadence
+      // is still bounded by imminentIntervalMinutes (shouldCheck below), and the
+      // breaker reasserts automatically once imminent ends.
+      if (!def.imminent) {
+        log(`[${def.name}] Skipping — rate-limit cooldown`);
+        continue;
+      }
+      log(`[${def.name}] In cooldown but imminent — checking anyway`);
     }
     if (!shouldCheck(def, prevState, schedules)) continue;
 

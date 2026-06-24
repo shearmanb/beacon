@@ -11,6 +11,9 @@ import type { Alert } from "@beacon/shared";
 import { annotateProducts, type AnnotatedProduct } from "./annotate.js";
 
 export const ERROR_ALERT_THRESHOLD = 5;
+// In imminent mode, surface a block fast — the operator needs to know the drop
+// window is being blocked, not wait out the full 5-failure threshold.
+export const IMMINENT_ERROR_ALERT_THRESHOLD = 2;
 export const COOLDOWN_STEPS_MIN = [5, 15, 60];
 const CHECK_HISTORY_CAP = 100;
 const ERROR_LOG_CAP = 25;
@@ -117,7 +120,8 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
   const prev = prevState ?? ({} as SiteState);
   const consecutiveErrors = ((prev.consecutiveErrors as number | undefined) ?? 0) + 1;
   const alreadyAlerted = prev.errorAlertSent === true;
-  const shouldAlert = consecutiveErrors >= ERROR_ALERT_THRESHOLD && !alreadyAlerted;
+  const threshold = site.imminent ? IMMINENT_ERROR_ALERT_THRESHOLD : ERROR_ALERT_THRESHOLD;
+  const shouldAlert = consecutiveErrors >= threshold && !alreadyAlerted;
 
   // Circuit breaker: 429/403 -> escalating cooldown.
   let cooldown: Partial<SiteState> = {};
@@ -156,7 +160,10 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
           product: {
             title: site.name,
             url: siteUrl(site),
-            note: `${consecutiveErrors} consecutive failures. Last error: ${message}`,
+            note:
+              `${consecutiveErrors} consecutive failures${statusCode ? ` (HTTP ${statusCode}` +
+              `${statusCode === 403 || statusCode === 401 ? " — looks blocked" : ""})` : ""}. ` +
+              `Last error: ${message}`,
           },
         },
       ]

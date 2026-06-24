@@ -69,4 +69,28 @@ describe("parseCampariCards", () => {
     const handles = parseCampariCards(HTML, { baseUrl: "https://x.com" }).map((p) => p.handle);
     expect(handles).not.toContain("staged-combo");
   });
+
+  it("recognizes broader buyable CTAs (Purchase / bare Buy / Add to basket)", () => {
+    const html = `
+      <div><h3>Alpha</h3><a class="sn_btn" href="/our-products/alpha/">Purchase</a></div>
+      <div><h3>Bravo</h3><a class="sn_btn" href="/our-products/bravo/">Buy</a></div>
+      <div><h3>Charlie</h3><a class="sn_btn" href="/our-products/charlie/">Add to basket</a></div>
+    `;
+    const byHandle = Object.fromEntries(parseCampariCards(html, { baseUrl: "https://x.com" }).map((p) => [p.handle, p]));
+    expect(byHandle["alpha"]!.available).toBe(true);
+    expect(byHandle["bravo"]!.available).toBe(true);
+    expect(byHandle["charlie"]!.available).toBe(true);
+  });
+
+  it("keeps info/unavailable CTAs non-buyable, and INFO wins over a contained 'buy'", () => {
+    const html = `
+      <div><h3>Delta</h3><a class="sn_btn" href="/our-products/delta/">Join the waitlist</a></div>
+      <div><h3>Echo</h3><a class="sn_btn" href="/our-products/echo/">Where to buy</a></div>
+      <div><h3>Foxtrot</h3><a class="sn_btn" href="/our-products/foxtrot/">Sold out</a></div>
+    `;
+    const byHandle = Object.fromEntries(parseCampariCards(html, { baseUrl: "https://x.com" }).map((p) => [p.handle, p]));
+    expect(byHandle["delta"]!.available).toBe(false);
+    expect(byHandle["echo"]!.available).toBe(false); // "where to buy" → INFO wins
+    expect(byHandle["foxtrot"]!.available).toBe(false);
+  });
 });

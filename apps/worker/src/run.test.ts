@@ -94,6 +94,33 @@ describe("runOnce", () => {
     expect(sent.some((s) => s.alert.type === "imminent_timeout")).toBe(true);
   });
 
+  it("imminent bypasses a circuit-breaker cooldown that would skip a non-imminent site", async () => {
+    // A live 30-min cooldown sits on the site.
+    await store.state.save("s1", {
+      lastChecked: new Date(Date.now() - 60 * 60_000).toISOString(),
+      products: {},
+      cooldownUntil: new Date(Date.now() + 30 * 60_000).toISOString(),
+      cooldownLevel: 2,
+    });
+
+    // Non-imminent: the cooldown is honored, so the site is skipped.
+    expect((await runOnce(ctx())).checked).toBe(0);
+
+    // Flip to imminent (definition only — the cooldown state is untouched).
+    await store.sites.upsert({
+      id: "s1",
+      name: "Local Shop",
+      imminent: true,
+      imminentIntervalMinutes: 1,
+      imminentDurationMinutes: 20,
+      imminentSince: new Date().toISOString(),
+      source: { kind: "shopify_rest", baseUrl: base },
+    });
+
+    // Imminent: the cooldown is bypassed, so the launch window keeps checking.
+    expect((await runOnce(ctx())).checked).toBe(1);
+  });
+
   it("set_imminent command toggles imminent on with a timestamp", async () => {
     await store.commands.enqueue("set_imminent", "s1", { imminent: true });
     const res = await runOnce(ctx());
