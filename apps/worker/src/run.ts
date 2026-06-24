@@ -12,6 +12,10 @@ import { processSite } from "./process-site.js";
 
 export const DEFAULT_IMMINENT_DURATION_MIN = 20;
 
+// Site IDs we've already alerted about a config/adapter problem this process, so
+// the warning fires once per start instead of every ~60s loop.
+const warnedConfigSiteIds = new Set<string>();
+
 export interface RunContext {
   store: BeaconStore;
   channel?: NotificationChannel | undefined;
@@ -113,6 +117,26 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
       adapter = getAdapter(def.source.kind);
     } catch (err) {
       log(`[${def.name}] ${(err as Error).message}`);
+      // Config-level problem (e.g. an unknown/unimplemented source kind in the
+      // DB — Zod gates the normal write path, but a bad definition or a deferred
+      // kind like `html` lands here). Don't go silent: alert the operator ONCE
+      // per start instead of quietly skipping the site every loop.
+      if (channel && !dryRun && !warnedConfigSiteIds.has(def.id)) {
+        warnedConfigSiteIds.add(def.id);
+        const event: Alert = {
+          type: "site_error",
+          product: {
+            title: def.name,
+            url: siteUrl(def),
+            note: `Config error — ${(err as Error).message}. Site skipped until fixed.`,
+          },
+        };
+        try {
+          await channel.send(def.name, event);
+        } catch (e) {
+          log(`  Discord config-warning error: ${(e as Error).message}`);
+        }
+      }
       continue;
     }
 

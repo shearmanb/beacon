@@ -7,8 +7,8 @@ import { httpPost } from "@beacon/fetch";
 import { sleep, type Alert, type AlertType } from "@beacon/shared";
 import type { NotificationChannel } from "./types.js";
 
-// site_changed (purple) is reserved — no source emits it yet; kept so a future
-// "page content changed" signal has a color/label ready.
+// site_changed (purple) fires when a tracked product stays not-buyable but its
+// CTA/button text changes (see @beacon/shared diff.ts); color + label below.
 const COLORS: Record<string, number> = {
   new_product: 0x3498db, // blue
   restock: 0x2ecc71, // green

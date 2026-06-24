@@ -1,5 +1,11 @@
 # Automated Review Notes
 
+> ⚠️ **SUPERSEDED (v1).** These notes review the legacy v1 design (root
+> `worker.js`, `lib/`, `sites/`, `docs/`). Beacon has since been rebuilt as the
+> v2 monorepo (`apps/` + `packages/`) — most risks/cleanups below are done or
+> obsolete. Current backlog: `TODO.md`; architecture: `REBUILD.md`. Kept for
+> history only.
+
 _Last updated: 2026-06-05_
 
 ## Top risks (most fragile first)
