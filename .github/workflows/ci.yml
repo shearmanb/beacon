@@ -11,8 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10
+        # Version intentionally NOT set here — it's read from package.json's
+        # "packageManager" field (single source of truth, shared with Railway /
+        # corepack). Setting both errors: ERR_PNPM_BAD_PM_VERSION.
       - uses: actions/setup-node@v4
         with:
           node-version: 20
