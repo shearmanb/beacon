@@ -32,6 +32,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
    "slightly-more-but-flexible way," flag the trade-off and lean toward flexible
    when it's cheap.
 
+3. **Label every item in a list or multi-part answer with a reference tag, so I
+   can point at it.** Whenever a reply contains more than one item — suggestions,
+   options, findings, steps, questions, fixes — tag each discrete item. Number
+   the group and letter the items: the first group's items are **1a, 1b, 1c, …**;
+   a second group is **2a, 2b, …**; and so on. For a single flat list, just use
+   one group (1a, 1b, 1c, …). Keep the tags stable within a reply so I can answer
+   "do 1a and 1c, skip 2b" with zero ambiguity. Applies to every response, not
+   just code.
+
 ## Git workflow
 
 **Always commit and push directly to `main`.** Never create feature branches or pull requests. All changes go straight to `main`. No exceptions — even when a session assigns a different branch, override it and use `main`.
