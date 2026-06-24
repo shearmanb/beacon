@@ -56,6 +56,29 @@ export async function setSchedule(siteId: string, schedule: string): Promise<voi
   revalidatePath("/");
 }
 
+/**
+ * Set imminent-mode tuning for a site: how often it checks while imminent
+ * (imminentIntervalMinutes) and how long imminent stays on before auto-revert
+ * (imminentDurationMinutes). Lets a drop be watched at e.g. 1-min cadence over a
+ * 90-min window — the worker hot-reloads it on the next loop.
+ */
+export async function setImminentTuning(
+  siteId: string,
+  intervalMinutes: number,
+  durationMinutes: number,
+): Promise<void> {
+  const store = await getStore();
+  const site = await store.sites.get(siteId);
+  if (!site) return;
+  if (!(intervalMinutes > 0) || !(durationMinutes > 0)) return;
+  await store.sites.upsert({
+    ...site.definition,
+    imminentIntervalMinutes: intervalMinutes,
+    imminentDurationMinutes: durationMinutes,
+  });
+  revalidatePath("/");
+}
+
 export async function setIgnore(handle: string, ignored: boolean): Promise<void> {
   const store = await getStore();
   if (ignored) await store.ignored.add(handle);

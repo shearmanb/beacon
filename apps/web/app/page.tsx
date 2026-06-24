@@ -243,6 +243,8 @@ export default async function SitesPage() {
                 imminent={def.imminent}
                 schedule={String(def.schedule ?? def.intervalMinutes ?? "")}
                 scheduleOptions={scheduleOptions}
+                imminentInterval={def.imminentIntervalMinutes ?? null}
+                imminentDuration={def.imminentDurationMinutes ?? null}
               />
               {Array.isArray(state?.checkHistory) && (state!.checkHistory as unknown[]).length > 0 && (
                 <PulseStrip history={state!.checkHistory as { ts: string; ok: boolean }[]} />

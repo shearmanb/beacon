@@ -588,6 +588,27 @@ body {
   background: var(--accent-dim);
 }
 
+/* compact imminent-tuning row under the main controls */
+.row.tune {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 2px;
+  gap: 6px;
+}
+.row.tune .tune-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.row.tune select.in {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
 /* schedule dropdown in the controls row */
 select.in.sched {
   font-family: var(--mono);
