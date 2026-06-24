@@ -1,7 +1,14 @@
 {
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
-    "buildCommand": "pnpm install --frozen-lockfile && pnpm --filter @beacon/web build"
+    "buildCommand": "pnpm install --frozen-lockfile && pnpm --filter @beacon/web build",
+    "watchPatterns": [
+      "/apps/**",
+      "/packages/**",
+      "package.json",
+      "pnpm-lock.yaml",
+      "railway.json"
+    ]
   },
   "deploy": {
     "startCommand": "pnpm --filter @beacon/server start",
