@@ -4,7 +4,9 @@
 // already-known and produces ZERO new_product alerts (no re-alert flood).
 //
 // pending_bottles.json is intentionally NOT imported — bottle tracking moves to
-// the Cellar app.
+// the Cellar app. alert_history_archive.json (v1's pre-500 overflow) is also NOT
+// imported: the recent alert_history (cap 500) carries over; deeper history stays
+// in that archive file + git history if it's ever needed.
 
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";

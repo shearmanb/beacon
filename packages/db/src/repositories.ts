@@ -2,7 +2,7 @@
 // instead of touching tables directly. Grouped onto one store object so callers
 // do `store.sites.list()`, `store.state.load(id)`, etc.
 
-import { asc, desc, eq, isNull } from "drizzle-orm";
+import { asc, desc, eq, isNull, lte } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import type { Alert, ProductMap, ScheduleDefinition } from "@beacon/shared";
 import { siteDefinitionSchema, type SiteDefinition, type SiteState } from "@beacon/core";
@@ -108,6 +108,8 @@ function stateRepo(db: DB) {
   };
 }
 
+const ALERT_HISTORY_CAP = 5000;
+
 function historyRepo(db: DB) {
   return {
     async append(siteId: string | null, alerts: Alert[]): Promise<void> {
@@ -124,6 +126,17 @@ function historyRepo(db: DB) {
           payload: a.product as unknown,
         })),
       );
+      // Bound the table: keep only the newest ALERT_HISTORY_CAP rows. v1 capped
+      // alert_history at 500 (+ a 5000-entry archive file); v2 has one queryable
+      // table, so we just trim the tail to stop it growing forever.
+      const overflow = await db
+        .select({ id: t.alertHistory.id })
+        .from(t.alertHistory)
+        .orderBy(desc(t.alertHistory.id))
+        .limit(1)
+        .offset(ALERT_HISTORY_CAP);
+      const cutoff = overflow[0];
+      if (cutoff) await db.delete(t.alertHistory).where(lte(t.alertHistory.id, cutoff.id));
     },
     async recent(limit = 100) {
       return db.select().from(t.alertHistory).orderBy(desc(t.alertHistory.id)).limit(limit);

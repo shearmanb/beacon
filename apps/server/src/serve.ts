@@ -36,10 +36,13 @@ const store = await openStore({ url: dbUrl, authToken: process.env["BEACON_DB_AU
 // Auto-seed on first boot (only when the datastore is empty).
 const existing = await store.sites.list();
 if (existing.length === 0) {
-  console.log(`[serve] Empty datastore — seeding from legacy JSON in ${dataDir}…`);
+  console.warn(`[serve] Datastore is EMPTY — seeding from legacy JSON in ${dataDir}. (Expected ONLY on a brand-new datastore; if this volume was populated before, the volume may have been lost.)`);
   try {
     const summary = await runImport(store, dataDir, { reset: false });
     console.log(`[serve] Seeded: ${JSON.stringify(summary)}`);
+    if (summary.sitesFailed.length > 0) {
+      console.error(`[serve] WARNING — ${summary.sitesFailed.length} site(s) FAILED to seed and will NOT run: ${JSON.stringify(summary.sitesFailed)}`);
+    }
   } catch (err) {
     console.error(`[serve] Seed failed (continuing): ${(err as Error).message}`);
   }

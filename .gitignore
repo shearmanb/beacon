@@ -6,3 +6,7 @@ coverage/
 *.tsbuildinfo
 .DS_Store
 .next/
+# local SQLite DBs (never commit; prod DB lives on the Railway volume)
+*.db
+*.db-wal
+*.db-shm
