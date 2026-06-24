@@ -118,7 +118,7 @@ Requires `DISCORD_WEBHOOK_URL`, `GH_TOKEN`, and `GH_REPO` env vars. Optional: `H
 | `reveries_site_status` | thereveries.co/shop | site_status_monitor | Squarespace frontend status — fires site_reset if COMING SOON / password wall detected |
 | `reveries_official` | thereveries.co/shop | shopify_storefront | Storefront API via shared-pour.myshopify.com collection 367215214747 |
 | `wild_turkey_limited` | wildturkeybourbon.com/en-us/products/ | purchasable_state_monitor | **Staged, disabled until validated.** titleContains: ["Gold Foil","Generations","Keep"] — Keep catches all Master's Keep bottles. Alerts when a target flips See details → Add to cart |
-| `russells_reserve_limited` | russellsreserve.com/en-us/our-products/ | purchasable_state_monitor | **Staged, disabled until validated.** Whole section (titleContains: []) to catch new/unlisted drops; useCollectionSchema:true surfaces the password-Protected staged combo |
+| `russells_reserve_limited` | russellsreserve.com/en-us/our-products/ | purchasable_state_monitor | **Live — enabled (schedule `15`).** Whole section (titleContains: []) to catch new/unlisted drops; useCollectionSchema:true surfaces the password-Protected staged combo |
 
 ## Infrastructure
 
