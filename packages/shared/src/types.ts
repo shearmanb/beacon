@@ -12,6 +12,13 @@ export interface NormalizedProduct {
   minPrice?: number | null;
   available: boolean;
   image?: string | null;
+  /**
+   * Raw call-to-action / state text a source used to decide `available` (e.g. a
+   * product card's button text). When a source populates it, diff() emits a
+   * `site_changed` alert if it changes while availability stays the same — a
+   * language-agnostic catch for buyable states a fixed word-list won't recognize.
+   */
+  cta?: string | null;
 }
 
 export type ProductMap = Record<string, NormalizedProduct>;

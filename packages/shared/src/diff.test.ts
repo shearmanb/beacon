@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import { diff } from "./diff.js";
 import type { NormalizedProduct, ProductMap } from "./types.js";
 
-function p(handle: string, available: boolean): NormalizedProduct {
-  return { handle, title: handle, url: `https://x/${handle}`, tags: [], available };
+function p(handle: string, available: boolean, cta?: string): NormalizedProduct {
+  return { handle, title: handle, url: `https://x/${handle}`, tags: [], available, ...(cta != null ? { cta } : {}) };
 }
 
 const ALL = { onNew: true, onRestock: true, onSoldOut: true };
@@ -44,5 +44,33 @@ describe("diff", () => {
     expect(diff(prev, cur, { onNew: false, onRestock: true, onSoldOut: false })).toEqual([
       { type: "restock", product: cur.a },
     ]);
+  });
+
+  it("emits site_changed when the button text changes while still not buyable", () => {
+    const prev: ProductMap = { a: p("a", false, "See details") };
+    const cur: ProductMap = { a: p("a", false, "Reserve now") };
+    const alerts = diff(prev, cur, ALL);
+    expect(alerts).toHaveLength(1);
+    expect(alerts[0]!.type).toBe("site_changed");
+    expect(alerts[0]!.product.handle).toBe("a");
+    expect(alerts[0]!.product.note).toContain("Reserve now");
+  });
+
+  it("does NOT emit site_changed when the flip is already a restock", () => {
+    const prev: ProductMap = { a: p("a", false, "See details") };
+    const cur: ProductMap = { a: p("a", true, "Add to cart") };
+    expect(diff(prev, cur, ALL).map((x) => x.type)).toEqual(["restock"]);
+  });
+
+  it("does NOT emit site_changed on the first check after deploy (no prior cta)", () => {
+    const prev: ProductMap = { a: p("a", false) }; // old state carries no cta
+    const cur: ProductMap = { a: p("a", false, "Add to cart") };
+    expect(diff(prev, cur, ALL)).toEqual([]);
+  });
+
+  it("does NOT emit site_changed when the button text is unchanged", () => {
+    const prev: ProductMap = { a: p("a", false, "See details") };
+    const cur: ProductMap = { a: p("a", false, "See details") };
+    expect(diff(prev, cur, ALL)).toEqual([]);
   });
 });

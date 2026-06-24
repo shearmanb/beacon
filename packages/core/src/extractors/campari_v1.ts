@@ -150,6 +150,9 @@ export function parseCampariCards(
       available: PURCHASE_SIGNALS.test(cta) && !INFO_SIGNALS.test(cta),
       image: null,
       url: slugInfo.url,
+      // Carry the raw button text so diff() can fire site_changed if the wording
+      // changes to something our word-list doesn't recognize as buyable.
+      cta,
     });
   }
 

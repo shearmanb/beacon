@@ -42,6 +42,10 @@ describe("parseCampariCards", () => {
 
     expect(byHandle["single-barrel"]!.available).toBe(false); // "See details"
     expect(byHandle["single-barrel"]!.title).toBe("Russell's Reserve Single Barrel"); // entity decoded
+
+    // Raw button text is carried so diff() can fire site_changed on a wording change.
+    expect(byHandle["russells-reserve-13"]!.cta).toBe("Add to cart");
+    expect(byHandle["single-barrel"]!.cta).toBe("See details");
   });
 
   it("excludes non-product sn_btns (nav javascript:, cocktails, commented-out)", () => {
