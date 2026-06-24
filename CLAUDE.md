@@ -3,11 +3,14 @@
 > **⚠️ REBUILT (v2 — 2026-06).** Beacon has been rebuilt as a TypeScript monorepo
 > under `packages/` and `apps/`. **That is now the active codebase.** See
 > **`REBUILD.md`** (architecture) and **`DEPLOY.md`** (one-service Railway deploy).
-> The root `worker.js`, `lib/`, `sites/`, `notifiers/`, and `docs/` are the
-> **legacy v1**, kept for reference/fallback only — the live service runs
-> `@beacon/server` per `railway.json`. The root JSON files (`config.json`,
-> `state.json`, …) remain as the one-time migration/seed source. Everything below
-> documents the legacy v1 design.
+> The live service runs `@beacon/server` per `railway.json`. The root JSON files
+> (`config.json`, `state.json`, …) remain as the one-time migration/seed source.
+>
+> **The legacy v1 code has been removed (2026-06-24).** The old root `worker.js`,
+> `lib/`, `sites/`, `notifiers/`, and `docs/` are gone from `main` — archived on
+> the **`legacy-v1`** branch (`git show legacy-v1:worker.js`) if ever needed. The
+> v1 *design notes* below are kept as historical reference only; they describe
+> code that no longer lives in this repo.
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
