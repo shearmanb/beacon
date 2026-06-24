@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import { ThemeSwitcher } from "../components/ThemeSwitcher";
+import { AutoRefresh } from "../components/AutoRefresh";
 
 export const metadata = {
   title: "Beacon",
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body>
+        <AutoRefresh />
         <div className="app">
           <header className="hdr">
             <div className="wordmark">

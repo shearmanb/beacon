@@ -729,6 +729,61 @@ select.in.sched {
   color: var(--faint);
 }
 
+/* ===== worker-liveness banner (R3 dead-worker signal) ===== */
+.worker-banner {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  border-radius: 6px;
+  padding: 7px 12px;
+  margin: 10px 0 2px;
+}
+.worker-banner.ok {
+  color: var(--muted);
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.worker-banner.stale {
+  color: var(--err);
+  border: 1px solid color-mix(in srgb, var(--err) 50%, var(--line));
+  background: color-mix(in srgb, var(--err) 10%, var(--panel));
+  font-weight: 600;
+}
+
+/* ===== ✨ Reveries product grid (reuses card/pill tokens) ===== */
+.reveries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.rev-card {
+  background: linear-gradient(165deg, var(--panel2), var(--panel));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rev-card.in {
+  border-color: color-mix(in srgb, var(--ok) 40%, var(--line));
+}
+.rev-title {
+  font-weight: 600;
+  font-size: 13px;
+}
+.rev-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rev-meta .mono {
+  font-size: 12px;
+}
+.rev-sub {
+  font-size: 10px;
+}
+
 /* ===== schedules manager ===== */
 .sched-card {
   background: var(--panel);

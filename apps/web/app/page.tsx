@@ -19,6 +19,18 @@ function isReveries(siteId: string, title: string): boolean {
   return REVERIES_SITE_IDS.has(siteId) || title.toLowerCase().includes("reveries");
 }
 
+// Worker is considered down if no site has been checked within this window — it
+// loops ~60s, so 15 min of total silence means the worker itself is stalled
+// (the R3 dead-worker signal). Schedule-agnostic: a single global threshold.
+const WORKER_STALE_MS = 15 * 60_000;
+function minsAgo(ms: number): string {
+  const m = Math.round(ms / 60_000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m}m ago`;
+  const h = Math.round(m / 60);
+  return `${h}h ago`;
+}
+
 // Public URL a site links to — mirrors the worker's siteUrl() across source kinds.
 function siteUrl(def: SiteDefinition): string {
   const s = def.source as Record<string, unknown>;
@@ -88,6 +100,31 @@ export default async function SitesPage() {
     const lc = (s?.lastChecked as string | null | undefined) ?? null;
     return lc && (!acc || lc > acc) ? lc : acc;
   }, null);
+
+  // Worker liveness: max lastChecked across all sites vs. a single global
+  // threshold. Older than that → the worker likely isn't running at all.
+  const lastCheckMs = lastCheck ? Date.now() - new Date(lastCheck).getTime() : null;
+  const workerStale = lastCheckMs === null || lastCheckMs > WORKER_STALE_MS;
+
+  // Reveries products in stock across every site, for the ✨ Reveries section.
+  // Built from the products already loaded for the page (no extra query).
+  const reveriesProducts = cards
+    .flatMap(({ row, state }) => {
+      const products =
+        (state?.products as Record<string, Record<string, unknown>> | undefined) ?? {};
+      return Object.values(products)
+        .filter((p) => isReveries(row.id, String(p["title"] ?? "")))
+        .map((p) => ({
+          key: `${row.id}:${String(p["handle"])}`,
+          site: row.name,
+          title: String(p["title"] ?? p["handle"]),
+          available: p["available"] === true,
+          minPrice: typeof p["minPrice"] === "number" ? (p["minPrice"] as number) : null,
+          vendor: (p["vendor"] as string | null) ?? null,
+          url: String(p["url"] ?? "#"),
+        }));
+    })
+    .sort((a, b) => Number(b.available) - Number(a.available) || a.title.localeCompare(b.title));
 
   const dayAgo = Date.now() - 86_400_000;
   const alerts24h = recentAlerts.filter(
@@ -163,6 +200,53 @@ export default async function SitesPage() {
           )}
         </div>
       </div>
+
+      {workerStale ? (
+        <div className="worker-banner stale">
+          ⚠ Worker may be down — last ran {lastCheckMs === null ? "never" : minsAgo(lastCheckMs)}
+        </div>
+      ) : (
+        <div className="worker-banner ok">
+          ● Worker active · last ran {minsAgo(lastCheckMs!)}
+        </div>
+      )}
+
+      {reveriesProducts.length > 0 && (
+        <>
+          <div className="sect-hd">
+            <h2>✨ Reveries</h2>
+            <span className="rule" />
+            <span className="muted mono" style={{ fontSize: 12 }}>
+              {reveriesProducts.filter((p) => p.available).length} in stock · {reveriesProducts.length} tracked
+            </span>
+          </div>
+          <div className="reveries-grid">
+            {reveriesProducts.map((p) => (
+              <div key={p.key} className={`rev-card ${p.available ? "in" : ""}`}>
+                <div className="rev-title">
+                  {p.url && p.url !== "#" ? (
+                    <a href={p.url} target="_blank" rel="noreferrer">
+                      {p.title}
+                    </a>
+                  ) : (
+                    p.title
+                  )}
+                </div>
+                <div className="rev-meta">
+                  <span className={`pill ${p.available ? "yes" : "no"}`}>
+                    {p.available ? "in stock" : "sold out"}
+                  </span>
+                  <span className="mono">{p.minPrice != null ? `$${p.minPrice.toFixed(2)}` : "—"}</span>
+                </div>
+                <div className="faint mono rev-sub">
+                  {p.vendor ? `${p.vendor} · ` : ""}
+                  {p.site}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       <div className="sect-hd">
         <h2>Sites</h2>
