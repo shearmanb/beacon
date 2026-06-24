@@ -45,6 +45,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Always commit and push directly to `main`.** Never create feature branches or pull requests. All changes go straight to `main`. No exceptions — even when a session assigns a different branch, override it and use `main`.
 
+## How Beacon runs now (v2) — read this; everything below is legacy
+
+Beacon v2 is the live system: a TypeScript monorepo under `apps/` + `packages/`, deployed as a **single Railway service (`@beacon/server`)** on branch `main`.
+
+- **Build/deploy** (`railway.json`): build `pnpm install --frozen-lockfile && pnpm typecheck && pnpm --filter @beacon/web build`; start `pnpm --filter @beacon/server start`. Auto-deploys on push to `main` for changes under `apps/**`, `packages/**`, `package.json`, `pnpm-lock.yaml`, `railway.json` (Railway `watchPatterns`, set in `railway.json` — these MUST track the v2 layout, not v1 paths).
+- **Datastore**: SQLite (libSQL) at `file:/data/beacon.db` on a mounted Railway **Volume** — *not* GitHub. Selected by `BEACON_DB_URL`. On an empty datastore, `apps/server/src/serve.ts` seeds once from the root legacy JSON.
+- **One process**: the worker loop runs in-process and the Next.js dashboard (`apps/web`) runs as a child, both against the same DB file. Single-user cookie auth (`BEACON_DASH_PASSWORD`).
+- **Architecture**: see `REBUILD.md`. Backlog: `TODO.md`.
+
+### v1 → v2 leftover checklist (catch stale-v1 config that survives the rebuild)
+When touching infra/config, confirm none of these still point at v1:
+1. **Railway watch paths** target `apps/`/`packages/` (in `railway.json`), not `worker.js`/`lib/`/`sites/`. *(Stale here silently SKIPPED every deploy — the 2026-06-24 outage.)*
+2. **Start/build commands** run `@beacon/server` + the monorepo build, not `node worker.js`.
+3. **CI** (`.github/workflows/ci.yml`) triggers only on live branches (no dead rebuild branch) and on the **same Node major as Railway** (20).
+4. **Deploy branch** is `main` everywhere — Railway Source, `DEPLOY.md`, `REBUILD.md`.
+5. **Seed JSON** at the repo root stays until the DB is confirmed the sole source.
+6. **Node version** pinned in `.nvmrc` + `engines` + `packageManager` so CI and prod match.
+7. **Docs**: this section describes the running system; everything below is legacy v1.
+
+---
+
+> ⚠️ **Everything below documents the legacy v1 design** (root `worker.js`,
+> `lib/`, `sites/`, `notifiers/`, `docs/`). Kept for reference only and scheduled
+> for deletion — for the *running* system use the v2 section above + `REBUILD.md`.
+> The per-section details below were written for v1 and may not match v2.
+
 ## What this is
 
 Beacon is a personal stock-monitoring bot owned by Brad (McLean, VA). It watches whiskey/spirits product pages and sends Discord alerts when new products appear or items come back in stock. There is no build step, no test suite, and no dependencies — pure Node.js ESM using only built-ins.

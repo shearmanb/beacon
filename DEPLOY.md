@@ -1,5 +1,9 @@
 # Deploy — get the new dashboard on a URL
 
+> ✅ **Already deployed (2026-06-24):** one Railway service `beacon` on branch
+> `main`, with a `/data` volume, the old v1 worker stopped. This doc is the
+> **setup reference** — don't re-run it against a different branch.
+
 The v2 dashboard is a **server app** (not the static GitHub Pages page), so it
 needs a host + the database.
 
@@ -12,7 +16,7 @@ no new signups. On first boot it auto-seeds from the legacy JSON in the repo
 (preserving your product baselines).
 
 1. **New service** in your Railway project → **Deploy from GitHub repo** →
-   `shearmanb/beacon`, branch `claude/app-rebuild-strategy-2xbedp`.
+   `shearmanb/beacon`, branch `main`.
    (The root `railway.json` already sets the build + start commands.)
 2. **Add a Volume** to the service, mount path **`/data`**.
 3. **Variables:**

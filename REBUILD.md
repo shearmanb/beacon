@@ -1,8 +1,9 @@
 # Beacon — Rebuild (v2)
 
-A ground-up rebuild of Beacon as a TypeScript monorepo. The legacy app (root
-`worker.js`, `lib/`, `sites/`, `docs/`) still runs on `main`; this rebuild lives
-on `claude/app-rebuild-strategy-2xbedp` until cutover. See
+A ground-up rebuild of Beacon as a TypeScript monorepo — **now live on `main`**
+(cutover 2026-06-22), deployed as one Railway service (`@beacon/server`). The
+legacy app (root `worker.js`, `lib/`, `sites/`, `docs/`) remains in the tree for
+reference only and is scheduled for deletion. See
 `.claude/plans/if-i-want-to-reactive-moonbeam.md` for the full design.
 
 ## Why
@@ -70,7 +71,7 @@ Env: `BEACON_DB_URL` (libSQL/Turso URL or `file:`), `BEACON_DB_AUTH_TOKEN`
 (Turso), `DISCORD_WEBHOOK_URL`, `HEALTHCHECK_URL`, `BEACON_DRY_RUN=1`
 (compute + log, send/persist nothing), `BEACON_DASH_PASSWORD` (dashboard login).
 
-## Cutover (when ready)
+## Cutover (completed 2026-06-22)
 
 1. Run the importer against a **prod** Turso DB.
 2. Run the worker with `BEACON_DRY_RUN=1` for one loop and confirm **zero**
