@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: ["claude/app-rebuild-strategy-2xbedp", "main"]
+    branches: ["main"]
   pull_request:
 
 jobs:
@@ -15,10 +15,10 @@ jobs:
           version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Typecheck (packages + worker + migrate)
+      - name: Typecheck (packages + server + worker + migrate)
         run: pnpm typecheck
       - name: Test
         run: pnpm test

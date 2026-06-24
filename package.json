@@ -5,8 +5,9 @@
   "type": "module",
   "description": "Beacon — declarative stock-monitoring engine (rebuild)",
   "engines": {
-    "node": ">=20"
+    "node": "20.x"
   },
+  "packageManager": "pnpm@10.33.0",
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
