@@ -16,6 +16,7 @@ export interface ProductRow {
   minPrice: number | null;
   vendor: string | null;
   url: string;
+  reveries: boolean;
 }
 
 type Avail = "all" | "in" | "out";
@@ -27,6 +28,8 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
   const [site, setSite] = useState("");
   const [avail, setAvail] = useState<Avail>("all");
   const [showIgnored, setShowIgnored] = useState(false);
+  const [revOnly, setRevOnly] = useState(false);
+  const reveriesCount = useMemo(() => items.filter((i) => i.reveries).length, [items]);
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -34,6 +37,7 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
       if (site && it.site !== site) return false;
       if (avail === "in" && !it.available) return false;
       if (avail === "out" && it.available) return false;
+      if (revOnly && !it.reveries) return false;
       if (!showIgnored && ignoredSet.has(it.handle)) return false;
       if (
         needle &&
@@ -43,7 +47,7 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
         return false;
       return true;
     });
-  }, [items, q, site, avail, showIgnored, ignoredSet]);
+  }, [items, q, site, avail, revOnly, showIgnored, ignoredSet]);
 
   return (
     <>
@@ -67,6 +71,10 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
           <option value="in">In stock</option>
           <option value="out">Sold out</option>
         </select>
+        <label className="check">
+          <input type="checkbox" checked={revOnly} onChange={(e) => setRevOnly(e.target.checked)} />
+          ✨ Reveries only{reveriesCount > 0 ? ` (${reveriesCount})` : ""}
+        </label>
         <label className="check">
           <input
             type="checkbox"
@@ -95,6 +103,11 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
             return (
               <tr key={`${it.site}:${it.handle}`} style={isIgnored ? { opacity: 0.5 } : undefined}>
                 <td>
+                  {it.reveries && (
+                    <span className="rev-flag" title="Reveries">
+                      ✨
+                    </span>
+                  )}
                   <a href={it.url} target="_blank" rel="noreferrer">
                     {it.title}
                   </a>
