@@ -9,6 +9,71 @@ mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
 
 ---
 
+## Review follow-ups (2026-06-25)
+
+Big reliability / self-healing batch from the code+feature review. **Shipped this
+session** (all typechecked, 148 tests green):
+
+- **1a/2a — web/worker isolation.** `serve.ts` now SUPERVISES the Next.js child
+  (backoff restart, pages on crash-loop); a web crash never takes the worker
+  down. (Scale-out path = split services on Turso — see REBUILD.md.)
+- **1b/2b — datastore durability.** Rotated on-volume `VACUUM INTO` snapshots
+  (`packages/db/backup.ts`) + restore; a `meta.initialized` latch refuses to
+  auto-seed stale baselines when the DB is empty-but-initialized (volume loss),
+  auto-restores the newest backup if present, else pages. New env:
+  `BEACON_FORCE_SEED`, `BEACON_BACKUP_INTERVAL_H`.
+- **2c — bounded work.** `shopify_rest` `MAX_PAGES` cap + a per-site `AbortSignal`
+  wall-clock budget (45s) threaded via `AdapterDeps.signal`.
+- **2d — systemic-failure detection.** All-sites-failing pass → ONE
+  `system_degraded` page, per-site error spam suppressed.
+- **2e — crash guards + heartbeat.** `unhandledRejection`/`uncaughtException`
+  handlers (worker + serve); per-loop heartbeat in `meta`, surfaced on the
+  dashboard worker banner.
+- **2g/2h — header coherence.** `document` vs `api` request kinds (JSON endpoints
+  no longer send navigation headers); context-aware `Sec-Fetch-Site` + `Referer`.
+- **2i — identity persistence.** `host_identities` table; identities rehydrate on
+  boot and flush periodically (no more fresh-browser-per-restart from one IP).
+- **3a — structure-drift guard.** Yield ≪ baseline → preserve products + once-daily
+  `site_changed` ping (catches a broken parser returning garbage, not just 0).
+- **3d — quiet-site canary.** `lastAlertAt` tracked; dashboard "💤 quiet" chip.
+  (Surface-only by design — no Discord ping, to avoid alert fatigue.)
+- **3e — daily re-page** on a stuck `site_error` (mirrors the empty-guard).
+- **3f — defensive `state.load`** (corrupt blob → re-baseline, never crash).
+- **4b — signed auth cookie** (HMAC; kills the forgeable `beacon_auth=1`). New env
+  `BEACON_AUTH_SECRET` (falls back to `BEACON_DASH_PASSWORD`).
+- **4d — shared `sourceUrl()`** helper (de-duped across 4 files).
+- Discord link-button omitted when an alert has no URL (system-level alerts).
+
+### Deferred — Section 4 (weakest/sloppiest), for your review
+- [ ] **4c — `history.count()` loads every row** to produce a number → use SQL
+      `COUNT(*)`; and trim history NOT on every append (every Nth / time-based).
+- [ ] **4e — `commands.drainPending()` is non-atomic** (select then N UPDATEs) →
+      single `UPDATE … WHERE processed_at IS NULL` or a transaction.
+- [ ] **4d (remaining) — `SiteState` is `[key:string]: unknown`.** The most
+      bug-prone area gets no compiler help; consider a typed state interface.
+- [x] **4f — unbounded pagination** → done via 2c page cap.
+
+### Deferred — Section 5 (efficiency, no feature loss), for your review
+- [ ] **5a** — `history.count()` → `COUNT(*)` (same as 4c).
+- [ ] **5b** — trim alert_history periodically, not every append.
+- [ ] **5c** — `runOnce` loads `sites.list()` twice + per-site `state.load`;
+      bulk-load states / collapse the list calls.
+- [ ] **5d** — `drainPending` as a single statement (also fixes 4e).
+- [ ] **5e** — strip unused `tags` (and maybe `image`) from the persisted state
+      blob (~30% of size); verify the Products table doesn't render tags first.
+- [ ] **5f** — split hot (`lastChecked`/`checkHistory`) from cold (`products`)
+      writes; only re-serialize the product map when it actually changed.
+
+### Also deferred (from this batch)
+- [ ] **1b Layer 2 — off-box backup.** On-volume snapshots guard corruption but
+      NOT volume loss. Wire an off-box upload (GitHub commit or Turso) behind the
+      existing backup hook so a lost volume is fully recoverable. _Impact: S–M._
+- [ ] **2f — proxy tier.** Header polish (2g/2h/2i) does NOT beat datacenter-IP
+      reputation (Campari/Total Wine/Costco). Residential/mobile proxy is the only
+      real fix for the hard tier — its own deliberate project (real $ + upkeep).
+
+---
+
 ## ✅ Done this session (rebuild + cutover)
 - TS monorepo; declarative engine (all 4 legacy strategies → config + adapters);
   libSQL/Turso datastore; Discord notify; worker runtime; migration importer;
@@ -38,9 +103,9 @@ mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
       action + a ★ control on each reminder.
 
 ## Reliability / self-healing (loop engineering)
-- [ ] **Structure-drift alerts** — generalize the empty-guard into "site normally
-      returns N, now 0 / selector matched nothing → likely broken" pings,
-      distinct from "legitimately empty." _Impact: **S** (extends existing guard)._
+- [x] **Structure-drift alerts** ✅ (2026-06-25) — `drift_guard.ts` (`assessYield`)
+      tracks a yield baseline; an anomalously small fetch vs that baseline
+      preserves products + pings `site_changed`, distinct from "legitimately empty."
 - [ ] **Adaptive anti-bot** — `host_telemetry` table + a policy module that tunes
       cooldown/identity/jitter from per-host block rates. _Impact: **M**.
       On-demand (build when blocks actually appear)._

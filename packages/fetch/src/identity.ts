@@ -30,3 +30,45 @@ export function identityForHost(hostname: string): HostIdentity {
 export function _resetIdentities(): void {
   hostIdentities.clear();
 }
+
+// ── Persistence (2i) ─────────────────────────────────────────────────────────
+// The identity map is in-memory, so every process restart re-rolls a fresh
+// browser for every host — and "the same IP suddenly presents a brand-new
+// browser" is exactly the bot signature a stable identity exists to avoid. The
+// worker persists these to the datastore and rehydrates them on boot. This
+// module stays storage-agnostic (no DB dependency) — it only serializes.
+
+export interface SerializedIdentity {
+  host: string;
+  profile: BrowserProfile;
+  acceptLanguage: string;
+  expiresAt: number;
+}
+
+/** Snapshot the live (non-expired) identities for persistence. */
+export function exportIdentities(): SerializedIdentity[] {
+  const now = Date.now();
+  const out: SerializedIdentity[] = [];
+  for (const [host, id] of hostIdentities) {
+    if (id.expiresAt > now) {
+      out.push({ host, profile: id.profile, acceptLanguage: id.acceptLanguage, expiresAt: id.expiresAt });
+    }
+  }
+  return out;
+}
+
+/** Rehydrate persisted identities, skipping any that have since expired. Does
+ *  not clobber a fresher in-memory identity for the same host. */
+export function importIdentities(entries: SerializedIdentity[]): void {
+  const now = Date.now();
+  for (const e of entries) {
+    if (!e?.host || !e.profile?.ua || e.expiresAt <= now) continue;
+    const existing = hostIdentities.get(e.host);
+    if (existing && existing.expiresAt >= e.expiresAt) continue;
+    hostIdentities.set(e.host, {
+      profile: e.profile,
+      acceptLanguage: e.acceptLanguage,
+      expiresAt: e.expiresAt,
+    });
+  }
+}

@@ -100,6 +100,40 @@ describe("httpGet", () => {
     await expect(httpGet(`${base}/missing`)).rejects.toBeInstanceOf(HttpError);
   });
 
+  it("sends API-shaped headers for kind:'api' (no navigation headers)", async () => {
+    let seen: IncomingMessage["headers"] | undefined;
+    handler = (req, res) => {
+      seen = req.headers;
+      res.end("ok");
+    };
+    await httpGet(`${base}/products.json`, { kind: "api" });
+    expect(seen?.["accept"]).toMatch(/application\/json/);
+    expect(seen?.["sec-fetch-dest"]).toBe("empty");
+    expect(seen?.["sec-fetch-mode"]).toBe("cors");
+    expect(seen?.["upgrade-insecure-requests"]).toBeUndefined();
+  });
+
+  it("sends navigation headers for a deep document path (same-origin + Referer)", async () => {
+    let seen: IncomingMessage["headers"] | undefined;
+    handler = (req, res) => {
+      seen = req.headers;
+      res.end("ok");
+    };
+    await httpGet(`${base}/shop/page`);
+    expect(seen?.["sec-fetch-dest"]).toBe("document");
+    expect(seen?.["sec-fetch-site"]).toBe("same-origin");
+    expect(seen?.["referer"]).toBeTruthy();
+  });
+
+  it("aborts an in-flight request when its signal fires", async () => {
+    handler = () => {
+      /* never responds → only the abort can settle it */
+    };
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 30);
+    await expect(httpGet(`${base}/hang`, { signal: controller.signal })).rejects.toThrow(/Aborted/);
+  });
+
   it("exposes status + headers + body with withResponse on 200", async () => {
     handler = (_req, res) => {
       res.writeHead(200, { ETag: '"v1"' });

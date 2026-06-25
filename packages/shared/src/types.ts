@@ -35,6 +35,7 @@ export type AlertType =
   | "site_recovered"
   | "imminent_timeout"
   | "site_changed"
+  | "system_degraded"
   | "baseline";
 
 export interface AlertProduct {

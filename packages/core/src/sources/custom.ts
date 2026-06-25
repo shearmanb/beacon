@@ -25,6 +25,7 @@ export const customAdapter: SourceAdapter = {
     const requestHeaders = (src.options?.["requestHeaders"] as Record<string, string> | undefined) ?? {};
     const res = await httpGet(src.url, {
       withResponse: true,
+      signal: deps?.signal,
       headers: { ...conditionalHeaders(validators), ...requestHeaders },
     });
     if (res.status === 304) {

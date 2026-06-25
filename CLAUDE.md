@@ -53,9 +53,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Beacon v2 is the live system: a TypeScript monorepo under `apps/` + `packages/`, deployed as a **single Railway service (`@beacon/server`)** on branch `main`.
 
 - **Build/deploy** (`railway.json`): build `pnpm install --frozen-lockfile && pnpm typecheck && pnpm --filter @beacon/web build`; start `pnpm --filter @beacon/server start`. Auto-deploys on push to `main` for changes under `apps/**`, `packages/**`, `package.json`, `pnpm-lock.yaml`, `railway.json` (Railway `watchPatterns`, set in `railway.json` — these MUST track the v2 layout, not v1 paths).
-- **Datastore**: SQLite (libSQL) at `file:/data/beacon.db` on a mounted Railway **Volume** — *not* GitHub. Selected by `BEACON_DB_URL`. On an empty datastore, `apps/server/src/serve.ts` seeds once from the root legacy JSON.
-- **One process**: the worker loop runs in-process and the Next.js dashboard (`apps/web`) runs as a child, both against the same DB file. Single-user cookie auth (`BEACON_DASH_PASSWORD`).
-- **Architecture**: see `REBUILD.md`. Backlog: `TODO.md`.
+- **Datastore**: SQLite (libSQL) at `file:/data/beacon.db` on a mounted Railway **Volume** — *not* GitHub. Selected by `BEACON_DB_URL`. On a genuinely-empty datastore, `apps/server/src/serve.ts` seeds once from the root legacy JSON; on an empty-but-previously-initialized datastore (volume loss) it **refuses to re-seed stale baselines** and restores the newest snapshot / pages instead (1b).
+- **One process**: the worker loop runs in-process (the resilient parent) and the Next.js dashboard (`apps/web`) runs as a **supervised** child — a web crash is restarted with backoff and never takes the worker down (1a). Single-user **signed-cookie** auth (HMAC keyed by `BEACON_AUTH_SECRET` ?? `BEACON_DASH_PASSWORD` — the cookie is no longer a forgeable static flag, 4b).
+- **Durability** (1b): rotated on-volume `VACUUM INTO` snapshots (`packages/db/backup.ts`); `BEACON_FORCE_SEED=1` overrides the seed-guard; `BEACON_BACKUP_INTERVAL_H` tunes cadence (default 6, 0 disables). *On-volume snapshots guard corruption, not volume loss — off-box upload is a future hook (`TODO.md`).*
+- **Self-healing extras**: structure-drift guard (3a), per-loop heartbeat + `unhandledRejection`/`uncaughtException` guards (2e), systemic-failure detection → one `system_degraded` page (2d), per-site abort budget + `shopify_rest` page cap (2c), daily re-page on stuck errors (3e), defensive state reads (3f), kind-coherent request headers (2g/2h), and per-host browser identities persisted across restarts (2i).
+- **Architecture**: see `REBUILD.md`. Backlog: `TODO.md` (latest: the 2026-06-25 review batch).
 
 ### v1 → v2 leftover checklist (catch stale-v1 config that survives the rebuild)
 When touching infra/config, confirm none of these still point at v1:

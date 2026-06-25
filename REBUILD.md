@@ -79,6 +79,15 @@ Env: `BEACON_DB_URL` (libSQL/Turso URL or `file:`), `BEACON_DB_AUTH_TOKEN`
 3. Point worker + web at the prod DB; keep the old Railway worker deployable for
    ~1 week as a fallback; retire GitHub Pages.
 
+## Scale-out path (when one process isn't enough)
+
+Today the worker + dashboard share one process and one libSQL **file** on a
+volume (the worker supervises the web child; a web crash can't take monitoring
+down). To split them into independent services (separate deploy/scale), the file
+can't be shared — move to a **network DB (Turso)** and point both services at it.
+That's also where off-box durability comes for free (Turso replication), folding
+in the 1b "off-box backup" follow-up.
+
 ## Still open (next iterations)
 
 - Dashboard visual polish / parity pass (this is the functional foundation).

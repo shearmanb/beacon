@@ -22,6 +22,12 @@ export interface AdapterDeps {
   resolveSecret?: (ref: string) => string | null | undefined;
   /** Look up a registered custom extractor by id. */
   getExtractor?: (id: string) => CustomExtractor | undefined;
+  /**
+   * Per-site abort signal (2c). The worker arms one with a wall-clock budget and
+   * passes it here; adapters forward it to httpGet/httpPost so a slow/blocked
+   * host can't starve the loop. Absent in tests / preview (no budget).
+   */
+  signal?: AbortSignal;
 }
 
 export type FetchResult =

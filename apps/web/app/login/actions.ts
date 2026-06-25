@@ -2,12 +2,14 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { issueAuthToken } from "../../lib/auth";
 
 export async function login(formData: FormData): Promise<void> {
   const password = String(formData.get("password") ?? "");
   const expected = process.env.BEACON_DASH_PASSWORD ?? "beam";
   if (password === expected) {
-    cookies().set("beacon_auth", "1", {
+    // Store a signed token, not a forgeable static flag (4b).
+    cookies().set("beacon_auth", await issueAuthToken(), {
       httpOnly: true,
       sameSite: "lax",
       path: "/",

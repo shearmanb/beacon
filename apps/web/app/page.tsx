@@ -24,6 +24,10 @@ function isReveries(siteId: string, title: string): boolean {
 // loops ~60s, so 15 min of total silence means the worker itself is stalled
 // (the R3 dead-worker signal). Schedule-agnostic: a single global threshold.
 const WORKER_STALE_MS = 15 * 60_000;
+// Quiet-site canary (3d): a healthy site that hasn't produced any activity in
+// this long (or has never alerted despite many checks) is worth a glance — often
+// a too-narrow filter or a quietly-broken source.
+const QUIET_MS = 21 * 86_400_000;
 function minsAgo(ms: number): string {
   const m = Math.round(ms / 60_000);
   if (m < 1) return "just now";
@@ -54,10 +58,13 @@ function imminentLeft(def: SiteDefinition): number | null {
 
 export default async function SitesPage() {
   const store = await getStore();
-  const [rows, schedules, recentAlerts] = await Promise.all([
+  const [rows, schedules, recentAlerts, heartbeat] = await Promise.all([
     store.sites.list(),
     store.schedules.all(),
     store.history.recent(100),
+    // Per-loop worker heartbeat (2e) — written every ~60s regardless of whether
+    // any site was due, so it's a tighter liveness signal than max(lastChecked).
+    store.meta.get("worker_heartbeat"),
   ]);
   const states = await Promise.all(rows.map((r) => store.state.load(r.id)));
 
@@ -102,10 +109,13 @@ export default async function SitesPage() {
     return lc && (!acc || lc > acc) ? lc : acc;
   }, null);
 
-  // Worker liveness: max lastChecked across all sites vs. a single global
-  // threshold. Older than that → the worker likely isn't running at all.
+  // Worker liveness: prefer the explicit heartbeat (2e); fall back to
+  // max(lastChecked) for pre-heartbeat state. Older than the threshold → the
+  // worker likely isn't running at all.
   const lastCheckMs = lastCheck ? Date.now() - new Date(lastCheck).getTime() : null;
-  const workerStale = lastCheckMs === null || lastCheckMs > WORKER_STALE_MS;
+  const heartbeatMs = heartbeat ? Date.now() - Date.parse(heartbeat) : null;
+  const liveMs = heartbeatMs ?? lastCheckMs;
+  const workerStale = liveMs === null || liveMs > WORKER_STALE_MS;
 
   // Reveries products in stock across every site, for the ✨ Reveries section.
   // Built from the products already loaded for the page (no extra query).
@@ -204,11 +214,11 @@ export default async function SitesPage() {
 
       {workerStale ? (
         <div className="worker-banner stale">
-          ⚠ Worker may be down — last ran {lastCheckMs === null ? "never" : minsAgo(lastCheckMs)}
+          ⚠ Worker may be down — last ran {liveMs === null ? "never" : minsAgo(liveMs)}
         </div>
       ) : (
         <div className="worker-banner ok">
-          ● Worker active · last ran {minsAgo(lastCheckMs!)}
+          ● Worker active · last ran {minsAgo(liveMs!)}
         </div>
       )}
 
@@ -280,6 +290,14 @@ export default async function SitesPage() {
           const overdueMs = lastCheckedStr ? Date.now() - new Date(lastCheckedStr).getTime() : Infinity;
           const stalled = row.enabled && overdueMs > (getEffectiveInterval(def, schedules) * 2.5 + 8) * 60_000;
           const degraded = checkHist.slice(-4).some((h) => !h.ok);
+          // Quiet-site canary (3d): healthy + active for a while + never/long-ago alerted.
+          const lastAlertAt = state?.lastAlertAt as string | undefined;
+          const quiet =
+            row.enabled &&
+            health === "ok" &&
+            (lastAlertAt
+              ? Date.now() - Date.parse(lastAlertAt) > QUIET_MS
+              : checkHist.length >= 50);
           return (
             <div key={row.id} className={`site-card ${row.enabled ? "" : "disabled"}`}>
               <div className="site-hd">
@@ -321,6 +339,17 @@ export default async function SitesPage() {
                     <span className="k">Errors</span>
                     <span className="val" style={{ color: "var(--err)" }}>
                       {errors}
+                    </span>
+                  </div>
+                )}
+                {quiet && (
+                  <div className="site-stat">
+                    <span className="k">Activity</span>
+                    <span
+                      className="val faint"
+                      title="No alerts in a long time despite healthy checks — verify the filter/source isn't quietly broken."
+                    >
+                      💤 quiet
                     </span>
                   </div>
                 )}

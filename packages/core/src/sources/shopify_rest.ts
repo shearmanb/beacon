@@ -7,7 +7,7 @@
 import { httpGet, conditionalHeaders, extractValidators } from "@beacon/fetch";
 import { sleep, type NormalizedProduct } from "@beacon/shared";
 import type { SourceOf } from "../schema.js";
-import type { FetchResult, PrevState, SourceAdapter } from "./types.js";
+import type { AdapterDeps, FetchResult, PrevState, SourceAdapter } from "./types.js";
 
 interface ShopifyVariant {
   price?: string | number | null;
@@ -24,6 +24,10 @@ interface ShopifyProduct {
 }
 
 const PAGE_LIMIT = 250;
+// Hard cap on pagination (2c): a misconfigured or pathologically large catalog
+// must not paginate "forever" and starve the loop. 20 pages = 5,000 products,
+// well past any store we track. Hitting it is logged so it's visible.
+const MAX_PAGES = 20;
 
 function getMinPrice(variants: ShopifyVariant[] | undefined): number | null {
   if (!variants?.length) return null;
@@ -59,7 +63,7 @@ function normalize(p: ShopifyProduct, origin: string): NormalizedProduct {
 
 export const shopifyRestAdapter: SourceAdapter = {
   kind: "shopify_rest",
-  async fetch(site, prev: PrevState): Promise<FetchResult> {
+  async fetch(site, prev: PrevState, deps?: AdapterDeps): Promise<FetchResult> {
     const src = site.source as SourceOf<"shopify_rest">;
     const base = src.baseUrl.replace(/\/$/, "");
     const collection = src.collectionPath ? `/${src.collectionPath.replace(/^\/|\/$/g, "")}` : "";
@@ -82,6 +86,8 @@ export const shopifyRestAdapter: SourceAdapter = {
       const url = `${root}/products.json?limit=${PAGE_LIMIT}&page=${page}${extraParams}`;
       const res = await httpGet(url, {
         withResponse: true,
+        kind: "api", // products.json is a JSON/XHR call, not a page navigation (2g)
+        signal: deps?.signal,
         headers: page === 1 && singlePage ? conditionalHeaders(prev.httpValidators) : {},
       });
       if (res.status === 304) {
@@ -92,6 +98,10 @@ export const shopifyRestAdapter: SourceAdapter = {
       const batch = json.products ?? [];
       all.push(...batch);
       if (batch.length < PAGE_LIMIT) break;
+      if (page >= MAX_PAGES) {
+        console.warn(`[${site.name}] Hit MAX_PAGES (${MAX_PAGES}) — stopping pagination at ${all.length} products.`);
+        break;
+      }
       page += 1;
     }
 

@@ -129,4 +129,22 @@ describe("runOnce", () => {
     expect(typeof def?.imminentSince).toBe("string");
     expect(res.anyImminentActive).toBe(true);
   });
+
+  it("collapses an all-sites-failing pass into one system_degraded page (2d)", async () => {
+    // Disable the working site; add two sites pointing at a dead port so both fail.
+    await store.sites.setEnabled("s1", false);
+    const dead = "http://127.0.0.1:9"; // connection refused → fast failure
+    await store.sites.upsert({ id: "d1", name: "Dead One", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: dead } });
+    await store.sites.upsert({ id: "d2", name: "Dead Two", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: dead } });
+
+    const res = await runOnce(ctx());
+    expect(res.checked).toBe(2);
+    const types = sent.map((s) => s.alert.type);
+    expect(types).toContain("system_degraded");
+    // The per-site errors are suppressed in favor of the single aggregate page.
+    expect(types).not.toContain("site_error");
+    expect(types.filter((t) => t === "system_degraded")).toHaveLength(1);
+    // And it's recorded in history under a null siteId.
+    expect((await store.history.recent()).some((h) => h.type === "system_degraded")).toBe(true);
+  });
 });

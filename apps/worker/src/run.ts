@@ -2,19 +2,38 @@
 // Loads config/schedules/ignored/secrets from the store, drains commands, runs
 // imminent auto-off, then checks each due site via the engine and persists the
 // outcome. No GitHub push/merge/SHA machinery — the DB handles persistence.
+//
+// Two reliability behaviors layered on top of the port:
+//  • Per-site budget (2c): each site check runs under an AbortSignal with a
+//    wall-clock cap, so one slow/blocked host can't starve the loop (esp. the
+//    ~10s imminent cadence).
+//  • Systemic-failure detection (2d): if EVERY checked site fails in one pass
+//    (a network outage or the egress IP being blocked), send ONE aggregate
+//    `system_degraded` page instead of N near-identical site_error pings, and
+//    suppress the per-site error sends for that pass.
 
-import { buildAdapterDeps, getAdapter, type SiteDefinition } from "@beacon/core";
+import { buildAdapterDeps, getAdapter, sourceUrl, type SiteDefinition } from "@beacon/core";
 import { sleep, jitter, shouldCheck, type Alert } from "@beacon/shared";
 import type { NotificationChannel } from "@beacon/notify";
 import type { BeaconStore, SiteRow } from "@beacon/db";
 import { applyCommands } from "./commands.js";
-import { processSite } from "./process-site.js";
+import { processSite, type SiteOutcome } from "./process-site.js";
 
 export const DEFAULT_IMMINENT_DURATION_MIN = 20;
+// Wall-clock ceiling for a single site's check (fetch + parse). The fetch layer
+// has its own 30s per-request deadline; this bounds the whole multi-page/site
+// op so the loop stays responsive.
+const PER_SITE_BUDGET_MS = 45_000;
+// Need at least this many checked sites before "all failed" means "systemic"
+// rather than "my two sites happen to both be down".
+const SYSTEMIC_MIN_SITES = 2;
 
 // Site IDs we've already alerted about a config/adapter problem this process, so
 // the warning fires once per start instead of every ~60s loop.
 const warnedConfigSiteIds = new Set<string>();
+// Whether we've paged about the current systemic-failure episode (reset when a
+// pass is no longer all-failing). Process-level so a restart re-pages if still down.
+let systemicAlerted = false;
 
 export interface RunContext {
   store: BeaconStore;
@@ -23,13 +42,6 @@ export interface RunContext {
   log?: (msg: string) => void;
   /** Override the inter-fetch politeness sleep (tests pass a no-op). */
   sleep?: (ms: number) => Promise<void>;
-}
-
-function siteUrl(site: SiteDefinition): string {
-  const s = site.source;
-  if ("url" in s) return s.url;
-  if ("baseUrl" in s) return s.baseUrl;
-  return "";
 }
 
 async function autoOffImminent(ctx: RunContext, rows: SiteRow[]): Promise<void> {
@@ -46,7 +58,7 @@ async function autoOffImminent(ctx: RunContext, rows: SiteRow[]): Promise<void> 
       type: "imminent_timeout",
       product: {
         title: def.name,
-        url: siteUrl(def),
+        url: sourceUrl(def),
         note: `Imminent mode auto-disabled after ${durationMin} min.`,
       },
     };
@@ -75,13 +87,18 @@ export interface RunResult {
   checked: number;
 }
 
+interface CheckedSite {
+  def: SiteDefinition;
+  outcome: SiteOutcome;
+}
+
 export async function runOnce(ctx: RunContext): Promise<RunResult> {
   const { store, channel, dryRun, log = () => {} } = ctx;
   const wait = ctx.sleep ?? sleep;
 
   const schedules = await store.schedules.all();
   const ignored = await store.ignored.set();
-  const deps = buildAdapterDeps(await store.secrets.all());
+  const baseDeps = buildAdapterDeps(await store.secrets.all());
 
   await applyCommands(store, await store.commands.drainPending());
   let rows = await store.sites.list();
@@ -90,6 +107,7 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
 
   const anyImminentActive = rows.some((r) => r.enabled && r.definition.imminent);
   let checked = 0;
+  const results: CheckedSite[] = [];
 
   for (const row of rows) {
     const def = row.definition;
@@ -127,7 +145,7 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
           type: "site_error",
           product: {
             title: def.name,
-            url: siteUrl(def),
+            url: sourceUrl(def),
             note: `Config error — ${(err as Error).message}. Site skipped until fixed.`,
           },
         };
@@ -144,15 +162,91 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     log(`[${def.name}] Checking...`);
     checked += 1;
 
-    const outcome = await processSite({ site: def, prevState, adapter, deps, ignored });
+    // Per-site wall-clock budget (2c): abort the fetch if it overruns so the
+    // loop isn't held hostage by one slow/blocked host.
+    const controller = new AbortController();
+    const budget = setTimeout(() => controller.abort(), PER_SITE_BUDGET_MS);
+    let outcome: SiteOutcome;
+    try {
+      outcome = await processSite({
+        site: def,
+        prevState,
+        adapter,
+        deps: { ...baseDeps, signal: controller.signal },
+        ignored,
+      });
+    } finally {
+      clearTimeout(budget);
+    }
 
     if (!dryRun) {
       await store.state.save(def.id, outcome.newState);
       if (outcome.events.length) await store.history.append(def.id, outcome.events);
     }
+    results.push({ def, outcome });
+
+    await wait(jitter(1000, 500)); // inter-site gap
+  }
+
+  await dispatch(ctx, results);
+
+  return { anyImminentActive, checked };
+}
+
+// Send alerts after the full pass, so systemic failure can be detected and
+// collapsed into a single page. State/history are already persisted above —
+// dispatch only touches Discord.
+async function dispatch(ctx: RunContext, results: CheckedSite[]): Promise<void> {
+  const { store, channel, dryRun, log = () => {} } = ctx;
+  if (dryRun) {
+    // In dry-run, still surface what WOULD have been sent (parity with the old
+    // inline logging), but persist/send nothing.
+    for (const { def, outcome } of results) {
+      for (const ev of outcome.events) log(`  → ${ev.type}: ${ev.product.title}`);
+    }
+    return;
+  }
+
+  const errored = results.filter((r) => !r.outcome.ok);
+  const systemic = results.length >= SYSTEMIC_MIN_SITES && errored.length === results.length;
+
+  if (systemic) {
+    log(`[systemic] All ${results.length} checked sites failed this pass.`);
+    if (!systemicAlerted) {
+      systemicAlerted = true;
+      const sample = errored
+        .slice(0, 4)
+        .map((r) => `• ${r.def.name}: ${(r.outcome.newState.lastError as string | undefined) ?? "failed"}`)
+        .join("\n");
+      const event: Alert = {
+        type: "system_degraded",
+        product: {
+          title: "All sites failing",
+          url: "",
+          note:
+            `Every one of the ${results.length} checked sites failed this pass — likely a network ` +
+            `outage or the egress IP being blocked, not a per-site problem.\n${sample}`,
+        },
+      };
+      await store.history.append(null, [event]);
+      if (channel) {
+        try {
+          await channel.send("Beacon worker", event);
+        } catch (err) {
+          log(`  Discord system_degraded error: ${(err as Error).message}`);
+        }
+      }
+    }
+    // Suppress the individual site_error pings this pass — the aggregate covers it.
+    return;
+  }
+
+  systemicAlerted = false;
+
+  for (const { def, outcome } of results) {
     for (const ev of outcome.events) {
       log(`  → ${ev.type}: ${ev.product.title}`);
-      if (ev.type !== "baseline" && channel && !dryRun) {
+      if (ev.type !== "baseline" && channel) {
         try {
           await channel.send(def.name, ev);
         } catch (err) {
@@ -160,9 +254,5 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
         }
       }
     }
-
-    await wait(jitter(1000, 500)); // inter-site gap
   }
-
-  return { anyImminentActive, checked };
 }

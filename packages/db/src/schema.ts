@@ -76,6 +76,23 @@ export const secrets = sqliteTable("secrets", {
   value: text("value").notNull(),
 });
 
+// Small key/value store for operational metadata: the worker heartbeat (2e), the
+// "initialized" latch that guards the auto-seed against a lost volume (1b), and
+// future flags. Keeping it generic avoids a new table per scalar.
+export const meta = sqliteTable("meta", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: text("updated_at"),
+});
+
+// Persisted browser identities (2i) so a restart doesn't re-roll a fresh browser
+// for every host from the same IP. Rehydrated into @beacon/fetch on boot.
+export const hostIdentities = sqliteTable("host_identities", {
+  host: text("host").primaryKey(),
+  data: text("data", { mode: "json" }).notNull(),
+  expiresAt: integer("expires_at").notNull(),
+});
+
 export const schema = {
   sites,
   siteState,
@@ -85,4 +102,6 @@ export const schema = {
   reminders,
   commands,
   secrets,
+  meta,
+  hostIdentities,
 };

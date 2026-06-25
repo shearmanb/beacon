@@ -15,19 +15,31 @@ export interface PostOptions {
   headers?: Record<string, string>;
   /** When true (default), reject non-2xx with HttpError; otherwise resolve it. */
   throwOnHttpError?: boolean;
+  /** Cancel the request when this aborts (shared per-site budget, 2c). */
+  signal?: AbortSignal;
 }
 
 export function httpPost(url: string, body: string, options: PostOptions = {}): Promise<HttpResponse> {
   const throwOnHttpError = options.throwOnHttpError ?? true;
   return new Promise((resolve, reject) => {
+    const { signal } = options;
+    if (signal?.aborted) {
+      reject(new Error(`Aborted posting ${url}`));
+      return;
+    }
     const parsed = new URL(url);
 
     let settled = false;
+    let onAbort: (() => void) | undefined;
+    const cleanup = (): void => {
+      if (onAbort && signal) signal.removeEventListener("abort", onAbort);
+    };
     const finish =
       <T>(fn: (val: T) => void) =>
       (val: T): void => {
         if (settled) return;
         settled = true;
+        cleanup();
         fn(val);
       };
     const ok = finish(resolve);
@@ -80,6 +92,14 @@ export function httpPost(url: string, body: string, options: PostOptions = {}): 
     req.setTimeout(SOCKET_IDLE_TIMEOUT_MS, () => {
       req.destroy(new Error(`Socket idle timeout posting ${url}`));
     });
+    if (signal) {
+      onAbort = () => {
+        clearDeadline();
+        req.destroy(new Error(`Aborted posting ${url}`));
+        fail(new Error(`Aborted posting ${url}`));
+      };
+      signal.addEventListener("abort", onAbort, { once: true });
+    }
     req.write(body);
     req.end();
   });

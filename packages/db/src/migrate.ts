@@ -65,6 +65,16 @@ const STATEMENTS = [
     ref TEXT PRIMARY KEY,
     value TEXT NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at TEXT
+  )`,
+  `CREATE TABLE IF NOT EXISTS host_identities (
+    host TEXT PRIMARY KEY,
+    data TEXT NOT NULL,
+    expires_at INTEGER NOT NULL
+  )`,
 ];
 
 export async function initSchema(client: Client): Promise<void> {

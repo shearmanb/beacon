@@ -6,6 +6,7 @@ import { asc, desc, eq, isNull, lte } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import type { Alert, ProductMap, ScheduleDefinition } from "@beacon/shared";
 import { siteDefinitionSchema, type SiteDefinition, type SiteState } from "@beacon/core";
+import type { BrowserProfile, SerializedIdentity } from "@beacon/fetch";
 import * as t from "./schema.js";
 
 type DB = LibSQLDatabase<typeof t.schema>;
@@ -79,10 +80,19 @@ function sitesRepo(db: DB) {
 
 function stateRepo(db: DB) {
   return {
-    /** The SiteState the engine expects as `previousState` (or undefined). */
+    /** The SiteState the engine expects as `previousState` (or undefined).
+     *  Defensive (3f): a corrupt/non-object blob is treated as "no prior state"
+     *  (so the site quietly re-baselines) instead of propagating garbage that
+     *  could crash the engine or fabricate alerts. */
     async load(siteId: string): Promise<SiteState | undefined> {
       const [r] = await db.select().from(t.siteState).where(eq(t.siteState.siteId, siteId));
-      return r?.data;
+      const data = r?.data as unknown;
+      if (data == null) return undefined;
+      if (typeof data !== "object" || Array.isArray(data)) {
+        console.warn(`[state] ${siteId}: stored state is not an object — ignoring (will re-baseline).`);
+        return undefined;
+      }
+      return data as SiteState;
     },
     async save(siteId: string, state: SiteState): Promise<void> {
       const row = {
@@ -268,6 +278,43 @@ function secretsRepo(db: DB) {
   };
 }
 
+function metaRepo(db: DB) {
+  return {
+    async get(key: string): Promise<string | undefined> {
+      const [r] = await db.select().from(t.meta).where(eq(t.meta.key, key));
+      return r?.value;
+    },
+    async set(key: string, value: string): Promise<void> {
+      const row = { key, value, updatedAt: new Date().toISOString() };
+      await db.insert(t.meta).values(row).onConflictDoUpdate({ target: t.meta.key, set: row });
+    },
+  };
+}
+
+function identitiesRepo(db: DB) {
+  return {
+    /** Load all persisted host identities (2i) for rehydration into @beacon/fetch. */
+    async all(): Promise<SerializedIdentity[]> {
+      const rows = await db.select().from(t.hostIdentities);
+      return rows.map((r) => {
+        const d = r.data as { profile: BrowserProfile; acceptLanguage: string };
+        return { host: r.host, profile: d.profile, acceptLanguage: d.acceptLanguage, expiresAt: r.expiresAt };
+      });
+    },
+    /** Replace the persisted set with the current live snapshot. */
+    async save(entries: SerializedIdentity[]): Promise<void> {
+      for (const e of entries) {
+        const row = {
+          host: e.host,
+          data: { profile: e.profile, acceptLanguage: e.acceptLanguage } as unknown,
+          expiresAt: e.expiresAt,
+        };
+        await db.insert(t.hostIdentities).values(row).onConflictDoUpdate({ target: t.hostIdentities.host, set: row });
+      }
+    },
+  };
+}
+
 export function buildRepositories(db: DB) {
   return {
     sites: sitesRepo(db),
@@ -278,6 +325,8 @@ export function buildRepositories(db: DB) {
     reminders: remindersRepo(db),
     commands: commandsRepo(db),
     secrets: secretsRepo(db),
+    meta: metaRepo(db),
+    identities: identitiesRepo(db),
   };
 }
 

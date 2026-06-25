@@ -153,6 +153,15 @@ export interface SiteValidationResult {
   error?: string;
 }
 
+/** The public/source URL for a site, regardless of which source recipe it uses.
+ *  One source of truth — callers previously re-implemented this per file (4d). */
+export function sourceUrl(site: SiteDefinition): string {
+  const s = site.source;
+  if ("url" in s) return s.url;
+  if ("baseUrl" in s) return s.baseUrl;
+  return "";
+}
+
 /** Parse + validate one site definition, returning a flat result (no throw). */
 export function validateSite(input: unknown): SiteValidationResult {
   const parsed = siteDefinitionSchema.safeParse(input);

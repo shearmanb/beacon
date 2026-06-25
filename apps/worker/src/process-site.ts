@@ -6,7 +6,7 @@
 // logic (quiet mode, recovery, circuit breaker, error escalation) testable with
 // a stub adapter.
 
-import { runSiteCheck, type AdapterDeps, type SiteDefinition, type SiteState, type SourceAdapter } from "@beacon/core";
+import { runSiteCheck, sourceUrl, type AdapterDeps, type SiteDefinition, type SiteState, type SourceAdapter } from "@beacon/core";
 import type { Alert } from "@beacon/shared";
 import { annotateProducts, type AnnotatedProduct } from "./annotate.js";
 
@@ -17,6 +17,11 @@ export const IMMINENT_ERROR_ALERT_THRESHOLD = 2;
 export const COOLDOWN_STEPS_MIN = [5, 15, 60];
 const CHECK_HISTORY_CAP = 100;
 const ERROR_LOG_CAP = 25;
+// A site stuck erroring re-pages once a day (3e) — mirrors the empty-guard's
+// daily reminder, so a multi-day outage doesn't go silent after the first ping.
+const ERROR_REALERT_MS = 24 * 3_600_000;
+// Alert types that count as "site activity" for the quiet-site surface (3d).
+const ACTIVITY_TYPES = new Set(["new_product", "restock", "sold_out", "site_changed", "site_reset"]);
 
 interface CheckRecord {
   ts: string;
@@ -28,13 +33,6 @@ export interface SiteOutcome {
   /** History events to record; non-"baseline" events are also sent to channels. */
   events: Alert[];
   ok: boolean;
-}
-
-function siteUrl(site: SiteDefinition): string {
-  const s = site.source;
-  if ("url" in s) return s.url;
-  if ("baseUrl" in s) return s.baseUrl;
-  return "";
 }
 
 export interface ProcessSiteArgs {
@@ -80,7 +78,7 @@ export async function processSite({
     if (wasInErrorAlert) {
       events.push({
         type: "site_recovered",
-        product: { title: site.name, url: siteUrl(site), note: "Checks are succeeding again." },
+        product: { title: site.name, url: sourceUrl(site), note: "Checks are succeeding again." },
       });
     }
 
@@ -96,7 +94,7 @@ export async function processSite({
           type: "baseline",
           product: {
             title: site.name,
-            url: siteUrl(site),
+            url: sourceUrl(site),
             note: `First check with no prior state — ${suppressed.length} existing product(s) baselined without alerts.`,
           },
         });
@@ -107,6 +105,12 @@ export async function processSite({
       if (alert.product.handle && ignored.has(alert.product.handle)) continue;
       events.push(alert);
     }
+
+    // Quiet-site surface (3d): track the last time this site produced real
+    // activity, so the dashboard can flag a site that checks fine for weeks but
+    // never alerts (likely a too-narrow filter or a quietly-broken source).
+    const hadActivity = events.some((e) => ACTIVITY_TYPES.has(e.type));
+    newState.lastAlertAt = hadActivity ? nowIso() : (prevState?.lastAlertAt as string | undefined) ?? null;
 
     return { newState, events, ok: true };
   } catch (err) {
@@ -120,8 +124,12 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
   const prev = prevState ?? ({} as SiteState);
   const consecutiveErrors = ((prev.consecutiveErrors as number | undefined) ?? 0) + 1;
   const alreadyAlerted = prev.errorAlertSent === true;
+  // Re-page a stuck site once a day (3e) rather than going silent after the
+  // first site_error.
+  const lastErrorAlertMs = prev.errorAlertAt ? new Date(prev.errorAlertAt as string).getTime() : null;
+  const dueForRealert = alreadyAlerted && lastErrorAlertMs != null && Date.now() - lastErrorAlertMs >= ERROR_REALERT_MS;
   const threshold = site.imminent ? IMMINENT_ERROR_ALERT_THRESHOLD : ERROR_ALERT_THRESHOLD;
-  const shouldAlert = consecutiveErrors >= threshold && !alreadyAlerted;
+  const shouldAlert = consecutiveErrors >= threshold && (!alreadyAlerted || dueForRealert);
 
   // Circuit breaker: 429/403 -> escalating cooldown.
   let cooldown: Partial<SiteState> = {};
@@ -148,6 +156,7 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
     lastError: message,
     lastErrorAt: nowIso,
     errorAlertSent: alreadyAlerted || shouldAlert,
+    errorAlertAt: shouldAlert ? nowIso : (prev.errorAlertAt as string | undefined) ?? null,
     checkHistory,
     errorLog,
     ...cooldown,
@@ -159,11 +168,11 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
           type: "site_error",
           product: {
             title: site.name,
-            url: siteUrl(site),
+            url: sourceUrl(site),
             note:
               `${consecutiveErrors} consecutive failures${statusCode ? ` (HTTP ${statusCode}` +
               `${statusCode === 403 || statusCode === 401 ? " — looks blocked" : ""})` : ""}. ` +
-              `Last error: ${message}`,
+              `Last error: ${message}${dueForRealert ? " (daily reminder)" : ""}`,
           },
         },
       ]

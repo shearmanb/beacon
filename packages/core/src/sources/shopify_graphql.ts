@@ -65,6 +65,7 @@ export const shopifyGraphqlAdapter: SourceAdapter = {
 
     const res = await httpPost(endpointFor(src), JSON.stringify({ query }), {
       headers: { "X-Shopify-Storefront-Access-Token": token },
+      signal: deps?.signal,
     });
     const data = JSON.parse(res.body) as {
       data?: { collection?: { products?: { nodes?: StorefrontNode[] } } };

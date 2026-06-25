@@ -5,10 +5,11 @@
 
 import { diff, type Alert, type NormalizedProduct, type ProductMap, type SiteSignal } from "@beacon/shared";
 import type { HttpValidators } from "@beacon/fetch";
-import type { SiteDefinition } from "./schema.js";
+import { sourceUrl, type SiteDefinition } from "./schema.js";
 import type { AdapterDeps, PrevState, SourceAdapter } from "./sources/types.js";
 import { applyFilters, toProductMap } from "./filter.js";
 import { emptyFetchGuard } from "./empty_guard.js";
+import { assessYield } from "./drift_guard.js";
 
 export interface SiteState {
   lastChecked: string | null;
@@ -66,6 +67,13 @@ export async function runSiteCheck(
     if (guarded) return guarded;
   }
 
+  // Structure-drift guard (3a): a non-zero but anomalously small yield against a
+  // healthy baseline likely means a broken parser. Preserve products + ping,
+  // rather than wiping state and flooding on recovery. Returns null on healthy
+  // yields, along with the baseline bookkeeping to carry forward.
+  const yieldEval = assessYield({ site, prev, prevProducts, rawCount: result.products.length });
+  if (yieldEval.drift) return yieldEval.drift;
+
   const filtered = applyFilters(result.products, site.filters);
   const productMap = toProductMap(filtered);
   const alerts = diff(prevProducts, productMap, {
@@ -81,6 +89,7 @@ export async function runSiteCheck(
       products: productMap,
       pageCount: result.pageCount,
       httpValidators: result.validators ?? null,
+      ...yieldEval.tracking,
     },
     alerts,
   };
@@ -122,7 +131,7 @@ function runSignal(
           type: "site_reset",
           product: {
             title: site.name,
-            url: "url" in site.source ? site.source.url : "",
+            url: sourceUrl(site),
             available: false,
             note: signal.reason ?? "Site appears blocked (password wall / coming-soon / 401-403).",
           },

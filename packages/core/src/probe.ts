@@ -47,7 +47,7 @@ export async function probeSite(rawUrl: string): Promise<ProbeResult> {
   // 1) Shopify? products.json is the definitive tell.
   const probeUrl = `${origin}${collectionMatch ? collectionMatch[0] : ""}/products.json?limit=1`;
   try {
-    const res = await httpGet(probeUrl, { withResponse: true });
+    const res = await httpGet(probeUrl, { withResponse: true, kind: "api" });
     const json = JSON.parse(res.body) as { products?: unknown };
     if (Array.isArray(json.products)) {
       const n = json.products.length;

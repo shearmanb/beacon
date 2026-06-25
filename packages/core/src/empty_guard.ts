@@ -7,7 +7,7 @@
 // their normal diff path. Ported from lib/empty_guard.js.
 
 import type { Alert, NormalizedProduct } from "@beacon/shared";
-import type { SiteDefinition } from "./schema.js";
+import { sourceUrl, type SiteDefinition } from "./schema.js";
 import type { SiteCheckResult, SiteState } from "./pipeline.js";
 
 const REALERT_MS = 24 * 3_600_000;
@@ -81,11 +81,4 @@ export function emptyFetchGuard({
     },
     alerts,
   };
-}
-
-function sourceUrl(site: SiteDefinition): string {
-  const s = site.source;
-  if ("url" in s) return s.url;
-  if ("baseUrl" in s) return s.baseUrl;
-  return "";
 }

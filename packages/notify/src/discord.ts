@@ -18,6 +18,7 @@ const COLORS: Record<string, number> = {
   site_error: 0xe67e22, // dark orange
   site_recovered: 0x16a085, // teal
   imminent_timeout: 0xf1c40f, // yellow
+  system_degraded: 0xc0392b, // crimson (all sites failing at once — likely IP block / network)
 };
 
 const LABELS: Record<string, string> = {
@@ -29,6 +30,7 @@ const LABELS: Record<string, string> = {
   site_error: "🚨 Site Down",
   site_recovered: "✅ Site Recovered",
   imminent_timeout: "⏱ Imminent Timed Out",
+  system_degraded: "🛑 Systemic Failure",
 };
 
 const SITE_LEVEL = new Set<AlertType>([
@@ -37,6 +39,7 @@ const SITE_LEVEL = new Set<AlertType>([
   "site_error",
   "site_recovered",
   "imminent_timeout",
+  "system_degraded",
 ]);
 
 const SITE_DEFAULTS: Record<string, string> = {
@@ -45,6 +48,7 @@ const SITE_DEFAULTS: Record<string, string> = {
   site_error: "Repeated check failures — investigate.",
   site_recovered: "Checks are succeeding again.",
   imminent_timeout: "Imminent mode auto-disabled after timeout.",
+  system_degraded: "Every site failed this pass — likely a network outage or the egress IP being blocked.",
 };
 
 interface EmbedField {
@@ -69,6 +73,8 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
   const label = LABELS[type] ?? type;
   const siteLevel = SITE_LEVEL.has(type);
 
+  const hasUrl = typeof product.url === "string" && product.url.length > 0;
+
   let embed: Embed;
   if (siteLevel) {
     embed = {
@@ -76,7 +82,7 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
       color,
       description: product.note ?? SITE_DEFAULTS[type] ?? "",
       fields: type === "site_reset" ? [{ name: "Expected", value: "New bottles in 2–14 days", inline: true }] : [],
-      url: product.url,
+      ...(hasUrl ? { url: product.url } : {}),
       timestamp: new Date().toISOString(),
     };
   } else {
@@ -99,14 +105,20 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
   return JSON.stringify({
     username: "Beacon",
     embeds: [embed],
-    components: [
-      {
-        type: 1,
-        components: [
-          { type: 2, style: 5, label: siteLevel ? "View Site" : "View Product", url: product.url },
-        ],
-      },
-    ],
+    // A Discord link button requires a valid URL; system-level alerts (DB down,
+    // systemic failure) carry none, so omit the button entirely in that case.
+    ...(hasUrl
+      ? {
+          components: [
+            {
+              type: 1,
+              components: [
+                { type: 2, style: 5, label: siteLevel ? "View Site" : "View Product", url: product.url },
+              ],
+            },
+          ],
+        }
+      : {}),
   });
 }
 

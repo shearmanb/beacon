@@ -8,11 +8,11 @@
 
 import { httpGet, conditionalHeaders, extractValidators, type HttpValidators } from "@beacon/fetch";
 import type { SourceOf } from "../schema.js";
-import type { FetchResult, PrevState, SourceAdapter } from "./types.js";
+import type { AdapterDeps, FetchResult, PrevState, SourceAdapter } from "./types.js";
 
 export const httpStatusAdapter: SourceAdapter = {
   kind: "http_status",
-  async fetch(site, prev: PrevState): Promise<FetchResult> {
+  async fetch(site, prev: PrevState, deps?: AdapterDeps): Promise<FetchResult> {
     const src = site.source as SourceOf<"http_status">;
     let html = "";
     let validators: HttpValidators | null = prev.httpValidators ?? null;
@@ -21,6 +21,7 @@ export const httpStatusAdapter: SourceAdapter = {
     try {
       const res = await httpGet(src.url, {
         withResponse: true,
+        signal: deps?.signal,
         headers: conditionalHeaders(validators),
       });
       if (res.status === 304) {
