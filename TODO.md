@@ -66,6 +66,14 @@ mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
       the Cellar API. _Impact: **S** once Cellar's endpoint is confirmed._
 
 ## Infra / housekeeping
+- [ ] **Set up the dead-worker alarm (`HEALTHCHECK_URL`)** — R3 mitigation. The
+      worker already pings `HEALTHCHECK_URL` after every loop (`apps/worker/src/loop.ts`,
+      and skips the ping while the DB is down so a datastore failure also trips
+      it) — it just needs the env var set. To finish: create a healthchecks.io
+      check (Period 2m / Grace 5m; alert via email + optionally the Beacon Discord
+      so the alarm reaches you independently of the dead worker), then set
+      `HEALTHCHECK_URL` to its ping URL on the Railway `beacon` service. Until
+      then there's no external "worker is dead" alert. _User-side, no code._
 - [x] **Railway auto-deploy** ✅ (2026-06-24) — deploys on push to `main`;
       `railway.json` watchPatterns gate it to `apps/**`/`packages/**` + root
       manifests. (The stale-v1 watchPatterns that silently skipped deploys were
