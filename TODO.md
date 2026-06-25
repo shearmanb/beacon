@@ -32,8 +32,9 @@ mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
       (validate via existing Zod schema)._
 - [ ] **System-Health panel** — per-site parse-success / error / block rates
       rolled up from checkHistory. _Impact: **S–M**._
-- [ ] **Schedules manager: day-of-week (`days`) rules** — schema already supports
-      it; expose in the builder. _Impact: **S**._
+- [x] **Schedules manager: day-of-week (`days`) rules** ✅ (2026-06-25) — Mon–Sun
+      buttons per window row + the default rule in `SchedulesManager`; empty =
+      every day, and the day scope renders in the rule chips.
 - [x] **Reminder priority (★) toggle** ✅ (2026-06-23) — `setReminderPriority`
       action + a ★ control on each reminder.
 
@@ -65,15 +66,17 @@ mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
       the Cellar API. _Impact: **S** once Cellar's endpoint is confirmed._
 
 ## Infra / housekeeping
-- [ ] **Railway auto-deploy** — wire Settings → Source to deploy on push to
-      `main`. _User-side, no code._
+- [x] **Railway auto-deploy** ✅ (2026-06-24) — deploys on push to `main`;
+      `railway.json` watchPatterns gate it to `apps/**`/`packages/**` + root
+      manifests. (The stale-v1 watchPatterns that silently skipped deploys were
+      the 2026-06-24 outage — now fixed.)
 - [ ] **Auth hardening** — single-password cookie is fine for solo use; Cloudflare
       Access (Google login) is the real shared-machine fix. _Impact: **S** code +
       Cloudflare setup. (Carried from v1 backlog.)_
-- [ ] **Prune legacy v1** — once v2 is proven (~1 week stable), delete root
-      `worker.js`/`lib/`/`sites/`/`notifiers/`/`docs/` (keep the JSON seed files
-      until the DB is the sole source). _Impact: **S** (deletions). After the
-      stability window._
+- [x] **Prune legacy v1** ✅ (2026-06-24) — deleted root
+      `worker.js`/`lib/`/`sites/`/`notifiers/`/`docs/` (5,682 lines); full tree
+      archived on the `legacy-v1` branch (`git show legacy-v1:worker.js`). JSON
+      seed files kept (still the one-time DB bootstrap source).
 - [ ] **Compiled prod build (optional)** — worker/launcher run via `tsx` (TS at
       runtime); a `dist` build + dual exports would be a tidier prod story.
       _Impact: **M**. Low priority — `tsx` works fine._
