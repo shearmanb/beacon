@@ -117,6 +117,7 @@ export default async function SitesPage() {
         .filter((p) => isReveries(row.id, String(p["title"] ?? "")))
         .map((p) => ({
           key: `${row.id}:${String(p["handle"])}`,
+          handle: String(p["handle"]),
           site: row.name,
           title: String(p["title"] ?? p["handle"]),
           available: p["available"] === true,
@@ -142,10 +143,27 @@ export default async function SitesPage() {
         (e.type === "new_product" || e.type === "restock") &&
         isReveries(e.siteId ?? "", e.title ?? ""),
     ) ?? null;
-  const lastReveriesLabel =
-    lastReveries?.title && lastReveries.title.length > 26
-      ? lastReveries.title.slice(0, 25) + "…"
-      : (lastReveries?.title ?? null);
+  // Most recent Reveries bottle to sell out (products carry no sold-out
+  // timestamp, so this comes from history). Lets the compact panel show the
+  // freshest sold-out tile right after the in-stock ones.
+  const recentSoldOutHandle =
+    recentAlerts.find((e) => e.type === "sold_out" && isReveries(e.siteId ?? "", e.title ?? ""))
+      ?.handle ?? null;
+
+  // Live state of the Reveries storefront's password / coming-soon wall, from the
+  // reveries_site_status monitor (pageReset = wall up). The leading indicator of
+  // a drop, surfaced in the header at a glance.
+  const revStatusState = cards.find((c) => c.row.id === "reveries_site_status")?.state;
+  const reveriesSite: "open" | "blocked" | "unknown" = !revStatusState?.lastChecked
+    ? "unknown"
+    : revStatusState.pageReset === true
+      ? "blocked"
+      : "open";
+  const reveriesSiteView = {
+    open: { label: "open", color: "var(--ok)", title: "thereveries.co is open — no password / coming-soon wall" },
+    blocked: { label: "🌊 wall up", color: "#f39c12", title: "thereveries.co is behind its coming-soon / password wall — a drop is likely being prepped" },
+    unknown: { label: "—", color: "var(--faint)", title: "Reveries site status unknown — the monitor hasn't checked yet" },
+  }[reveriesSite];
 
   const imminentCount = rows.filter((r) => r.enabled && r.definition.imminent).length;
 
@@ -185,6 +203,12 @@ export default async function SitesPage() {
           </span>
         </div>
         <div className="stat">
+          <span className="k">Reveries site</span>
+          <span className="v" style={{ color: reveriesSiteView.color }} title={reveriesSiteView.title}>
+            {reveriesSiteView.label}
+          </span>
+        </div>
+        <div className="stat">
           <span className="k">Tracked products</span>
           <span className="v">{trackedProducts}</span>
         </div>
@@ -202,14 +226,9 @@ export default async function SitesPage() {
         )}
         <div className="stat">
           <span className="k">Last Reveries drop</span>
-          <span className="v" title="Most recent Reveries bottle to list or restock">
+          <span className="v" title="Most recent Reveries bottle to list or restock — name shown on the ✨ Reveries panel">
             {lastReveries ? ago(lastReveries.ts) : "none yet"}
           </span>
-          {lastReveriesLabel && (
-            <span className="faint mono" style={{ fontSize: 9 }}>
-              {lastReveriesLabel}
-            </span>
-          )}
         </div>
         <div className="stat">
           <span className="k">Last error</span>
@@ -234,7 +253,13 @@ export default async function SitesPage() {
         </div>
       )}
 
-      {reveriesProducts.length > 0 && <ReveriesPanel products={reveriesProducts} />}
+      {reveriesProducts.length > 0 && (
+        <ReveriesPanel
+          products={reveriesProducts}
+          lastDrop={lastReveries?.title ? { title: lastReveries.title, when: ago(lastReveries.ts) } : null}
+          recentSoldOutHandle={recentSoldOutHandle}
+        />
+      )}
 
       <div className="sect-hd">
         <h2>Sites</h2>
