@@ -2,23 +2,13 @@ import { getStore } from "../lib/store";
 import { ago, siteHealth, type Health } from "../lib/health";
 import { SiteControls } from "../components/SiteControls";
 import { PulseStrip } from "../components/PulseStrip";
+import { ReveriesPanel } from "../components/ReveriesPanel";
+import { isReveries } from "../lib/reveries";
 import { runNow } from "./actions";
 import { getEffectiveInterval } from "@beacon/shared";
 import type { SiteDefinition } from "@beacon/core";
 
 export const dynamic = "force-dynamic";
-
-// Sites that carry Reveries (the Storefront-API feed's titles may not literally
-// contain "reveries"), plus a title match that catches it on every other site.
-const REVERIES_SITE_IDS = new Set([
-  "reveries_official",
-  "sharedpour_reveries",
-  "fountain_inn_dc",
-  "bourbon_concierge",
-]);
-function isReveries(siteId: string, title: string): boolean {
-  return REVERIES_SITE_IDS.has(siteId) || title.toLowerCase().includes("reveries");
-}
 
 // Worker is considered down if no site has been checked within this window — it
 // loops ~60s, so 15 min of total silence means the worker itself is stalled
@@ -142,6 +132,21 @@ export default async function SitesPage() {
     (e) => e.type !== "baseline" && Date.parse(e.ts) >= dayAgo,
   ).length;
 
+  // Most recent time a Reveries bottle went up for sale (newly listed) or came
+  // back in stock — the headline header stat. recentAlerts is newest-first, so
+  // the first match is the latest. Replaces the redundant global "Last check"
+  // (which just duplicated the worker banner directly below it).
+  const lastReveries =
+    recentAlerts.find(
+      (e) =>
+        (e.type === "new_product" || e.type === "restock") &&
+        isReveries(e.siteId ?? "", e.title ?? ""),
+    ) ?? null;
+  const lastReveriesLabel =
+    lastReveries?.title && lastReveries.title.length > 26
+      ? lastReveries.title.slice(0, 25) + "…"
+      : (lastReveries?.title ?? null);
+
   const imminentCount = rows.filter((r) => r.enabled && r.definition.imminent).length;
 
   const banner: Health = errCount > 0 ? "err" : warnCount > 0 ? "warn" : "ok";
@@ -196,8 +201,15 @@ export default async function SitesPage() {
           </div>
         )}
         <div className="stat">
-          <span className="k">Last check</span>
-          <span className="v">{ago(lastCheck)}</span>
+          <span className="k">Last Reveries drop</span>
+          <span className="v" title="Most recent Reveries bottle to list or restock">
+            {lastReveries ? ago(lastReveries.ts) : "none yet"}
+          </span>
+          {lastReveriesLabel && (
+            <span className="faint mono" style={{ fontSize: 9 }}>
+              {lastReveriesLabel}
+            </span>
+          )}
         </div>
         <div className="stat">
           <span className="k">Last error</span>
@@ -222,42 +234,7 @@ export default async function SitesPage() {
         </div>
       )}
 
-      {reveriesProducts.length > 0 && (
-        <>
-          <div className="sect-hd">
-            <h2>✨ Reveries</h2>
-            <span className="rule" />
-            <span className="muted mono" style={{ fontSize: 12 }}>
-              {reveriesProducts.filter((p) => p.available).length} in stock · {reveriesProducts.length} tracked
-            </span>
-          </div>
-          <div className="reveries-grid">
-            {reveriesProducts.map((p) => (
-              <div key={p.key} className={`rev-card ${p.available ? "in" : ""}`}>
-                <div className="rev-title">
-                  {p.url && p.url !== "#" ? (
-                    <a href={p.url} target="_blank" rel="noreferrer">
-                      {p.title}
-                    </a>
-                  ) : (
-                    p.title
-                  )}
-                </div>
-                <div className="rev-meta">
-                  <span className={`pill ${p.available ? "yes" : "no"}`}>
-                    {p.available ? "in stock" : "sold out"}
-                  </span>
-                  <span className="mono">{p.minPrice != null ? `$${p.minPrice.toFixed(2)}` : "—"}</span>
-                </div>
-                <div className="faint mono rev-sub">
-                  {p.vendor ? `${p.vendor} · ` : ""}
-                  {p.site}
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+      {reveriesProducts.length > 0 && <ReveriesPanel products={reveriesProducts} />}
 
       <div className="sect-hd">
         <h2>Sites</h2>

@@ -1,5 +1,6 @@
 import { getStore } from "../../lib/store";
 import { ProductsTable, type ProductRow } from "../../components/ProductsTable";
+import { isReveries } from "../../lib/reveries";
 
 export const dynamic = "force-dynamic";
 
@@ -15,14 +16,16 @@ export default async function ProductsPage() {
   rows.forEach((row, i) => {
     const products = (states[i]?.products as Record<string, Record<string, unknown>> | undefined) ?? {};
     for (const p of Object.values(products)) {
+      const title = String(p["title"] ?? p["handle"]);
       items.push({
         site: row.name,
         handle: String(p["handle"]),
-        title: String(p["title"] ?? p["handle"]),
+        title,
         available: p["available"] === true,
         minPrice: typeof p["minPrice"] === "number" ? (p["minPrice"] as number) : null,
         vendor: (p["vendor"] as string | null) ?? null,
         url: String(p["url"] ?? "#"),
+        reveries: isReveries(row.id, title),
       });
     }
   });

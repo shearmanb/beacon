@@ -3,8 +3,8 @@
   "build": {
     "buildCommand": "pnpm install --frozen-lockfile && pnpm typecheck && pnpm --filter @beacon/web build",
     "watchPatterns": [
-      "/apps/**",
-      "/packages/**",
+      "apps/**",
+      "packages/**",
       "package.json",
       "pnpm-lock.yaml",
       "railway.json"
