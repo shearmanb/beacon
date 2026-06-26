@@ -2,9 +2,8 @@
 
 // The ✨ Reveries section with three view levels:
 //   full    — the complete product grid (default; how it has always looked).
-//   compact — a single, non-wrapping row of tiles: in-stock first, then the most
-//             recently sold-out one ahead of the rest, so it's what shows if the
-//             row has room left (the row clips whatever doesn't fit).
+//   compact — a single, non-wrapping row of tiles that scrolls horizontally:
+//             in-stock first, then the most recently sold-out ones after.
 //   micro   — header only, no tiles: in-stock count, tracked count, last drop name.
 //
 // The chosen level persists per-browser in localStorage (`beacon_reveries_level`),
@@ -89,7 +88,7 @@ export function ReveriesPanel({
   const inStock = products.filter((p) => p.available);
   const soldOut = products.filter((p) => !p.available);
   // Compact row order: in-stock first, then the freshest sold-out tile ahead of
-  // the other sold-out ones (so it's the one that survives the single-row clip).
+  // the other sold-out ones, so it's the first sold-out tile you reach scrolling.
   const compactOrder = [
     ...inStock,
     ...soldOut.sort(
