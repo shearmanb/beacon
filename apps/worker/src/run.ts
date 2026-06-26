@@ -12,7 +12,7 @@
 //    `system_degraded` page instead of N near-identical site_error pings, and
 //    suppress the per-site error sends for that pass.
 
-import { buildAdapterDeps, getAdapter, sourceUrl, type SiteDefinition } from "@beacon/core";
+import { buildAdapterDeps, getAdapter, siteDefinitionSchema, sourceUrl, type SiteDefinition } from "@beacon/core";
 import { sleep, jitter, shouldCheck, type Alert } from "@beacon/shared";
 import type { NotificationChannel } from "@beacon/notify";
 import type { BeaconStore, SiteRow } from "@beacon/db";
@@ -42,6 +42,25 @@ export interface RunContext {
   log?: (msg: string) => void;
   /** Override the inter-fetch politeness sleep (tests pass a no-op). */
   sleep?: (ms: number) => Promise<void>;
+}
+
+// Re-validate each stored definition through Zod on load so schema defaults
+// (e.g. a newly-added source field) populate without a data migration, and a
+// definition that somehow went invalid is skipped + warned once rather than
+// crashing the pass. `sites.list()` returns the raw stored JSON — only `upsert`
+// runs Zod — so this is where defaults actually land for the running worker.
+function normalizeRows(rows: SiteRow[], log: (msg: string) => void): SiteRow[] {
+  const out: SiteRow[] = [];
+  for (const row of rows) {
+    const parsed = siteDefinitionSchema.safeParse(row.definition);
+    if (parsed.success) {
+      out.push({ ...row, definition: parsed.data, enabled: parsed.data.enabled, sourceKind: parsed.data.source.kind });
+    } else if (!warnedConfigSiteIds.has(row.id)) {
+      warnedConfigSiteIds.add(row.id);
+      log(`[${row.name ?? row.id}] Invalid site definition — skipped: ${parsed.error.issues[0]?.message ?? "invalid"}`);
+    }
+  }
+  return out;
 }
 
 async function autoOffImminent(ctx: RunContext, rows: SiteRow[]): Promise<void> {
@@ -101,9 +120,9 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
   const baseDeps = buildAdapterDeps(await store.secrets.all());
 
   await applyCommands(store, await store.commands.drainPending());
-  let rows = await store.sites.list();
+  let rows = normalizeRows(await store.sites.list(), log);
   await autoOffImminent(ctx, rows);
-  rows = await store.sites.list(); // refresh after auto-off mutations
+  rows = normalizeRows(await store.sites.list(), log); // refresh after auto-off mutations
 
   const anyImminentActive = rows.some((r) => r.enabled && r.definition.imminent);
   let checked = 0;

@@ -49,7 +49,7 @@ export async function runSiteCheck(
   }
 
   if (result.kind === "signal") {
-    return runSignal(site, prev, result.signal, result.validators ?? null, now);
+    return runSignal(site, prev, result.signal, result.validators ?? null, now, result.contentHash, result.contentLen);
   }
 
   const prevProducts: ProductMap = (prev?.products as ProductMap | undefined) ?? {};
@@ -96,10 +96,25 @@ export async function runSiteCheck(
 }
 
 // ── Signal state machine (page-state probes) ─────────────────────────────────
-// Faithful to site_status_monitor.js: fires site_reset ONCE on the open->blocked
-// transition (gated by alerts.onSiteReset), suppresses while it stays blocked,
-// and clears silently on recovery. No periodic re-alert — that's the
-// empty-guard's job, not this probe's.
+// One alert per check, decided by the transition between the previous and new
+// page classification (open/blocked) plus a normalized content fingerprint:
+//   open    -> blocked : site_reset  (wall went up — fire once, gated onSiteReset)
+//   blocked -> open    : site_changed "wall lifted" (gated source.alertOnOpen)
+//   same classification, fingerprint moved: site_changed "content changed"
+//                        (gated source.watchContentChange; baseline-safe — needs
+//                        a prior hash, so the first check after deploy is silent)
+// This is the never-miss net for a password wall flipping to a live store: even
+// if the wall was never classified as "blocked", the content change still fires.
+
+function isMaterialChange(prevLen: number | undefined, newLen: number | undefined, minFrac: number): boolean {
+  if (minFrac <= 0) return true; // any fingerprint change counts (never-miss default)
+  if (prevLen == null || newLen == null || prevLen === 0) return true;
+  return Math.abs(newLen - prevLen) / prevLen >= minFrac;
+}
+
+function lenNote(prevLen: number | undefined, newLen: number | undefined): string {
+  return prevLen != null && newLen != null ? ` (≈${prevLen}→${newLen} chars)` : "";
+}
 
 function runSignal(
   site: SiteDefinition,
@@ -107,49 +122,100 @@ function runSignal(
   signal: SiteSignal,
   validators: HttpValidators | null,
   now: string,
+  contentHash?: string,
+  contentLen?: number,
 ): SiteCheckResult {
-  if (signal.kind === "open") {
+  const newBlocked = signal.kind === "blocked";
+  const prevBlocked = prev?.pageReset === true;
+  const prevHash = prev?.contentHash as string | undefined;
+  const prevLen = prev?.contentLen as number | undefined;
+
+  // Only http_status emits signals; read its content-change knobs when present.
+  const src = site.source.kind === "http_status" ? site.source : undefined;
+  const alertOnOpen = src?.alertOnOpen ?? false;
+  const watchContentChange = src?.watchContentChange ?? false;
+  const minFrac = src?.contentChangeMinFrac ?? 0;
+
+  const baseState: SiteState = {
+    ...(prev ?? {}),
+    lastChecked: now,
+    products: {},
+    httpValidators: validators,
+    contentHash: contentHash ?? prevHash ?? null,
+    contentLen: contentLen ?? prevLen ?? null,
+  };
+  const url = sourceUrl(site);
+
+  // open -> blocked: wave reset (fire once).
+  if (newBlocked && !prevBlocked) {
+    const alreadyAlerted = prev?.resetAlertSent === true;
+    const fire = !alreadyAlerted && site.alerts.onSiteReset;
     return {
-      state: {
-        ...(prev ?? {}),
-        lastChecked: now,
-        products: {},
-        pageReset: false,
-        resetAlertSent: false,
-        resetReason: null,
-        httpValidators: validators,
-      },
-      alerts: [],
+      state: { ...baseState, pageReset: true, resetAlertSent: alreadyAlerted || fire, resetReason: signal.reason ?? "blocked" },
+      alerts: fire
+        ? [
+            {
+              type: "site_reset",
+              product: {
+                title: site.name,
+                url,
+                available: false,
+                note: signal.reason ?? "Site appears blocked (password wall / coming-soon / 401-403).",
+              },
+            },
+          ]
+        : [],
     };
   }
 
-  const alreadyAlerted = prev?.resetAlertSent === true;
-  const fire = !alreadyAlerted && site.alerts.onSiteReset;
-  const alerts: Alert[] = fire
-    ? [
-        {
-          type: "site_reset",
-          product: {
-            title: site.name,
-            url: sourceUrl(site),
-            available: false,
-            note: signal.reason ?? "Site appears blocked (password wall / coming-soon / 401-403).",
-          },
-        },
-      ]
-    : [];
+  // blocked -> open: wall lifted. Previously silent — now the headline alert.
+  if (!newBlocked && prevBlocked) {
+    return {
+      state: { ...baseState, pageReset: false, resetAlertSent: false, resetReason: null },
+      alerts: alertOnOpen
+        ? [
+            {
+              type: "site_changed",
+              product: {
+                title: site.name,
+                url,
+                available: true,
+                note: `🟢 Wall lifted — ${site.name} is now OPEN. Check for bottles.`,
+              },
+            },
+          ]
+        : [],
+    };
+  }
+
+  // Same classification (open->open or blocked->blocked): content-change net.
+  const changed =
+    watchContentChange &&
+    contentHash != null &&
+    prevHash != null &&
+    contentHash !== prevHash &&
+    isMaterialChange(prevLen, contentLen, minFrac);
 
   return {
     state: {
-      ...(prev ?? {}),
-      lastChecked: now,
-      products: {},
-      pageReset: true,
-      resetAlertSent: alreadyAlerted || fire,
-      resetReason: signal.reason ?? "blocked",
-      httpValidators: validators,
+      ...baseState,
+      pageReset: newBlocked,
+      resetAlertSent: newBlocked ? prev?.resetAlertSent === true : false,
+      resetReason: newBlocked ? (prev?.resetReason ?? signal.reason ?? "blocked") : null,
     },
-    alerts,
+    alerts: changed
+      ? [
+          {
+            type: "site_changed",
+            product: {
+              title: site.name,
+              url,
+              available: !newBlocked,
+              note: `Page content changed${lenNote(prevLen, contentLen)} at ${url} — check it.`,
+            },
+          },
+        ]
+      : [],
   };
 }
 

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import { type AddressInfo } from "node:net";
-import { httpStatusAdapter } from "./http_status.js";
+import { httpStatusAdapter, pageFingerprint } from "./http_status.js";
 import { siteDefinitionSchema, type SiteDefinition } from "../schema.js";
 import type { PrevState } from "./types.js";
 
@@ -86,5 +86,36 @@ describe("httpStatusAdapter", () => {
       res.end("boom");
     };
     await expect(httpStatusAdapter.fetch(makeSite(), {})).rejects.toMatchObject({ statusCode: 500 });
+  });
+
+  it("emits a content fingerprint (hash + len) on a signal result", async () => {
+    handler = (_req, res) => {
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.end("<html><body><div class='shop'>Shop now</div></body></html>");
+    };
+    const result = await httpStatusAdapter.fetch(makeSite(), {});
+    if (result.kind !== "signal") throw new Error("expected signal");
+    expect(result.contentHash).toMatch(/^[0-9a-f]{40}$/);
+    expect(typeof result.contentLen).toBe("number");
+  });
+});
+
+describe("pageFingerprint", () => {
+  it("is stable across <script>/comment churn", () => {
+    const a = "<html><body><div>Shop now</div><script>var n='aaaa1111';</script><!-- x --></body></html>";
+    const b = "<html><body><div>Shop now</div><script>var n='bbbb2222zzzz';</script><!-- y z --></body></html>";
+    expect(pageFingerprint(a).hash).toBe(pageFingerprint(b).hash);
+  });
+
+  it("is stable across rotating nonces/timestamps/long ids", () => {
+    const a = "<div data-ts=1717000000000 data-build=0123456789abcdef0123>Shop now</div>";
+    const b = "<div data-ts=1888000000000 data-build=fedcba9876543210fedc>Shop now</div>";
+    expect(pageFingerprint(a).hash).toBe(pageFingerprint(b).hash);
+  });
+
+  it("differs for a materially different page (wall vs store)", () => {
+    const wall = "<html><body>This store is Coming Soon</body></html>";
+    const store = "<html><body><div class='product'>Bottle A — $129</div></body></html>";
+    expect(pageFingerprint(wall).hash).not.toBe(pageFingerprint(store).hash);
   });
 });

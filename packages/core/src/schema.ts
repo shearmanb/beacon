@@ -65,9 +65,16 @@ export const httpStatusSource = z.object({
     bodyMatchesAny: z.array(z.string()).default([]),
     httpStatusIn: z.array(z.number()).default([401, 403]),
   }),
-  // Note: faithful to site_status_monitor.js — site_reset fires ONCE on the
-  // open->blocked transition and clears silently on recovery (no periodic
-  // re-alert; that's the empty-guard's job, not this probe's).
+  // site_reset still fires ONCE on the open->blocked transition. These add the
+  // reverse + a content-change net so a wall flipping to a live store is caught
+  // even if the open/blocked classification never registers it (never-miss bias).
+  /** Fire `site_changed` ("wall lifted") on the blocked->open transition. */
+  alertOnOpen: z.boolean().default(true),
+  /** Fire `site_changed` when the normalized page fingerprint changes. */
+  watchContentChange: z.boolean().default(true),
+  /** Optional noise mute: require the normalized length to move by at least this
+   *  fraction before a same-classification change counts. 0 = any change fires. */
+  contentChangeMinFrac: z.number().default(0),
 });
 
 const textPredicate = z.object({ matchesAny: z.array(z.string()).default([]) });

@@ -17,6 +17,22 @@ describe("siteDefinitionSchema", () => {
     expect(parsed.source.kind).toBe("shopify_rest");
   });
 
+  it("applies http_status content-change defaults to a definition that omits them", () => {
+    // Mirrors what normalizeRows relies on: a stored definition predating the new
+    // fields parses with the never-miss defaults (so the worker activates them
+    // without a data migration).
+    const parsed = sourceSchema.parse({
+      kind: "http_status",
+      url: "https://www.thereveries.co/shop",
+      blockedWhen: { bodyMatchesAny: ["coming soon"] },
+    });
+    if (parsed.kind !== "http_status") throw new Error("expected http_status");
+    expect(parsed.alertOnOpen).toBe(true);
+    expect(parsed.watchContentChange).toBe(true);
+    expect(parsed.contentChangeMinFrac).toBe(0);
+    expect(parsed.blockedWhen.httpStatusIn).toEqual([401, 403]); // existing default
+  });
+
   it("discriminates the source union by kind", () => {
     const html = sourceSchema.parse({
       kind: "html",

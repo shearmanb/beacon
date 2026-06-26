@@ -44,7 +44,17 @@ export type FetchResult =
       emptyGuardNote?: string;
     }
   // Page-state probe (no products) — feeds the signal state machine.
-  | { kind: "signal"; signal: SiteSignal; validators?: HttpValidators | null };
+  // contentHash/contentLen are a normalized fingerprint of the page body, so the
+  // signal machine can fire `site_changed` when the page materially changes
+  // (e.g. a password wall replaced by a live store) even when the open/blocked
+  // classification doesn't move.
+  | {
+      kind: "signal";
+      signal: SiteSignal;
+      validators?: HttpValidators | null;
+      contentHash?: string;
+      contentLen?: number;
+    };
 
 export interface SourceAdapter {
   kind: SourceKind;

@@ -2,6 +2,7 @@
 // SiteDefinition (source-discriminated). Storefront tokens are pulled OUT of the
 // definition into a secret (the legacy config committed them in plaintext).
 
+import { httpStatusSource } from "@beacon/core";
 import type { SourceSpec } from "@beacon/core";
 
 export interface LegacySite {
@@ -34,7 +35,10 @@ export interface MappedSource {
 const SQUARESPACE_RESET_SIGNALS = [
   "sqs-pw-form",
   "coming soon",
+  "opening soon", // Shopify default "Opening Soon" password page
+  "come back later", // themed wall (the Reveries / T8KE "Come Back Later" screen)
   "enter password",
+  "store using password", // Shopify "Enter store using password"
   "password protected",
   "this store is unavailable",
 ];
@@ -72,11 +76,11 @@ export function mapSource(legacy: LegacySite): MappedSource {
     }
     case "site_status_monitor":
       return {
-        source: {
+        source: httpStatusSource.parse({
           kind: "http_status",
           url: legacy.url,
           blockedWhen: { bodyMatchesAny: SQUARESPACE_RESET_SIGNALS, httpStatusIn: [401, 403] },
-        },
+        }),
       };
     case "purchasable_state_monitor":
       return {

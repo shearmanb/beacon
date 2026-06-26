@@ -5,6 +5,7 @@
 // fetch layer the adapters use and stays testable alongside the engine.
 
 import { httpGet, HttpError } from "@beacon/fetch";
+import { httpStatusSource } from "./schema.js";
 import type { SourceKind, SourceSpec } from "./schema.js";
 
 export interface ProbeResult {
@@ -86,11 +87,11 @@ export async function probeSite(rawUrl: string): Promise<ProbeResult> {
           `${isSquarespace ? "Squarespace site" : "Page"} detected` +
           (wall ? ` with a likely password / coming-soon wall (matched “${wall}”).` : ".") +
           " A status monitor fires site_reset once when the wall drops.",
-        source: {
+        source: httpStatusSource.parse({
           kind: "http_status",
           url: url.toString(),
           blockedWhen: { bodyMatchesAny: ["sqs-pw-form", "coming soon", "enter password"], httpStatusIn: [401, 403] },
-        },
+        }),
       };
     }
     return {
@@ -99,11 +100,11 @@ export async function probeSite(rawUrl: string): Promise<ProbeResult> {
       detail:
         `Page is reachable (HTTP ${res.status}) but isn’t recognizably Shopify or Squarespace. ` +
         "Pick a source kind manually — a 'custom' extractor (e.g. campari_v1) or a status monitor may fit.",
-      source: {
+      source: httpStatusSource.parse({
         kind: "http_status",
         url: url.toString(),
         blockedWhen: { bodyMatchesAny: [], httpStatusIn: [401, 403] },
-      },
+      }),
     };
   } catch (err) {
     const code = err instanceof HttpError ? err.statusCode : undefined;
@@ -112,11 +113,11 @@ export async function probeSite(rawUrl: string): Promise<ProbeResult> {
         kind: "http_status",
         name: suggestName(url),
         detail: `Page returned HTTP ${code} — likely an age / password wall. A status monitor fires when it opens.`,
-        source: {
+        source: httpStatusSource.parse({
           kind: "http_status",
           url: url.toString(),
           blockedWhen: { bodyMatchesAny: [], httpStatusIn: [401, 403] },
-        },
+        }),
       };
     }
     return { kind: null, detail: "", error: `Couldn’t fetch that URL: ${(err as Error).message}` };

@@ -102,3 +102,78 @@ describe("runSiteCheck", () => {
     expect(result.state.resetAlertSent).toBe(false);
   });
 });
+
+// http_status sources carry the content-change knobs (alertOnOpen / watchContentChange),
+// so signal transitions are tested against a real http_status site definition.
+function statusSite(over: Record<string, unknown> = {}): SiteDefinition {
+  return siteDefinitionSchema.parse({
+    id: "s",
+    name: "Status Site",
+    source: { kind: "http_status", url: "https://x.com/shop", blockedWhen: { bodyMatchesAny: ["coming soon"] }, ...over },
+    alerts: { onSiteReset: true },
+  });
+}
+
+describe("runSiteCheck — http_status content-change net", () => {
+  it("baseline: first check records a hash and stays silent", async () => {
+    const result = await runSiteCheck(
+      statusSite(),
+      { lastChecked: "t", pageReset: false }, // no prior contentHash
+      stub({ kind: "signal", signal: { kind: "open" }, contentHash: "h1", contentLen: 100 }),
+    );
+    expect(result.alerts).toEqual([]);
+    expect(result.state.contentHash).toBe("h1");
+  });
+
+  it("fires site_changed (wall lifted) on blocked -> open", async () => {
+    const result = await runSiteCheck(
+      statusSite(),
+      { lastChecked: "t", pageReset: true, resetAlertSent: true, contentHash: "wall", contentLen: 40 },
+      stub({ kind: "signal", signal: { kind: "open" }, contentHash: "store", contentLen: 9000 }),
+    );
+    expect(result.alerts).toHaveLength(1);
+    expect(result.alerts[0]!.type).toBe("site_changed");
+    expect(result.alerts[0]!.product.note).toMatch(/wall lifted/i);
+    expect(result.state.pageReset).toBe(false);
+  });
+
+  it("fires site_changed on a content change while open", async () => {
+    const result = await runSiteCheck(
+      statusSite(),
+      { lastChecked: "t", pageReset: false, contentHash: "a", contentLen: 100 },
+      stub({ kind: "signal", signal: { kind: "open" }, contentHash: "b", contentLen: 9000 }),
+    );
+    expect(result.alerts).toHaveLength(1);
+    expect(result.alerts[0]!.type).toBe("site_changed");
+    expect(result.alerts[0]!.product.note).toMatch(/content changed/i);
+  });
+
+  it("stays silent when the fingerprint is unchanged", async () => {
+    const result = await runSiteCheck(
+      statusSite(),
+      { lastChecked: "t", pageReset: false, contentHash: "a", contentLen: 100 },
+      stub({ kind: "signal", signal: { kind: "open" }, contentHash: "a", contentLen: 100 }),
+    );
+    expect(result.alerts).toEqual([]);
+  });
+
+  it("contentChangeMinFrac mutes a sub-threshold length wobble", async () => {
+    const result = await runSiteCheck(
+      statusSite({ contentChangeMinFrac: 0.2 }),
+      { lastChecked: "t", pageReset: false, contentHash: "a", contentLen: 100 },
+      stub({ kind: "signal", signal: { kind: "open" }, contentHash: "b", contentLen: 105 }), // +5% < 20%
+    );
+    expect(result.alerts).toEqual([]);
+  });
+
+  it("still fires site_reset once on open -> blocked", async () => {
+    const result = await runSiteCheck(
+      statusSite(),
+      { lastChecked: "t", pageReset: false, contentHash: "a", contentLen: 100 },
+      stub({ kind: "signal", signal: { kind: "blocked", reason: "coming soon" }, contentHash: "wall", contentLen: 40 }),
+    );
+    expect(result.alerts).toHaveLength(1);
+    expect(result.alerts[0]!.type).toBe("site_reset");
+    expect(result.state.pageReset).toBe(true);
+  });
+});
