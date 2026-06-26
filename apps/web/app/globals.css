@@ -898,12 +898,16 @@ select.in.sched {
 .rev-last-name {
   color: var(--accent);
 }
-/* compact: one clipped row of tiles */
+/* compact: one row of tiles that scrolls horizontally (every in-stock tile
+   reachable, no clipping) */
 .rev-compact {
   display: flex;
   flex-wrap: nowrap;
   gap: 12px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  padding-bottom: 6px;
   margin-bottom: 4px;
 }
 .rev-compact .rev-card {
