@@ -1,7 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
-import { runNow, setImminent, setImminentTuning, setMonitoring, setSchedule } from "../app/actions";
+import { useState, useTransition } from "react";
+import { runNow, setImminent, setImminentTuning, setMonitoring, setSchedule, setSiteFilters } from "../app/actions";
+import { splitList } from "../lib/site-forms";
 
 export interface ScheduleOption {
   value: string;
@@ -22,6 +23,7 @@ export function SiteControls({
   scheduleOptions,
   imminentInterval,
   imminentDuration,
+  titleContains,
 }: {
   siteId: string;
   enabled: boolean;
@@ -30,8 +32,18 @@ export function SiteControls({
   scheduleOptions: ScheduleOption[];
   imminentInterval: number | null;
   imminentDuration: number | null;
+  titleContains: string[];
 }) {
   const [pending, start] = useTransition();
+  const [kw, setKw] = useState(titleContains.join(", "));
+
+  // Save the keyword filter only when it actually changed. Changing it
+  // re-baselines the site server-side so existing matches don't flood as new.
+  function commitKeywords(): void {
+    const next = splitList(kw);
+    if (JSON.stringify(next) === JSON.stringify(titleContains)) return;
+    start(() => setSiteFilters(siteId, { titleContains: next }));
+  }
   const opts = scheduleOptions.some((o) => o.value === schedule)
     ? scheduleOptions
     : [{ value: schedule, label: schedule || "(default)" }, ...scheduleOptions];
@@ -108,6 +120,27 @@ export function SiteControls({
             </option>
           ))}
         </select>
+      </div>
+      <div className="row kw">
+        <span
+          className="tune-label"
+          title="Only alert on products whose title contains one of these words (comma-separated, case-insensitive). Leave blank to match everything. Changing this re-baselines the site so existing matches don't flood as new."
+        >
+          🔎 keywords
+        </span>
+        <input
+          className="in"
+          style={{ flex: 1 }}
+          value={kw}
+          disabled={pending}
+          placeholder="any title (e.g. Reveries, T8KE, Jay West)"
+          onChange={(e) => setKw(e.target.value)}
+          onBlur={commitKeywords}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+          }}
+          title="Title keywords (comma-separated)"
+        />
       </div>
     </>
   );

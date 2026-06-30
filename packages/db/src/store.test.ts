@@ -57,6 +57,13 @@ describe("state repo", () => {
   it("returns undefined for an unknown site (startup-quiet signal)", async () => {
     expect(await store.state.load("missing")).toBeUndefined();
   });
+
+  it("clear() drops stored state so the site re-baselines", async () => {
+    await store.state.save("s1", { lastChecked: "2026-06-22T00:00:00Z", products: { a: { handle: "a", title: "A", url: "https://x/a", tags: [], available: true } } });
+    expect(await store.state.load("s1")).toBeDefined();
+    await store.state.clear("s1");
+    expect(await store.state.load("s1")).toBeUndefined(); // → startup-quiet on next check
+  });
 });
 
 describe("history repo", () => {

@@ -80,6 +80,37 @@ export async function setImminentTuning(
   revalidatePath("/");
 }
 
+/**
+ * Edit a site's title-keyword filters (what titles it alerts on) without
+ * re-creating the site. Mirrors setSchedule. When the keyword lists actually
+ * change, the site's stored state is cleared so the next check re-baselines —
+ * otherwise broadening the keywords would flood `new_product` alerts for
+ * products that were simply filtered out before (existing T8KE/Jay West bottles
+ * suddenly "appearing"). The full definition re-validates via Zod on upsert.
+ */
+export async function setSiteFilters(
+  siteId: string,
+  patch: { titleContains?: string[]; titleExcludes?: string[] },
+): Promise<void> {
+  const store = await getStore();
+  const site = await store.sites.get(siteId);
+  if (!site) return;
+  const prev = site.definition.filters;
+  const next = {
+    ...prev,
+    ...(patch.titleContains !== undefined ? { titleContains: patch.titleContains } : {}),
+    ...(patch.titleExcludes !== undefined ? { titleExcludes: patch.titleExcludes } : {}),
+  };
+  const changed =
+    JSON.stringify(prev.titleContains ?? []) !== JSON.stringify(next.titleContains ?? []) ||
+    JSON.stringify(prev.titleExcludes ?? []) !== JSON.stringify(next.titleExcludes ?? []);
+  if (!changed) return;
+  await store.sites.upsert({ ...site.definition, filters: next });
+  await store.state.clear(siteId);
+  revalidatePath("/");
+  revalidatePath("/products");
+}
+
 export async function setIgnore(handle: string, ignored: boolean): Promise<void> {
   const store = await getStore();
   if (ignored) await store.ignored.add(handle);

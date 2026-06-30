@@ -115,6 +115,13 @@ function stateRepo(db: DB) {
       const state = await this.load(siteId);
       return ((state?.products as ProductMap | undefined) ?? {}) as ProductMap;
     },
+    /** Drop a site's stored state so its next check re-baselines (startup-quiet
+     *  suppresses the new_product wave). Used when a site's filter changes, so
+     *  broadening keywords doesn't flood alerts for products that were simply
+     *  filtered out before. */
+    async clear(siteId: string): Promise<void> {
+      await db.delete(t.siteState).where(eq(t.siteState.siteId, siteId));
+    },
   };
 }
 

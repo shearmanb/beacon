@@ -369,6 +369,7 @@ export default async function SitesPage() {
                 scheduleOptions={scheduleOptions}
                 imminentInterval={def.imminentIntervalMinutes ?? null}
                 imminentDuration={def.imminentDurationMinutes ?? null}
+                titleContains={def.filters?.titleContains ?? []}
               />
               {Array.isArray(state?.checkHistory) && (state!.checkHistory as unknown[]).length > 0 && (
                 <PulseStrip
