@@ -36,6 +36,10 @@ export type AlertType =
   | "imminent_timeout"
   | "site_changed"
   | "system_degraded"
+  // Self-healing engaged (or disengaged): a primary channel was blocked and the
+  // checker kept running via a fallback — fired once per transition, with the
+  // "why" in the note, so silent auto-recovery is never invisible.
+  | "self_healed"
   | "baseline";
 
 export interface AlertProduct {

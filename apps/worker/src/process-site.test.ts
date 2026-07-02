@@ -22,6 +22,10 @@ function ok(products: NormalizedProduct[]): SourceAdapter {
   const result: FetchResult = { kind: "products", products, pageCount: 1 };
   return { kind: "shopify_rest", fetch: async () => result };
 }
+function okVia(products: NormalizedProduct[], via: string, viaReason: string): SourceAdapter {
+  const result: FetchResult = { kind: "products", products, via, viaReason };
+  return { kind: "shopify_rest", fetch: async () => result };
+}
 function fails(err: unknown): SourceAdapter {
   return { kind: "shopify_rest", fetch: async () => { throw err; } };
 }
@@ -113,5 +117,41 @@ describe("processSite", () => {
     const out = await processSite({ site: site(), prevState: prev, adapter: fails(new HttpError(430, "https://x.com")), deps, ignored: noneIgnored });
     expect(out.newState.cooldownLevel).toBe(1);
     expect(typeof out.newState.cooldownUntil).toBe("string");
+  });
+
+  it("self_healed: fires ONCE with the why when a fallback channel engages", async () => {
+    const prev: SiteState = { lastChecked: "t", products: { a: prod("a", true) } };
+    const out = await processSite({
+      site: site(),
+      prevState: prev,
+      adapter: okVia([prod("a", true)], "storefront_fallback", "products.json blocked with HTTP 403"),
+      deps,
+      ignored: noneIgnored,
+    });
+    const healed = out.events.filter((e) => e.type === "self_healed");
+    expect(healed).toHaveLength(1);
+    expect(healed[0]!.product.note).toContain("HTTP 403");
+    expect(out.newState.fetchVia).toBe("storefront_fallback");
+  });
+
+  it("self_healed: silent while the fallback stays engaged (no re-ping per check)", async () => {
+    const prev: SiteState = { lastChecked: "t", products: { a: prod("a", true) }, fetchVia: "storefront_fallback" };
+    const out = await processSite({
+      site: site(),
+      prevState: prev,
+      adapter: okVia([prod("a", true)], "storefront_fallback", "products.json blocked with HTTP 403"),
+      deps,
+      ignored: noneIgnored,
+    });
+    expect(out.events.filter((e) => e.type === "self_healed")).toHaveLength(0);
+  });
+
+  it("self_healed: fires a recovery note when the primary channel comes back", async () => {
+    const prev: SiteState = { lastChecked: "t", products: { a: prod("a", true) }, fetchVia: "storefront_fallback" };
+    const out = await processSite({ site: site(), prevState: prev, adapter: ok([prod("a", true)]), deps, ignored: noneIgnored });
+    const healed = out.events.filter((e) => e.type === "self_healed");
+    expect(healed).toHaveLength(1);
+    expect(healed[0]!.product.note).toContain("Primary endpoint is reachable again");
+    expect(out.newState.fetchVia).toBeNull();
   });
 });

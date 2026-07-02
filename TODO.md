@@ -17,7 +17,12 @@ failing while the store loads fine in a browser — Shopify/WAF bot protection n
 `storefrontFallback` (REST blocked → Storefront GraphQL on `*.myshopify.com`,
 auto-recovering), 430 added to the circuit-breaker statuses, identity re-roll on
 repeated blocks, and dashboard failure diagnostics (HTTP status, cooldown
-countdown, ⛑ fallback chip, "looks like bot protection" hint). Follow-ups:
+countdown, ⛑ fallback chip, "looks like bot protection" hint). Second batch
+(same day): **`self_healed` alert** (Discord + history, fires once per
+engage/recover transition with the why in `fetchViaReason`) and the per-tile
+**🩺 Diagnose** button (`core/diagnose.ts`) that tests REST → fresh identity →
+Storefront fallback from the server's own IP and verdicts "Railway blocked?"
+in plain English. Follow-ups:
 
 - **Delete the one-time `serve.ts` amendment** (SharedPour fallback injection)
   once the prod logs show `[serve] Amended sharedpour_…` (or the ⛑ chip appears).

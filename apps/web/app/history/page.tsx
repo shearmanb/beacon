@@ -8,9 +8,12 @@ const TYPE_COLOR: Record<string, string> = {
   restock: "var(--ok)",
   sold_out: "var(--err)",
   site_reset: "#f39c12",
+  site_changed: "#9b59b6",
   site_error: "#e67e22",
   site_recovered: "#16a085",
   imminent_timeout: "var(--warn)",
+  system_degraded: "#c0392b",
+  self_healed: "#00bcd4",
   baseline: "var(--faint)",
 };
 

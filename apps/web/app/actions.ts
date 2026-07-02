@@ -5,11 +5,13 @@ import type { ScheduleRule, NormalizedProduct } from "@beacon/shared";
 import {
   applyFilters,
   buildAdapterDeps,
+  diagnoseSite as coreDiagnoseSite,
   getAdapter,
   hasAdapter,
   parseCampariCards,
   probeSite as coreProbeSite,
   validateSite,
+  type DiagnoseReport,
   type ProbeResult,
 } from "@beacon/core";
 import { getStore } from "../lib/store";
@@ -146,6 +148,24 @@ export async function setReminderPriority(id: string, priority: boolean): Promis
   const store = await getStore();
   await store.reminders.update(id, { priority });
   revalidatePath("/reminders");
+}
+
+/**
+ * 🩺 Block diagnosis: exercise the site's channels step-by-step FROM THIS SERVER
+ * (the dashboard shares Railway's egress IP with the worker) and report a
+ * plain-English verdict — the one-click answer to "is Railway's IP blocked, or
+ * is the site actually down?".
+ */
+export async function diagnoseSite(siteId: string): Promise<DiagnoseReport | { error: string }> {
+  const store = await getStore();
+  const site = await store.sites.get(siteId);
+  if (!site) return { error: `Unknown site "${siteId}".` };
+  try {
+    const deps = buildAdapterDeps(await store.secrets.all());
+    return await coreDiagnoseSite(site.definition, deps);
+  } catch (err) {
+    return { error: `Diagnosis failed: ${(err as Error).message}` };
+  }
 }
 
 // ── Add-site flow + sandbox ──────────────────────────────────────────────────

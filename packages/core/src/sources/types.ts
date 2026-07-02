@@ -42,6 +42,9 @@ export type FetchResult =
       /** Set when the primary channel was blocked and a fallback produced the
        *  roster (e.g. "storefront_fallback") — surfaced on the dashboard tile. */
       via?: string;
+      /** Human-readable WHY the fallback was needed (e.g. "products.json blocked
+       *  with HTTP 403") — carried into the self_healed alert + tile tooltip. */
+      viaReason?: string;
       /** Per-source empty-guard tuning (defaults applied by the pipeline). */
       emptyGuardThreshold?: number;
       emptyGuardNote?: string;

@@ -19,6 +19,7 @@ const COLORS: Record<string, number> = {
   site_recovered: 0x16a085, // teal
   imminent_timeout: 0xf1c40f, // yellow
   system_degraded: 0xc0392b, // crimson (all sites failing at once — likely IP block / network)
+  self_healed: 0x00bcd4, // cyan (fallback channel engaged/disengaged — informational)
 };
 
 const LABELS: Record<string, string> = {
@@ -31,6 +32,7 @@ const LABELS: Record<string, string> = {
   site_recovered: "✅ Site Recovered",
   imminent_timeout: "⏱ Imminent Timed Out",
   system_degraded: "🛑 Systemic Failure",
+  self_healed: "⛑ Self-Healed",
 };
 
 const SITE_LEVEL = new Set<AlertType>([
@@ -40,6 +42,7 @@ const SITE_LEVEL = new Set<AlertType>([
   "site_recovered",
   "imminent_timeout",
   "system_degraded",
+  "self_healed",
 ]);
 
 const SITE_DEFAULTS: Record<string, string> = {
@@ -49,6 +52,7 @@ const SITE_DEFAULTS: Record<string, string> = {
   site_recovered: "Checks are succeeding again.",
   imminent_timeout: "Imminent mode auto-disabled after timeout.",
   system_degraded: "Every site failed this pass — likely a network outage or the egress IP being blocked.",
+  self_healed: "A primary channel was blocked; checks continue via a fallback channel.",
 };
 
 interface EmbedField {

@@ -82,6 +82,36 @@ export async function processSite({
       });
     }
 
+    // Self-healing visibility: fire ONCE when a fallback channel engages (with
+    // the why) and once when the primary recovers — auto-recovery should never
+    // be invisible to the operator. Keyed on the fetchVia transition, so a site
+    // that stays on the fallback for days doesn't re-ping every check.
+    const prevVia = (prevState?.fetchVia as string | undefined) ?? null;
+    const newVia = (newState.fetchVia as string | undefined) ?? null;
+    if (newVia && newVia !== prevVia) {
+      const why = (newState.fetchViaReason as string | undefined) ?? "primary channel blocked";
+      events.push({
+        type: "self_healed",
+        product: {
+          title: site.name,
+          url: sourceUrl(site),
+          note:
+            `⛑ Self-healed: ${why}, so this check ran via the Storefront GraphQL API instead. ` +
+            `Monitoring continues uninterrupted; the primary endpoint is retried on every check and ` +
+            `you'll get another ping when it recovers.`,
+        },
+      });
+    } else if (!newVia && prevVia) {
+      events.push({
+        type: "self_healed",
+        product: {
+          title: site.name,
+          url: sourceUrl(site),
+          note: "✅ Primary endpoint is reachable again — back to normal checks (fallback no longer needed).",
+        },
+      });
+    }
+
     // Startup quiet mode: with NO previous state entry at all, every product
     // would alert as "new". Baseline silently instead. Keyed on the entry being
     // absent (not the product map being empty) so a real 0->N wave still alerts.

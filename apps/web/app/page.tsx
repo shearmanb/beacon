@@ -2,6 +2,7 @@ import { getStore } from "../lib/store";
 import { ago, siteHealth, type Health } from "../lib/health";
 import { SiteControls } from "../components/SiteControls";
 import { PulseStrip } from "../components/PulseStrip";
+import { DiagnoseButton } from "../components/DiagnoseButton";
 import { ReveriesPanel } from "../components/ReveriesPanel";
 import { isReveries } from "../lib/reveries";
 import { runNow } from "./actions";
@@ -373,7 +374,7 @@ export default async function SitesPage() {
                     <span
                       className="val"
                       style={{ color: "var(--warn)" }}
-                      title="products.json is blocked, so this roster came from the Storefront GraphQL API fallback. REST is retried first on every check and this clears when it recovers."
+                      title={`${(state?.fetchViaReason as string | undefined) ?? "products.json is blocked"} — this roster came from the Storefront GraphQL API fallback. REST is retried first on every check and this clears when it recovers.`}
                     >
                       ⛑ storefront fallback
                     </span>
@@ -420,6 +421,7 @@ export default async function SitesPage() {
                   degraded={degraded}
                 />
               )}
+              <DiagnoseButton siteId={row.id} />
             </div>
           );
         })}

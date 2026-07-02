@@ -87,7 +87,7 @@ export const shopifyRestAdapter: SourceAdapter = {
       if (fb && token && status != null && BLOCKED_STATUSES.has(status)) {
         console.warn(`[${site.name}] REST blocked (HTTP ${status}) — failing over to Storefront API on ${fb.domain}.`);
         try {
-          return await fetchViaStorefront(src, fb, token, origin, deps);
+          return await fetchViaStorefront(src, fb, token, origin, `products.json blocked with HTTP ${status}`, deps);
         } catch (fbErr) {
           console.warn(`[${site.name}] Storefront fallback also failed: ${(fbErr as Error).message}`);
         }
@@ -199,6 +199,7 @@ async function fetchViaStorefront(
   fb: NonNullable<SourceOf<"shopify_rest">["storefrontFallback"]>,
   token: string,
   origin: string,
+  reason: string,
   deps?: AdapterDeps,
 ): Promise<FetchResult> {
   const endpoint = fb.endpoint ?? `https://${fb.domain}/api/${fb.apiVersion}/graphql.json`;
@@ -237,6 +238,7 @@ async function fetchViaStorefront(
     products: all.map((n) => normalizeStorefront(n, origin)),
     validators: null, // ETags are per-endpoint; force a fresh REST attempt next check
     via: "storefront_fallback",
+    viaReason: reason,
     emptyGuardThreshold: 3,
     emptyGuardNote:
       "Storefront-API fallback returned 0 products on consecutive checks. Previous " +

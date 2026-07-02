@@ -199,24 +199,27 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
       clearTimeout(budget);
     }
 
-    if (!dryRun) {
-      await store.state.save(def.id, outcome.newState);
-      if (outcome.events.length) await store.history.append(def.id, outcome.events);
-    }
-    results.push({ def, outcome });
-
     // Self-healing nudge: a second consecutive block (cooldown escalated past
     // level 1) suggests the current browser identity may be flagged — re-roll it
-    // so the next attempt presents a fresh profile.
+    // so the next attempt presents a fresh profile. Stamped into state (before
+    // the save below) so the tile/errorLog era of "we already tried a new
+    // browser" is visible, not just a log line.
     if (!outcome.ok && ((outcome.newState.cooldownLevel as number | undefined) ?? 0) >= 2) {
       try {
         const host = new URL(sourceUrl(def)).hostname;
         expireIdentity(host);
+        outcome.newState.identityRerolledAt = new Date().toISOString();
         log(`[${def.name}] Re-rolled browser identity for ${host} after repeated blocks.`);
       } catch {
         /* sourceUrl may be empty for some kinds */
       }
     }
+
+    if (!dryRun) {
+      await store.state.save(def.id, outcome.newState);
+      if (outcome.events.length) await store.history.append(def.id, outcome.events);
+    }
+    results.push({ def, outcome });
 
     await wait(jitter(1000, 500)); // inter-site gap
   }

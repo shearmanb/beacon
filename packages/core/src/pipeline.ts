@@ -92,6 +92,7 @@ export async function runSiteCheck(
       // Which channel produced the roster ("storefront_fallback" when the
       // primary was blocked); null on a normal primary fetch so recovery clears it.
       fetchVia: result.via ?? null,
+      fetchViaReason: result.viaReason ?? null,
       ...yieldEval.tracking,
     },
     alerts,
