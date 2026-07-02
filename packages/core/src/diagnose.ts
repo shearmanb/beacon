@@ -37,9 +37,9 @@ interface Attempt {
   detail: string;
 }
 
-async function tryGet(url: string, kind: "api" | "document"): Promise<Attempt> {
+async function tryGet(url: string, kind: "api" | "document", signal?: AbortSignal): Promise<Attempt> {
   try {
-    const res = await httpGet(url, { withResponse: true, kind });
+    const res = await httpGet(url, { withResponse: true, kind, ...(signal ? { signal } : {}) });
     let detail = `HTTP ${res.status}`;
     if (kind === "api") {
       try {
@@ -69,7 +69,7 @@ export async function diagnoseSite(site: SiteDefinition, deps?: AdapterDeps): Pr
   // Generic path for other kinds: one fetch of the source URL, classified.
   const url = sourceUrl(site);
   const steps: DiagnoseStep[] = [];
-  const attempt = await tryGet(url, "document");
+  const attempt = await tryGet(url, "document", deps?.signal);
   steps.push({ label: "Fetch page from this server", ...attempt });
   const blocked = !attempt.ok && attempt.status != null && BLOCKED.has(attempt.status);
   return {
@@ -92,7 +92,7 @@ async function diagnoseShopifyRest(site: SiteDefinition, deps?: AdapterDeps): Pr
   const steps: DiagnoseStep[] = [];
 
   // 1) REST as the worker fetches it.
-  const rest = await tryGet(restUrl, "api");
+  const rest = await tryGet(restUrl, "api", deps?.signal);
   steps.push({ label: "REST products.json (worker's primary channel)", ...rest });
   if (rest.ok) {
     return {
@@ -113,7 +113,7 @@ async function diagnoseShopifyRest(site: SiteDefinition, deps?: AdapterDeps): Pr
   // 2) Same request with a freshly-rolled browser identity — separates
   //    "this UA/profile is flagged" from "the IP itself is blocked".
   expireIdentity(host);
-  const fresh = await tryGet(restUrl, "api");
+  const fresh = await tryGet(restUrl, "api", deps?.signal);
   steps.push({ label: "REST retry with a fresh browser identity", ...fresh });
   if (fresh.ok) {
     return {
@@ -132,6 +132,7 @@ async function diagnoseShopifyRest(site: SiteDefinition, deps?: AdapterDeps): Pr
     try {
       const res = await httpPost(endpoint, JSON.stringify({ query: "{ shop { name } }" }), {
         headers: { "X-Shopify-Storefront-Access-Token": token },
+        ...(deps?.signal ? { signal: deps.signal } : {}),
       });
       const name = (JSON.parse(res.body) as { data?: { shop?: { name?: string } } })?.data?.shop?.name;
       attempt = name

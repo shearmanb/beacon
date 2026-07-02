@@ -157,14 +157,31 @@ export async function setReminderPriority(id: string, priority: boolean): Promis
  * is the site actually down?".
  */
 export async function diagnoseSite(siteId: string): Promise<DiagnoseReport | { error: string }> {
-  const store = await getStore();
-  const site = await store.sites.get(siteId);
-  if (!site) return { error: `Unknown site "${siteId}".` };
+  // Whole body guarded + a hard wall-clock budget: a tar-pitted host must end
+  // as a visible "timed out" step, never a silently-dead server action. Every
+  // run is logged so the Railway deploy logs keep a durable record ([diagnose]).
+  const controller = new AbortController();
+  const budget = setTimeout(() => controller.abort(), 45_000);
   try {
+    const store = await getStore();
+    const site = await store.sites.get(siteId);
+    if (!site) return { error: `Unknown site "${siteId}".` };
     const deps = buildAdapterDeps(await store.secrets.all());
-    return await coreDiagnoseSite(site.definition, deps);
+    const report = await coreDiagnoseSite(site.definition, { ...deps, signal: controller.signal });
+    console.log(
+      `[diagnose] ${siteId} blocked=${report.blocked}\n` +
+        report.steps.map((s) => `[diagnose]   ${s.ok ? "✔" : "✘"} ${s.label}: ${s.detail}`).join("\n") +
+        `\n[diagnose]   verdict: ${report.verdict}`,
+    );
+    return report;
   } catch (err) {
-    return { error: `Diagnosis failed: ${(err as Error).message}` };
+    const msg = controller.signal.aborted
+      ? "Timed out after 45s — the host is stalling connections from this server (itself a bot-mitigation tell)."
+      : (err as Error).message;
+    console.error(`[diagnose] ${siteId} FAILED: ${msg}`);
+    return { error: `Diagnosis failed: ${msg}` };
+  } finally {
+    clearTimeout(budget);
   }
 }
 
