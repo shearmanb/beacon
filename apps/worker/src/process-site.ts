@@ -148,9 +148,15 @@ export async function processSite({
   }
 }
 
+// A fetch that died with NO status at all — aborted/deadline/idle-timeout — is
+// a stall: the host accepted the connection and left it hanging (tar-pit bot
+// mitigation). Functionally a block, so it gets the same cooldown + wording.
+const STALL_RE = /aborted (fetch|post)ing|deadline exceeded|socket idle timeout/i;
+
 function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefined, err: unknown): SiteOutcome {
   const message = err instanceof Error ? err.message : String(err);
   const statusCode = (err as { statusCode?: number }).statusCode;
+  const stalled = statusCode == null && STALL_RE.test(message);
   const prev = prevState ?? ({} as SiteState);
   const consecutiveErrors = ((prev.consecutiveErrors as number | undefined) ?? 0) + 1;
   const alreadyAlerted = prev.errorAlertSent === true;
@@ -161,10 +167,10 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
   const threshold = site.imminent ? IMMINENT_ERROR_ALERT_THRESHOLD : ERROR_ALERT_THRESHOLD;
   const shouldAlert = consecutiveErrors >= threshold && (!alreadyAlerted || dueForRealert);
 
-  // Circuit breaker: 429/403/430 -> escalating cooldown (430 is Shopify's own
-  // bot-block status — same meaning as a WAF 403).
+  // Circuit breaker: 429/403/430 or a stall -> escalating cooldown (430 is
+  // Shopify's own bot-block status; a stall is a status-less block).
   let cooldown: Partial<SiteState> = {};
-  if (statusCode === 429 || statusCode === 403 || statusCode === 430) {
+  if (statusCode === 429 || statusCode === 403 || statusCode === 430 || stalled) {
     const level = Math.min(((prev.cooldownLevel as number | undefined) ?? 0) + 1, COOLDOWN_STEPS_MIN.length);
     const minutes = COOLDOWN_STEPS_MIN[level - 1]!;
     cooldown = { cooldownLevel: level, cooldownUntil: new Date(Date.now() + minutes * 60_000).toISOString() };
@@ -202,7 +208,8 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
             url: sourceUrl(site),
             note:
               `${consecutiveErrors} consecutive failures${statusCode ? ` (HTTP ${statusCode}` +
-              `${statusCode === 403 || statusCode === 401 || statusCode === 430 ? " — looks blocked (bot protection?); the page may still load fine in a browser" : ""})` : ""}. ` +
+              `${statusCode === 403 || statusCode === 401 || statusCode === 430 ? " — looks blocked (bot protection?); the page may still load fine in a browser" : ""})` : ""}` +
+              `${stalled ? " (connections left hanging with no response — looks like tar-pit bot mitigation; the page may still load fine in a browser)" : ""}. ` +
               `Last error: ${message}${dueForRealert ? " (daily reminder)" : ""}`,
           },
         },

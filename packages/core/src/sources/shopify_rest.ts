@@ -73,26 +73,59 @@ export const shopifyRestAdapter: SourceAdapter = {
   async fetch(site, prev: PrevState, deps?: AdapterDeps): Promise<FetchResult> {
     const src = site.source as SourceOf<"shopify_rest">;
     const origin = new URL(src.baseUrl).origin;
+    const fb = src.storefrontFallback;
+    const token = fb ? deps?.resolveSecret?.(fb.accessTokenRef) : null;
+
+    // Stall guard (armed only when a fallback is available): a tar-pitting host
+    // never answers with a status — it leaves the connection hanging until the
+    // worker's whole per-site budget dies ("Aborted fetching …"). Cap the REST
+    // phase so there's budget left to actually run the fallback.
+    let stallFired = false;
+    const restController = fb && token ? new AbortController() : null;
+    let stallTimer: ReturnType<typeof setTimeout> | null = null;
+    let onParentAbort: (() => void) | null = null;
+    if (restController) {
+      stallTimer = setTimeout(() => {
+        stallFired = true;
+        restController.abort();
+      }, fb!.restStallMs);
+      if (deps?.signal) {
+        if (deps.signal.aborted) restController.abort();
+        else {
+          onParentAbort = () => restController.abort();
+          deps.signal.addEventListener("abort", onParentAbort, { once: true });
+        }
+      }
+    }
+
     try {
-      return await fetchRest(src, prev, origin, deps);
+      const restDeps = restController ? { ...deps, signal: restController.signal } : deps;
+      return await fetchRest(src, prev, origin, restDeps);
     } catch (err) {
-      // Self-healing failover: a blocked REST endpoint (bot protection on the
-      // custom domain) retries via the token-authenticated Storefront GraphQL
-      // API on the canonical myshopify.com domain. If the fallback also fails,
-      // the ORIGINAL error is rethrown so the circuit breaker still sees the
-      // real block status.
+      // Self-healing failover: a blocked REST endpoint retries via the token-
+      // authenticated Storefront GraphQL API on the canonical myshopify.com
+      // domain. "Blocked" is either an explicit status (403/429/430/401) or a
+      // stall — no response inside restStallMs while the overall budget is
+      // still alive (tar-pit bot mitigation). If the fallback also fails, the
+      // ORIGINAL error is rethrown so the circuit breaker sees the real cause.
       const status = (err as { statusCode?: number }).statusCode;
-      const fb = src.storefrontFallback;
-      const token = fb ? deps?.resolveSecret?.(fb.accessTokenRef) : null;
-      if (fb && token && status != null && BLOCKED_STATUSES.has(status)) {
-        console.warn(`[${site.name}] REST blocked (HTTP ${status}) — failing over to Storefront API on ${fb.domain}.`);
+      const blocked = status != null && BLOCKED_STATUSES.has(status);
+      const stalled = stallFired && !deps?.signal?.aborted;
+      if (fb && token && (blocked || stalled)) {
+        const reason = blocked
+          ? `products.json blocked with HTTP ${status}`
+          : `products.json stalled — no response within ${Math.round(fb.restStallMs / 1000)}s (connection tar-pit, a bot-mitigation tactic)`;
+        console.warn(`[${site.name}] ${reason} — failing over to Storefront API on ${fb.domain}.`);
         try {
-          return await fetchViaStorefront(src, fb, token, origin, `products.json blocked with HTTP ${status}`, deps);
+          return await fetchViaStorefront(src, fb, token, origin, reason, deps);
         } catch (fbErr) {
           console.warn(`[${site.name}] Storefront fallback also failed: ${(fbErr as Error).message}`);
         }
       }
       throw err;
+    } finally {
+      if (stallTimer) clearTimeout(stallTimer);
+      if (onParentAbort && deps?.signal) deps.signal.removeEventListener("abort", onParentAbort);
     }
   },
 };

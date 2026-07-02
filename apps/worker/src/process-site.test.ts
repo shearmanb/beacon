@@ -119,6 +119,20 @@ describe("processSite", () => {
     expect(typeof out.newState.cooldownUntil).toBe("string");
   });
 
+  it("error path: a status-less stall (tar-pit) trips the cooldown and reads as a block", async () => {
+    const prev: SiteState = { lastChecked: "t", consecutiveErrors: 4, cooldownLevel: 0 };
+    const out = await processSite({
+      site: site(),
+      prevState: prev,
+      adapter: fails(new Error("Aborted fetching https://x.com/products.json?limit=250&page=1")),
+      deps,
+      ignored: noneIgnored,
+    });
+    expect(out.newState.cooldownLevel).toBe(1);
+    expect(out.events.map((e) => e.type)).toEqual(["site_error"]);
+    expect(out.events[0]!.product.note).toContain("tar-pit");
+  });
+
   it("self_healed: fires ONCE with the why when a fallback channel engages", async () => {
     const prev: SiteState = { lastChecked: "t", products: { a: prod("a", true) } };
     const out = await processSite({

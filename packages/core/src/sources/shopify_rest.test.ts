@@ -117,7 +117,7 @@ describe("shopifyRestAdapter", () => {
 
 // ── Storefront fallback (self-healing failover) ──────────────────────────────
 
-function makeFallbackSite(collectionPath?: string): SiteDefinition {
+function makeFallbackSite(collectionPath?: string, restStallMs?: number): SiteDefinition {
   return siteDefinitionSchema.parse({
     id: "t",
     name: "T",
@@ -125,7 +125,12 @@ function makeFallbackSite(collectionPath?: string): SiteDefinition {
       kind: "shopify_rest",
       baseUrl: base,
       ...(collectionPath ? { collectionPath } : {}),
-      storefrontFallback: { domain: "x.myshopify.com", accessTokenRef: "sp_token", endpoint: `${base}/api/graphql` },
+      storefrontFallback: {
+        domain: "x.myshopify.com",
+        accessTokenRef: "sp_token",
+        endpoint: `${base}/api/graphql`,
+        ...(restStallMs != null ? { restStallMs } : {}),
+      },
     },
   });
 }
@@ -232,6 +237,27 @@ describe("shopifyRestAdapter storefront fallback", () => {
       res.end("blocked");
     };
     await expect(shopifyRestAdapter.fetch(makeSite(), {}, fallbackDeps)).rejects.toMatchObject({ statusCode: 403 });
+  });
+
+  it("fails over when REST stalls (tar-pit: connection accepted, never answered)", async () => {
+    handler = (req, res) => {
+      if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            data: { products: { pageInfo: { hasNextPage: false }, nodes: [storefrontNode("rev-1", true, "129.00")] } },
+          }),
+        );
+        return;
+      }
+      // REST: hang forever — no status, no body. The stall guard must fire.
+    };
+    const result = await shopifyRestAdapter.fetch(makeFallbackSite(undefined, 300), {}, fallbackDeps);
+    expect(result.kind).toBe("products");
+    if (result.kind !== "products") return;
+    expect(result.via).toBe("storefront_fallback");
+    expect(result.viaReason).toContain("stalled");
+    expect(result.products[0]!.handle).toBe("rev-1");
   });
 
   it("does NOT fall back on a non-blocked error (500)", async () => {

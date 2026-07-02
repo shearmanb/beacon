@@ -52,6 +52,10 @@ export const shopifyRestSource = z.object({
       apiVersion: z.string().default("2025-01"),
       /** Full endpoint override (primarily for testing); derived from domain otherwise. */
       endpoint: z.string().url().optional(),
+      /** How long the REST attempt gets before failing over (ms). A tar-pitting
+       *  host never returns a status at all — it just leaves the connection
+       *  hanging — so don't burn the whole per-site budget waiting on it. */
+      restStallMs: z.number().default(20_000),
     })
     .optional(),
 });

@@ -77,6 +77,23 @@ describe("diagnoseSite", () => {
     expect(report.verdict).toContain("no Storefront fallback");
   });
 
+  it("diagnoses a tar-pit (host hangs, no status) with per-step timeouts", async () => {
+    handler = (req, res) => {
+      if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ data: { shop: { name: "Shared Pour" } } }));
+        return;
+      }
+      // REST: hang forever — the step timeout must end it, not the whole budget.
+    };
+    const report = await diagnoseSite(restSite(true), deps, { stepTimeoutMs: 300 });
+    expect(report.blocked).toBe(true);
+    expect(report.steps.map((s) => s.ok)).toEqual([false, false, true]);
+    expect(report.steps[0]!.detail).toContain("left hanging");
+    expect(report.verdict).toContain("tar-pit");
+    expect(report.verdict).toContain("self-heals");
+  });
+
   it("classifies a non-block failure (500) as an outage, not a block", async () => {
     handler = (_req, res) => {
       res.writeHead(500);

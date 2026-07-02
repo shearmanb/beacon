@@ -294,6 +294,12 @@ export default async function SitesPage() {
           const errLog = (state?.errorLog as { statusCode?: number | null }[] | undefined) ?? [];
           const lastStatus = errors > 0 ? errLog[errLog.length - 1]?.statusCode ?? null : null;
           const looksBlocked = lastStatus === 401 || lastStatus === 403 || lastStatus === 430;
+          // Status-less stall ("Aborted fetching…"): the host hangs the
+          // connection instead of answering — tar-pit bot mitigation.
+          const looksStalled =
+            errors > 0 &&
+            lastStatus == null &&
+            /aborted (fetch|post)ing|deadline exceeded|socket idle timeout/i.test(String(state?.lastError ?? ""));
           const viaFallback = state?.fetchVia === "storefront_fallback";
           // PulseStrip health overlays. `stalled` reuses siteHealth's staleness
           // formula (interval × 2.5 + grace) so a red strip lines up with a
@@ -399,6 +405,12 @@ export default async function SitesPage() {
                     <span style={{ color: "var(--warn)" }}>
                       {" "}
                       — looks like bot protection blocking Beacon&apos;s server IP; the page can still load fine in your own browser.
+                    </span>
+                  )}
+                  {looksStalled && (
+                    <span style={{ color: "var(--warn)" }}>
+                      {" "}
+                      — the site is leaving Beacon&apos;s connections hanging with no answer (tar-pit bot mitigation aimed at server IPs); the page can still load fine in your own browser.
                     </span>
                   )}
                 </div>
