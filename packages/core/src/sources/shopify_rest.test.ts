@@ -114,3 +114,136 @@ describe("shopifyRestAdapter", () => {
     expect(sawIfNoneMatch).toBeUndefined();
   });
 });
+
+// ── Storefront fallback (self-healing failover) ──────────────────────────────
+
+function makeFallbackSite(collectionPath?: string): SiteDefinition {
+  return siteDefinitionSchema.parse({
+    id: "t",
+    name: "T",
+    source: {
+      kind: "shopify_rest",
+      baseUrl: base,
+      ...(collectionPath ? { collectionPath } : {}),
+      storefrontFallback: { domain: "x.myshopify.com", accessTokenRef: "sp_token", endpoint: `${base}/api/graphql` },
+    },
+  });
+}
+
+const fallbackDeps = { resolveSecret: (ref: string) => (ref === "sp_token" ? "tok-abc" : undefined) };
+
+function storefrontNode(handle: string, available: boolean, amount: string) {
+  return {
+    handle,
+    title: handle.toUpperCase(),
+    vendor: "TestVendor",
+    productType: "Whiskey",
+    tags: ["a"],
+    availableForSale: available,
+    priceRange: { minVariantPrice: { amount } },
+    featuredImage: { url: `https://img/${handle}.jpg` },
+  };
+}
+
+function graphqlHandler(onBody: (body: string, res: ServerResponse) => void): Handler {
+  return (req, res) => {
+    if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
+      let body = "";
+      req.on("data", (c: Buffer) => (body += c.toString()));
+      req.on("end", () => onBody(body, res));
+      return;
+    }
+    res.writeHead(403); // REST is blocked
+    res.end("blocked");
+  };
+}
+
+describe("shopifyRestAdapter storefront fallback", () => {
+  it("fails over to the Storefront API when REST is blocked (403)", async () => {
+    let sawToken: string | undefined;
+    handler = (req, res) => {
+      if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
+        sawToken = req.headers["x-shopify-storefront-access-token"] as string | undefined;
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            data: {
+              products: {
+                pageInfo: { hasNextPage: false, endCursor: null },
+                nodes: [storefrontNode("rev-1", true, "129.00")],
+              },
+            },
+          }),
+        );
+        return;
+      }
+      res.writeHead(403);
+      res.end("blocked");
+    };
+    const result = await shopifyRestAdapter.fetch(makeFallbackSite(), {}, fallbackDeps);
+    expect(result.kind).toBe("products");
+    if (result.kind !== "products") return;
+    expect(result.via).toBe("storefront_fallback");
+    expect(sawToken).toBe("tok-abc");
+    expect(result.products).toHaveLength(1);
+    const p = result.products[0]!;
+    expect(p.handle).toBe("rev-1");
+    expect(p.available).toBe(true);
+    expect(p.minPrice).toBe(129);
+    expect(p.vendor).toBe("TestVendor");
+    expect(p.url).toBe(`${base}/products/rev-1`); // links still point at the primary domain
+    expect(result.validators).toBeNull(); // no stale cross-endpoint ETags
+  });
+
+  it("scopes the fallback query to the collection handle for collection sources", async () => {
+    let sawQuery = "";
+    handler = graphqlHandler((body, res) => {
+      sawQuery = (JSON.parse(body) as { query: string }).query;
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          data: {
+            collection: {
+              products: { pageInfo: { hasNextPage: false }, nodes: [storefrontNode("t8ke-1", false, "50.00")] },
+            },
+          },
+        }),
+      );
+    });
+    const result = await shopifyRestAdapter.fetch(makeFallbackSite("/collections/t8ke"), {}, fallbackDeps);
+    expect(sawQuery).toContain('collection(handle: "t8ke")');
+    if (result.kind !== "products") throw new Error("expected products");
+    expect(result.products[0]!.handle).toBe("t8ke-1");
+  });
+
+  it("rethrows the ORIGINAL blocked error when the fallback also fails", async () => {
+    handler = graphqlHandler((_body, res) => {
+      res.writeHead(500);
+      res.end("boom");
+    });
+    await expect(shopifyRestAdapter.fetch(makeFallbackSite(), {}, fallbackDeps)).rejects.toMatchObject({
+      statusCode: 403,
+    });
+  });
+
+  it("throws the blocked error untouched when no fallback is configured", async () => {
+    handler = (_req, res) => {
+      res.writeHead(403);
+      res.end("blocked");
+    };
+    await expect(shopifyRestAdapter.fetch(makeSite(), {}, fallbackDeps)).rejects.toMatchObject({ statusCode: 403 });
+  });
+
+  it("does NOT fall back on a non-blocked error (500)", async () => {
+    let graphqlCalled = false;
+    handler = (req, res) => {
+      if (req.method === "POST") graphqlCalled = true;
+      res.writeHead(500);
+      res.end("server error");
+    };
+    await expect(shopifyRestAdapter.fetch(makeFallbackSite(), {}, fallbackDeps)).rejects.toMatchObject({
+      statusCode: 500,
+    });
+    expect(graphqlCalled).toBe(false);
+  });
+});

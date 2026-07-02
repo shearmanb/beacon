@@ -9,6 +9,30 @@ mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
 
 ---
 
+## SharedPour bot-block incident (2026-07-02)
+
+`sharedpour_reveries` (and by extension every checker on sharedpour.com) started
+failing while the store loads fine in a browser — Shopify/WAF bot protection now
+403s datacenter IPs (Railway included). **Shipped this session**: `shopify_rest`
+`storefrontFallback` (REST blocked → Storefront GraphQL on `*.myshopify.com`,
+auto-recovering), 430 added to the circuit-breaker statuses, identity re-roll on
+repeated blocks, and dashboard failure diagnostics (HTTP status, cooldown
+countdown, ⛑ fallback chip, "looks like bot protection" hint). Follow-ups:
+
+- **Delete the one-time `serve.ts` amendment** (SharedPour fallback injection)
+  once the prod logs show `[serve] Amended sharedpour_…` (or the ⛑ chip appears).
+  Size XS · no deps · no risk.
+- **Watch the fallback in prod.** If the Storefront API is *also* blocked from
+  Railway, the remaining lever is a residential/rotating egress proxy (adds a
+  paid dep — on-demand only) or moving the checker cadence way down. Decide only
+  on evidence.
+- **Host-level block detection** (both sharedpour sites failing ⇒ one "host
+  blocked" note instead of two site_errors) — S · no deps · low risk. On-demand;
+  the systemic detector (2d) already covers the all-sites case.
+- **Dashboard "edit source JSON" action** for existing sites (today only
+  filters/schedule are editable; source changes need a code amendment or
+  re-adding the site) — M · no deps · medium risk (validation via existing Zod).
+
 ## Review follow-ups (2026-06-25)
 
 Big reliability / self-healing batch from the code+feature review. **Shipped this

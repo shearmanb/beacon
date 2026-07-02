@@ -107,4 +107,11 @@ describe("processSite", () => {
     expect(out.newState.cooldownLevel).toBe(1);
     expect(typeof out.newState.cooldownUntil).toBe("string");
   });
+
+  it("error path: Shopify's 430 bot-block status also trips the cooldown", async () => {
+    const prev: SiteState = { lastChecked: "t", cooldownLevel: 0 };
+    const out = await processSite({ site: site(), prevState: prev, adapter: fails(new HttpError(430, "https://x.com")), deps, ignored: noneIgnored });
+    expect(out.newState.cooldownLevel).toBe(1);
+    expect(typeof out.newState.cooldownUntil).toBe("string");
+  });
 });

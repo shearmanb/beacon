@@ -40,6 +40,20 @@ export const shopifyRestSource = z.object({
   /** Extra query params appended to products.json (rarely needed). */
   extraParams: z.string().optional(),
   conditionalGet: z.boolean().default(true),
+  /** Self-healing failover: when the REST endpoint is bot-blocked (401/403/429/
+   *  430), the adapter retries via the token-authenticated Storefront GraphQL
+   *  API on the canonical *.myshopify.com domain — Shopify's designed-for-server
+   *  channel, which a custom domain's WAF/bot protection doesn't sit in front of. */
+  storefrontFallback: z
+    .object({
+      domain: z.string(),
+      /** Reference into the secrets table — never an inline token. */
+      accessTokenRef: z.string(),
+      apiVersion: z.string().default("2025-01"),
+      /** Full endpoint override (primarily for testing); derived from domain otherwise. */
+      endpoint: z.string().url().optional(),
+    })
+    .optional(),
 });
 
 export const shopifyGraphqlSource = z.object({

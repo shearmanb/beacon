@@ -284,6 +284,16 @@ export default async function SitesPage() {
           const productCount = Object.keys((state?.products as object | undefined) ?? {}).length;
           const errors = (state?.consecutiveErrors as number | undefined) ?? 0;
           const immLeft = imminentLeft(def);
+          // Failure diagnostics: cooldown countdown, HTTP status of the latest
+          // failure, and a "blocked" read when the status is a bot-protection
+          // tell (401/403/430) — so a dead checker explains itself on the tile.
+          const cooldownMsLeft = state?.cooldownUntil
+            ? new Date(state.cooldownUntil as string).getTime() - Date.now()
+            : 0;
+          const errLog = (state?.errorLog as { statusCode?: number | null }[] | undefined) ?? [];
+          const lastStatus = errors > 0 ? errLog[errLog.length - 1]?.statusCode ?? null : null;
+          const looksBlocked = lastStatus === 401 || lastStatus === 403 || lastStatus === 430;
+          const viaFallback = state?.fetchVia === "storefront_fallback";
           // PulseStrip health overlays. `stalled` reuses siteHealth's staleness
           // formula (interval × 2.5 + grace) so a red strip lines up with a
           // non-ok dot; `degraded` flags a recent failure even if not yet stale.
@@ -341,6 +351,31 @@ export default async function SitesPage() {
                     <span className="k">Errors</span>
                     <span className="val" style={{ color: "var(--err)" }}>
                       {errors}
+                      {lastStatus != null ? ` · HTTP ${lastStatus}` : ""}
+                    </span>
+                  </div>
+                )}
+                {cooldownMsLeft > 0 && (
+                  <div className="site-stat">
+                    <span className="k">Cooldown</span>
+                    <span
+                      className="val"
+                      style={{ color: "var(--warn)" }}
+                      title="Circuit breaker: after a 403/429/430 the site is rested 5→15→60 min before retrying, so checks pause on purpose."
+                    >
+                      ⏸ {Math.ceil(cooldownMsLeft / 60_000)}m left
+                    </span>
+                  </div>
+                )}
+                {viaFallback && (
+                  <div className="site-stat">
+                    <span className="k">Channel</span>
+                    <span
+                      className="val"
+                      style={{ color: "var(--warn)" }}
+                      title="products.json is blocked, so this roster came from the Storefront GraphQL API fallback. REST is retried first on every check and this clears when it recovers."
+                    >
+                      ⛑ storefront fallback
                     </span>
                   </div>
                 )}
@@ -359,6 +394,12 @@ export default async function SitesPage() {
               {(state?.lastError as string | undefined) && errors > 0 && (
                 <div className="faint mono" style={{ fontSize: 11, marginBottom: 6 }}>
                   {String(state?.lastError)}
+                  {looksBlocked && (
+                    <span style={{ color: "var(--warn)" }}>
+                      {" "}
+                      — looks like bot protection blocking Beacon&apos;s server IP; the page can still load fine in your own browser.
+                    </span>
+                  )}
                 </div>
               )}
               <SiteControls

@@ -26,6 +26,13 @@ export function identityForHost(hostname: string): HostIdentity {
   return identity;
 }
 
+/** Self-healing nudge: drop a host's cached identity so the next request rolls
+ *  a fresh browser profile. Used after repeated 403/429/430 blocks — an
+ *  IP-level block won't care, but a flagged UA/profile-level one might. */
+export function expireIdentity(hostname: string): void {
+  hostIdentities.delete(hostname);
+}
+
 /** Test-only: clear cached identities so a test can assert fresh selection. */
 export function _resetIdentities(): void {
   hostIdentities.clear();

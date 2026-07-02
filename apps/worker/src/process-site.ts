@@ -131,9 +131,10 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
   const threshold = site.imminent ? IMMINENT_ERROR_ALERT_THRESHOLD : ERROR_ALERT_THRESHOLD;
   const shouldAlert = consecutiveErrors >= threshold && (!alreadyAlerted || dueForRealert);
 
-  // Circuit breaker: 429/403 -> escalating cooldown.
+  // Circuit breaker: 429/403/430 -> escalating cooldown (430 is Shopify's own
+  // bot-block status — same meaning as a WAF 403).
   let cooldown: Partial<SiteState> = {};
-  if (statusCode === 429 || statusCode === 403) {
+  if (statusCode === 429 || statusCode === 403 || statusCode === 430) {
     const level = Math.min(((prev.cooldownLevel as number | undefined) ?? 0) + 1, COOLDOWN_STEPS_MIN.length);
     const minutes = COOLDOWN_STEPS_MIN[level - 1]!;
     cooldown = { cooldownLevel: level, cooldownUntil: new Date(Date.now() + minutes * 60_000).toISOString() };
@@ -171,7 +172,7 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
             url: sourceUrl(site),
             note:
               `${consecutiveErrors} consecutive failures${statusCode ? ` (HTTP ${statusCode}` +
-              `${statusCode === 403 || statusCode === 401 ? " — looks blocked" : ""})` : ""}. ` +
+              `${statusCode === 403 || statusCode === 401 || statusCode === 430 ? " — looks blocked (bot protection?); the page may still load fine in a browser" : ""})` : ""}. ` +
               `Last error: ${message}${dueForRealert ? " (daily reminder)" : ""}`,
           },
         },

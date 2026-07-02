@@ -13,6 +13,7 @@
 //    suppress the per-site error sends for that pass.
 
 import { buildAdapterDeps, getAdapter, siteDefinitionSchema, sourceUrl, type SiteDefinition } from "@beacon/core";
+import { expireIdentity } from "@beacon/fetch";
 import { sleep, jitter, shouldCheck, type Alert } from "@beacon/shared";
 import type { NotificationChannel } from "@beacon/notify";
 import type { BeaconStore, SiteRow } from "@beacon/db";
@@ -203,6 +204,19 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
       if (outcome.events.length) await store.history.append(def.id, outcome.events);
     }
     results.push({ def, outcome });
+
+    // Self-healing nudge: a second consecutive block (cooldown escalated past
+    // level 1) suggests the current browser identity may be flagged — re-roll it
+    // so the next attempt presents a fresh profile.
+    if (!outcome.ok && ((outcome.newState.cooldownLevel as number | undefined) ?? 0) >= 2) {
+      try {
+        const host = new URL(sourceUrl(def)).hostname;
+        expireIdentity(host);
+        log(`[${def.name}] Re-rolled browser identity for ${host} after repeated blocks.`);
+      } catch {
+        /* sourceUrl may be empty for some kinds */
+      }
+    }
 
     await wait(jitter(1000, 500)); // inter-site gap
   }

@@ -4,7 +4,7 @@
 // minPrice are intrinsic to the Shopify variant shape, so they're computed here
 // (not per-site config).
 
-import { httpGet, conditionalHeaders, extractValidators } from "@beacon/fetch";
+import { httpGet, httpPost, conditionalHeaders, extractValidators } from "@beacon/fetch";
 import { sleep, type NormalizedProduct } from "@beacon/shared";
 import type { SourceOf } from "../schema.js";
 import type { AdapterDeps, FetchResult, PrevState, SourceAdapter } from "./types.js";
@@ -28,6 +28,13 @@ const PAGE_LIMIT = 250;
 // must not paginate "forever" and starve the loop. 20 pages = 5,000 products,
 // well past any store we track. Hitting it is logged so it's visible.
 const MAX_PAGES = 20;
+// Statuses that mean "the endpoint is blocking us" (bot protection / rate limit)
+// rather than "the endpoint is broken" — these trigger the Storefront fallback.
+// 430 is Shopify's own bot-block status; 401/403 are WAF/challenge walls.
+const BLOCKED_STATUSES = new Set([401, 403, 429, 430]);
+// Storefront-fallback pagination cap: 4 × 250 = 1,000 products, same spirit as
+// MAX_PAGES but the fallback is a last-resort channel — keep it tighter.
+const FALLBACK_MAX_PAGES = 4;
 
 function getMinPrice(variants: ShopifyVariant[] | undefined): number | null {
   if (!variants?.length) return null;
@@ -65,56 +72,175 @@ export const shopifyRestAdapter: SourceAdapter = {
   kind: "shopify_rest",
   async fetch(site, prev: PrevState, deps?: AdapterDeps): Promise<FetchResult> {
     const src = site.source as SourceOf<"shopify_rest">;
-    const base = src.baseUrl.replace(/\/$/, "");
-    const collection = src.collectionPath ? `/${src.collectionPath.replace(/^\/|\/$/g, "")}` : "";
-    const root = `${base}${collection}`;
-    const origin = new URL(base).origin;
-    const extraParams = src.extraParams ? `&${src.extraParams}` : "";
-
-    // Conditional GET only when the whole catalog fit one page last check — a
-    // 304 on page 1 then proves nothing changed anywhere. Multi-page catalogs
-    // can change on later pages without touching page 1's ETag, so they always
-    // fetch in full.
-    const singlePage = src.conditionalGet && prev.pageCount === 1 && !!prev.httpValidators;
-
-    const all: ShopifyProduct[] = [];
-    let page = 1;
-    let validators = null;
-
-    for (;;) {
-      if (page > 1) await sleep(300 + Math.floor(Math.random() * 500));
-      const url = `${root}/products.json?limit=${PAGE_LIMIT}&page=${page}${extraParams}`;
-      const res = await httpGet(url, {
-        withResponse: true,
-        kind: "api", // products.json is a JSON/XHR call, not a page navigation (2g)
-        signal: deps?.signal,
-        headers: page === 1 && singlePage ? conditionalHeaders(prev.httpValidators) : {},
-      });
-      if (res.status === 304) {
-        return { kind: "not_modified", validators: prev.httpValidators };
+    const origin = new URL(src.baseUrl).origin;
+    try {
+      return await fetchRest(src, prev, origin, deps);
+    } catch (err) {
+      // Self-healing failover: a blocked REST endpoint (bot protection on the
+      // custom domain) retries via the token-authenticated Storefront GraphQL
+      // API on the canonical myshopify.com domain. If the fallback also fails,
+      // the ORIGINAL error is rethrown so the circuit breaker still sees the
+      // real block status.
+      const status = (err as { statusCode?: number }).statusCode;
+      const fb = src.storefrontFallback;
+      const token = fb ? deps?.resolveSecret?.(fb.accessTokenRef) : null;
+      if (fb && token && status != null && BLOCKED_STATUSES.has(status)) {
+        console.warn(`[${site.name}] REST blocked (HTTP ${status}) — failing over to Storefront API on ${fb.domain}.`);
+        try {
+          return await fetchViaStorefront(src, fb, token, origin, deps);
+        } catch (fbErr) {
+          console.warn(`[${site.name}] Storefront fallback also failed: ${(fbErr as Error).message}`);
+        }
       }
-      if (page === 1) validators = extractValidators(res.headers);
-      const json = JSON.parse(res.body) as { products?: ShopifyProduct[] };
-      const batch = json.products ?? [];
-      all.push(...batch);
-      if (batch.length < PAGE_LIMIT) break;
-      if (page >= MAX_PAGES) {
-        console.warn(`[${site.name}] Hit MAX_PAGES (${MAX_PAGES}) — stopping pagination at ${all.length} products.`);
-        break;
-      }
-      page += 1;
+      throw err;
     }
-
-    return {
-      kind: "products",
-      products: all.map((p) => normalize(p, origin)),
-      validators,
-      pageCount: page,
-      emptyGuardThreshold: 3,
-      emptyGuardNote:
-        "products.json returned 0 products on consecutive checks. Previous products " +
-        "are preserved. If the store is between waves this is expected — otherwise the " +
-        "collection URL may have changed.",
-    };
   },
 };
+
+async function fetchRest(
+  src: SourceOf<"shopify_rest">,
+  prev: PrevState,
+  origin: string,
+  deps?: AdapterDeps,
+): Promise<FetchResult> {
+  const base = src.baseUrl.replace(/\/$/, "");
+  const collection = src.collectionPath ? `/${src.collectionPath.replace(/^\/|\/$/g, "")}` : "";
+  const root = `${base}${collection}`;
+  const extraParams = src.extraParams ? `&${src.extraParams}` : "";
+
+  // Conditional GET only when the whole catalog fit one page last check — a
+  // 304 on page 1 then proves nothing changed anywhere. Multi-page catalogs
+  // can change on later pages without touching page 1's ETag, so they always
+  // fetch in full.
+  const singlePage = src.conditionalGet && prev.pageCount === 1 && !!prev.httpValidators;
+
+  const all: ShopifyProduct[] = [];
+  let page = 1;
+  let validators = null;
+
+  for (;;) {
+    if (page > 1) await sleep(300 + Math.floor(Math.random() * 500));
+    const url = `${root}/products.json?limit=${PAGE_LIMIT}&page=${page}${extraParams}`;
+    const res = await httpGet(url, {
+      withResponse: true,
+      kind: "api", // products.json is a JSON/XHR call, not a page navigation (2g)
+      signal: deps?.signal,
+      headers: page === 1 && singlePage ? conditionalHeaders(prev.httpValidators) : {},
+    });
+    if (res.status === 304) {
+      return { kind: "not_modified", validators: prev.httpValidators };
+    }
+    if (page === 1) validators = extractValidators(res.headers);
+    const json = JSON.parse(res.body) as { products?: ShopifyProduct[] };
+    const batch = json.products ?? [];
+    all.push(...batch);
+    if (batch.length < PAGE_LIMIT) break;
+    if (page >= MAX_PAGES) {
+      console.warn(`[${root}] Hit MAX_PAGES (${MAX_PAGES}) — stopping pagination at ${all.length} products.`);
+      break;
+    }
+    page += 1;
+  }
+
+  return {
+    kind: "products",
+    products: all.map((p) => normalize(p, origin)),
+    validators,
+    pageCount: page,
+    emptyGuardThreshold: 3,
+    emptyGuardNote:
+      "products.json returned 0 products on consecutive checks. Previous products " +
+      "are preserved. If the store is between waves this is expected — otherwise the " +
+      "collection URL may have changed.",
+  };
+}
+
+// ── Storefront GraphQL fallback ──────────────────────────────────────────────
+// The same roster via Shopify's token-authenticated Storefront API: a collection
+// source queries collection(handle:); a store-root source queries products().
+// The nodes carry vendor/productType/tags so the pipeline's filters keep working
+// unchanged, and product URLs still point at the primary (custom) domain.
+
+interface StorefrontNode {
+  title: string;
+  handle: string;
+  vendor?: string | null;
+  productType?: string | null;
+  tags?: string[] | null;
+  availableForSale: boolean;
+  priceRange?: { minVariantPrice?: { amount?: string } };
+  featuredImage?: { url?: string };
+}
+interface StorefrontPage {
+  pageInfo?: { hasNextPage?: boolean; endCursor?: string | null };
+  nodes?: StorefrontNode[];
+}
+
+const NODE_FIELDS = `title handle vendor productType tags availableForSale
+  priceRange { minVariantPrice { amount } } featuredImage { url }`;
+
+function normalizeStorefront(n: StorefrontNode, origin: string): NormalizedProduct {
+  const amount = n.priceRange?.minVariantPrice?.amount;
+  return {
+    handle: n.handle,
+    title: n.title,
+    vendor: n.vendor ?? null,
+    productType: n.productType ?? null,
+    tags: Array.isArray(n.tags) ? n.tags : [],
+    minPrice: amount ? parseFloat(amount) : null,
+    available: !!n.availableForSale,
+    image: n.featuredImage?.url ?? null,
+    url: `${origin}/products/${n.handle}`,
+  };
+}
+
+async function fetchViaStorefront(
+  src: SourceOf<"shopify_rest">,
+  fb: NonNullable<SourceOf<"shopify_rest">["storefrontFallback"]>,
+  token: string,
+  origin: string,
+  deps?: AdapterDeps,
+): Promise<FetchResult> {
+  const endpoint = fb.endpoint ?? `https://${fb.domain}/api/${fb.apiVersion}/graphql.json`;
+  const handleMatch = src.collectionPath?.match(/collections\/([^/?]+)/);
+  const collectionHandle = handleMatch?.[1];
+
+  const all: StorefrontNode[] = [];
+  let cursor: string | null = null;
+  for (let page = 1; page <= FALLBACK_MAX_PAGES; page += 1) {
+    if (page > 1) await sleep(300 + Math.floor(Math.random() * 500));
+    const inner = `products(first: ${PAGE_LIMIT}, after: $cursor) {
+      pageInfo { hasNextPage endCursor }
+      nodes { ${NODE_FIELDS} }
+    }`;
+    const query = collectionHandle
+      ? `query($cursor: String) { collection(handle: "${collectionHandle}") { ${inner} } }`
+      : `query($cursor: String) { ${inner} }`;
+    const res = await httpPost(endpoint, JSON.stringify({ query, variables: { cursor } }), {
+      headers: { "X-Shopify-Storefront-Access-Token": token },
+      signal: deps?.signal,
+    });
+    const json = JSON.parse(res.body) as {
+      data?: { products?: StorefrontPage; collection?: { products?: StorefrontPage } | null };
+    };
+    const pageData = collectionHandle ? json.data?.collection?.products : json.data?.products;
+    if (!Array.isArray(pageData?.nodes)) {
+      throw new Error(`Storefront fallback returned unexpected structure: ${res.body.slice(0, 200)}`);
+    }
+    all.push(...pageData.nodes);
+    if (!pageData.pageInfo?.hasNextPage || !pageData.pageInfo.endCursor) break;
+    cursor = pageData.pageInfo.endCursor;
+  }
+
+  return {
+    kind: "products",
+    products: all.map((n) => normalizeStorefront(n, origin)),
+    validators: null, // ETags are per-endpoint; force a fresh REST attempt next check
+    via: "storefront_fallback",
+    emptyGuardThreshold: 3,
+    emptyGuardNote:
+      "Storefront-API fallback returned 0 products on consecutive checks. Previous " +
+      "products are preserved. If the store is between waves this is expected — " +
+      "otherwise the collection handle may not exist on the Storefront channel.",
+  };
+}

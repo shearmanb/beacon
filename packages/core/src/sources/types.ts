@@ -39,6 +39,9 @@ export type FetchResult =
       products: NormalizedProduct[];
       validators?: HttpValidators | null;
       pageCount?: number;
+      /** Set when the primary channel was blocked and a fallback produced the
+       *  roster (e.g. "storefront_fallback") — surfaced on the dashboard tile. */
+      via?: string;
       /** Per-source empty-guard tuning (defaults applied by the pipeline). */
       emptyGuardThreshold?: number;
       emptyGuardNote?: string;

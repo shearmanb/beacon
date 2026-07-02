@@ -114,6 +114,32 @@ if (existing.length > 0) {
   }
 }
 
+// ── One-time config amendments (idempotent, safe to delete once applied) ──────
+// 2026-07: sharedpour.com's bot protection started 403-ing datacenter IPs,
+// killing the REST checkers while the store loads fine in a browser. Give the
+// SharedPour shopify_rest sites the Storefront-API fallback (the adapter fails
+// over to the token-authenticated GraphQL channel on the canonical myshopify
+// domain when REST is blocked). No-ops on every boot after the first.
+{
+  const FALLBACK = { domain: "shared-pour.myshopify.com", accessTokenRef: "reveries_official_storefront_token" };
+  try {
+    const secrets = await store.secrets.all();
+    if (secrets[FALLBACK.accessTokenRef]) {
+      for (const row of await store.sites.list()) {
+        const src = row.definition.source as Record<string, unknown>;
+        if (src["kind"] !== "shopify_rest" || src["storefrontFallback"]) continue;
+        if (new URL(String(src["baseUrl"] ?? "")).hostname.replace(/^www\./, "") !== "sharedpour.com") continue;
+        await store.sites.upsert({ ...row.definition, source: { ...src, storefrontFallback: FALLBACK } });
+        console.log(`[serve] Amended ${row.id}: added Storefront-API fallback for blocked REST.`);
+      }
+    } else {
+      console.warn(`[serve] Skipping SharedPour fallback amendment — secret "${FALLBACK.accessTokenRef}" not found.`);
+    }
+  } catch (err) {
+    console.error(`[serve] Config amendment failed (continuing): ${(err as Error).message}`);
+  }
+}
+
 if (seedOnly) {
   store.close();
   process.exit(0);
