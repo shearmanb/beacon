@@ -2,16 +2,17 @@ import "./globals.css";
 import type { ReactNode } from "react";
 import { ThemeSwitcher } from "../components/ThemeSwitcher";
 import { AutoRefresh } from "../components/AutoRefresh";
+import { DeployStamp } from "../components/DeployStamp";
 
 export const metadata = {
   title: "Beacon",
   description: "Stock-monitoring dashboard",
 };
 
-// Shown in the header so it's obvious which build is live. Bump on a notable
-// release (mirrors the v1 dashboard's "v0.4 · App update" stamp).
+// Shown in the header so it's obvious which build is live. The live "updated"
+// time + Railway deploy ID render below via <DeployStamp /> (self-maintaining
+// from Railway env), so no hardcoded date to go stale here anymore.
 const APP_VERSION = "v2";
-const APP_UPDATED = "2026-06-24";
 
 // Set the saved theme before paint to avoid a flash of the default theme.
 const themeInit = `try{var t=localStorage.getItem('beacon_theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}`;
@@ -38,11 +39,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <a href="/reminders">Reminders</a>
             </nav>
             <div className="spacer" />
-            <span className="ver mono" title={`Last app update: ${APP_UPDATED} ET`}>
-              {APP_VERSION} · {APP_UPDATED}
-            </span>
+            <span className="ver mono">{APP_VERSION}</span>
             <ThemeSwitcher />
           </header>
+          <DeployStamp />
           {children}
         </div>
       </body>
