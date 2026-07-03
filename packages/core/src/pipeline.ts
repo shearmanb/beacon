@@ -93,6 +93,8 @@ export async function runSiteCheck(
       // primary was blocked); null on a normal primary fetch so recovery clears it.
       fetchVia: result.via ?? null,
       fetchViaReason: result.viaReason ?? null,
+      // Adapter feedback-loop telemetry (channel preference, probe stamps, …).
+      ...(result.stateExtras ?? {}),
       ...yieldEval.tracking,
     },
     alerts,

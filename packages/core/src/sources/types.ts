@@ -45,6 +45,11 @@ export type FetchResult =
       /** Human-readable WHY the fallback was needed (e.g. "products.json blocked
        *  with HTTP 403") — carried into the self_healed alert + tile tooltip. */
       viaReason?: string;
+      /** Adapter-owned telemetry merged verbatim into the site state (e.g.
+       *  channel-preference bookkeeping: preferFallback, lastRestProbeAt).
+       *  Generic on purpose — any adapter can persist feedback-loop state
+       *  without a pipeline change. */
+      stateExtras?: Record<string, unknown>;
       /** Per-source empty-guard tuning (defaults applied by the pipeline). */
       emptyGuardThreshold?: number;
       emptyGuardNote?: string;

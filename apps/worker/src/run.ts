@@ -12,7 +12,7 @@
 //    `system_degraded` page instead of N near-identical site_error pings, and
 //    suppress the per-site error sends for that pass.
 
-import { buildAdapterDeps, getAdapter, siteDefinitionSchema, sourceUrl, type SiteDefinition } from "@beacon/core";
+import { buildAdapterDeps, diagnoseSite, getAdapter, siteDefinitionSchema, sourceUrl, type AdapterDeps, type SiteDefinition } from "@beacon/core";
 import { expireIdentity } from "@beacon/fetch";
 import { sleep, jitter, shouldCheck, type Alert } from "@beacon/shared";
 import type { NotificationChannel } from "@beacon/notify";
@@ -123,7 +123,17 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
   await applyCommands(store, await store.commands.drainPending());
   let rows = normalizeRows(await store.sites.list(), log);
   await autoOffImminent(ctx, rows);
-  rows = normalizeRows(await store.sites.list(), log); // refresh after auto-off mutations
+
+  // Preventive fallback arming (2a): harvest Storefront tokens for shopify_rest
+  // sites that lack one, while their pages are still reachable (≤1 try/site/day).
+  try {
+    const { maybeHarvestFallbacks } = await import("./harvest.js");
+    await maybeHarvestFallbacks(ctx, rows);
+  } catch (err) {
+    log(`Fallback harvest error (continuing): ${(err as Error).message}`);
+  }
+
+  rows = normalizeRows(await store.sites.list(), log); // refresh after auto-off/harvest mutations
 
   const anyImminentActive = rows.some((r) => r.enabled && r.definition.imminent);
   let checked = 0;
@@ -224,15 +234,25 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     await wait(jitter(1000, 500)); // inter-site gap
   }
 
-  await dispatch(ctx, results);
+  await dispatch(ctx, results, baseDeps);
 
   return { anyImminentActive, checked };
 }
 
+function hostOf(def: SiteDefinition): string | null {
+  try {
+    return new URL(sourceUrl(def)).hostname.replace(/^www\./, "");
+  } catch {
+    return null;
+  }
+}
+
 // Send alerts after the full pass, so systemic failure can be detected and
 // collapsed into a single page. State/history are already persisted above —
-// dispatch only touches Discord.
-async function dispatch(ctx: RunContext, results: CheckedSite[]): Promise<void> {
+// dispatch only touches Discord. site_error pages are enriched before sending:
+// an auto-run 🩺 diagnosis verdict (3b) and a host-level rollup note when
+// multiple checkers on the same host are failing together (3c).
+async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterDeps): Promise<void> {
   const { store, channel, dryRun, log = () => {} } = ctx;
   if (dryRun) {
     // In dry-run, still surface what WOULD have been sent (parity with the old
@@ -261,7 +281,10 @@ async function dispatch(ctx: RunContext, results: CheckedSite[]): Promise<void> 
           url: "",
           note:
             `Every one of the ${results.length} checked sites failed this pass — likely a network ` +
-            `outage or the egress IP being blocked, not a per-site problem.\n${sample}`,
+            `outage or the egress IP being blocked, not a per-site problem.\n${sample}\n\n` +
+            `What to check: 1) is the Railway service up (deploy logs)? 2) hit 🩺 Diagnose on any tile — ` +
+            `if every step fails, the egress IP is blocked or the network is down; 3) a Railway redeploy ` +
+            `can rotate the egress IP if this persists.`,
         },
       };
       await store.history.append(null, [event]);
@@ -279,15 +302,41 @@ async function dispatch(ctx: RunContext, results: CheckedSite[]): Promise<void> 
 
   systemicAlerted = false;
 
+  // Host-level view (3c): which hosts have 2+ failing checkers this pass.
+  const failingByHost = new Map<string, string[]>();
+  for (const { def } of errored) {
+    const host = hostOf(def);
+    if (!host) continue;
+    failingByHost.set(host, [...(failingByHost.get(host) ?? []), def.name]);
+  }
+
   for (const { def, outcome } of results) {
     for (const ev of outcome.events) {
       log(`  → ${ev.type}: ${ev.product.title}`);
-      if (ev.type !== "baseline" && channel) {
+      if (ev.type === "baseline" || !channel) continue;
+
+      let note = ev.product.note ?? "";
+      if (ev.type === "site_error") {
+        // Auto-diagnosis (3b): run the same step-by-step probe the 🩺 button
+        // runs and ship the verdict INSIDE the page — the alert arrives already
+        // explaining itself. Short per-step timeout; failures never block the send.
         try {
-          await channel.send(def.name, ev);
+          const report = await diagnoseSite(def, deps, { stepTimeoutMs: 8_000 });
+          note += `\n\n🩺 Auto-diagnosis: ${report.verdict}`;
         } catch (err) {
-          log(`  Discord error: ${(err as Error).message}`);
+          log(`  auto-diagnose failed: ${(err as Error).message}`);
         }
+        const host = hostOf(def);
+        const siblings = host ? failingByHost.get(host) ?? [] : [];
+        if (siblings.length >= 2) {
+          note += `\n\n⚠ Host-level: ${siblings.length} checkers on ${host} are failing together (${siblings.join(", ")}) — one host block, one fix clears them all.`;
+        }
+      }
+
+      try {
+        await channel.send(def.name, note === ev.product.note ? ev : { ...ev, product: { ...ev.product, note } });
+      } catch (err) {
+        log(`  Discord error: ${(err as Error).message}`);
       }
     }
   }

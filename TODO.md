@@ -31,12 +31,30 @@ in plain English. Follow-ups:
   Railway, the remaining lever is a residential/rotating egress proxy (adds a
   paid dep — on-demand only) or moving the checker cadence way down. Decide only
   on evidence.
-- **Host-level block detection** (both sharedpour sites failing ⇒ one "host
-  blocked" note instead of two site_errors) — S · no deps · low risk. On-demand;
-  the systemic detector (2d) already covers the all-sites case.
-- **Dashboard "edit source JSON" action** for existing sites (today only
-  filters/schedule are editable; source changes need a code amendment or
-  re-adding the site) — M · no deps · medium risk (validation via existing Zod).
+- ~~Host-level block detection~~ ✅ Done (2026-07-03) — site_error pages now
+  carry a host rollup note when 2+ checkers on one host fail together.
+- ~~Dashboard "edit source JSON" action~~ ✅ Done (2026-07-03) — ⚙ source editor
+  on every tile (`updateSiteSource`, Zod-validated, re-baselines on change).
+
+### Mitigation/prevention batch (2026-07-03) — shipped
+
+- **1a Channel preference**: after 3 consecutive fallback checks, the Storefront
+  API becomes the preferred channel (`preferFallback` in state, "(preferred)" on
+  the ⛑ chip); REST re-probed every 12h, flips back automatically + pings.
+- **1b Adaptive backoff**: cooldown ladder extended 5→15→60→**180 min**.
+- **2a Preventive token harvest**: un-armed `shopify_rest` sites get one
+  homepage fetch/day (`apps/worker/harvest.ts`) to extract + VERIFY their public
+  Storefront token from page source; on success the secret is stored, the
+  fallback armed, and a 🛡 self_healed ping explains it.
+- **2b (lean)** blocked alerts suggest the Railway-redeploy IP-rotation trick.
+  Full Railway-API automation stays parked (adds token + moving part).
+- **2c Alert enrichment**: every site_error carries a "What to check" list and
+  an auto-run 🩺 diagnosis verdict (3b); system_degraded too.
+- **3a**: dashboard nags (amber banner) while `HEALTHCHECK_URL` is unset —
+  the actual healthchecks.io check is still a **5-min manual setup: DO IT**.
+- **Parked deliberately**: 1c TLS-fingerprint spoofing (headless browser /
+  curl-impersonate — heavy dep, unnecessary while the token-API path works);
+  4a off-box backups (operator: low priority).
 
 ## Review follow-ups (2026-06-25)
 

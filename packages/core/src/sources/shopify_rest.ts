@@ -35,6 +35,12 @@ const BLOCKED_STATUSES = new Set([401, 403, 429, 430]);
 // Storefront-fallback pagination cap: 4 × 250 = 1,000 products, same spirit as
 // MAX_PAGES but the fallback is a last-resort channel — keep it tighter.
 const FALLBACK_MAX_PAGES = 4;
+// Channel preference (feedback loop): after this many consecutive checks that
+// had to use the fallback, stop LEADING with blocked REST — every lead-off REST
+// attempt wastes the stall budget AND keeps hammering a host that already
+// flagged us. Once preferred, REST is re-probed for recovery twice a day.
+const PREFER_FALLBACK_AFTER = 3;
+const REST_REPROBE_MS = 12 * 3_600_000;
 
 function getMinPrice(variants: ShopifyVariant[] | undefined): number | null {
   if (!variants?.length) return null;
@@ -68,6 +74,11 @@ function normalize(p: ShopifyProduct, origin: string): NormalizedProduct {
   };
 }
 
+/** Merge channel-preference telemetry into a products result. */
+function withExtras(result: FetchResult, extras: Record<string, unknown>): FetchResult {
+  return result.kind === "products" ? { ...result, stateExtras: { ...result.stateExtras, ...extras } } : result;
+}
+
 export const shopifyRestAdapter: SourceAdapter = {
   kind: "shopify_rest",
   async fetch(site, prev: PrevState, deps?: AdapterDeps): Promise<FetchResult> {
@@ -75,6 +86,36 @@ export const shopifyRestAdapter: SourceAdapter = {
     const origin = new URL(src.baseUrl).origin;
     const fb = src.storefrontFallback;
     const token = fb ? deps?.resolveSecret?.(fb.accessTokenRef) : null;
+
+    // Channel preference (feedback loop): after PREFER_FALLBACK_AFTER
+    // consecutive fallback checks, lead with the Storefront API instead of
+    // wasting the stall budget re-poking blocked REST every check. REST is
+    // re-probed for recovery every REST_REPROBE_MS, so flipping back is
+    // automatic (and fires the self_healed recovery ping).
+    const fallbackStreak = (prev["fallbackStreak"] as number | undefined) ?? 0;
+    const preferFallback = prev["preferFallback"] === true && !!fb && !!token;
+    const lastProbe = typeof prev["lastRestProbeAt"] === "string" ? Date.parse(prev["lastRestProbeAt"]) : 0;
+    const restProbeDue = Date.now() - lastProbe >= REST_REPROBE_MS;
+
+    let storefrontAlreadyFailed = false;
+    if (preferFallback && !restProbeDue) {
+      const reason =
+        (prev["fetchViaReason"] as string | undefined) ??
+        "REST paused after repeated blocks — Storefront API is the preferred channel (REST re-probed twice a day)";
+      try {
+        const result = await fetchViaStorefront(src, fb!, token!, origin, reason, deps);
+        return withExtras(result, {
+          preferFallback: true,
+          fallbackStreak: fallbackStreak + 1,
+          lastRestProbeAt: (prev["lastRestProbeAt"] as string | undefined) ?? null,
+        });
+      } catch (fbErr) {
+        // Preferred channel broke — fall through to a full REST attempt below
+        // (it may have recovered), rather than failing the check outright.
+        storefrontAlreadyFailed = true;
+        console.warn(`[${site.name}] Preferred Storefront channel failed (${(fbErr as Error).message}) — retrying REST.`);
+      }
+    }
 
     // Stall guard (armed only when a fallback is available): a tar-pitting host
     // never answers with a status — it leaves the connection hanging until the
@@ -100,7 +141,9 @@ export const shopifyRestAdapter: SourceAdapter = {
 
     try {
       const restDeps = restController ? { ...deps, signal: restController.signal } : deps;
-      return await fetchRest(src, prev, origin, restDeps);
+      const result = await fetchRest(src, prev, origin, restDeps);
+      // REST answered — primary is (back to) healthy; clear the preference.
+      return withExtras(result, { preferFallback: false, fallbackStreak: 0, lastRestProbeAt: new Date().toISOString() });
     } catch (err) {
       // Self-healing failover: a blocked REST endpoint retries via the token-
       // authenticated Storefront GraphQL API on the canonical myshopify.com
@@ -111,13 +154,19 @@ export const shopifyRestAdapter: SourceAdapter = {
       const status = (err as { statusCode?: number }).statusCode;
       const blocked = status != null && BLOCKED_STATUSES.has(status);
       const stalled = stallFired && !deps?.signal?.aborted;
-      if (fb && token && (blocked || stalled)) {
+      if (fb && token && !storefrontAlreadyFailed && (blocked || stalled)) {
         const reason = blocked
           ? `products.json blocked with HTTP ${status}`
           : `products.json stalled — no response within ${Math.round(fb.restStallMs / 1000)}s (connection tar-pit, a bot-mitigation tactic)`;
         console.warn(`[${site.name}] ${reason} — failing over to Storefront API on ${fb.domain}.`);
         try {
-          return await fetchViaStorefront(src, fb, token, origin, reason, deps);
+          const result = await fetchViaStorefront(src, fb, token, origin, reason, deps);
+          const streak = fallbackStreak + 1;
+          return withExtras(result, {
+            preferFallback: streak >= PREFER_FALLBACK_AFTER,
+            fallbackStreak: streak,
+            lastRestProbeAt: new Date().toISOString(),
+          });
         } catch (fbErr) {
           console.warn(`[${site.name}] Storefront fallback also failed: ${(fbErr as Error).message}`);
         }

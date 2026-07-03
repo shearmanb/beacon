@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { runNow, setImminent, setImminentTuning, setMonitoring, setSchedule, setSiteFilters } from "../app/actions";
+import { runNow, setImminent, setImminentTuning, setMonitoring, setSchedule, setSiteFilters, updateSiteSource } from "../app/actions";
 import { splitList } from "../lib/site-forms";
 
 export interface ScheduleOption {
@@ -24,6 +24,7 @@ export function SiteControls({
   imminentInterval,
   imminentDuration,
   titleContains,
+  sourceJson,
 }: {
   siteId: string;
   enabled: boolean;
@@ -33,9 +34,28 @@ export function SiteControls({
   imminentInterval: number | null;
   imminentDuration: number | null;
   titleContains: string[];
+  sourceJson: string;
 }) {
   const [pending, start] = useTransition();
   const [kw, setKw] = useState(titleContains.join(", "));
+  // Source JSON editor (4c): plain async busy-state (NOT useTransition — see
+  // DiagnoseButton: React 18 async transitions swallow rejections silently).
+  const [srcText, setSrcText] = useState(sourceJson);
+  const [srcBusy, setSrcBusy] = useState(false);
+  const [srcMsg, setSrcMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  async function saveSource(): Promise<void> {
+    setSrcBusy(true);
+    setSrcMsg(null);
+    try {
+      const res = await updateSiteSource(siteId, srcText);
+      setSrcMsg(res.ok ? { ok: true, text: "✓ saved — site re-baselines on its next check" } : { ok: false, text: res.error ?? "save failed" });
+    } catch (err) {
+      setSrcMsg({ ok: false, text: `save failed: ${err instanceof Error ? err.message : String(err)}` });
+    } finally {
+      setSrcBusy(false);
+    }
+  }
 
   // Save the keyword filter only when it actually changed. Changing it
   // re-baselines the site server-side so existing matches don't flood as new.
@@ -142,6 +162,37 @@ export function SiteControls({
           title="Title keywords (comma-separated)"
         />
       </div>
+      <details style={{ marginTop: 4 }}>
+        <summary
+          className="tune-label"
+          style={{ cursor: "pointer", fontSize: 11 }}
+          title="Edit this site's source recipe (URL, collection path, storefront fallback, …) as JSON. Validated before saving; a change re-baselines the site silently."
+        >
+          ⚙ source
+        </summary>
+        <textarea
+          className="in mono"
+          style={{ width: "100%", marginTop: 4, fontSize: 11 }}
+          rows={7}
+          value={srcText}
+          disabled={srcBusy}
+          onChange={(e) => setSrcText(e.target.value)}
+          spellCheck={false}
+        />
+        <div className="row" style={{ marginTop: 4, alignItems: "center" }}>
+          <button className="btn" disabled={srcBusy || srcText === sourceJson} onClick={() => void saveSource()}>
+            {srcBusy ? "saving…" : "Save source"}
+          </button>
+          <button className="btn" disabled={srcBusy || srcText === sourceJson} onClick={() => { setSrcText(sourceJson); setSrcMsg(null); }}>
+            reset
+          </button>
+          {srcMsg && (
+            <span className="mono" style={{ fontSize: 11, color: srcMsg.ok ? "var(--ok)" : "var(--err)" }}>
+              {srcMsg.text}
+            </span>
+          )}
+        </div>
+      </details>
     </>
   );
 }

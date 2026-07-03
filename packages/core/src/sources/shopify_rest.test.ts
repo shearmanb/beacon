@@ -260,6 +260,58 @@ describe("shopifyRestAdapter storefront fallback", () => {
     expect(result.products[0]!.handle).toBe("rev-1");
   });
 
+  it("sets preferFallback after 3 consecutive fallback checks", async () => {
+    handler = (req, res) => {
+      if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ data: { products: { pageInfo: { hasNextPage: false }, nodes: [storefrontNode("a", true, "10.00")] } } }));
+        return;
+      }
+      res.writeHead(403);
+      res.end("blocked");
+    };
+    const prev: PrevState = { fallbackStreak: 2 };
+    const result = await shopifyRestAdapter.fetch(makeFallbackSite(), prev, fallbackDeps);
+    if (result.kind !== "products") throw new Error("expected products");
+    expect(result.stateExtras?.["preferFallback"]).toBe(true);
+    expect(result.stateExtras?.["fallbackStreak"]).toBe(3);
+    expect(typeof result.stateExtras?.["lastRestProbeAt"]).toBe("string");
+  });
+
+  it("preferred channel: goes straight to Storefront without touching REST until the probe is due", async () => {
+    let restHits = 0;
+    handler = (req, res) => {
+      if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ data: { products: { pageInfo: { hasNextPage: false }, nodes: [storefrontNode("a", true, "10.00")] } } }));
+        return;
+      }
+      restHits += 1;
+      res.writeHead(403);
+      res.end("blocked");
+    };
+    const prev: PrevState = { preferFallback: true, fallbackStreak: 5, lastRestProbeAt: new Date().toISOString() };
+    const result = await shopifyRestAdapter.fetch(makeFallbackSite(), prev, fallbackDeps);
+    if (result.kind !== "products") throw new Error("expected products");
+    expect(restHits).toBe(0);
+    expect(result.via).toBe("storefront_fallback");
+    expect(result.stateExtras?.["preferFallback"]).toBe(true);
+  });
+
+  it("preferred channel: a due REST probe that succeeds flips back to primary", async () => {
+    handler = (_req, res) => {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ products: [shopifyProduct("a", true, "10.00")] }));
+    };
+    const thirteenHoursAgo = new Date(Date.now() - 13 * 3_600_000).toISOString();
+    const prev: PrevState = { preferFallback: true, fallbackStreak: 9, lastRestProbeAt: thirteenHoursAgo };
+    const result = await shopifyRestAdapter.fetch(makeFallbackSite(), prev, fallbackDeps);
+    if (result.kind !== "products") throw new Error("expected products");
+    expect(result.via).toBeUndefined();
+    expect(result.stateExtras?.["preferFallback"]).toBe(false);
+    expect(result.stateExtras?.["fallbackStreak"]).toBe(0);
+  });
+
   it("does NOT fall back on a non-blocked error (500)", async () => {
     let graphqlCalled = false;
     handler = (req, res) => {

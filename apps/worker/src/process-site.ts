@@ -14,7 +14,11 @@ export const ERROR_ALERT_THRESHOLD = 5;
 // In imminent mode, surface a block fast — the operator needs to know the drop
 // window is being blocked, not wait out the full 5-failure threshold.
 export const IMMINENT_ERROR_ALERT_THRESHOLD = 2;
-export const COOLDOWN_STEPS_MIN = [5, 15, 60];
+// Adaptive backoff (1b): the ladder now extends to 3h for a block that persists
+// past an hour — keep resting a hostile host instead of re-poking it every 60m.
+// Recovery latency is bounded by the daily re-page + the fallback channel
+// carrying the actual monitoring.
+export const COOLDOWN_STEPS_MIN = [5, 15, 60, 180];
 const CHECK_HISTORY_CAP = 100;
 const ERROR_LOG_CAP = 25;
 // A site stuck erroring re-pages once a day (3e) — mirrors the empty-guard's
@@ -199,6 +203,16 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
     ...cooldown,
   };
 
+  // "What to check" guidance (2c): every site_error page tells the operator the
+  // next move instead of just stating the failure.
+  const blockedLike = statusCode === 401 || statusCode === 403 || statusCode === 429 || statusCode === 430 || stalled;
+  const tips = blockedLike
+    ? "What to check: 1) open the site in your own browser — if it loads fine, this is a server-IP block, not an outage; " +
+      "2) hit 🩺 Diagnose on the tile for a step-by-step verdict (incl. whether the Storefront fallback still works); " +
+      "3) if it stays fully blocked for days, a Railway redeploy can rotate the egress IP."
+    : "What to check: 1) does the URL still load in your browser (store moved/renamed?); " +
+      "2) hit 🩺 Diagnose on the tile; 3) if the site redesigned, the source config may need updating (⚙ source on the tile).";
+
   const events: Alert[] = shouldAlert
     ? [
         {
@@ -210,7 +224,7 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
               `${consecutiveErrors} consecutive failures${statusCode ? ` (HTTP ${statusCode}` +
               `${statusCode === 403 || statusCode === 401 || statusCode === 430 ? " — looks blocked (bot protection?); the page may still load fine in a browser" : ""})` : ""}` +
               `${stalled ? " (connections left hanging with no response — looks like tar-pit bot mitigation; the page may still load fine in a browser)" : ""}. ` +
-              `Last error: ${message}${dueForRealert ? " (daily reminder)" : ""}`,
+              `Last error: ${message}${dueForRealert ? " (daily reminder)" : ""}\n\n${tips}`,
           },
         },
       ]

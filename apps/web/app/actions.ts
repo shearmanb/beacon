@@ -113,6 +113,33 @@ export async function setSiteFilters(
   revalidatePath("/products");
 }
 
+/**
+ * Edit a site's source recipe as JSON (4c): the escape hatch so source-level
+ * fixes (new fallback, changed collection path, swapped URL) are a form edit,
+ * not a code deploy. Validated through the same Zod schema the worker uses.
+ * A material change clears stored state so the next check re-baselines silently
+ * (startup quiet mode) instead of flooding new_product alerts.
+ */
+export async function updateSiteSource(siteId: string, sourceJson: string): Promise<{ ok: boolean; error?: string }> {
+  const store = await getStore();
+  const site = await store.sites.get(siteId);
+  if (!site) return { ok: false, error: `Unknown site "${siteId}".` };
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(sourceJson);
+  } catch (err) {
+    return { ok: false, error: `Not valid JSON: ${(err as Error).message}` };
+  }
+  const candidate = validateSite({ ...site.definition, source: parsed });
+  if (!candidate.ok) return { ok: false, error: candidate.error ?? "Invalid source definition" };
+  if (JSON.stringify(candidate.site!.source) === JSON.stringify(site.definition.source)) return { ok: true };
+  await store.sites.upsert(candidate.site!);
+  await store.state.clear(siteId);
+  revalidatePath("/");
+  revalidatePath("/products");
+  return { ok: true };
+}
+
 export async function setIgnore(handle: string, ignored: boolean): Promise<void> {
   const store = await getStore();
   if (ignored) await store.ignored.add(handle);

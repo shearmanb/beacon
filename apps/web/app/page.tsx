@@ -253,6 +253,13 @@ export default async function SitesPage() {
           ● Worker active · last ran {minsAgo(liveMs!)}
         </div>
       )}
+      {!process.env["HEALTHCHECK_URL"] && (
+        <div className="faint" style={{ fontSize: 11, margin: "4px 0 10px", color: "var(--warn)" }}>
+          ⚠ Dead-man switch not configured: if the whole worker dies, nothing will tell you — Beacon can&apos;t
+          report its own death. Fix (free, ~5 min): create a check at healthchecks.io (period ~2 min, grace ~10 min)
+          and set its ping URL as <span className="mono">HEALTHCHECK_URL</span> in the Railway service variables.
+        </div>
+      )}
 
       {reveriesProducts.length > 0 && (
         <ReveriesPanel
@@ -380,9 +387,13 @@ export default async function SitesPage() {
                     <span
                       className="val"
                       style={{ color: "var(--warn)" }}
-                      title={`${(state?.fetchViaReason as string | undefined) ?? "products.json is blocked"} — this roster came from the Storefront GraphQL API fallback. REST is retried first on every check and this clears when it recovers.`}
+                      title={`${(state?.fetchViaReason as string | undefined) ?? "products.json is blocked"} — this roster came from the Storefront GraphQL API fallback. ${
+                        state?.preferFallback === true
+                          ? "After repeated blocks the Storefront API is now the PREFERRED channel; REST is re-probed twice a day and this flips back automatically when it recovers."
+                          : "REST is retried first on every check and this clears when it recovers."
+                      }`}
                     >
-                      ⛑ storefront fallback
+                      ⛑ storefront {state?.preferFallback === true ? "(preferred)" : "fallback"}
                     </span>
                   </div>
                 )}
@@ -424,6 +435,7 @@ export default async function SitesPage() {
                 imminentInterval={def.imminentIntervalMinutes ?? null}
                 imminentDuration={def.imminentDurationMinutes ?? null}
                 titleContains={def.filters?.titleContains ?? []}
+                sourceJson={JSON.stringify(def.source, null, 2)}
               />
               {Array.isArray(state?.checkHistory) && (state!.checkHistory as unknown[]).length > 0 && (
                 <PulseStrip
