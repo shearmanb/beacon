@@ -694,20 +694,23 @@ body {
 .mode-micro .site-stat.st-cadence {
   display: flex;
 }
+/* Two stacked rows so the name isn't crushed onto one line with the stats:
+   row 1 = stoplight + name (full width), row 2 = last checked + cadence. */
 .mode-micro .site-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 14px;
+  padding: 10px 14px 12px;
 }
-.mode-micro .site-hd {
-  flex: 1 1 auto;
-  min-width: 0;
+.mode-micro .site-hd .name {
+  font-size: 12px;
 }
 .mode-micro .site-stats {
-  margin: 0;
-  flex: 0 0 auto;
-  gap: 4px 16px;
+  margin: 7px 0 0;
+  gap: 4px 20px;
+}
+.mode-micro .site-stat .k {
+  font-size: 8px;
+}
+.mode-micro .site-stat .val {
+  font-size: 11.5px;
 }
 
 /* compact imminent-tuning row under the main controls */
