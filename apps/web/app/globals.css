@@ -645,6 +645,71 @@ body {
   background: var(--accent-dim);
 }
 
+/* ===== site tile density modes (full / compact / micro) ===== */
+/* The schedule + cadence readouts exist only for the density modes — hidden in
+   full so the default tile is unchanged. */
+.site-stat.st-schedule,
+.site-stat.st-cadence {
+  display: none;
+}
+
+/* COMPACT: products · last checked · schedule · heartbeat (PulseStrip). Drops
+   the controls, diagnostics, and the error/cooldown/channel detail stats. */
+.sites-grid.mode-compact {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+.mode-compact .st-mode,
+.mode-compact .st-errors,
+.mode-compact .st-cooldown,
+.mode-compact .st-channel,
+.mode-compact .st-activity,
+.mode-compact .site-err,
+.mode-compact .site-controls-wrap,
+.mode-compact .diag-wrap {
+  display: none;
+}
+.mode-compact .site-stat.st-schedule {
+  display: flex;
+}
+
+/* MICRO: stoplight · name · last checked · cadence — one short row. */
+.sites-grid.mode-micro {
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 8px;
+}
+.mode-micro .kind-chip,
+.mode-micro .st-products,
+.mode-micro .st-mode,
+.mode-micro .st-errors,
+.mode-micro .st-cooldown,
+.mode-micro .st-channel,
+.mode-micro .st-activity,
+.mode-micro .st-schedule,
+.mode-micro .site-err,
+.mode-micro .site-controls-wrap,
+.mode-micro .diag-wrap,
+.mode-micro .pulse {
+  display: none;
+}
+.mode-micro .site-stat.st-cadence {
+  display: flex;
+}
+.mode-micro .site-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+}
+.mode-micro .site-hd {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.mode-micro .site-stats {
+  margin: 0;
+  flex: 0 0 auto;
+  gap: 4px 16px;
+}
+
 /* compact imminent-tuning row under the main controls */
 .row.tune {
   border-top: none;

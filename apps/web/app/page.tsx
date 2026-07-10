@@ -4,8 +4,8 @@ import { SiteControls } from "../components/SiteControls";
 import { PulseStrip } from "../components/PulseStrip";
 import { DiagnoseButton } from "../components/DiagnoseButton";
 import { ReveriesPanel } from "../components/ReveriesPanel";
+import { SitesView } from "../components/SitesView";
 import { isReveries } from "../lib/reveries";
-import { runNow } from "./actions";
 import { getEffectiveInterval } from "@beacon/shared";
 import type { SiteDefinition } from "@beacon/core";
 
@@ -59,13 +59,19 @@ export default async function SitesPage() {
   ]);
   const states = await Promise.all(rows.map((r) => store.state.load(r.id)));
 
-  const cards = rows.map((row, i) => ({ row, state: states[i] }));
-  const healths = cards.map(({ row, state }) => siteHealth(row.definition, state, schedules));
+  const cards = rows.map((row, i) => ({
+    row,
+    state: states[i],
+    health: siteHealth(row.definition, states[i], schedules),
+  }));
 
   const monitored = rows.filter((r) => r.enabled).length;
-  const healthy = healths.filter((h) => h === "ok").length;
-  const errCount = healths.filter((h) => h === "err").length;
-  const warnCount = healths.filter((h) => h === "warn").length;
+  const healthy = cards.filter((c) => c.health === "ok").length;
+  const errCount = cards.filter((c) => c.health === "err").length;
+  const warnCount = cards.filter((c) => c.health === "warn").length;
+  // Density-mode requirement: "off" (disabled) sites sink to the bottom of the
+  // grid regardless of DB order. Stable sort keeps the enabled sites' order.
+  cards.sort((a, b) => Number(b.row.enabled) - Number(a.row.enabled));
 
   const trackedProducts = states.reduce(
     (n, s) => n + Object.keys((s?.products as object | undefined) ?? {}).length,
@@ -269,26 +275,16 @@ export default async function SitesPage() {
         />
       )}
 
-      <div className="sect-hd">
-        <h2>Sites</h2>
-        <span className="rule" />
-        <form
-          action={async () => {
-            "use server";
-            await runNow();
-          }}
-        >
-          <button className="btn" type="submit">
-            ▶ Run all
-          </button>
-        </form>
-      </div>
-
-      <div className="sites-grid">
-        {cards.map(({ row, state }, i) => {
-          const health: Health = healths[i]!;
+      <SitesView>
+        {cards.map(({ row, state, health }) => {
           const def = row.definition;
           const url = siteUrl(def);
+          // Density-mode readouts: effective cadence in minutes (micro) + the
+          // human schedule label (compact).
+          const cadenceMins = getEffectiveInterval(def, schedules);
+          const schedVal = String(def.schedule ?? def.intervalMinutes ?? "");
+          const schedLabel =
+            scheduleOptions.find((o) => o.value === schedVal)?.label ?? (schedVal || "—");
           const productCount = Object.keys((state?.products as object | undefined) ?? {}).length;
           const errors = (state?.consecutiveErrors as number | undefined) ?? 0;
           const immLeft = imminentLeft(def);
@@ -314,7 +310,7 @@ export default async function SitesPage() {
           const checkHist = (state?.checkHistory as { ts: string; ok: boolean }[] | undefined) ?? [];
           const lastCheckedStr = state?.lastChecked as string | undefined;
           const overdueMs = lastCheckedStr ? Date.now() - new Date(lastCheckedStr).getTime() : Infinity;
-          const stalled = row.enabled && overdueMs > (getEffectiveInterval(def, schedules) * 2.5 + 8) * 60_000;
+          const stalled = row.enabled && overdueMs > (cadenceMins * 2.5 + 8) * 60_000;
           const degraded = checkHist.slice(-4).some((h) => !h.ok);
           // Quiet-site canary (3d): healthy + active for a while + never/long-ago alerted.
           const lastAlertAt = state?.lastAlertAt as string | undefined;
@@ -340,16 +336,28 @@ export default async function SitesPage() {
                 <span className="kind-chip">{row.sourceKind}</span>
               </div>
               <div className="site-stats">
-                <div className="site-stat">
+                <div className="site-stat st-products">
                   <span className="k">Products</span>
                   <span className="val">{productCount}</span>
                 </div>
-                <div className="site-stat">
+                <div className="site-stat st-lastcheck">
                   <span className="k">Last check</span>
                   <span className="val">{ago(state?.lastChecked)}</span>
                 </div>
+                <div className="site-stat st-schedule">
+                  <span className="k">Schedule</span>
+                  <span className="val" style={{ fontSize: 12 }}>
+                    {schedLabel}
+                  </span>
+                </div>
+                <div className="site-stat st-cadence">
+                  <span className="k">Cadence</span>
+                  <span className="val" title="Effective check interval right now (schedule-resolved).">
+                    {cadenceMins}m
+                  </span>
+                </div>
                 {def.imminent && (
-                  <div className="site-stat">
+                  <div className="site-stat st-mode">
                     <span className="k">Mode</span>
                     <span
                       className="val"
@@ -361,7 +369,7 @@ export default async function SitesPage() {
                   </div>
                 )}
                 {errors > 0 && (
-                  <div className="site-stat">
+                  <div className="site-stat st-errors">
                     <span className="k">Errors</span>
                     <span className="val" style={{ color: "var(--err)" }}>
                       {errors}
@@ -370,7 +378,7 @@ export default async function SitesPage() {
                   </div>
                 )}
                 {cooldownMsLeft > 0 && (
-                  <div className="site-stat">
+                  <div className="site-stat st-cooldown">
                     <span className="k">Cooldown</span>
                     <span
                       className="val"
@@ -382,7 +390,7 @@ export default async function SitesPage() {
                   </div>
                 )}
                 {viaFallback && (
-                  <div className="site-stat">
+                  <div className="site-stat st-channel">
                     <span className="k">Channel</span>
                     <span
                       className="val"
@@ -398,7 +406,7 @@ export default async function SitesPage() {
                   </div>
                 )}
                 {quiet && (
-                  <div className="site-stat">
+                  <div className="site-stat st-activity">
                     <span className="k">Activity</span>
                     <span
                       className="val faint"
@@ -410,7 +418,7 @@ export default async function SitesPage() {
                 )}
               </div>
               {(state?.lastError as string | undefined) && errors > 0 && (
-                <div className="faint mono" style={{ fontSize: 11, marginBottom: 6 }}>
+                <div className="faint mono site-err" style={{ fontSize: 11, marginBottom: 6 }}>
                   {String(state?.lastError)}
                   {looksBlocked && (
                     <span style={{ color: "var(--warn)" }}>
@@ -426,17 +434,19 @@ export default async function SitesPage() {
                   )}
                 </div>
               )}
-              <SiteControls
-                siteId={row.id}
-                enabled={row.enabled}
-                imminent={def.imminent}
-                schedule={String(def.schedule ?? def.intervalMinutes ?? "")}
-                scheduleOptions={scheduleOptions}
-                imminentInterval={def.imminentIntervalMinutes ?? null}
-                imminentDuration={def.imminentDurationMinutes ?? null}
-                titleContains={def.filters?.titleContains ?? []}
-                sourceJson={JSON.stringify(def.source, null, 2)}
-              />
+              <div className="site-controls-wrap">
+                <SiteControls
+                  siteId={row.id}
+                  enabled={row.enabled}
+                  imminent={def.imminent}
+                  schedule={String(def.schedule ?? def.intervalMinutes ?? "")}
+                  scheduleOptions={scheduleOptions}
+                  imminentInterval={def.imminentIntervalMinutes ?? null}
+                  imminentDuration={def.imminentDurationMinutes ?? null}
+                  titleContains={def.filters?.titleContains ?? []}
+                  sourceJson={JSON.stringify(def.source, null, 2)}
+                />
+              </div>
               {Array.isArray(state?.checkHistory) && (state!.checkHistory as unknown[]).length > 0 && (
                 <PulseStrip
                   history={state!.checkHistory as { ts: string; ok: boolean }[]}
@@ -445,14 +455,16 @@ export default async function SitesPage() {
                   degraded={degraded}
                 />
               )}
-              <DiagnoseButton siteId={row.id} />
+              <div className="diag-wrap">
+                <DiagnoseButton siteId={row.id} />
+              </div>
             </div>
           );
         })}
         {rows.length === 0 && (
           <p className="muted">No sites configured yet. Run the migration importer to seed the database.</p>
         )}
-      </div>
+      </SitesView>
     </>
   );
 }
