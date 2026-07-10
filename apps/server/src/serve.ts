@@ -140,6 +140,47 @@ if (existing.length > 0) {
   }
 }
 
+// ── One-time config amendment: dedicated SharedPour "Provenance" watcher ──────
+// 2026-07: the sharedpour_t8ke tile is scoped to the /collections/t8ke JSON, so
+// its title keywords only narrow THAT collection. A "Provenance" keyword there
+// matches nothing — Provenance bottles live in the general catalog, not the T8KE
+// collection (store search finds them; the collection JSON doesn't). Add a
+// separate store-root watcher that title-filters the whole catalog for
+// "Provenance" (same shape as sharedpour_reveries). Idempotent: creates the site
+// only once, and only when the Storefront token exists (sharedpour.com 403s
+// datacenter IPs, so the token-authed fallback is what actually carries it).
+// Safe to delete once confirmed applied in prod.
+{
+  const PROVENANCE_ID = "sharedpour_provenance";
+  const TOKEN_REF = "reveries_official_storefront_token";
+  try {
+    if (!(await store.sites.get(PROVENANCE_ID))) {
+      const secrets = await store.secrets.all();
+      if (secrets[TOKEN_REF]) {
+        await store.sites.upsert({
+          id: PROVENANCE_ID,
+          name: "SharedPour Provenance",
+          enabled: true,
+          schedule: "working_hours_heavy",
+          intervalMinutes: 20,
+          alerts: { onNew: true, onRestock: true, onSoldOut: true },
+          filters: { titleContains: ["Provenance"] },
+          source: {
+            kind: "shopify_rest",
+            baseUrl: "https://sharedpour.com",
+            storefrontFallback: { domain: "shared-pour.myshopify.com", accessTokenRef: TOKEN_REF },
+          },
+        });
+        console.log(`[serve] Added ${PROVENANCE_ID}: store-root SharedPour watcher for "Provenance" titles.`);
+      } else {
+        console.warn(`[serve] Skipping ${PROVENANCE_ID} amendment — secret "${TOKEN_REF}" not found.`);
+      }
+    }
+  } catch (err) {
+    console.error(`[serve] Provenance amendment failed (continuing): ${(err as Error).message}`);
+  }
+}
+
 if (seedOnly) {
   store.close();
   process.exit(0);
