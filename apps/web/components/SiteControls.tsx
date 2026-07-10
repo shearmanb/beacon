@@ -144,7 +144,13 @@ export function SiteControls({
       <div className="row kw">
         <span
           className="tune-label"
-          title="Only alert on products whose title contains one of these words (comma-separated, case-insensitive). Leave blank to match everything. Changing this re-baselines the site so existing matches don't flood as new."
+          title={
+            "Keep only products whose title contains one of these words (comma-separated, case-insensitive). " +
+            "IMPORTANT: this filters what the source already FETCHES — for a collection source (e.g. /collections/t8ke) " +
+            "it only narrows that collection, it does NOT search the whole store. A keyword for a bottle that lives " +
+            "outside the fetched collection will match nothing (fix the source scope via ⚙ source, or add a separate site). " +
+            "Leave blank to keep everything the source returns. Changing this re-baselines the site so existing matches don't flood as new."
+          }
         >
           🔎 keywords
         </span>

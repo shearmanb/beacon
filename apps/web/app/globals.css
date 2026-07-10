@@ -390,6 +390,57 @@ a:hover {
   white-space: nowrap;
 }
 
+/* ===== error log ===== */
+/* per-site collapsible failure log inside an active-issue card */
+.errlog {
+  margin: 2px 0 4px;
+}
+.errlog-body {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.errlog-line {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 10.5px;
+  color: var(--muted);
+}
+.errlog-line .when {
+  color: var(--faint);
+  white-space: nowrap;
+  flex: none;
+}
+.errlog-line .stat-code {
+  color: var(--warn);
+  white-space: nowrap;
+  flex: none;
+}
+.errlog-line .msg {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* event-timeline rows that carry a diagnostic note stack vertically */
+.evt.evt-stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+.evt .evt-top {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.evt-note {
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  padding-left: 2px;
+}
+
 /* forms */
 .in {
   background: var(--bg2);

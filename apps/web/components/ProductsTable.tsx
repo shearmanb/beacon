@@ -17,9 +17,23 @@ export interface ProductRow {
   vendor: string | null;
   url: string;
   reveries: boolean;
+  firstSeen: string | null;
 }
 
 type Avail = "all" | "in" | "out";
+
+// Compact "when added" label. Short absolute date is the primary read (a stable
+// value that doesn't need re-rendering), with a relative "ago" + exact time in
+// the tooltip. Kept local so this client component doesn't import server helpers.
+function addedLabel(iso: string | null): { short: string; full: string } {
+  if (!iso) return { short: "—", full: "First-seen time not recorded for this product yet." };
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return { short: "—", full: iso };
+  const days = Math.floor((Date.now() - d.getTime()) / 86_400_000);
+  const rel = days <= 0 ? "today" : days === 1 ? "yesterday" : `${days}d ago`;
+  const short = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  return { short, full: `Added ${rel} · ${d.toLocaleString()}` };
+}
 
 export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored: string[] }) {
   const ignoredSet = useMemo(() => new Set(ignored), [ignored]);
@@ -94,6 +108,7 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
             <th>Site</th>
             <th>Price</th>
             <th>Status</th>
+            <th>Added</th>
             <th></th>
           </tr>
         </thead>
@@ -120,6 +135,9 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
                     {it.available ? "in stock" : "sold out"}
                   </span>
                 </td>
+                <td className="mono muted" style={{ whiteSpace: "nowrap" }} title={addedLabel(it.firstSeen).full}>
+                  {addedLabel(it.firstSeen).short}
+                </td>
                 <td>
                   <IgnoreButton handle={it.handle} ignored={isIgnored} />
                 </td>
@@ -128,7 +146,7 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
           })}
           {filtered.length === 0 && (
             <tr>
-              <td colSpan={5} className="muted">
+              <td colSpan={6} className="muted">
                 No products match.
               </td>
             </tr>

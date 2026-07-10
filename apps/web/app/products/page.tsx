@@ -26,6 +26,9 @@ export default async function ProductsPage() {
         vendor: (p["vendor"] as string | null) ?? null,
         url: String(p["url"] ?? "#"),
         reveries: isReveries(row.id, title),
+        // When Beacon first observed this product (stamped by the worker's
+        // annotateProducts). Absent for pre-annotation / freshly-baselined rows.
+        firstSeen: typeof p["firstSeen"] === "string" ? (p["firstSeen"] as string) : null,
       });
     }
   });

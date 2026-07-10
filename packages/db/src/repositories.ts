@@ -2,7 +2,7 @@
 // instead of touching tables directly. Grouped onto one store object so callers
 // do `store.sites.list()`, `store.state.load(id)`, etc.
 
-import { asc, desc, eq, isNull, lte } from "drizzle-orm";
+import { asc, desc, eq, inArray, isNull, lte } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import type { Alert, ProductMap, ScheduleDefinition } from "@beacon/shared";
 import { siteDefinitionSchema, type SiteDefinition, type SiteState } from "@beacon/core";
@@ -157,6 +157,18 @@ function historyRepo(db: DB) {
     },
     async recent(limit = 100) {
       return db.select().from(t.alertHistory).orderBy(desc(t.alertHistory.id)).limit(limit);
+    },
+    /** Newest events restricted to a set of types — used by the Error-log view so
+     *  operational events (site_error/recovered/self_healed/…) aren't pushed out
+     *  of the newest-N window by product-alert volume. */
+    async recentByTypes(types: string[], limit = 200) {
+      if (types.length === 0) return [];
+      return db
+        .select()
+        .from(t.alertHistory)
+        .where(inArray(t.alertHistory.type, types))
+        .orderBy(desc(t.alertHistory.id))
+        .limit(limit);
     },
     /** Bulk import historical rows preserving original timestamps (migration). */
     async import(
