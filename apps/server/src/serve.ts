@@ -181,6 +181,26 @@ if (existing.length > 0) {
   }
 }
 
+// ── One-time config amendment: silence reveries_site_status content-change noise ─
+// 2026-07: thereveries.co/shop (Squarespace) rotates a same-length token the page
+// fingerprint can't strip, so `watchContentChange` fires "content changed" on pure
+// noise (≈61319→61319 chars). The signals that matter — the coming-soon/password
+// wall going UP (site_reset) and LIFTING (site_changed) — don't use the content
+// hash, so turn the generic net off. Idempotent (only acts while it's still on).
+// Safe to delete once confirmed applied in prod.
+{
+  try {
+    const row = await store.sites.get("reveries_site_status");
+    const src = row?.definition.source as Record<string, unknown> | undefined;
+    if (row && src?.["kind"] === "http_status" && src["watchContentChange"] !== false) {
+      await store.sites.upsert({ ...row.definition, source: { ...src, watchContentChange: false } });
+      console.log("[serve] Amended reveries_site_status: watchContentChange off (same-length token noise).");
+    }
+  } catch (err) {
+    console.error(`[serve] reveries_site_status amendment failed (continuing): ${(err as Error).message}`);
+  }
+}
+
 if (seedOnly) {
   store.close();
   process.exit(0);
