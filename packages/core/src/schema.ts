@@ -65,7 +65,16 @@ export const shopifyGraphqlSource = z.object({
   domain: z.string(),
   /** Reference into the secrets table — never an inline token. */
   accessTokenRef: z.string(),
-  collectionId: z.string(),
+  /** Watch a published collection by numeric id. */
+  collectionId: z.string().optional(),
+  /** Watch a single product by numeric id — for Buy Button single-product embeds
+   *  (a collection that sold down to one bottle, or a shop that embeds one SKU). */
+  productId: z.string().optional(),
+  /** Self-heal (R2): read the LIVE Buy Button embed (type + id) from this shop
+   *  page's `ShopifyBuyInit` block on every check, so Beacon follows when the shop
+   *  swaps its collection/product instead of querying a dead id. Falls back to the
+   *  last-known discovered embed (persisted in state), then productId/collectionId. */
+  discoverEmbedFrom: z.string().url().optional(),
   apiVersion: z.string().default("2025-01"),
   /** Public URL products link to (the shop page). Defaults to https://<domain>. */
   productUrl: z.string().url().optional(),

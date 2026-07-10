@@ -201,6 +201,31 @@ if (existing.length > 0) {
   }
 }
 
+// ── One-time config amendment: reveries_official self-healing embed watch (R2) ──
+// 2026-07: thereveries.co/shop stopped embedding a collection — its Buy Button now
+// embeds a single PRODUCT (id 9001382805659), so the old collection query
+// (367215214747) returns 0 forever and nags. Point it at the product AND turn on
+// `discoverEmbedFrom` so the adapter re-reads the live ShopifyBuyInit embed off the
+// shop page each check — following the shop when it swaps product/collection again.
+// Clears state so the current (leftover) bottle re-baselines silently instead of
+// firing a false "new drop". Idempotent (acts only until discovery is configured).
+{
+  try {
+    const row = await store.sites.get("reveries_official");
+    const src = row?.definition.source as Record<string, unknown> | undefined;
+    if (row && src?.["kind"] === "shopify_graphql" && !src["discoverEmbedFrom"]) {
+      await store.sites.upsert({
+        ...row.definition,
+        source: { ...src, productId: "9001382805659", discoverEmbedFrom: "https://www.thereveries.co/shop" },
+      });
+      await store.state.clear("reveries_official");
+      console.log("[serve] Amended reveries_official: product-embed watch + self-healing id discovery (re-baselined).");
+    }
+  } catch (err) {
+    console.error(`[serve] reveries_official amendment failed (continuing): ${(err as Error).message}`);
+  }
+}
+
 if (seedOnly) {
   store.close();
   process.exit(0);
