@@ -23,7 +23,7 @@ interface ShopifyProduct {
   images?: Array<{ src?: string | null }>;
 }
 
-const PAGE_LIMIT = 250;
+export const PAGE_LIMIT = 250; // exported so diagnose probes with the worker's real page size
 // Hard cap on pagination (2c): a misconfigured or pathologically large catalog
 // must not paginate "forever" and starve the loop. 20 pages = 5,000 products,
 // well past any store we track. Hitting it is logged so it's visible.

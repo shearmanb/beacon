@@ -321,7 +321,12 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
         // runs and ship the verdict INSIDE the page — the alert arrives already
         // explaining itself. Short per-step timeout; failures never block the send.
         try {
-          const report = await diagnoseSite(def, deps, { stepTimeoutMs: 8_000 });
+          const report = await diagnoseSite(def, deps, {
+            stepTimeoutMs: 8_000,
+            // Let it retest the exact request this failure died on (blind-spot
+            // guard: a page-1 probe can pass while the scan fails pages deep).
+            lastError: outcome.newState.lastError as string | undefined,
+          });
           note += `\n\n🩺 Auto-diagnosis: ${report.verdict}`;
         } catch (err) {
           log(`  auto-diagnose failed: ${(err as Error).message}`);

@@ -194,7 +194,14 @@ export async function diagnoseSite(siteId: string): Promise<DiagnoseReport | { e
     const site = await store.sites.get(siteId);
     if (!site) return { error: `Unknown site "${siteId}".` };
     const deps = buildAdapterDeps(await store.secrets.all());
-    const report = await coreDiagnoseSite(site.definition, { ...deps, signal: controller.signal });
+    // Hand diagnosis the stored lastError so it can retest the exact request
+    // the checker died on (a page-1 probe alone misses deep-pagination blocks).
+    const state = await store.state.load(siteId);
+    const report = await coreDiagnoseSite(
+      site.definition,
+      { ...deps, signal: controller.signal },
+      { lastError: state?.["lastError"] as string | undefined },
+    );
     console.log(
       `[diagnose] ${siteId} blocked=${report.blocked}\n` +
         report.steps.map((s) => `[diagnose]   ${s.ok ? "✔" : "✘"} ${s.label}: ${s.detail}`).join("\n") +

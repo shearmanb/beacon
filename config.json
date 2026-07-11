@@ -81,7 +81,7 @@
       "id": "bourbon_concierge",
       "enabled": true,
       "strategy": "shopify_collection",
-      "url": "https://thebourbonconcierge.com",
+      "url": "https://thebourbonconcierge.com/collections/reveries",
       "intervalMinutes": 30,
       "schedule": "working_hours_heavy",
       "imminentIntervalMinutes": 2,

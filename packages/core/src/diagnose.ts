@@ -16,6 +16,7 @@
 import { httpGet, httpPost, expireIdentity, HttpError } from "@beacon/fetch";
 import type { SiteDefinition, SourceOf } from "./schema.js";
 import { sourceUrl } from "./schema.js";
+import { PAGE_LIMIT } from "./sources/shopify_rest.js";
 import type { AdapterDeps } from "./sources/types.js";
 
 // Statuses that read as "you are being blocked" rather than "the site is broken".
@@ -40,6 +41,11 @@ export interface DiagnoseReport {
 export interface DiagnoseOptions {
   /** Per-step wall-clock cap (ms). Default 12s — 3 steps fit a 45s action budget. */
   stepTimeoutMs?: number;
+  /** The site's stored `lastError` message. When it names a URL (the worker's
+   *  errors read "HTTP 430 for <url>" / "Aborted fetching <url>"), diagnosis
+   *  re-runs that EXACT request after the page-1 probe — closing the blind spot
+   *  where a small probe passes while the real scan dies pages deep. */
+  lastError?: string | null;
 }
 
 interface Attempt {
@@ -123,7 +129,7 @@ export async function diagnoseSite(
   opts?: DiagnoseOptions,
 ): Promise<DiagnoseReport> {
   const stepMs = opts?.stepTimeoutMs ?? DEFAULT_STEP_MS;
-  if (site.source.kind === "shopify_rest") return diagnoseShopifyRest(site, stepMs, deps);
+  if (site.source.kind === "shopify_rest") return diagnoseShopifyRest(site, stepMs, deps, opts?.lastError);
 
   // Generic path for other kinds: one fetch of the source URL, classified.
   const url = sourceUrl(site);
@@ -141,11 +147,31 @@ export async function diagnoseSite(
   };
 }
 
-async function diagnoseShopifyRest(site: SiteDefinition, stepMs: number, deps?: AdapterDeps): Promise<DiagnoseReport> {
+/** Best-effort: pull the failing URL out of a stored worker error message
+ *  ("HTTP 430 for https://…&page=8", "Aborted fetching https://…"). Only a
+ *  same-host URL is ever retested — never whatever else a message contains. */
+function failingUrlFrom(lastError: string | null | undefined, host: string): string | null {
+  const m = lastError?.match(/https?:\/\/[^\s"']+/);
+  if (!m) return null;
+  try {
+    return new URL(m[0]).hostname === host ? m[0] : null;
+  } catch {
+    return null;
+  }
+}
+
+async function diagnoseShopifyRest(
+  site: SiteDefinition,
+  stepMs: number,
+  deps?: AdapterDeps,
+  lastError?: string | null,
+): Promise<DiagnoseReport> {
   const src = site.source as SourceOf<"shopify_rest">;
   const base = src.baseUrl.replace(/\/$/, "");
   const collection = src.collectionPath ? `/${src.collectionPath.replace(/^\/|\/$/g, "")}` : "";
-  const restUrl = `${base}${collection}/products.json?limit=1&page=1`;
+  // Probe with the worker's real page size — a tiny limit=1 request can pass
+  // where the actual 250-row scan trips size- or rate-based bot mitigation.
+  const restUrl = `${base}${collection}/products.json?limit=${PAGE_LIMIT}&page=1`;
   const host = new URL(base).hostname;
   const steps: DiagnoseStep[] = [];
   const push = (label: string, a: Attempt): void => {
@@ -156,6 +182,36 @@ async function diagnoseShopifyRest(site: SiteDefinition, stepMs: number, deps?: 
   const rest = await step(getAttempt(restUrl, "api"), deps?.signal, stepMs);
   push("REST products.json (worker's primary channel)", rest);
   if (rest.ok) {
+    // Blind-spot guard: page 1 answering proves little for a multi-page scan —
+    // the checker can die pages deep (rate limit / tar-pit) while a one-page
+    // probe stays green. Re-run the EXACT request it last failed on.
+    const failingUrl = failingUrlFrom(lastError, host);
+    if (failingUrl && failingUrl !== restUrl) {
+      const retest = await step(getAttempt(failingUrl, "api"), deps?.signal, stepMs);
+      push("Re-run the exact request the checker last failed on", retest);
+      if (!retest.ok) {
+        const retestBlocked = retest.stalled === true || (retest.status != null && BLOCKED.has(retest.status));
+        const pageNo = new URL(failingUrl).searchParams.get("page");
+        const what = pageNo && pageNo !== "1" ? `page ${pageNo} of the catalog scan` : "that request";
+        return {
+          steps,
+          blocked: retestBlocked,
+          verdict: retestBlocked
+            ? `Page 1 answers, but the request the checker actually died on (${what}) still fails (${blockPhrase(retest)}) — ` +
+              `the host tolerates a quick probe yet blocks the deep scan. If this site paginates a whole catalog just to ` +
+              `keyword-filter it, scope the source to a dedicated collection (collectionPath) so a check is one small request. ` +
+              browserCompareHint(failingUrl)
+            : `Page 1 answers, but the previously-failing request still errors (${retest.detail}) — check whether that URL/page still exists.`,
+        };
+      }
+      return {
+        steps,
+        blocked: false,
+        verdict:
+          "products.json answers from this server — including the exact request that previously failed. " +
+          "The primary channel is healthy right now; the earlier errors were transient or the site was mid-cooldown.",
+      };
+    }
     return {
       steps,
       blocked: false,

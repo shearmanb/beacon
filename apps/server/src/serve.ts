@@ -226,6 +226,29 @@ if (existing.length > 0) {
   }
 }
 
+// ── One-time config amendment: scope bourbon_concierge to its Reveries collection ─
+// 2026-07: thebourbonconcierge.com's checker scanned the WHOLE catalog (8+ pages
+// of 250) just to keyword-filter for "Reveries", and the host tar-pits the scan
+// pages deep (stalls on ~page 8) while a small probe passes. The store has a
+// dedicated /collections/reveries (~9 products) — scope the source to it so a
+// check is ONE request. Keyword filters still apply after fetch, unchanged.
+// Clears state so the next check re-baselines quietly and the stuck error/
+// cooldown bookkeeping is dropped. Idempotent (acts only while collectionPath is
+// unset). Safe to delete once confirmed applied in prod.
+{
+  try {
+    const row = await store.sites.get("bourbon_concierge");
+    const src = row?.definition.source as Record<string, unknown> | undefined;
+    if (row && src?.["kind"] === "shopify_rest" && !src["collectionPath"]) {
+      await store.sites.upsert({ ...row.definition, source: { ...src, collectionPath: "/collections/reveries" } });
+      await store.state.clear("bourbon_concierge");
+      console.log("[serve] Amended bourbon_concierge: scoped to /collections/reveries (was a full-catalog scan) — re-baselined.");
+    }
+  } catch (err) {
+    console.error(`[serve] bourbon_concierge amendment failed (continuing): ${(err as Error).message}`);
+  }
+}
+
 if (seedOnly) {
   store.close();
   process.exit(0);

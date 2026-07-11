@@ -103,4 +103,52 @@ describe("diagnoseSite", () => {
     expect(report.blocked).toBe(false);
     expect(report.verdict).toContain("not bot protection");
   });
+
+  // Blind-spot guard: a green page-1 probe must not end the diagnosis when the
+  // checker's stored lastError names a deeper request (e.g. page 8 of a
+  // full-catalog scan) — that exact URL is retested.
+  it("retests the exact lastError URL and flags a deep-pagination block", async () => {
+    handler = (req, res) => {
+      const page = new URL(req.url ?? "/", base).searchParams.get("page");
+      if (page === "8") {
+        res.writeHead(430);
+        res.end("blocked");
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ products: [{ handle: "a" }] }));
+    };
+    const report = await diagnoseSite(restSite(false), deps, {
+      lastError: `HTTP 430 for ${base}/products.json?limit=250&page=8`,
+    });
+    expect(report.blocked).toBe(true);
+    expect(report.steps.map((s) => s.ok)).toEqual([true, false]);
+    expect(report.verdict).toContain("page 8");
+    expect(report.verdict).toContain("collectionPath");
+  });
+
+  it("reports full health when the previously-failing URL answers again", async () => {
+    handler = (_req, res) => {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ products: [{ handle: "a" }] }));
+    };
+    const report = await diagnoseSite(restSite(false), deps, {
+      lastError: `HTTP 430 for ${base}/products.json?limit=250&page=8`,
+    });
+    expect(report.blocked).toBe(false);
+    expect(report.steps.map((s) => s.ok)).toEqual([true, true]);
+    expect(report.verdict).toContain("including the exact request that previously failed");
+  });
+
+  it("never retests a lastError URL pointing at a different host", async () => {
+    handler = (_req, res) => {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ products: [{ handle: "a" }] }));
+    };
+    const report = await diagnoseSite(restSite(false), deps, {
+      lastError: "HTTP 430 for https://evil.example.com/products.json?limit=250&page=8",
+    });
+    expect(report.steps).toHaveLength(1);
+    expect(report.blocked).toBe(false);
+  });
 });
