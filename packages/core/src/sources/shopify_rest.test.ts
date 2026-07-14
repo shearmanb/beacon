@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import { type AddressInfo } from "node:net";
-import { shopifyRestAdapter } from "./shopify_rest.js";
+import { shopifyRestAdapter, isRestStall } from "./shopify_rest.js";
 import { siteDefinitionSchema, type SiteDefinition } from "../schema.js";
 import type { PrevState } from "./types.js";
 
@@ -323,5 +323,43 @@ describe("shopifyRestAdapter storefront fallback", () => {
       statusCode: 500,
     });
     expect(graphqlCalled).toBe(false);
+  });
+});
+
+// Failover-stall classification. The important case for a silent tar-pit: our
+// whole-fetch guard (restStallMs, 20s) can LOSE the race to httpGet's own
+// socket-idle (15s), which surfaces a status-less "Socket idle timeout" error —
+// that must still count as a stall so the fallback engages.
+describe("isRestStall", () => {
+  it("counts our whole-fetch stall guard firing as a stall", () => {
+    expect(isRestStall(new Error("Aborted fetching x"), { stallFired: true, parentAborted: false })).toBe(true);
+  });
+
+  it("counts httpGet's own socket-idle / deadline as a stall (they beat the guard on a silent tar-pit)", () => {
+    expect(
+      isRestStall(new Error("Socket idle timeout fetching https://x/products.json?limit=250&page=1"), {
+        stallFired: false,
+        parentAborted: false,
+      }),
+    ).toBe(true);
+    expect(
+      isRestStall(new Error("Deadline exceeded fetching https://x/products.json"), {
+        stallFired: false,
+        parentAborted: false,
+      }),
+    ).toBe(true);
+  });
+
+  it("does NOT count a parent-budget abort as a stall (no time left for a fallback)", () => {
+    expect(isRestStall(new Error("Aborted fetching x"), { stallFired: true, parentAborted: true })).toBe(false);
+  });
+
+  it("does NOT count an HTTP-status error as a stall (the blocked path handles it)", () => {
+    const e = Object.assign(new Error("HTTP 403 for x"), { statusCode: 403 });
+    expect(isRestStall(e, { stallFired: false, parentAborted: false })).toBe(false);
+  });
+
+  it("does NOT count an unrelated network error (DNS/refused) as a stall", () => {
+    expect(isRestStall(new Error("getaddrinfo ENOTFOUND x"), { stallFired: false, parentAborted: false })).toBe(false);
   });
 });

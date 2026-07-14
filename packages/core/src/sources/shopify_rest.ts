@@ -79,6 +79,29 @@ function withExtras(result: FetchResult, extras: Record<string, unknown>): Fetch
   return result.kind === "products" ? { ...result, stateExtras: { ...result.stateExtras, ...extras } } : result;
 }
 
+// httpGet's own per-request timers can give up on a silent tar-pit BEFORE the
+// adapter's whole-fetch stall guard does — socket-idle (15s) / wall-clock
+// deadline (30s) vs restStallMs (20s default). Those surface as status-less
+// errors, which the failover logic must recognize as a stall too, or a silent
+// tar-pit would never reach the Storefront fallback.
+const NETWORK_STALL_RE = /socket idle timeout|deadline exceeded/i;
+
+/**
+ * Should a REST failure fail over to the Storefront channel as a *stall* (a
+ * status-less block — the host accepted the connection but never answered)?
+ * True when our whole-fetch stall guard tripped OR httpGet's own socket-idle /
+ * deadline tripped first. False when the per-site budget aborted (no time left
+ * for a fallback) or the error carried a real HTTP status (handled separately).
+ */
+export function isRestStall(err: unknown, opts: { stallFired: boolean; parentAborted: boolean }): boolean {
+  if (opts.parentAborted) return false;
+  if (opts.stallFired) return true;
+  const status = (err as { statusCode?: number }).statusCode;
+  if (status != null) return false;
+  const message = err instanceof Error ? err.message : String(err);
+  return NETWORK_STALL_RE.test(message);
+}
+
 export const shopifyRestAdapter: SourceAdapter = {
   kind: "shopify_rest",
   async fetch(site, prev: PrevState, deps?: AdapterDeps): Promise<FetchResult> {
@@ -153,11 +176,14 @@ export const shopifyRestAdapter: SourceAdapter = {
       // ORIGINAL error is rethrown so the circuit breaker sees the real cause.
       const status = (err as { statusCode?: number }).statusCode;
       const blocked = status != null && BLOCKED_STATUSES.has(status);
-      const stalled = stallFired && !deps?.signal?.aborted;
+      // Recognize a stall whether OUR guard fired or httpGet's own socket-idle/
+      // deadline tripped first (a silent tar-pit) — otherwise the fallback never
+      // engages on a host that just hangs the connection.
+      const stalled = isRestStall(err, { stallFired, parentAborted: deps?.signal?.aborted === true });
       if (fb && token && !storefrontAlreadyFailed && (blocked || stalled)) {
         const reason = blocked
           ? `products.json blocked with HTTP ${status}`
-          : `products.json stalled — no response within ${Math.round(fb.restStallMs / 1000)}s (connection tar-pit, a bot-mitigation tactic)`;
+          : `products.json stalled — the host accepted the connection but never answered (tar-pit, a bot-mitigation tactic)`;
         console.warn(`[${site.name}] ${reason} — failing over to Storefront API on ${fb.domain}.`);
         try {
           const result = await fetchViaStorefront(src, fb, token, origin, reason, deps);
@@ -312,6 +338,17 @@ async function fetchViaStorefront(
     }
     all.push(...pageData.nodes);
     if (!pageData.pageInfo?.hasNextPage || !pageData.pageInfo.endCursor) break;
+    if (page === FALLBACK_MAX_PAGES) {
+      // More pages exist but we've hit the fallback's tighter cap. A store-root
+      // source (no collectionPath) that title-filters a big catalog can silently
+      // MISS products past this point — surface it so the fix (scope to a
+      // collection) is visible instead of a quiet blind spot.
+      console.warn(
+        `[storefront fallback] Reached the ${FALLBACK_MAX_PAGES}-page cap (${all.length} products) with more pages still available — ` +
+          `a large catalog may be TRUNCATED here. Scope this source to a specific collectionPath so a check isn't a full-catalog scan.`,
+      );
+      break;
+    }
     cursor = pageData.pageInfo.endCursor;
   }
 

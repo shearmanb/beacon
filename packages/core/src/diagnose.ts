@@ -54,6 +54,11 @@ interface Attempt {
   detail: string;
   /** No status at all inside the step budget — the host left us hanging. */
   stalled?: boolean;
+  /** Pre-empted by the OVERALL diagnosis budget before this step could run — it
+   *  was never actually exercised. Distinct from a real failure: reporting an
+   *  untested step as "failed" is the false-negative that made a healthy
+   *  Storefront fallback look dead. */
+  notTested?: boolean;
 }
 
 /** Run one fetch under its own timeout, chained to the caller's overall signal. */
@@ -64,27 +69,45 @@ async function step(
 ): Promise<Attempt> {
   const ctl = new AbortController();
   let stallFired = false;
+  let parentAborted = false;
   const timer = setTimeout(() => {
     stallFired = true;
     ctl.abort();
   }, stepMs);
   let onAbort: (() => void) | null = null;
   if (parentSignal) {
-    if (parentSignal.aborted) ctl.abort();
-    else {
-      onAbort = () => ctl.abort();
+    if (parentSignal.aborted) {
+      parentAborted = true;
+      ctl.abort();
+    } else {
+      onAbort = () => {
+        parentAborted = true;
+        ctl.abort();
+      };
       parentSignal.addEventListener("abort", onAbort, { once: true });
     }
   }
   try {
     return await run(ctl.signal);
   } catch (err) {
+    // This step's OWN timer fired: the host genuinely stalled it (tar-pit).
     if (stallFired) {
       return {
         ok: false,
         status: null,
         stalled: true,
         detail: `no response within ${Math.round(stepMs / 1000)}s — connection left hanging (tar-pit)`,
+      };
+    }
+    // Killed by the overall diagnosis budget before this step could run — NOT a
+    // failure of the channel itself. Say "not tested" so a working fallback is
+    // never reported as dead (the false verdict this whole fix is about).
+    if (parentAborted) {
+      return {
+        ok: false,
+        status: null,
+        notTested: true,
+        detail: "not tested — the overall diagnosis budget ran out before this step",
       };
     }
     const status = err instanceof HttpError ? err.statusCode : null;
@@ -262,8 +285,12 @@ async function diagnoseShopifyRest(
       verdict: attempt.ok
         ? `This server IS blocked at REST (${blockPhrase(rest)}; a fresh identity made no difference) — bot protection. ` +
           `The Storefront-API fallback works, so monitoring self-heals through it (⛑ chip on the tile). ${browserCompareHint(restUrl)}`
-        : `This server is blocked at REST (${blockPhrase(rest)}) AND the Storefront fallback failed (${attempt.detail}) — the checker is fully blocked from this box. ` +
-          `${browserCompareHint(restUrl)} A Railway redeploy sometimes lands a different egress IP; beyond that the levers are a longer check interval or a residential proxy (paid — on-demand only).`,
+        : attempt.notTested
+          ? `This server is blocked at REST (${blockPhrase(rest)}; a fresh identity made no difference). The Storefront fallback could NOT be tested — ` +
+            `diagnosis ran out of time before reaching it (a slow REST step ate the budget). Re-run 🩺 Diagnose and it should reach the fallback this time; ` +
+            `if the tile shows a ⛑ chip, the fallback is already carrying monitoring. ${browserCompareHint(restUrl)}`
+          : `This server is blocked at REST (${blockPhrase(rest)}) AND the Storefront fallback failed (${attempt.detail}) — the checker is fully blocked from this box. ` +
+            `${browserCompareHint(restUrl)} A Railway redeploy sometimes lands a different egress IP; beyond that the levers are a longer check interval or a residential proxy (paid — on-demand only).`,
     };
   }
 

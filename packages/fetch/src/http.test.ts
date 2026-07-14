@@ -88,6 +88,38 @@ describe("httpGet", () => {
     expect(calls).toBe(2);
   });
 
+  it("fails fast with the status when Retry-After exceeds the inline cap (no long sleep)", async () => {
+    // A long Retry-After must NOT be waited out inline — that would burn the
+    // caller's per-site budget and starve the fallback. It surfaces as HttpError
+    // so the circuit breaker / fallback channel handle it upstream.
+    let calls = 0;
+    handler = (_req, res) => {
+      calls += 1;
+      res.writeHead(429, { "Retry-After": "60" });
+      res.end("come back later");
+    };
+    const start = Date.now();
+    await expect(httpGet(`${base}/rl-long`)).rejects.toMatchObject({ name: "HttpError", statusCode: 429 });
+    expect(Date.now() - start).toBeLessThan(1000); // did not sleep anywhere near 60s
+    expect(calls).toBe(1); // no inline retry
+  });
+
+  it("honors an abort fired during the retry backoff (does not wait it out)", async () => {
+    // The backoff sleep must be cancelable — the old code removed the abort
+    // listener before sleeping, so a stall guard / per-site budget was ignored
+    // until the full delay elapsed. Retry-After 3s is under the inline cap, so it
+    // sleeps; aborting at 50ms must reject promptly, not after 3s.
+    handler = (_req, res) => {
+      res.writeHead(429, { "Retry-After": "3" });
+      res.end("slow");
+    };
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 50);
+    const start = Date.now();
+    await expect(httpGet(`${base}/rl-abort`, { signal: controller.signal })).rejects.toThrow(/Aborted/);
+    expect(Date.now() - start).toBeLessThan(1500); // cancelled the sleep, didn't wait 3s
+  });
+
   it("rejects with HttpError carrying the status code on 4xx", async () => {
     handler = (_req, res) => {
       res.writeHead(404);

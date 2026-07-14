@@ -94,6 +94,28 @@ describe("diagnoseSite", () => {
     expect(report.verdict).toContain("self-heals");
   });
 
+  it("reports the fallback 'not tested' (never 'failed') when the overall budget expires first", async () => {
+    // Regression guard for the false verdict: REST is blocked (403 twice), then
+    // the overall diagnosis budget dies while the Storefront fallback is still in
+    // flight. The fallback was never exercised, so it must read as "not tested" —
+    // NOT as "the fallback failed / fully blocked".
+    handler = (req, res) => {
+      if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
+        return; // fallback hangs — the budget will abort it mid-flight
+      }
+      res.writeHead(403); // REST blocked for old AND fresh identity (both fast)
+      res.end("blocked");
+    };
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 500); // overall budget, dies during the POST
+    const report = await diagnoseSite(restSite(true), { ...deps, signal: controller.signal }, { stepTimeoutMs: 3000 });
+    expect(report.steps.map((s) => s.ok)).toEqual([false, false, false]);
+    expect(report.steps[2]!.detail).toContain("not tested");
+    expect(report.blocked).toBe(true);
+    expect(report.verdict).toContain("could NOT be tested");
+    expect(report.verdict).not.toContain("fully blocked");
+  });
+
   it("classifies a non-block failure (500) as an outage, not a block", async () => {
     handler = (_req, res) => {
       res.writeHead(500);

@@ -26,6 +26,13 @@ import { identityForHost, type HostIdentity } from "./identity.js";
 const REQUEST_DEADLINE_MS = 30_000;
 const SOCKET_IDLE_TIMEOUT_MS = 15_000;
 const MAX_RETRIES = 3;
+// Cap on how long an inline 429/503 backoff may block the caller. A Retry-After
+// longer than this is NOT waited out here — the request fails with its HttpError
+// so the higher-level circuit breaker + Storefront fallback take over (they own
+// the minutes-long cooldown ladder). This stops one rate-limited request from
+// eating the whole per-site budget and starving the fallback channel — the bug
+// that made a working fallback look dead in 🩺 Diagnose.
+const MAX_INLINE_RETRY_MS = 5_000;
 
 export type RequestKind = "document" | "api";
 
@@ -213,8 +220,38 @@ function _httpGet(
         }
         res.resume(); // drain to free the socket
         clearDeadline();
+        // A long Retry-After means "come back much later" — waiting it out inline
+        // would burn the caller's whole per-site budget. Surface the status as an
+        // HttpError so the circuit breaker + fallback channel handle it upstream.
+        if (delay > MAX_INLINE_RETRY_MS) {
+          fail(new HttpError(status, url));
+          return;
+        }
+        // Abortable backoff: the caller's signal (per-site budget / stall guard /
+        // diagnose step timer) MUST be able to cancel the wait — the old code
+        // removed the abort listener before sleeping, so an abort was ignored
+        // until the full delay elapsed, blowing the budget. Swap the handler from
+        // "destroy the drained request" to "cancel the retry", and honor an abort
+        // that already fired during the body read.
         cleanup();
-        setTimeout(() => _httpGet(url, options, visited, retries + 1).then(ok, fail), delay);
+        if (signal?.aborted) {
+          fail(new Error(`Aborted fetching ${url}`));
+          return;
+        }
+        const retryTimer = setTimeout(() => {
+          if (onAbort && signal) signal.removeEventListener("abort", onAbort);
+          onAbort = undefined;
+          _httpGet(url, options, visited, retries + 1).then(ok, fail);
+        }, delay);
+        if (signal) {
+          onAbort = () => {
+            clearTimeout(retryTimer);
+            fail(new Error(`Aborted fetching ${url}`));
+          };
+          signal.addEventListener("abort", onAbort, { once: true });
+        } else {
+          onAbort = undefined;
+        }
         return;
       }
 
