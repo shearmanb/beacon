@@ -312,8 +312,8 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
 
   for (const { def, outcome } of results) {
     for (const ev of outcome.events) {
-      log(`  → ${ev.type}: ${ev.product.title}`);
-      if (ev.type === "baseline" || !channel) continue;
+      log(`  → ${ev.type}: ${ev.product.title}${ev.quiet ? " (quiet — history only)" : ""}`);
+      if (ev.type === "baseline" || ev.quiet || !channel) continue;
 
       let note = ev.product.note ?? "";
       if (ev.type === "site_error") {

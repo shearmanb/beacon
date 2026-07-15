@@ -130,6 +130,22 @@ describe("runOnce", () => {
     expect(res.anyImminentActive).toBe(true);
   });
 
+  it("quiet events reach history but are never sent to Discord", async () => {
+    // Prev state: on the fallback channel, with a self_healed ping sent 10 min
+    // ago. REST (the local server) answers -> recovery transition -> the event
+    // is damped (quiet) -> history yes, Discord no.
+    await store.state.save("s1", {
+      lastChecked: new Date(Date.now() - 60 * 60_000).toISOString(),
+      products: { a: { handle: "a", title: "a", url: `${base}/products/a`, tags: [], available: true, minPrice: 50 },
+                  b: { handle: "b", title: "b", url: `${base}/products/b`, tags: [], available: true, minPrice: 50 } },
+      fetchVia: "storefront_fallback",
+      lastSelfHealedPingAt: new Date(Date.now() - 10 * 60_000).toISOString(),
+    });
+    await runOnce(ctx());
+    expect(sent.filter((s) => s.alert.type === "self_healed")).toHaveLength(0);
+    expect((await store.history.recent()).some((h) => h.type === "self_healed")).toBe(true);
+  });
+
   it("collapses an all-sites-failing pass into one system_degraded page (2d)", async () => {
     // Disable the working site; add two sites pointing at a dead port so both fail.
     await store.sites.setEnabled("s1", false);

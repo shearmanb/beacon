@@ -169,3 +169,120 @@ describe("processSite", () => {
     expect(out.newState.fetchVia).toBeNull();
   });
 });
+
+// A host that rate-limits intermittently makes the channel ping-pong REST <->
+// fallback. These guards keep that from paging on every flip and from
+// re-alerting reappearing products as "new" (the overnight spam bug).
+describe("channel-flap damping + reappearance guard", () => {
+  const fallback = (products: NormalizedProduct[]) =>
+    okVia(products, "storefront_fallback", "products.json blocked with HTTP 429");
+
+  it("damps a repeat self_healed ping inside the 90-min gap (history-only)", async () => {
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      lastSelfHealedPingAt: new Date(Date.now() - 10 * 60_000).toISOString(),
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: fallback([prod("a", true)]), deps, ignored: noneIgnored });
+    const healed = out.events.filter((e) => e.type === "self_healed");
+    expect(healed).toHaveLength(1);
+    expect(healed[0]!.quiet).toBe(true);
+    // A damped ping must NOT refresh the stamp — the gap is "at most one page
+    // per 90 min", not a debounce that continuous flapping extends forever.
+    expect(out.newState.lastSelfHealedPingAt).toBe(prev.lastSelfHealedPingAt);
+  });
+
+  it("sends (and stamps) a self_healed ping when the last one is outside the gap", async () => {
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      lastSelfHealedPingAt: new Date(Date.now() - 3 * 3_600_000).toISOString(),
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: fallback([prod("a", true)]), deps, ignored: noneIgnored });
+    const healed = out.events.filter((e) => e.type === "self_healed");
+    expect(healed).toHaveLength(1);
+    expect(healed[0]!.quiet).toBeFalsy();
+    expect(out.newState.lastSelfHealedPingAt).not.toBe(prev.lastSelfHealedPingAt);
+  });
+
+  it("pins to the fallback after 3 via-flips in 6 h, with ONE explanatory ping", async () => {
+    const now = Date.now();
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      viaFlips: [new Date(now - 2 * 3_600_000).toISOString(), new Date(now - 1 * 3_600_000).toISOString()],
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: fallback([prod("a", true)]), deps, ignored: noneIgnored });
+    const healed = out.events.filter((e) => e.type === "self_healed");
+    expect(healed).toHaveLength(1);
+    expect(healed[0]!.product.note).toContain("flapping");
+    expect(healed[0]!.quiet).toBeFalsy(); // the pin notice always pages
+    expect(out.newState.preferFallback).toBe(true); // adapter now leads with the Storefront API
+    expect(typeof out.newState.lastRestProbeAt).toBe("string"); // ~12 h until the REST re-probe
+    expect((out.newState.viaFlips as string[]).length).toBe(3);
+  });
+
+  it("ignores flips older than the 6-h window (no premature pin)", async () => {
+    const now = Date.now();
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      viaFlips: [new Date(now - 8 * 3_600_000).toISOString(), new Date(now - 7 * 3_600_000).toISOString()],
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: fallback([prod("a", true)]), deps, ignored: noneIgnored });
+    expect(out.newState.preferFallback).toBeFalsy();
+    expect((out.newState.viaFlips as string[]).length).toBe(1); // stale entries pruned
+  });
+
+  it("does not re-announce the pin when already pinned — a re-probe recovery pings normally", async () => {
+    const now = Date.now();
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      fetchVia: "storefront_fallback",
+      preferFallback: true,
+      viaFlips: [1, 2, 3].map((h) => new Date(now - h * 3_600_000).toISOString()),
+      lastSelfHealedPingAt: new Date(now - 12 * 3_600_000).toISOString(),
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: ok([prod("a", true)]), deps, ignored: noneIgnored });
+    const healed = out.events.filter((e) => e.type === "self_healed");
+    expect(healed).toHaveLength(1);
+    expect(healed[0]!.product.note).toContain("Primary endpoint is reachable again");
+    expect(healed[0]!.product.note).not.toContain("flapping");
+  });
+
+  it("suppresses new_product for a handle seen within 24 h — reappearance, not a launch", async () => {
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) }, // "x" was dropped by a partial fallback roster
+      recentlySeen: { a: new Date().toISOString(), x: new Date(Date.now() - 45 * 60_000).toISOString() },
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: ok([prod("a", true), prod("x", true)]), deps, ignored: noneIgnored });
+    expect(out.events.filter((e) => e.type === "new_product")).toHaveLength(0);
+    const note = out.events.find((e) => e.type === "baseline");
+    expect(note?.product.note).toContain("reappeared");
+    // The product itself is back in state, and the roster is re-stamped.
+    expect(Object.keys(out.newState.products ?? {})).toContain("x");
+    expect(Object.keys(out.newState.recentlySeen as Record<string, string>)).toEqual(
+      expect.arrayContaining(["a", "x"]),
+    );
+  });
+
+  it("still alerts new_product when the handle was last seen over 24 h ago (a real relist)", async () => {
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      recentlySeen: { x: new Date(Date.now() - 25 * 3_600_000).toISOString() },
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: ok([prod("a", true), prod("x", true)]), deps, ignored: noneIgnored });
+    expect(out.events.map((e) => e.type)).toContain("new_product");
+  });
+
+  it("stamps the current roster into recentlySeen on every products check", async () => {
+    const prev: SiteState = { lastChecked: "t", products: {} };
+    const out = await processSite({ site: site(), prevState: prev, adapter: ok([prod("a", true)]), deps, ignored: noneIgnored });
+    const seen = out.newState.recentlySeen as Record<string, string>;
+    expect(Object.keys(seen)).toEqual(["a"]);
+    expect(Date.parse(seen["a"]!)).toBeGreaterThan(Date.now() - 60_000);
+  });
+});

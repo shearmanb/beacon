@@ -24,6 +24,28 @@ const ERROR_LOG_CAP = 25;
 // A site stuck erroring re-pages once a day (3e) — mirrors the empty-guard's
 // daily reminder, so a multi-day outage doesn't go silent after the first ping.
 const ERROR_REALERT_MS = 24 * 3_600_000;
+// Channel-flap damping (feedback loop): a host that rate-limits intermittently
+// makes the checker ping-pong REST <-> fallback. The transition-keyed
+// self_healed alert was designed for rare engage/recover pairs, so a flapping
+// channel would page on EVERY flip — and preferFallback's consecutive-streak
+// trigger never fires because each REST success resets the streak (the exact
+// blind spot ping-pong exploits). Detection: FLAP_THRESHOLD via-transitions
+// inside FLAP_WINDOW_MS → pin the site to the fallback channel (the adapter's
+// existing preferFallback machinery, REST re-probed after ~12 h) with ONE
+// explanatory ping. Independently, repeat self_healed pings inside
+// SELF_HEALED_PING_GAP_MS go to history only.
+const FLAP_WINDOW_MS = 6 * 3_600_000;
+const FLAP_THRESHOLD = 3;
+const SELF_HEALED_PING_GAP_MS = 90 * 60_000;
+const VIA_FLIPS_CAP = 20;
+// Reappearance guard: rosters can differ per channel (a product missing from
+// the fallback's view, a truncated deep scan), so a channel flip makes products
+// vanish and "reappear" — and diff() would re-alert them as NEW every cycle.
+// Handles seen within RESEEN_WINDOW_MS are remembered; a new_product alert for
+// a remembered handle becomes a quiet history note instead of a page. A real
+// relist after ≥24 h away still alerts.
+const RESEEN_WINDOW_MS = 24 * 3_600_000;
+const RECENTLY_SEEN_CAP = 800;
 // Alert types that count as "site activity" for the quiet-site surface (3d).
 const ACTIVITY_TYPES = new Set(["new_product", "restock", "sold_out", "site_changed", "site_reset"]);
 
@@ -86,35 +108,75 @@ export async function processSite({
       });
     }
 
-    // Self-healing visibility: fire ONCE when a fallback channel engages (with
-    // the why) and once when the primary recovers — auto-recovery should never
-    // be invisible to the operator. Keyed on the fetchVia transition, so a site
-    // that stays on the fallback for days doesn't re-ping every check.
+    // Self-healing visibility: fire when a fallback channel engages (with the
+    // why) and when the primary recovers — auto-recovery should never be
+    // invisible. Keyed on the fetchVia transition, PLUS two dampers for a
+    // flapping channel (see constants above): repeat pings inside the gap go
+    // history-only, and hitting the flap threshold pins the site to the
+    // fallback with one explanatory ping instead of narrating every flip.
     const prevVia = (prevState?.fetchVia as string | undefined) ?? null;
     const newVia = (newState.fetchVia as string | undefined) ?? null;
-    if (newVia && newVia !== prevVia) {
-      const why = (newState.fetchViaReason as string | undefined) ?? "primary channel blocked";
-      events.push({
-        type: "self_healed",
-        product: {
-          title: site.name,
-          url: sourceUrl(site),
-          note:
-            `⛑ Self-healed: ${why}, so this check ran via the Storefront GraphQL API instead. ` +
-            `Monitoring continues uninterrupted; the primary endpoint is retried on every check and ` +
-            `you'll get another ping when it recovers.`,
-        },
-      });
-    } else if (!newVia && prevVia) {
-      events.push({
-        type: "self_healed",
-        product: {
-          title: site.name,
-          url: sourceUrl(site),
-          note: "✅ Primary endpoint is reachable again — back to normal checks (fallback no longer needed).",
-        },
-      });
+    const flapCutoff = Date.now() - FLAP_WINDOW_MS;
+    let viaFlips = ((prevState?.viaFlips as string[] | undefined) ?? []).filter(
+      (ts) => Date.parse(ts) >= flapCutoff,
+    );
+    let lastSelfHealedPingAt = (prevState?.lastSelfHealedPingAt as string | undefined) ?? null;
+
+    if (newVia !== prevVia) {
+      viaFlips = [...viaFlips, nowIso()].slice(-VIA_FLIPS_CAP);
+      const lastPingMs = lastSelfHealedPingAt ? Date.parse(lastSelfHealedPingAt) : 0;
+      const damped = Date.now() - lastPingMs < SELF_HEALED_PING_GAP_MS;
+      const alreadyPinned = prevState?.preferFallback === true;
+
+      if (viaFlips.length >= FLAP_THRESHOLD && !alreadyPinned) {
+        // Flapping — pin to the stable channel and say so ONCE. A fresh probe
+        // stamp means the adapter leads with the Storefront API and re-probes
+        // REST in ~12 h; a stable recovery then gets its own ping.
+        newState.preferFallback = true;
+        newState.lastRestProbeAt = nowIso();
+        lastSelfHealedPingAt = nowIso();
+        events.push({
+          type: "self_healed",
+          product: {
+            title: site.name,
+            url: sourceUrl(site),
+            note:
+              `⛑ Channel flapping: this site flipped between products.json and the Storefront API ` +
+              `${viaFlips.length} times in the last 6 h — the host rate-limits intermittently. ` +
+              `Pinning checks to the Storefront API for ~12 h to stop the alert noise; products.json ` +
+              `will be re-probed automatically and you'll get one ping when it stably recovers.`,
+          },
+        });
+      } else if (newVia) {
+        const why = (newState.fetchViaReason as string | undefined) ?? "primary channel blocked";
+        if (!damped) lastSelfHealedPingAt = nowIso();
+        events.push({
+          type: "self_healed",
+          quiet: damped,
+          product: {
+            title: site.name,
+            url: sourceUrl(site),
+            note:
+              `⛑ Self-healed: ${why}, so this check ran via the Storefront GraphQL API instead. ` +
+              `Monitoring continues uninterrupted; the primary endpoint is retried on every check and ` +
+              `you'll get another ping when it recovers.`,
+          },
+        });
+      } else {
+        if (!damped) lastSelfHealedPingAt = nowIso();
+        events.push({
+          type: "self_healed",
+          quiet: damped,
+          product: {
+            title: site.name,
+            url: sourceUrl(site),
+            note: "✅ Primary endpoint is reachable again — back to normal checks (fallback no longer needed).",
+          },
+        });
+      }
     }
+    newState.viaFlips = viaFlips;
+    newState.lastSelfHealedPingAt = lastSelfHealedPingAt;
 
     // Startup quiet mode: with NO previous state entry at all, every product
     // would alert as "new". Baseline silently instead. Keyed on the entry being
@@ -134,6 +196,52 @@ export async function processSite({
         });
       }
     }
+
+    // Reappearance guard: suppress "new product" for handles we saw recently —
+    // they didn't launch, they came back into view (channel flip / partial
+    // fetch). Recorded as a quiet history note so the suppression is auditable.
+    const seenCutoff = Date.now() - RESEEN_WINDOW_MS;
+    const prevSeen = (prevState?.recentlySeen as Record<string, string> | undefined) ?? {};
+    const reappeared: string[] = [];
+    alerts = alerts.filter((a) => {
+      if (a.type !== "new_product" || !a.product.handle) return true;
+      const seenAt = prevSeen[a.product.handle];
+      if (seenAt && Date.parse(seenAt) >= seenCutoff) {
+        reappeared.push(a.product.title);
+        return false;
+      }
+      return true;
+    });
+    if (reappeared.length > 0) {
+      events.push({
+        type: "baseline",
+        product: {
+          title: site.name,
+          url: sourceUrl(site),
+          note:
+            `${reappeared.length} product(s) reappeared within 24 h (channel switch or partial fetch) — ` +
+            `duplicate "new product" alert(s) suppressed: ${reappeared.slice(0, 3).join(", ")}` +
+            (reappeared.length > 3 ? ", …" : ""),
+        },
+      });
+    }
+
+    // Remember every handle currently on the roster (pruned to the window,
+    // capped by recency so state stays bounded).
+    const seen: Record<string, string> = {};
+    for (const [h, ts] of Object.entries(prevSeen)) {
+      if (Date.parse(ts) >= seenCutoff) seen[h] = ts;
+    }
+    if (newState.products) {
+      for (const h of Object.keys(newState.products)) seen[h] = nowIso();
+    }
+    const seenEntries = Object.entries(seen);
+    newState.recentlySeen =
+      seenEntries.length > RECENTLY_SEEN_CAP
+        ? Object.fromEntries(
+            seenEntries.sort((a, b) => Date.parse(b[1]) - Date.parse(a[1])).slice(0, RECENTLY_SEEN_CAP),
+          )
+        : seen;
 
     for (const alert of alerts) {
       if (alert.product.handle && ignored.has(alert.product.handle)) continue;

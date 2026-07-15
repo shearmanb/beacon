@@ -57,6 +57,9 @@ export interface AlertProduct {
 export interface Alert {
   type: AlertType;
   product: AlertProduct;
+  /** History-only: record in alert history but do NOT page Discord. Used to
+   *  damp repeats (e.g. a flapping channel re-announcing itself every flip). */
+  quiet?: boolean;
 }
 
 // A page-state probe (http_status source) emits a signal rather than products:

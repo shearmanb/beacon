@@ -32,9 +32,13 @@ const MAX_PAGES = 20;
 // rather than "the endpoint is broken" — these trigger the Storefront fallback.
 // 430 is Shopify's own bot-block status; 401/403 are WAF/challenge walls.
 const BLOCKED_STATUSES = new Set([401, 403, 429, 430]);
-// Storefront-fallback pagination cap: 4 × 250 = 1,000 products, same spirit as
-// MAX_PAGES but the fallback is a last-resort channel — keep it tighter.
-const FALLBACK_MAX_PAGES = 4;
+// Storefront-fallback pagination cap: 8 × 250 = 2,000 products, same spirit as
+// MAX_PAGES but tighter — the fallback is a secondary channel. Raised 4→8
+// (2026-07): a root-catalog scan truncated at 1,000 returned a DIFFERENT roster
+// than REST, so every channel flip made the missing products "reappear" and
+// re-alert as new. GraphQL pages hit Shopify's own API domain (not the
+// tar-pitting WAF), so the extra requests are cheap and safe.
+const FALLBACK_MAX_PAGES = 8;
 // Channel preference (feedback loop): after this many consecutive checks that
 // had to use the fallback, stop LEADING with blocked REST — every lead-off REST
 // attempt wastes the stall budget AND keeps hammering a host that already
