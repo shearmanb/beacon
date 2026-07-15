@@ -227,10 +227,18 @@ export async function processSite({
     }
 
     // Remember every handle currently on the roster (pruned to the window,
-    // capped by recency so state stays bounded).
+    // capped by recency so state stays bounded). CRITICAL: absence from a
+    // fallback-channel roster is NOT evidence of removal — that channel has
+    // partial visibility (truncation / channel publishing), which is the whole
+    // reason the guard exists. So while this check ran via the fallback, FREEZE
+    // memory (re-stamp carried entries instead of decaying them); a long pinned
+    // period must not expire REST-only products and re-alert them as "new" when
+    // REST finally recovers. Decay only runs under the authoritative channel.
+    const partialView = newVia != null;
     const seen: Record<string, string> = {};
     for (const [h, ts] of Object.entries(prevSeen)) {
-      if (Date.parse(ts) >= seenCutoff) seen[h] = ts;
+      if (partialView) seen[h] = nowIso();
+      else if (Date.parse(ts) >= seenCutoff) seen[h] = ts;
     }
     if (newState.products) {
       for (const h of Object.keys(newState.products)) seen[h] = nowIso();

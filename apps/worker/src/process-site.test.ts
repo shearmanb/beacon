@@ -285,4 +285,33 @@ describe("channel-flap damping + reappearance guard", () => {
     expect(Object.keys(seen)).toEqual(["a"]);
     expect(Date.parse(seen["a"]!)).toBeGreaterThan(Date.now() - 60_000);
   });
+
+  it("FREEZES recentlySeen on fallback checks — a long pinned period must not expire REST-only products", async () => {
+    // "x" is invisible on the Storefront channel and its stamp is near expiry.
+    // A fallback check must re-stamp it (absence there proves nothing), so a
+    // REST recovery days later still counts as a reappearance, not a launch.
+    const nearExpiry = new Date(Date.now() - 23 * 3_600_000).toISOString();
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      fetchVia: "storefront_fallback", // steady on the fallback (no transition ping)
+      recentlySeen: { a: new Date().toISOString(), x: nearExpiry },
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: fallback([prod("a", true)]), deps, ignored: noneIgnored });
+    const seen = out.newState.recentlySeen as Record<string, string>;
+    expect(Object.keys(seen).sort()).toEqual(["a", "x"]);
+    expect(Date.parse(seen["x"]!)).toBeGreaterThan(Date.parse(nearExpiry)); // refreshed, not decayed
+  });
+
+  it("still DECAYS recentlySeen under the authoritative REST channel", async () => {
+    const stale = new Date(Date.now() - 25 * 3_600_000).toISOString();
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      recentlySeen: { a: new Date().toISOString(), gone: stale },
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: ok([prod("a", true)]), deps, ignored: noneIgnored });
+    const seen = out.newState.recentlySeen as Record<string, string>;
+    expect(Object.keys(seen)).toEqual(["a"]); // the stale entry is pruned
+  });
 });
