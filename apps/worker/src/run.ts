@@ -23,8 +23,11 @@ import { processSite, type SiteOutcome } from "./process-site.js";
 export const DEFAULT_IMMINENT_DURATION_MIN = 20;
 // Wall-clock ceiling for a single site's check (fetch + parse). The fetch layer
 // has its own 30s per-request deadline; this bounds the whole multi-page/site
-// op so the loop stays responsive.
-const PER_SITE_BUDGET_MS = 45_000;
+// op so the loop stays responsive. 60s (was 45s): a failover check legitimately
+// spends up to 20s proving REST is stalled (restStallMs) BEFORE the 8-page
+// Storefront fallback even starts — 45s left the fallback too little headroom
+// and a slow-but-working fallback could die at the parent budget.
+const PER_SITE_BUDGET_MS = 60_000;
 // Need at least this many checked sites before "all failed" means "systemic"
 // rather than "my two sites happen to both be down".
 const SYSTEMIC_MIN_SITES = 2;
@@ -138,6 +141,9 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
   const anyImminentActive = rows.some((r) => r.enabled && r.definition.imminent);
   let checked = 0;
   const results: CheckedSite[] = [];
+  // Hosts whose channel got pinned to the Storefront API THIS pass (host →
+  // name of the site that pinned), for host-level propagation below.
+  const newlyPinnedHosts = new Map<string, string>();
 
   for (const row of rows) {
     const def = row.definition;
@@ -231,12 +237,70 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     }
     results.push({ def, outcome });
 
+    // Collect newly-pinned hosts (flap-pin or fallback-streak preference) for
+    // host-level propagation after the pass.
+    if (outcome.newState.preferFallback === true && prevState?.preferFallback !== true) {
+      const host = hostOf(def);
+      if (host) newlyPinnedHosts.set(host, def.name);
+    }
+
     await wait(jitter(1000, 500)); // inter-site gap
+  }
+
+  if (!dryRun && newlyPinnedHosts.size > 0) {
+    await propagateHostPins(ctx, rows, newlyPinnedHosts);
   }
 
   await dispatch(ctx, results, baseDeps);
 
   return { anyImminentActive, checked };
+}
+
+// Host-level pin propagation (feedback loop): rate limits and bot scores are
+// per-HOST, so when one checker's flapping channel gets pinned to the
+// Storefront API, its siblings on the same host are still poking the
+// rate-limited REST endpoint — re-heating the block for everyone (and each
+// sibling would need 3 flips of its own before pinning itself). Pre-pin every
+// armed sibling: quiet history note only, no Discord page — the pinning site's
+// own ping already told the story. The ~12 h REST re-probe un-pins them all
+// automatically when the host cools down.
+async function propagateHostPins(
+  ctx: RunContext,
+  rows: SiteRow[],
+  pinnedHosts: Map<string, string>,
+): Promise<void> {
+  const { store, log = () => {} } = ctx;
+  for (const row of rows) {
+    const def = row.definition;
+    if (!def.enabled || def.source.kind !== "shopify_rest" || !def.source.storefrontFallback) continue;
+    const host = hostOf(def);
+    if (!host || !pinnedHosts.has(host)) continue;
+    const state = await store.state.load(def.id);
+    // Skip never-checked sites (no state yet — their first check must baseline
+    // quietly, and a synthetic state row would defeat startup quiet mode) and
+    // anything already pinned (including the site that pinned this pass).
+    if (!state || state.preferFallback === true) continue;
+    const pinnedBy = pinnedHosts.get(host)!;
+    await store.state.save(def.id, {
+      ...state,
+      preferFallback: true,
+      lastRestProbeAt: new Date().toISOString(),
+    });
+    const event: Alert = {
+      type: "self_healed",
+      quiet: true,
+      product: {
+        title: def.name,
+        url: sourceUrl(def),
+        note:
+          `⛑ Host-level pin: "${pinnedBy}" (same host: ${host}) was just pinned to the Storefront API after ` +
+          `channel flapping — pre-pinning this site too so it stops poking the rate-limited REST endpoint. ` +
+          `products.json is re-probed automatically in ~12 h.`,
+      },
+    };
+    await store.history.append(def.id, [event]);
+    log(`[${def.name}] Pre-pinned to the Storefront API (host-level, after "${pinnedBy}").`);
+  }
 }
 
 function hostOf(def: SiteDefinition): string | null {

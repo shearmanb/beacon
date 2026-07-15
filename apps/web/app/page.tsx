@@ -405,6 +405,18 @@ export default async function SitesPage() {
                     </span>
                   </div>
                 )}
+                {state?.fallbackTruncated === true && (
+                  <div className="site-stat st-truncated">
+                    <span className="k">Coverage</span>
+                    <span
+                      className="val"
+                      style={{ color: "var(--warn)" }}
+                      title="The Storefront fallback stopped at its pagination cap with catalog left over — products past the cap are invisible on this channel. Scope this source to a collectionPath (⚙ source) so a check isn't a full-catalog scan."
+                    >
+                      ⚠ roster truncated
+                    </span>
+                  </div>
+                )}
                 {quiet && (
                   <div className="site-stat st-activity">
                     <span className="k">Activity</span>

@@ -319,6 +319,7 @@ async function fetchViaStorefront(
   const collectionHandle = handleMatch?.[1];
 
   const all: StorefrontNode[] = [];
+  let truncated = false;
   let cursor: string | null = null;
   for (let page = 1; page <= FALLBACK_MAX_PAGES; page += 1) {
     if (page > 1) await sleep(300 + Math.floor(Math.random() * 500));
@@ -346,7 +347,11 @@ async function fetchViaStorefront(
       // More pages exist but we've hit the fallback's tighter cap. A store-root
       // source (no collectionPath) that title-filters a big catalog can silently
       // MISS products past this point — surface it so the fix (scope to a
-      // collection) is visible instead of a quiet blind spot.
+      // collection) is visible instead of a quiet blind spot: a console warning
+      // for the logs AND a `fallbackTruncated` state flag the dashboard tile
+      // renders as a ⚠ hint (a fresh REST check rebuilds state without the key,
+      // so recovery clears it automatically).
+      truncated = true;
       console.warn(
         `[storefront fallback] Reached the ${FALLBACK_MAX_PAGES}-page cap (${all.length} products) with more pages still available — ` +
           `a large catalog may be TRUNCATED here. Scope this source to a specific collectionPath so a check isn't a full-catalog scan.`,
@@ -362,6 +367,7 @@ async function fetchViaStorefront(
     validators: null, // ETags are per-endpoint; force a fresh REST attempt next check
     via: "storefront_fallback",
     viaReason: reason,
+    ...(truncated ? { stateExtras: { fallbackTruncated: true } } : {}),
     emptyGuardThreshold: 3,
     emptyGuardNote:
       "Storefront-API fallback returned 0 products on consecutive checks. Previous " +

@@ -312,6 +312,42 @@ describe("shopifyRestAdapter storefront fallback", () => {
     expect(result.stateExtras?.["fallbackStreak"]).toBe(0);
   });
 
+  it("flags stateExtras.fallbackTruncated when the fallback hits its page cap with catalog left", async () => {
+    // Every GraphQL page claims more pages exist — the adapter must stop at its
+    // cap AND surface the truncation (tile ⚠ hint), not silently under-report.
+    handler = graphqlHandler((_body, res) => {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          data: {
+            products: {
+              pageInfo: { hasNextPage: true, endCursor: "c" },
+              nodes: [storefrontNode("n", true, "10.00")],
+            },
+          },
+        }),
+      );
+    });
+    const result = await shopifyRestAdapter.fetch(makeFallbackSite(), {}, fallbackDeps);
+    if (result.kind !== "products") throw new Error("expected products");
+    expect(result.stateExtras?.["fallbackTruncated"]).toBe(true);
+    expect(result.products).toHaveLength(8); // one node per page × 8-page cap
+  }, 15_000); // 7 politeness sleeps between fallback pages make this test slow
+
+  it("leaves fallbackTruncated unset when the fallback roster completes", async () => {
+    handler = graphqlHandler((_body, res) => {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          data: { products: { pageInfo: { hasNextPage: false }, nodes: [storefrontNode("n", true, "10.00")] } },
+        }),
+      );
+    });
+    const result = await shopifyRestAdapter.fetch(makeFallbackSite(), {}, fallbackDeps);
+    if (result.kind !== "products") throw new Error("expected products");
+    expect(result.stateExtras?.["fallbackTruncated"]).toBeUndefined();
+  });
+
   it("does NOT fall back on a non-blocked error (500)", async () => {
     let graphqlCalled = false;
     handler = (req, res) => {

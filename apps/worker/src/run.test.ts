@@ -10,11 +10,16 @@ let server: Server;
 let base: string;
 let products: Array<Record<string, unknown>> = [];
 
+// Default responder: a healthy products.json. Tests that need path-specific
+// behavior (e.g. blocked REST + a working Storefront endpoint) swap `respond`.
+const defaultRespond = (_req: IncomingMessage, res: ServerResponse): void => {
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ products }));
+};
+let respond: (req: IncomingMessage, res: ServerResponse) => void = defaultRespond;
+
 beforeAll(async () => {
-  server = createServer((_req: IncomingMessage, res: ServerResponse) => {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ products }));
-  });
+  server = createServer((req: IncomingMessage, res: ServerResponse) => respond(req, res));
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
 });
@@ -37,6 +42,7 @@ function ctx(over: Partial<RunContext> = {}): RunContext {
 beforeEach(async () => {
   store = await openStore({ url: ":memory:" });
   sent.length = 0;
+  respond = defaultRespond;
   products = [shopifyProduct("a", true), shopifyProduct("b", true)];
   await store.sites.upsert({
     id: "s1",
@@ -128,6 +134,69 @@ describe("runOnce", () => {
     expect(def?.imminent).toBe(true);
     expect(typeof def?.imminentSince).toBe("string");
     expect(res.anyImminentActive).toBe(true);
+  });
+
+  it("host-level pin propagation: a flap-pin on one site pre-pins armed siblings on the same host", async () => {
+    const norm = (h: string) => ({ handle: h, title: h, url: `${base}/products/${h}`, tags: [], available: true, minPrice: 50 });
+    const fb = { domain: "x.myshopify.com", accessTokenRef: "sp_token", endpoint: `${base}/api/graphql` };
+    await store.secrets.set("sp_token", "tok");
+    // Replaces the default "s1" from beforeEach. s3 shares the host but has NO
+    // fallback armed — propagation must leave it alone.
+    await store.sites.upsert({ id: "s1", name: "Flapper", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: base, storefrontFallback: fb } });
+    await store.sites.upsert({ id: "s2", name: "Sibling", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: base, storefrontFallback: fb } });
+    await store.sites.upsert({ id: "s3", name: "Unarmed", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: base } });
+
+    const now = Date.now();
+    // Flapper: due for a check, already 2 via-flips in the window → this check's
+    // failover is flip #3 → flap-pin.
+    await store.state.save("s1", {
+      lastChecked: new Date(now - 60 * 60_000).toISOString(),
+      products: { a: norm("a") },
+      viaFlips: [new Date(now - 2 * 3_600_000).toISOString(), new Date(now - 1 * 3_600_000).toISOString()],
+    });
+    // Sibling: NOT due this pass (fresh lastChecked) — propagation must still reach it.
+    await store.state.save("s2", {
+      lastChecked: new Date().toISOString(),
+      products: { a: norm("a") },
+    });
+    // Unarmed sibling: same host, no fallback — must not be touched.
+    await store.state.save("s3", {
+      lastChecked: new Date().toISOString(),
+      products: { a: norm("a") },
+    });
+
+    // REST is blocked (403) everywhere; the Storefront endpoint answers.
+    respond = (req, res) => {
+      if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ data: { products: { pageInfo: { hasNextPage: false }, nodes: [
+          { handle: "a", title: "a", availableForSale: true },
+        ] } } }));
+        return;
+      }
+      res.writeHead(403);
+      res.end("blocked");
+    };
+
+    const res = await runOnce(ctx());
+    expect(res.checked).toBeGreaterThanOrEqual(1);
+
+    // Flapper pinned itself, with the one explanatory ping.
+    const s1 = await store.state.load("s1");
+    expect(s1?.preferFallback).toBe(true);
+    expect(sent.some((s) => s.alert.type === "self_healed" && (s.alert.product.note ?? "").includes("flapping"))).toBe(true);
+
+    // Sibling got pre-pinned without being checked, quietly.
+    const s2 = await store.state.load("s2");
+    expect(s2?.preferFallback).toBe(true);
+    expect(typeof s2?.lastRestProbeAt).toBe("string");
+    expect(sent.filter((s) => s.site === "Sibling")).toHaveLength(0);
+    const s2History = (await store.history.recent()).filter((h) => h.siteId === "s2");
+    expect(s2History.some((h) => h.type === "self_healed")).toBe(true);
+
+    // The un-armed same-host site is left alone.
+    const s3 = await store.state.load("s3");
+    expect(s3?.preferFallback).toBeFalsy();
   });
 
   it("quiet events reach history but are never sent to Discord", async () => {
