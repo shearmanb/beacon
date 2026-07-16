@@ -136,6 +136,16 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     log(`Fallback harvest error (continuing): ${(err as Error).message}`);
   }
 
+  // Daily analytics mirror: push new alert-history rows to the repo
+  // (analytics/alert_history.jsonl) so drop-timing analysis can be mined from
+  // git without touching the volume. No-ops unless GH_TOKEN + GH_REPO are set.
+  try {
+    const { maybeMirrorHistory } = await import("./mirror.js");
+    await maybeMirrorHistory({ store, dryRun, log });
+  } catch (err) {
+    log(`History mirror error (continuing): ${(err as Error).message}`);
+  }
+
   rows = normalizeRows(await store.sites.list(), log); // refresh after auto-off/harvest mutations
 
   const anyImminentActive = rows.some((r) => r.enabled && r.definition.imminent);
