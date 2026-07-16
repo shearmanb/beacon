@@ -249,6 +249,65 @@ if (existing.length > 0) {
   }
 }
 
+// ── One-time config amendment: data-tuned cadences (drop_windows / bar_evening) ─
+// 2026-07-16: mined the full alert history (v1 git archaeology + the v2 export,
+// May 17 → Jul 15, 49 deduped posting events): 47% of all bottle postings land
+// 11:00–13:00 ET, a Reveries-heavy evening window runs 17:00–20:00 with a small
+// 20:00–22:00 tail, and NOTHING has ever posted 22:00–08:00. Fountain Inn (a
+// bar) posts exclusively 15:24–19:39 ET. Two shared archetypes replace the
+// blanket working_hours_heavy: retailers get drop_windows; the bar gets
+// bar_evening (its old catch-all crawled overnight at 20 min for zero observed
+// postings). Guarded by a meta flag — runs ONCE, so later manual dashboard
+// schedule edits are never overridden by a redeploy. Safe to delete once
+// confirmed applied in prod.
+{
+  const FLAG = "amendment_cadence_20260716";
+  try {
+    if (!(await store.meta.get(FLAG))) {
+      await store.schedules.upsert("drop_windows", {
+        label: "📊 Drop Windows (data-tuned)",
+        rules: [
+          { fromHour: 9, toHour: 13, interval: 5 },
+          { fromHour: 17, toHour: 20, interval: 5 },
+          { fromHour: 8, toHour: 9, interval: 15 },
+          { fromHour: 13, toHour: 17, interval: 15 },
+          { fromHour: 20, toHour: 22, interval: 15 },
+          { fromHour: 22, toHour: 8, interval: 120 },
+          { defaultInterval: 120 },
+        ],
+      });
+      await store.schedules.upsert("bar_evening", {
+        label: "🍸 Bar Evening (data-tuned)",
+        rules: [
+          { fromHour: 15, toHour: 20, interval: 5 },
+          { fromHour: 12, toHour: 15, interval: 15 },
+          { fromHour: 20, toHour: 22, interval: 15 },
+          { fromHour: 22, toHour: 12, interval: 120 },
+          { defaultInterval: 120 },
+        ],
+      });
+      const assign: Record<string, string> = {
+        sharedpour_t8ke: "drop_windows",
+        sharedpour_t8ke_all: "drop_windows",
+        sharedpour_reveries: "drop_windows",
+        sharedpour_provenance: "drop_windows",
+        bourbon_concierge: "drop_windows",
+        fountain_inn_dc: "bar_evening",
+      };
+      for (const [id, schedule] of Object.entries(assign)) {
+        const row = await store.sites.get(id);
+        if (!row) continue; // site absent in this datastore — skip quietly
+        await store.sites.upsert({ ...row.definition, schedule });
+        console.log(`[serve] Amended ${id}: schedule → ${schedule}.`);
+      }
+      await store.meta.set(FLAG, new Date().toISOString());
+      console.log("[serve] Cadence amendment applied (drop_windows / bar_evening).");
+    }
+  } catch (err) {
+    console.error(`[serve] Cadence amendment failed (continuing): ${(err as Error).message}`);
+  }
+}
+
 if (seedOnly) {
   store.close();
   process.exit(0);
