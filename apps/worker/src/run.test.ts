@@ -181,10 +181,18 @@ describe("runOnce", () => {
     const res = await runOnce(ctx());
     expect(res.checked).toBeGreaterThanOrEqual(1);
 
-    // Flapper pinned itself, with the one explanatory ping.
+    // Flapper pinned itself, with the one explanatory note recorded to history.
+    // self_healed is history-only now (operator's call: page only real problems),
+    // so the flap-pin explanation is stored but never sent to Discord.
     const s1 = await store.state.load("s1");
     expect(s1?.preferFallback).toBe(true);
-    expect(sent.some((s) => s.alert.type === "self_healed" && (s.alert.product.note ?? "").includes("flapping"))).toBe(true);
+    expect(sent.filter((s) => s.alert.type === "self_healed")).toHaveLength(0);
+    const s1History = (await store.history.recent()).filter((h) => h.siteId === "s1");
+    expect(
+      s1History.some(
+        (h) => h.type === "self_healed" && ((h.payload as { note?: string })?.note ?? "").includes("flapping"),
+      ),
+    ).toBe(true);
 
     // Sibling got pre-pinned without being checked, quietly.
     const s2 = await store.state.load("s2");

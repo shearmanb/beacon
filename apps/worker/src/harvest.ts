@@ -93,7 +93,7 @@ export async function maybeHarvestFallbacks(
   rows: SiteRow[],
   opts?: { verifyEndpoint?: string; retryMs?: number },
 ): Promise<HarvestOutcome[]> {
-  const { store, channel, dryRun, log = () => {} } = ctx;
+  const { store, dryRun, log = () => {} } = ctx;
   if (dryRun) return [];
   const retryMs = opts?.retryMs ?? HARVEST_RETRY_MS;
   const out: HarvestOutcome[] = [];
@@ -122,14 +122,9 @@ export async function maybeHarvestFallbacks(
             `bot-blocked, checks will fail over to the Storefront API automatically — nothing to do now.`,
         },
       };
+      // History-only (see run.ts dispatch): self_healed telemetry surfaces on the
+      // dashboard but never pages Discord — preventive housekeeping, not a problem.
       await store.history.append(def.id, [event]);
-      if (channel) {
-        try {
-          await channel.send(def.name, event);
-        } catch (err) {
-          log(`  Discord harvest-note error: ${(err as Error).message}`);
-        }
-      }
     }
   }
   return out;

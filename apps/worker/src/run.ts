@@ -386,8 +386,15 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
 
   for (const { def, outcome } of results) {
     for (const ev of outcome.events) {
-      log(`  → ${ev.type}: ${ev.product.title}${ev.quiet ? " (quiet — history only)" : ""}`);
-      if (ev.type === "baseline" || ev.quiet || !channel) continue;
+      // self_healed is self-healing telemetry, not a problem to act on: record it
+      // to history + the dashboard (⛑ chips / fetchVia state) but never page
+      // Discord. Operator's call (2026-07-19) — only genuine problems should ping.
+      // A real outage still pages as site_error when BOTH channels fail, and
+      // product drops still alert normally (they flow via whichever channel works).
+      // baseline is likewise history-only; an explicitly-quiet event is damped too.
+      const historyOnly = ev.type === "baseline" || ev.type === "self_healed" || ev.quiet === true;
+      log(`  → ${ev.type}: ${ev.product.title}${historyOnly ? " (history only)" : ""}`);
+      if (historyOnly || !channel) continue;
 
       let note = ev.product.note ?? "";
       if (ev.type === "site_error") {
