@@ -318,12 +318,22 @@ async function fetchViaStorefront(
   const handleMatch = src.collectionPath?.match(/collections\/([^/?]+)/);
   const collectionHandle = handleMatch?.[1];
 
+  // Newest-first (2026-07-22): the API's default sort is oldest-first by id, so
+  // when a big catalog truncates at the page cap the roster lost exactly the
+  // products this app exists to catch — brand-new listings. Sorted newest-first,
+  // truncation can only shed the oldest tail; a fresh drop is always on page 1.
+  // (Enum names differ per scope: root ProductSortKeys.CREATED_AT vs collection
+  // ProductCollectionSortKeys.CREATED.)
+  const sortArg = collectionHandle
+    ? "sortKey: CREATED, reverse: true"
+    : "sortKey: CREATED_AT, reverse: true";
+
   const all: StorefrontNode[] = [];
   let truncated = false;
   let cursor: string | null = null;
   for (let page = 1; page <= FALLBACK_MAX_PAGES; page += 1) {
     if (page > 1) await sleep(300 + Math.floor(Math.random() * 500));
-    const inner = `products(first: ${PAGE_LIMIT}, after: $cursor) {
+    const inner = `products(first: ${PAGE_LIMIT}, after: $cursor, ${sortArg}) {
       pageInfo { hasNextPage endCursor }
       nodes { ${NODE_FIELDS} }
     }`;

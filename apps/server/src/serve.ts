@@ -332,7 +332,12 @@ if (backupIntervalH > 0) {
 
 // ── Worker loop in-process (shares the same file DB as the web server) ─────────
 if (!noWorker) {
-  void startLoop(
+  // Never fire-and-forget the loop (2026-07-22): a dropped rejection here left
+  // the dashboard quietly serving with a DEAD worker — the worst failure mode a
+  // monitor has. If the loop ever dies, exit non-zero so Railway's ON_FAILURE
+  // policy restarts the whole service and checks resume on their own. (A hung —
+  // not dead — loop is covered by the wedge watchdog inside startLoop.)
+  startLoop(
     {
       store,
       channel,
@@ -340,7 +345,12 @@ if (!noWorker) {
       log: (m) => console.log(`[worker] ${m}`),
     },
     { healthcheckUrl: process.env["HEALTHCHECK_URL"] },
-  );
+  ).catch((err: unknown) => {
+    console.error(
+      `[serve] Worker loop died: ${err instanceof Error ? err.stack ?? err.message : String(err)} — exiting for a platform restart.`,
+    );
+    process.exit(1);
+  });
   console.log(`[serve] Worker loop started${process.env["BEACON_DRY_RUN"] === "1" ? " (DRY RUN)" : ""}.`);
 }
 

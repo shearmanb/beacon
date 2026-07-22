@@ -21,6 +21,11 @@ import type { BeaconStore } from "@beacon/db";
 const MIRROR_INTERVAL_MS = 24 * 3_600_000;
 const MIRROR_PATH = "analytics/alert_history.jsonl";
 const META_KEY = "historyMirror"; // JSON: { at: iso, lastId: number }
+// Hard cap on each GitHub call (2026-07-22): this await runs INSIDE the check
+// loop, and it was the loop's only unbounded HTTP — undici's own limits can let
+// a stalled call sit for minutes. "Failures log and retry next interval — the
+// check loop must never notice" has to be enforced, not assumed.
+const MIRROR_HTTP_TIMEOUT_MS = 20_000;
 // Hard bound on the mirror file so it can't grow forever. 20k lines ≈ 4× the
 // DB's own 5,000-row cap — older rows scroll off the file but stay in git
 // history (mining can always walk versions, exactly like the v1 analysis).
@@ -97,7 +102,10 @@ export async function maybeMirrorHistory(ctx: MirrorCtx, over: MirrorOverrides =
     "User-Agent": "beacon-worker",
   };
 
-  const getRes = await fetchImpl(`${api}?ref=${branch}`, { headers });
+  const getRes = await fetchImpl(`${api}?ref=${branch}`, {
+    headers,
+    signal: AbortSignal.timeout(MIRROR_HTTP_TIMEOUT_MS),
+  });
   let existing = "";
   let sha: string | undefined;
   if (getRes.status === 200) {
@@ -112,6 +120,7 @@ export async function maybeMirrorHistory(ctx: MirrorCtx, over: MirrorOverrides =
   const putRes = await fetchImpl(api, {
     method: "PUT",
     headers: { ...headers, "Content-Type": "application/json" },
+    signal: AbortSignal.timeout(MIRROR_HTTP_TIMEOUT_MS),
     body: JSON.stringify({
       message: `analytics: mirror ${rows.length} alert-history row(s) [skip ci]`,
       content: Buffer.from(body, "utf8").toString("base64"),
