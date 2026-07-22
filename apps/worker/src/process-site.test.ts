@@ -105,6 +105,20 @@ describe("processSite", () => {
     expect(out.events).toEqual([]);
   });
 
+  it("tight drop window: fires site_error at 3 failures instead of 5", async () => {
+    const prev: SiteState = { lastChecked: "t", consecutiveErrors: 2 };
+    const out = await processSite({
+      site: site(),
+      prevState: prev,
+      adapter: fails(new HttpError(429, "https://x.com")),
+      deps,
+      ignored: noneIgnored,
+      tightWindow: true,
+    });
+    expect(out.newState.consecutiveErrors).toBe(3);
+    expect(out.events.map((e) => e.type)).toEqual(["site_error"]);
+  });
+
   it("error path: a 403 sets an escalating cooldown", async () => {
     const prev: SiteState = { lastChecked: "t", cooldownLevel: 0 };
     const out = await processSite({ site: site(), prevState: prev, adapter: fails(new HttpError(403, "https://x.com")), deps, ignored: noneIgnored });

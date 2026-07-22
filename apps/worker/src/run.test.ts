@@ -127,6 +127,40 @@ describe("runOnce", () => {
     expect((await runOnce(ctx())).checked).toBe(1);
   });
 
+  it("clamps a long cooldown to 15m when the schedule is a tight drop-window cadence", async () => {
+    // A 5-min cadence (drop window) with a 170-min cooldown stored and the last
+    // attempt 20 min ago: the 15-min clamp has elapsed, so the site checks.
+    await store.sites.upsert({
+      id: "s1",
+      name: "Local Shop",
+      intervalMinutes: 5,
+      source: { kind: "shopify_rest", baseUrl: base },
+    });
+    await store.state.save("s1", {
+      lastChecked: new Date(Date.now() - 20 * 60_000).toISOString(),
+      products: {},
+      cooldownUntil: new Date(Date.now() + 170 * 60_000).toISOString(),
+      cooldownLevel: 4,
+    });
+    expect((await runOnce(ctx())).checked).toBe(1);
+
+    // Control: the same cooldown under a relaxed 60-min cadence honors the
+    // full ladder and stays skipped.
+    await store.sites.upsert({
+      id: "s1",
+      name: "Local Shop",
+      intervalMinutes: 60,
+      source: { kind: "shopify_rest", baseUrl: base },
+    });
+    await store.state.save("s1", {
+      lastChecked: new Date(Date.now() - 20 * 60_000).toISOString(),
+      products: {},
+      cooldownUntil: new Date(Date.now() + 170 * 60_000).toISOString(),
+      cooldownLevel: 4,
+    });
+    expect((await runOnce(ctx())).checked).toBe(0);
+  });
+
   it("set_imminent command toggles imminent on with a timestamp", async () => {
     await store.commands.enqueue("set_imminent", "s1", { imminent: true });
     const res = await runOnce(ctx());

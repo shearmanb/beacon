@@ -14,7 +14,7 @@
 
 import { buildAdapterDeps, diagnoseSite, getAdapter, siteDefinitionSchema, sourceUrl, type AdapterDeps, type SiteDefinition } from "@beacon/core";
 import { expireIdentity } from "@beacon/fetch";
-import { sleep, jitter, shouldCheck, type Alert } from "@beacon/shared";
+import { sleep, jitter, shouldCheck, getEffectiveInterval, type Alert } from "@beacon/shared";
 import type { NotificationChannel } from "@beacon/notify";
 import type { BeaconStore, SiteRow } from "@beacon/db";
 import { applyCommands } from "./commands.js";
@@ -31,6 +31,20 @@ const PER_SITE_BUDGET_MS = 60_000;
 // Need at least this many checked sites before "all failed" means "systemic"
 // rather than "my two sites happen to both be down".
 const SYSTEMIC_MIN_SITES = 2;
+// Drop-window cooldown clamp (2026-07-22): the 5→15→60→180 min breaker ladder
+// is right overnight, but it was mission-failure in a drop window — a few
+// consecutive both-channel failures (below the site_error page threshold)
+// silently blacked out the exact hours Beacon exists for (the Jul 22
+// Glaze/ENDALZ miss: last good check 5:24 PM, listing ~6:30 PM, tile frozen in
+// a long cooldown, zero pages). While the site's CURRENT effective interval is
+// tight (≤ TIGHT_INTERVAL_MIN — i.e. the schedule says we're inside a
+// data-tuned drop window), honor at most TIGHT_COOLDOWN_CAP_MS of any stored
+// cooldown, measured from the last attempt. Read-side only: stored state is
+// untouched, the full ladder still applies overnight, and an already-stored
+// long cooldown un-sticks on the first pass after deploy. A 15-min re-probe of
+// a 429ing host matches the ladder's step-2 politeness, so this stays civil.
+const TIGHT_INTERVAL_MIN = 15;
+const TIGHT_COOLDOWN_CAP_MS = 15 * 60_000;
 
 // Site IDs we've already alerted about a config/adapter problem this process, so
 // the warning fires once per start instead of every ~60s loop.
@@ -161,18 +175,30 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
 
     const prevState = await store.state.load(def.id);
 
+    // Inside a tight (drop-window) cadence, blocking failures page earlier and
+    // long cooldowns are clamped — see TIGHT_INTERVAL_MIN above.
+    const tightWindow = getEffectiveInterval(def, schedules) <= TIGHT_INTERVAL_MIN;
+
     const cooldownUntil = prevState?.cooldownUntil ? Date.parse(prevState.cooldownUntil as string) : 0;
     if (cooldownUntil > Date.now()) {
-      // The 5/15/60-min circuit breaker would black out a site after a 403/429.
-      // In imminent mode the operator is actively watching a drop, so a single
-      // transient block must not silence the launch window — check anyway. Cadence
-      // is still bounded by imminentIntervalMinutes (shouldCheck below), and the
+      // The circuit breaker would black out a site after a 403/429. In imminent
+      // mode the operator is actively watching a drop, so a single transient
+      // block must not silence the launch window — check anyway. Cadence is
+      // still bounded by imminentIntervalMinutes (shouldCheck below), and the
       // breaker reasserts automatically once imminent ends.
-      if (!def.imminent) {
-        log(`[${def.name}] Skipping — rate-limit cooldown`);
-        continue;
+      if (def.imminent) {
+        log(`[${def.name}] In cooldown but imminent — checking anyway`);
+      } else {
+        const lastAttempt = prevState?.lastChecked ? Date.parse(prevState.lastChecked as string) : 0;
+        const honoredUntil = tightWindow
+          ? Math.min(cooldownUntil, lastAttempt + TIGHT_COOLDOWN_CAP_MS)
+          : cooldownUntil;
+        if (honoredUntil > Date.now()) {
+          log(`[${def.name}] Skipping — rate-limit cooldown`);
+          continue;
+        }
+        log(`[${def.name}] Long cooldown clamped to ${TIGHT_INTERVAL_MIN}m — tight drop-window cadence, checking anyway`);
       }
-      log(`[${def.name}] In cooldown but imminent — checking anyway`);
     }
     if (!shouldCheck(def, prevState, schedules)) continue;
 
@@ -220,6 +246,7 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
         adapter,
         deps: { ...baseDeps, signal: controller.signal },
         ignored,
+        tightWindow,
       });
     } finally {
       clearTimeout(budget);

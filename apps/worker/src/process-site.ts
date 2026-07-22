@@ -14,6 +14,11 @@ export const ERROR_ALERT_THRESHOLD = 5;
 // In imminent mode, surface a block fast — the operator needs to know the drop
 // window is being blocked, not wait out the full 5-failure threshold.
 export const IMMINENT_ERROR_ALERT_THRESHOLD = 2;
+// Inside a tight drop-window cadence (run.ts passes tightWindow), page at 3
+// consecutive failures instead of 5. The Jul 22 miss showed 5 was tuned for
+// noise, not for the hours that matter: 3-4 both-channel failures + the
+// cooldown ladder = a silent blackout across an entire drop with zero pages.
+export const TIGHT_ERROR_ALERT_THRESHOLD = 3;
 // Adaptive backoff (1b): the ladder now extends to 3h for a block that persists
 // past an hour — keep resting a hostile host instead of re-poking it every 60m.
 // Recovery latency is bounded by the daily re-page + the fallback channel
@@ -67,6 +72,8 @@ export interface ProcessSiteArgs {
   adapter: SourceAdapter;
   deps: AdapterDeps;
   ignored: Set<string>;
+  /** True when the site's current effective interval is a drop-window cadence — errors page earlier. */
+  tightWindow?: boolean;
 }
 
 export async function processSite({
@@ -75,6 +82,7 @@ export async function processSite({
   adapter,
   deps,
   ignored,
+  tightWindow,
 }: ProcessSiteArgs): Promise<SiteOutcome> {
   const nowIso = () => new Date().toISOString();
   try {
@@ -264,7 +272,7 @@ export async function processSite({
 
     return { newState, events, ok: true };
   } catch (err) {
-    return buildErrorOutcome(site, prevState, err);
+    return buildErrorOutcome(site, prevState, err, tightWindow === true);
   }
 }
 
@@ -273,7 +281,12 @@ export async function processSite({
 // mitigation). Functionally a block, so it gets the same cooldown + wording.
 const STALL_RE = /aborted (fetch|post)ing|deadline exceeded|socket idle timeout/i;
 
-function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefined, err: unknown): SiteOutcome {
+function buildErrorOutcome(
+  site: SiteDefinition,
+  prevState: SiteState | undefined,
+  err: unknown,
+  tightWindow = false,
+): SiteOutcome {
   const message = err instanceof Error ? err.message : String(err);
   const statusCode = (err as { statusCode?: number }).statusCode;
   const stalled = statusCode == null && STALL_RE.test(message);
@@ -284,7 +297,11 @@ function buildErrorOutcome(site: SiteDefinition, prevState: SiteState | undefine
   // first site_error.
   const lastErrorAlertMs = prev.errorAlertAt ? new Date(prev.errorAlertAt as string).getTime() : null;
   const dueForRealert = alreadyAlerted && lastErrorAlertMs != null && Date.now() - lastErrorAlertMs >= ERROR_REALERT_MS;
-  const threshold = site.imminent ? IMMINENT_ERROR_ALERT_THRESHOLD : ERROR_ALERT_THRESHOLD;
+  const threshold = site.imminent
+    ? IMMINENT_ERROR_ALERT_THRESHOLD
+    : tightWindow
+      ? TIGHT_ERROR_ALERT_THRESHOLD
+      : ERROR_ALERT_THRESHOLD;
   const shouldAlert = consecutiveErrors >= threshold && (!alreadyAlerted || dueForRealert);
 
   // Circuit breaker: 429/403/430 or a stall -> escalating cooldown (430 is
