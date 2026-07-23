@@ -96,10 +96,53 @@ describe("shopifyRestAdapter", () => {
         res.end(JSON.stringify({ products: [shopifyProduct("a", true, "10.00")] }));
       }
     };
-    const prev: PrevState = { pageCount: 1, httpValidators: { etag: '"v1"', lastModified: null } };
+    const prev: PrevState = {
+      pageCount: 1,
+      httpValidators: { etag: '"v1"', lastModified: null },
+      lastFullFetchAt: new Date().toISOString(), // validator freshly backed by a full body
+    };
     const result = await shopifyRestAdapter.fetch(makeSite(), prev);
     expect(sawIfNoneMatch).toBe('"v1"');
     expect(result.kind).toBe("not_modified");
+  });
+
+  it("skips conditional headers once the validator outlives FULL_REVALIDATE_MS (bounded 304 blindness)", async () => {
+    let sawIfNoneMatch: string | undefined;
+    handler = (req, res) => {
+      sawIfNoneMatch = req.headers["if-none-match"] as string | undefined;
+      // A stale-happy origin: would 304 any conditional request. The adapter
+      // must not give it the chance once the validator is too old.
+      if (sawIfNoneMatch) {
+        res.writeHead(304);
+        res.end();
+      } else {
+        res.writeHead(200, { ETag: '"v2"' });
+        res.end(JSON.stringify({ products: [shopifyProduct("fresh-drop", true, "129.99")] }));
+      }
+    };
+    const prev: PrevState = {
+      pageCount: 1,
+      httpValidators: { etag: '"v1"', lastModified: null },
+      lastFullFetchAt: new Date(Date.now() - 20 * 60_000).toISOString(), // 20 min > 15-min cap
+    };
+    const result = await shopifyRestAdapter.fetch(makeSite(), prev);
+    expect(sawIfNoneMatch).toBeUndefined(); // unconditional fetch forced
+    if (result.kind !== "products") throw new Error("expected products");
+    expect(result.products[0]?.handle).toBe("fresh-drop");
+    expect(typeof result.stateExtras?.["lastFullFetchAt"]).toBe("string"); // stamp renewed
+  });
+
+  it("a missing lastFullFetchAt (pre-existing state) forces one full fetch", async () => {
+    let sawIfNoneMatch: string | undefined;
+    handler = (req, res) => {
+      sawIfNoneMatch = req.headers["if-none-match"] as string | undefined;
+      res.writeHead(200, { ETag: '"v2"' });
+      res.end(JSON.stringify({ products: [shopifyProduct("a", true, "10.00")] }));
+    };
+    const prev: PrevState = { pageCount: 1, httpValidators: { etag: '"v1"', lastModified: null } };
+    const result = await shopifyRestAdapter.fetch(makeSite(), prev);
+    expect(sawIfNoneMatch).toBeUndefined();
+    expect(result.kind).toBe("products");
   });
 
   it("does NOT send conditional headers when last check was multi-page", async () => {

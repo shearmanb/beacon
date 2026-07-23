@@ -45,6 +45,16 @@ const FALLBACK_MAX_PAGES = 8;
 // flagged us. Once preferred, REST is re-probed for recovery twice a day.
 const PREFER_FALLBACK_AFTER = 3;
 const REST_REPROBE_MS = 12 * 3_600_000;
+// Bound on how long conditional GET may trust its stored validator. A 304 is
+// the origin's CLAIM that nothing changed — if a CDN serves stale 304s under
+// load, or the ETag stops reflecting catalog membership, every check reads
+// green while the roster silently freezes: the worst state a monitor can be
+// in (suspected in the Jul 22 Glaze/ENDALZ miss — page live + buyable ~2 h,
+// ~24 green checks, roster never budged). After this long without a full-body
+// fetch, the next check skips If-None-Match and downloads the catalog
+// unconditionally. Cadences ≥15 min are unaffected (every check was already a
+// candidate full fetch); a 5-min drop window costs one extra body per 15 min.
+const FULL_REVALIDATE_MS = 15 * 60_000;
 
 function getMinPrice(variants: ShopifyVariant[] | undefined): number | null {
   if (!variants?.length) return null;
@@ -223,8 +233,12 @@ async function fetchRest(
   // Conditional GET only when the whole catalog fit one page last check — a
   // 304 on page 1 then proves nothing changed anywhere. Multi-page catalogs
   // can change on later pages without touching page 1's ETag, so they always
-  // fetch in full.
-  const singlePage = src.conditionalGet && prev.pageCount === 1 && !!prev.httpValidators;
+  // fetch in full. Additionally, the validator is only trusted while a recent
+  // full body backs it (FULL_REVALIDATE_MS) — an unbounded 304 streak is an
+  // unbounded blind spot.
+  const lastFull = typeof prev.lastFullFetchAt === "string" ? Date.parse(prev.lastFullFetchAt) : 0;
+  const validatorFresh = Date.now() - lastFull < FULL_REVALIDATE_MS;
+  const singlePage = src.conditionalGet && prev.pageCount === 1 && !!prev.httpValidators && validatorFresh;
 
   const all: ShopifyProduct[] = [];
   let page = 1;
@@ -259,6 +273,10 @@ async function fetchRest(
     products: all.map((p) => normalize(p, origin)),
     validators,
     pageCount: page,
+    // Stamp the full-body fetch so conditional GET knows how stale its
+    // validator is. Deliberately NOT stamped on 304s or fallback fetches —
+    // neither proves the REST body is current.
+    stateExtras: { lastFullFetchAt: new Date().toISOString() },
     emptyGuardThreshold: 3,
     emptyGuardNote:
       "products.json returned 0 products on consecutive checks. Previous products " +
