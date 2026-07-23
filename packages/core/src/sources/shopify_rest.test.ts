@@ -243,6 +243,36 @@ describe("shopifyRestAdapter storefront fallback", () => {
     expect(result.validators).toBeNull(); // no stale cross-endpoint ETags
   });
 
+  it(
+    "fails over to the Storefront API on a challenge-mode 503 (Jul 22 drop-night block)",
+    { timeout: 20_000 }, // http.ts inline-retries 503 (~7s) before surfacing it
+    async () => {
+      handler = (req, res) => {
+        if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              data: {
+                products: {
+                  pageInfo: { hasNextPage: false, endCursor: null },
+                  nodes: [storefrontNode("glaze-endalz", true, "129.99")],
+                },
+              },
+            }),
+          );
+          return;
+        }
+        res.writeHead(503);
+        res.end("challenge");
+      };
+      const result = await shopifyRestAdapter.fetch(makeFallbackSite(), {}, fallbackDeps);
+      expect(result.kind).toBe("products");
+      if (result.kind !== "products") return;
+      expect(result.via).toBe("storefront_fallback");
+      expect(result.products[0]?.handle).toBe("glaze-endalz");
+    },
+  );
+
   it("scopes the fallback query to the collection handle for collection sources", async () => {
     let sawQuery = "";
     handler = graphqlHandler((body, res) => {

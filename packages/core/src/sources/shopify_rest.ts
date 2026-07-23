@@ -30,8 +30,14 @@ export const PAGE_LIMIT = 250; // exported so diagnose probes with the worker's 
 const MAX_PAGES = 20;
 // Statuses that mean "the endpoint is blocking us" (bot protection / rate limit)
 // rather than "the endpoint is broken" — these trigger the Storefront fallback.
-// 430 is Shopify's own bot-block status; 401/403 are WAF/challenge walls.
-const BLOCKED_STATUSES = new Set([401, 403, 429, 430]);
+// 430 is Shopify's own bot-block status; 401/403 are WAF/challenge walls. 503
+// is how challenge-mode WAFs answer suspect (datacenter) IPs — seen live on
+// sharedpour.com during the Jul 22 drop evening: products.json 503'd from the
+// worker's IP while browsers loaded the store fine, and the fallback sat idle
+// because 503 wasn't in this set. A genuine 503 outage lands here too, and
+// that's still right — trying the alternate channel beats erroring, and if
+// both channels fail the normal error path runs anyway.
+const BLOCKED_STATUSES = new Set([401, 403, 429, 430, 503]);
 // Storefront-fallback pagination cap: 8 × 250 = 2,000 products, same spirit as
 // MAX_PAGES but tighter — the fallback is a secondary channel. Raised 4→8
 // (2026-07): a root-catalog scan truncated at 1,000 returned a DIFFERENT roster

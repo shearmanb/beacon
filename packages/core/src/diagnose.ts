@@ -20,7 +20,11 @@ import { PAGE_LIMIT } from "./sources/shopify_rest.js";
 import type { AdapterDeps } from "./sources/types.js";
 
 // Statuses that read as "you are being blocked" rather than "the site is broken".
-const BLOCKED = new Set([401, 403, 429, 430]);
+// 503 included (Jul 22 lesson): challenge-mode WAFs serve 503 to suspect IPs,
+// and diagnose used to call that "outage/misconfiguration" and skip testing the
+// fresh-identity + fallback steps entirely — a wrong verdict on the one status
+// the host actually used at drop time.
+const BLOCKED = new Set([401, 403, 429, 430, 503]);
 const DEFAULT_STEP_MS = 12_000;
 
 export interface DiagnoseStep {
@@ -143,7 +147,10 @@ function browserCompareHint(url: string): string {
 
 /** "HTTP 403" vs "never answers (tar-pit)" — used in verdict sentences. */
 function blockPhrase(a: Attempt): string {
-  return a.stalled ? "never answers — it tar-pits the connection" : `HTTP ${a.status}`;
+  if (a.stalled) return "never answers — it tar-pits the connection";
+  if (a.status === 503)
+    return "HTTP 503 — typically a WAF challenge/protection mode answering this server, not a real outage (if the store loads in your browser, it is the challenge)";
+  return `HTTP ${a.status}`;
 }
 
 export async function diagnoseSite(
