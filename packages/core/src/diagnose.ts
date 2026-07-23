@@ -222,21 +222,34 @@ async function diagnoseShopifyRest(
     const endpoint = fb.endpoint ?? `https://${fb.domain}/api/${fb.apiVersion}/graphql.json`;
     let handles: string[] = [];
     const attempt = await step(async (signal): Promise<Attempt> => {
-      const query = "{ products(first: 5, sortKey: CREATED_AT, reverse: true) { nodes { handle } } }";
+      // Two sorts on purpose: created-at misses products drafted long before
+      // they are published (a pick created weeks ago and listed tonight sorts
+      // weeks deep), while a just-published/selling product is always near the
+      // top of updated-at. Together they answer "can this channel see what
+      // changed on the store today?"
+      const query =
+        "{ created: products(first: 5, sortKey: CREATED_AT, reverse: true) { nodes { handle } } " +
+        "updated: products(first: 8, sortKey: UPDATED_AT, reverse: true) { nodes { handle } } }";
       const res = await httpPost(endpoint, JSON.stringify({ query }), {
         headers: { "X-Shopify-Storefront-Access-Token": token },
         signal,
       });
-      const nodes = (JSON.parse(res.body) as { data?: { products?: { nodes?: Array<{ handle?: string }> } } })?.data
-        ?.products?.nodes;
-      if (!Array.isArray(nodes)) {
+      type Nodes = { nodes?: Array<{ handle?: string }> };
+      const data = (JSON.parse(res.body) as { data?: { created?: Nodes; updated?: Nodes } })?.data;
+      const pick = (n: Nodes | undefined): string[] =>
+        Array.isArray(n?.nodes) ? n.nodes.map((x) => x.handle ?? "").filter(Boolean) : [];
+      const created = pick(data?.created);
+      const updated = pick(data?.updated);
+      if (!created.length && !updated.length) {
         return { ok: false, status: res.status, detail: `HTTP ${res.status} — unexpected response (bad token?)` };
       }
-      handles = nodes.map((n) => n.handle ?? "").filter(Boolean);
+      handles = [...new Set([...updated, ...created])];
       return {
         ok: true,
         status: res.status,
-        detail: `HTTP ${res.status} — newest on this channel: ${handles.join(", ") || "(none)"}`,
+        detail:
+          `HTTP ${res.status} — recently updated on this channel: ${updated.join(", ") || "(none)"}; ` +
+          `newest created: ${created.join(", ") || "(none)"}`,
       };
     }, deps?.signal, stepMs);
     return { attempt, handles };
