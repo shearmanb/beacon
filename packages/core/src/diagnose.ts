@@ -208,6 +208,54 @@ async function diagnoseShopifyRest(
     steps.push({ label, ok: a.ok, status: a.status, detail: a.detail });
   };
 
+  // Storefront-channel visibility probe. Queries the newest products on the
+  // fallback channel (same newest-first sort the fallback fetch uses), so the
+  // operator can see BY HANDLE whether a product they expect is visible there.
+  // Motivated by the Jul 22 unlisted-drop hunt: a healthy REST feed of the
+  // whole catalog can still lack a live product (deliberately unlisted private
+  // pick, or a stale cached variant served to datacenter IPs) — the question
+  // "can ANY machine-readable channel see it?" needs the Storefront side too.
+  const probeStorefront = async (): Promise<{ attempt: Attempt; handles: string[] } | null> => {
+    const fb = src.storefrontFallback;
+    const token = fb ? deps?.resolveSecret?.(fb.accessTokenRef) : null;
+    if (!fb || !token) return null;
+    const endpoint = fb.endpoint ?? `https://${fb.domain}/api/${fb.apiVersion}/graphql.json`;
+    let handles: string[] = [];
+    const attempt = await step(async (signal): Promise<Attempt> => {
+      const query = "{ products(first: 5, sortKey: CREATED_AT, reverse: true) { nodes { handle } } }";
+      const res = await httpPost(endpoint, JSON.stringify({ query }), {
+        headers: { "X-Shopify-Storefront-Access-Token": token },
+        signal,
+      });
+      const nodes = (JSON.parse(res.body) as { data?: { products?: { nodes?: Array<{ handle?: string }> } } })?.data
+        ?.products?.nodes;
+      if (!Array.isArray(nodes)) {
+        return { ok: false, status: res.status, detail: `HTTP ${res.status} — unexpected response (bad token?)` };
+      }
+      handles = nodes.map((n) => n.handle ?? "").filter(Boolean);
+      return {
+        ok: true,
+        status: res.status,
+        detail: `HTTP ${res.status} — newest on this channel: ${handles.join(", ") || "(none)"}`,
+      };
+    }, deps?.signal, stepMs);
+    return { attempt, handles };
+  };
+
+  // Healthy-REST verdicts also probe the Storefront channel's newest handles —
+  // "REST is fine" does not mean "every live product is in the feed", and the
+  // handle list lets the operator check a specific product's visibility.
+  const healthyVerdict = async (base: string): Promise<DiagnoseReport> => {
+    const sf = await probeStorefront();
+    if (sf) {
+      push("Storefront channel probe (newest products it can see)", sf.attempt);
+      base += sf.attempt.ok
+        ? ` Storefront channel newest: ${sf.handles.join(", ") || "(none)"}. A live product missing from BOTH feeds is unlisted by the store — no polling channel can discover it.`
+        : ` (Storefront channel probe failed: ${sf.attempt.detail}.)`;
+    }
+    return { steps, blocked: false, verdict: base };
+  };
+
   // 1) REST as the worker fetches it.
   const rest = await step(getAttempt(restUrl, "api"), deps?.signal, stepMs);
   push("REST products.json (worker's primary channel)", rest);
@@ -234,19 +282,14 @@ async function diagnoseShopifyRest(
             : `Page 1 answers, but the previously-failing request still errors (${retest.detail}) — check whether that URL/page still exists.`,
         };
       }
-      return {
-        steps,
-        blocked: false,
-        verdict:
-          "products.json answers from this server — including the exact request that previously failed. " +
+      return healthyVerdict(
+        "products.json answers from this server — including the exact request that previously failed. " +
           "The primary channel is healthy right now; the earlier errors were transient or the site was mid-cooldown.",
-      };
+      );
     }
-    return {
-      steps,
-      blocked: false,
-      verdict: "products.json answers from this server — the primary channel is healthy right now. If the tile still shows errors, they were transient or the site was mid-cooldown.",
-    };
+    return healthyVerdict(
+      "products.json answers from this server — the primary channel is healthy right now. If the tile still shows errors, they were transient or the site was mid-cooldown.",
+    );
   }
   const restBlocked = rest.stalled === true || (rest.status != null && BLOCKED.has(rest.status));
   if (!restBlocked) {
@@ -270,21 +313,12 @@ async function diagnoseShopifyRest(
     };
   }
 
-  // 3) The Storefront-API fallback channel, when configured.
-  const fb = src.storefrontFallback;
-  const token = fb ? deps?.resolveSecret?.(fb.accessTokenRef) : null;
-  if (fb && token) {
-    const endpoint = fb.endpoint ?? `https://${fb.domain}/api/${fb.apiVersion}/graphql.json`;
-    const attempt = await step(async (signal): Promise<Attempt> => {
-      const res = await httpPost(endpoint, JSON.stringify({ query: "{ shop { name } }" }), {
-        headers: { "X-Shopify-Storefront-Access-Token": token },
-        signal,
-      });
-      const name = (JSON.parse(res.body) as { data?: { shop?: { name?: string } } })?.data?.shop?.name;
-      return name
-        ? { ok: true, status: res.status, detail: `HTTP ${res.status} — Storefront API answers (shop: ${name})` }
-        : { ok: false, status: res.status, detail: `HTTP ${res.status} — unexpected response (bad token?)` };
-    }, deps?.signal, stepMs);
+  // 3) The Storefront-API fallback channel, when configured. The probe fetches
+  //    the newest handles (not just shop{name}) so a blocked-REST verdict also
+  //    shows WHAT the fallback channel can actually see.
+  const sf = await probeStorefront();
+  if (sf) {
+    const attempt = sf.attempt;
     push("Storefront GraphQL API (fallback channel)", attempt);
     return {
       steps,

@@ -52,7 +52,7 @@ describe("diagnoseSite", () => {
     handler = (req, res) => {
       if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
         res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ data: { shop: { name: "Shared Pour" } } }));
+        res.end(JSON.stringify({ data: { products: { nodes: [{ handle: "newest-pick" }] } } }));
         return;
       }
       res.writeHead(403); // REST blocked for old AND fresh identity
@@ -81,7 +81,7 @@ describe("diagnoseSite", () => {
     handler = (req, res) => {
       if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
         res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ data: { shop: { name: "Shared Pour" } } }));
+        res.end(JSON.stringify({ data: { products: { nodes: [{ handle: "newest-pick" }] } } }));
         return;
       }
       // REST: hang forever — the step timeout must end it, not the whole budget.
