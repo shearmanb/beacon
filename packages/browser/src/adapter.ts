@@ -28,7 +28,7 @@ import {
   type SourceOf,
 } from "@beacon/core";
 import { sleep } from "@beacon/shared";
-import { createContext, createSession, resolveCreds, BrowserbaseApiError } from "./browserbase.js";
+import { createContext, createSession, ensureProjectId, resolveAuth, BrowserbaseApiError } from "./browserbase.js";
 import { classifyWall, wallToError, BrowserCheckError } from "./classify.js";
 import { captureEvidence, type EvidenceRefs } from "./evidence.js";
 
@@ -73,12 +73,15 @@ export const browserAdapter: SourceAdapter = {
     if (src.engine !== "browserbase") {
       throw new Error(`browser engine "${src.engine}" is not implemented (only "browserbase")`);
     }
-    const creds = resolveCreds(deps?.resolveSecret);
-    if (!creds) {
+    const auth = resolveAuth(deps?.resolveSecret);
+    if (!auth) {
       throw new Error(
-        "Browserbase credentials missing — set BROWSERBASE_API_KEY + BROWSERBASE_PROJECT_ID on the service",
+        "Browserbase API key missing — set BROWSERBASE_API_KEY on the service (the project resolves automatically from the key)",
       );
     }
+    // Only the API key is configured; the project id is discovered from the
+    // API on first use and cached for the process.
+    const creds = await ensureProjectId(auth, deps?.signal);
 
     const origin = new URL(src.baseUrl).origin;
     const visitUrl = src.visitUrl ?? collectionBase(src);

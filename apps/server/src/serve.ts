@@ -316,13 +316,15 @@ if (existing.length > 0) {
 // REST/Storefront checkers: hourly (Browserbase free-tier friendly), ALL
 // product alerts off — its job is to prove/compare, not to page. Promotion to
 // a live alerting tier happens only after its roster matches for several days.
-// Self-arming: created only once the Browserbase env vars exist on the service;
-// until then this block no-ops with a log line. Safe to delete once promoted.
+// Self-arming: created only once the Browserbase API key exists on the service
+// (the project id resolves automatically from the key — no PROJECT_ID var
+// needed); until then this block no-ops with a log line. Safe to delete once
+// promoted.
 {
   const TWIN_ID = "sharedpour_browser";
   try {
-    if (!process.env["BROWSERBASE_API_KEY"] || !process.env["BROWSERBASE_PROJECT_ID"]) {
-      console.log(`[serve] Browser twin not armed — set BROWSERBASE_API_KEY + BROWSERBASE_PROJECT_ID to create ${TWIN_ID}.`);
+    if (!process.env["BROWSERBASE_API_KEY"]) {
+      console.log(`[serve] Browser twin not armed — set BROWSERBASE_API_KEY to create ${TWIN_ID}.`);
     } else if (!(await store.sites.get(TWIN_ID))) {
       await store.sites.upsert({
         id: TWIN_ID,

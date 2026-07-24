@@ -1,5 +1,12 @@
-import { describe, it, expect, vi } from "vitest";
-import { sessionBody, createSession, createContext, BrowserbaseApiError } from "./browserbase.js";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import {
+  sessionBody,
+  createSession,
+  createContext,
+  ensureProjectId,
+  _resetProjectIdCache,
+  BrowserbaseApiError,
+} from "./browserbase.js";
 
 const CREDS = { apiKey: "key", projectId: "proj" };
 
@@ -54,6 +61,45 @@ describe("createSession", () => {
   it("propagates auth/quota errors instead of retrying", async () => {
     await expect(createSession(CREDS, {}, undefined, fetchReturning(401, { error: "no" }))).rejects.toBeInstanceOf(
       BrowserbaseApiError,
+    );
+  });
+});
+
+describe("ensureProjectId (no PROJECT_ID configured — 2026-07 onboarding)", () => {
+  beforeEach(() => _resetProjectIdCache());
+
+  it("passes through a configured project id without any API call", async () => {
+    const impl = vi.fn() as unknown as typeof fetch;
+    const creds = await ensureProjectId({ apiKey: "key", projectId: "explicit" }, undefined, impl);
+    expect(creds).toEqual({ apiKey: "key", projectId: "explicit" });
+    expect(impl).not.toHaveBeenCalled();
+  });
+
+  it("discovers the project via GET /projects (array shape) and caches it", async () => {
+    const impl = vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
+      expect(String(url)).toContain("/projects");
+      expect(init?.method).toBe("GET");
+      return new Response(JSON.stringify([{ id: "proj-auto", name: "Default" }]), { status: 200 });
+    }) as unknown as typeof fetch;
+    const first = await ensureProjectId({ apiKey: "key", projectId: null }, undefined, impl);
+    expect(first.projectId).toBe("proj-auto");
+    const second = await ensureProjectId({ apiKey: "key", projectId: null }, undefined, impl);
+    expect(second.projectId).toBe("proj-auto");
+    expect(impl).toHaveBeenCalledTimes(1); // cached after the first discovery
+  });
+
+  it("handles the { projects: [...] } wrapper shape", async () => {
+    const impl = vi.fn(async () =>
+      new Response(JSON.stringify({ projects: [{ id: "proj-wrapped" }] }), { status: 200 }),
+    ) as unknown as typeof fetch;
+    const creds = await ensureProjectId({ apiKey: "key", projectId: null }, undefined, impl);
+    expect(creds.projectId).toBe("proj-wrapped");
+  });
+
+  it("throws a clear error when the key has no projects", async () => {
+    const impl = vi.fn(async () => new Response(JSON.stringify([]), { status: 200 })) as unknown as typeof fetch;
+    await expect(ensureProjectId({ apiKey: "key", projectId: null }, undefined, impl)).rejects.toThrow(
+      /no projects/,
     );
   });
 });
