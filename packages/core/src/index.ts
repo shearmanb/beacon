@@ -8,7 +8,7 @@ export * from "./pipeline.js";
 export * from "./deps.js";
 export * from "./sources/types.js";
 export * from "./sources/registry.js";
-export { shopifyRestAdapter } from "./sources/shopify_rest.js";
+export { shopifyRestAdapter, normalizeShopifyProduct, type ShopifyProduct } from "./sources/shopify_rest.js";
 export { shopifyGraphqlAdapter } from "./sources/shopify_graphql.js";
 export { httpStatusAdapter } from "./sources/http_status.js";
 export { customAdapter } from "./sources/custom.js";

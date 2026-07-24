@@ -26,6 +26,13 @@ export function getAdapter(kind: SourceKind): SourceAdapter {
   return adapter;
 }
 
+/** Register an adapter implemented OUTSIDE core (e.g. @beacon/browser, which
+ *  carries the playwright-core dep core must not). The worker calls this lazily
+ *  when a site of that kind is enabled, so the dependency loads only if used. */
+export function registerAdapter(adapter: SourceAdapter): void {
+  adapters.set(adapter.kind, adapter);
+}
+
 export function hasAdapter(kind: SourceKind): boolean {
   return adapters.has(kind);
 }

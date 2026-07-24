@@ -104,6 +104,39 @@ export const httpStatusSource = z.object({
   contentChangeMinFrac: z.number().default(0),
 });
 
+/** Real-browser check via a remote Chromium (Browserbase CDP). The adapter
+ *  lives in @beacon/browser (worker registers it lazily) so core stays free of
+ *  playwright deps. The check opens the retailer page in a persistent
+ *  per-retailer browser context (real Chrome TLS/JS/cookies), then reads the
+ *  roster with a fetch made BY the page itself (same-origin, cookie-bearing —
+ *  what the site's own frontend does), not by our server. */
+export const browserSource = z.object({
+  kind: z.literal("browser"),
+  /** Where the check runs. Only "browserbase" is implemented; "local" reserved. */
+  engine: z.enum(["browserbase", "local"]).default("browserbase"),
+  /** Store base URL, e.g. https://sharedpour.com (mirrors shopify_rest.baseUrl). */
+  baseUrl: z.string().url(),
+  /** Optional collection scope, e.g. "/collections/reveries". */
+  collectionPath: z.string().optional(),
+  /** Page the browser visits before reading data (defaults to baseUrl+collectionPath).
+   *  A plausible landing page lets the site set cookies / run its scripts. */
+  visitUrl: z.string().url().optional(),
+  /** Roster extraction. "page_json": the loaded page runs fetch("…/products.json")
+   *  itself (browser-originated, same-origin). "dom" is reserved for non-Shopify. */
+  extract: z.enum(["page_json", "dom"]).default("page_json"),
+  /** Pagination cap for page_json (250/page). Browser checks are scoped, not scans. */
+  maxPages: z.number().int().min(1).max(8).default(3),
+  /** Optional CSS selector to await before extraction (page "ready" signal). */
+  waitForSelector: z.string().optional(),
+  /** Session proxy: "none" (default) or Browserbase residential (escalation only). */
+  proxy: z.enum(["none", "residential"]).default("none"),
+  /** Persist the browser profile (cookies/localStorage) across checks via a
+   *  named Browserbase Context (id kept in site state). */
+  persistProfile: z.boolean().default(true),
+  /** Capture screenshot + HTML evidence when a check fails or is ambiguous. */
+  evidenceOnFailure: z.boolean().default(true),
+});
+
 const textPredicate = z.object({ matchesAny: z.array(z.string()).default([]) });
 
 export const htmlSource = z.object({
@@ -149,6 +182,7 @@ export const sourceSchema = z.discriminatedUnion("kind", [
   httpStatusSource,
   htmlSource,
   customSource,
+  browserSource,
 ]);
 
 // ── Site definition ──────────────────────────────────────────────────────────
@@ -192,7 +226,7 @@ export interface SiteValidationResult {
 export function sourceUrl(site: SiteDefinition): string {
   const s = site.source;
   if ("url" in s) return s.url;
-  if ("baseUrl" in s) return s.baseUrl;
+  if ("baseUrl" in s) return "collectionPath" in s && s.collectionPath ? `${s.baseUrl.replace(/\/$/, "")}/${s.collectionPath.replace(/^\//, "")}` : s.baseUrl;
   return "";
 }
 

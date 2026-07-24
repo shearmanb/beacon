@@ -1,4 +1,22 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm test)",
+      "Bash(pnpm test *)",
+      "Bash(pnpm build)",
+      "Bash(git *)",
+      "Bash(railway status)",
+      "Bash(railway status *)",
+      "Bash(railway logs)",
+      "Bash(railway logs *)",
+      "Bash(railway variables)",
+      "Bash(npm i -g @railway/cli)",
+      "Bash(npm install -g @railway/cli)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {

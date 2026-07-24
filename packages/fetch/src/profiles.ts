@@ -40,10 +40,11 @@ export const BROWSER_PROFILES: readonly BrowserProfile[] = [
   },
 ];
 
+// en-US variants only: the egress IP is US and the operator is US — an en-GB
+// primary language from a US IP is a needless coherence break (audit W6).
 export const ACCEPT_LANGUAGES: readonly string[] = [
   "en-US,en;q=0.9",
   "en-US,en;q=0.8",
   "en-US,en;q=0.9,es;q=0.8",
-  "en-GB,en;q=0.9,en-US;q=0.8",
   "en-US,en;q=0.7",
 ];

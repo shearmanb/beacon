@@ -9,11 +9,11 @@ import { sleep, type NormalizedProduct } from "@beacon/shared";
 import type { SourceOf } from "../schema.js";
 import type { AdapterDeps, FetchResult, PrevState, SourceAdapter } from "./types.js";
 
-interface ShopifyVariant {
+export interface ShopifyVariant {
   price?: string | number | null;
   available?: boolean;
 }
-interface ShopifyProduct {
+export interface ShopifyProduct {
   handle: string;
   title: string;
   vendor?: string | null;
@@ -80,7 +80,10 @@ function normalizeTags(tags: ShopifyProduct["tags"]): string[] {
   return [];
 }
 
-function normalize(p: ShopifyProduct, origin: string): NormalizedProduct {
+/** Shopify /products.json product → NormalizedProduct. Exported so the
+ *  @beacon/browser adapter (which reads the same JSON via the page's own fetch)
+ *  normalizes identically — one source of truth for the Shopify shape. */
+export function normalizeShopifyProduct(p: ShopifyProduct, origin: string): NormalizedProduct {
   return {
     handle: p.handle,
     title: p.title,
@@ -276,7 +279,7 @@ async function fetchRest(
 
   return {
     kind: "products",
-    products: all.map((p) => normalize(p, origin)),
+    products: all.map((p) => normalizeShopifyProduct(p, origin)),
     validators,
     pageCount: page,
     // Stamp the full-body fetch so conditional GET knows how stale its

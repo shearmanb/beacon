@@ -308,6 +308,39 @@ if (existing.length > 0) {
   }
 }
 
+// ── One-time config amendment: SharedPour real-browser TWIN (2026-07-24) ─────
+// The decisive experiment for the browser tier: a `browser`-kind checker that
+// opens sharedpour.com in a REAL Chromium (Browserbase session, persistent
+// profile) and reads the roster via the page's own fetch — from the server's
+// egress, through a real browser. Runs as a quiet twin next to the live
+// REST/Storefront checkers: hourly (Browserbase free-tier friendly), ALL
+// product alerts off — its job is to prove/compare, not to page. Promotion to
+// a live alerting tier happens only after its roster matches for several days.
+// Self-arming: created only once the Browserbase env vars exist on the service;
+// until then this block no-ops with a log line. Safe to delete once promoted.
+{
+  const TWIN_ID = "sharedpour_browser";
+  try {
+    if (!process.env["BROWSERBASE_API_KEY"] || !process.env["BROWSERBASE_PROJECT_ID"]) {
+      console.log(`[serve] Browser twin not armed — set BROWSERBASE_API_KEY + BROWSERBASE_PROJECT_ID to create ${TWIN_ID}.`);
+    } else if (!(await store.sites.get(TWIN_ID))) {
+      await store.sites.upsert({
+        id: TWIN_ID,
+        name: "SharedPour (browser twin)",
+        enabled: true,
+        schedule: "60",
+        intervalMinutes: 60,
+        alerts: { onNew: false, onRestock: false, onSoldOut: false, onSiteReset: false },
+        filters: { titleContains: ["Reveries"] },
+        source: { kind: "browser", baseUrl: "https://sharedpour.com", extract: "page_json", maxPages: 3 },
+      });
+      console.log(`[serve] Added ${TWIN_ID}: real-browser twin for sharedpour.com (hourly, alerts off).`);
+    }
+  } catch (err) {
+    console.error(`[serve] Browser-twin amendment failed (continuing): ${(err as Error).message}`);
+  }
+}
+
 if (seedOnly) {
   store.close();
   process.exit(0);

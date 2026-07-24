@@ -12,7 +12,7 @@
 //    `system_degraded` page instead of N near-identical site_error pings, and
 //    suppress the per-site error sends for that pass.
 
-import { buildAdapterDeps, diagnoseSite, getAdapter, siteDefinitionSchema, sourceUrl, type AdapterDeps, type SiteDefinition } from "@beacon/core";
+import { buildAdapterDeps, diagnoseSite, getAdapter, hasAdapter, registerAdapter, siteDefinitionSchema, sourceUrl, type AdapterDeps, type SiteDefinition } from "@beacon/core";
 import { expireIdentity } from "@beacon/fetch";
 import { sleep, jitter, shouldCheck, getEffectiveInterval, type Alert } from "@beacon/shared";
 import type { NotificationChannel } from "@beacon/notify";
@@ -28,6 +28,10 @@ export const DEFAULT_IMMINENT_DURATION_MIN = 20;
 // Storefront fallback even starts — 45s left the fallback too little headroom
 // and a slow-but-working fallback could die at the parent budget.
 const PER_SITE_BUDGET_MS = 60_000;
+// Browser-tier checks (remote Chromium over CDP) legitimately spend longer:
+// session create + CDP connect + page load + challenge settling before the
+// roster fetch even starts. Still hard-capped so one walled host can't own the loop.
+const BROWSER_SITE_BUDGET_MS = 120_000;
 // Need at least this many checked sites before "all failed" means "systemic"
 // rather than "my two sites happen to both be down".
 const SYSTEMIC_MIN_SITES = 2;
@@ -162,6 +166,19 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
 
   rows = normalizeRows(await store.sites.list(), log); // refresh after auto-off/harvest mutations
 
+  // Browser tier (lazy): @beacon/browser carries the playwright-core dep, so it
+  // is imported ONLY when an enabled browser-kind site exists — a config-free
+  // deploy never loads it. Registration is process-wide and once.
+  if (!hasAdapter("browser") && rows.some((r) => r.enabled && r.definition.source.kind === "browser")) {
+    try {
+      const { browserAdapter } = await import("@beacon/browser");
+      registerAdapter(browserAdapter);
+      log("Browser adapter registered (Browserbase engine).");
+    } catch (err) {
+      log(`Browser adapter unavailable (continuing without it): ${(err as Error).message}`);
+    }
+  }
+
   const anyImminentActive = rows.some((r) => r.enabled && r.definition.imminent);
   let checked = 0;
   const results: CheckedSite[] = [];
@@ -235,9 +252,11 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     checked += 1;
 
     // Per-site wall-clock budget (2c): abort the fetch if it overruns so the
-    // loop isn't held hostage by one slow/blocked host.
+    // loop isn't held hostage by one slow/blocked host. Kind-aware: browser
+    // checks get more headroom (remote session + page load are legitimate cost).
     const controller = new AbortController();
-    const budget = setTimeout(() => controller.abort(), PER_SITE_BUDGET_MS);
+    const budgetMs = def.source.kind === "browser" ? BROWSER_SITE_BUDGET_MS : PER_SITE_BUDGET_MS;
+    const budget = setTimeout(() => controller.abort(), budgetMs);
     let outcome: SiteOutcome;
     try {
       outcome = await processSite({
