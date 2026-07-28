@@ -15,6 +15,12 @@ export async function GET(): Promise<NextResponse> {
   const sites = [];
   for (const row of rows) {
     const state = await store.state.load(row.id);
+    // Pass/fail timeline (the one record that survives a recovery) — the raw
+    // material for judging an intermittently-blocked checker. Failures only:
+    // compact, and the timestamps are what reveal the pattern (e.g. clustering
+    // in drop windows).
+    const history = (state?.checkHistory as Array<{ ts: string; ok: boolean }> | undefined) ?? [];
+    const failedAt = history.filter((h) => !h.ok).map((h) => h.ts);
     sites.push({
       id: row.id,
       name: row.name,
@@ -28,6 +34,12 @@ export async function GET(): Promise<NextResponse> {
       fetchVia: (state?.fetchVia as string | undefined) ?? null,
       preferFallback: state?.preferFallback === true,
       lastBrowserCheckAt: (state?.lastBrowserCheckAt as string | undefined) ?? null,
+      checks: {
+        recorded: history.length,
+        failed: failedAt.length,
+        since: history[0]?.ts ?? null,
+        failedAt: failedAt.slice(-25),
+      },
     });
   }
   return NextResponse.json({

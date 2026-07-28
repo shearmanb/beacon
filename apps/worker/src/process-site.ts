@@ -106,6 +106,11 @@ export async function processSite({
       cooldownLevel: 0,
       cooldownUntil: null,
       checkHistory,
+      // Carry the failure log across recoveries. `result.state` is rebuilt from
+      // scratch by the pipeline, so without this a single success erased every
+      // trace of an intermittent failure — exactly the pattern (periodic
+      // bot-challenge blocks) the error log exists to make visible.
+      errorLog: (prevState?.errorLog as unknown[] | undefined) ?? [],
     };
 
     // Recovery: we had an open error page; close it.
