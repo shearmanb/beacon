@@ -164,6 +164,17 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     log(`History mirror error (continuing): ${(err as Error).message}`);
   }
 
+  // Unicorn Auctions watcher: ISOLATED side-job with its own meta storage,
+  // error surface (/unicorn), and daily cadence. Deliberately not a pipeline
+  // site — its failures never page site_error, never count toward systemic
+  // failure, and never touch breakers/host pins (and vice versa).
+  try {
+    const { maybeScanUnicorn } = await import("./unicorn.js");
+    await maybeScanUnicorn(ctx);
+  } catch (err) {
+    log(`Unicorn scan error (continuing): ${(err as Error).message}`);
+  }
+
   rows = normalizeRows(await store.sites.list(), log); // refresh after auto-off/harvest mutations
 
   // Browser tier (lazy): @beacon/browser carries the playwright-core dep, so it

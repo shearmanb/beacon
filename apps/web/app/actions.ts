@@ -14,8 +14,20 @@ import {
   type DiagnoseReport,
   type ProbeResult,
 } from "@beacon/core";
+import {
+  matchLots,
+  descriptionCoverage,
+  parseUnicornListing,
+  parseUnicornScanState,
+  validateUnicornConfig,
+  UNICORN_CONFIG_META_KEY,
+  UNICORN_STATE_META_KEY,
+  unicornTermSchema,
+  type UnicornConfig,
+} from "@beacon/core";
 import { getStore } from "../lib/store";
 import type { AddResult, PreviewResult } from "../lib/site-forms";
+import type { UnicornActionResult, UnicornPreviewResult } from "../lib/unicorn-forms";
 
 export async function saveSchedule(id: string, label: string, rules: ScheduleRule[]): Promise<void> {
   const store = await getStore();
@@ -334,4 +346,79 @@ export async function removeReminder(id: string): Promise<void> {
   const store = await getStore();
   await store.reminders.remove(id);
   revalidatePath("/reminders");
+}
+
+// ── Unicorn Auctions watcher (isolated module — meta-table storage only) ─────
+
+/**
+ * Merge a patch onto the stored Unicorn config and re-validate through the same
+ * Zod schema the worker job uses. Also how the module is first enabled: an
+ * empty patch on an empty store persists the defaults. Term edits deliberately
+ * do NOT reset scan state — a newly added term's existing matches surface as
+ * new-match alerts on the next scan (that's the point of adding it).
+ */
+export async function updateUnicornConfig(patch: Record<string, unknown>): Promise<UnicornActionResult> {
+  const store = await getStore();
+  const raw = await store.meta.get(UNICORN_CONFIG_META_KEY);
+  let existing: Record<string, unknown> = {};
+  if (raw) {
+    try {
+      existing = JSON.parse(raw) as Record<string, unknown>;
+    } catch {
+      /* corrupt stored config — the patch becomes the new base */
+    }
+  }
+  const validated = validateUnicornConfig({ ...existing, ...patch });
+  if (!validated.ok) return { ok: false, error: validated.error ?? "Invalid config" };
+  await store.meta.set(UNICORN_CONFIG_META_KEY, JSON.stringify(validated.config));
+  revalidatePath("/unicorn");
+  return { ok: true };
+}
+
+/** "Scan now": flag the scan state; the worker's next ~60s loop picks it up. */
+export async function requestUnicornScan(): Promise<void> {
+  const store = await getStore();
+  const state = parseUnicornScanState(await store.meta.get(UNICORN_STATE_META_KEY));
+  await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...state, forceScanRequested: true }));
+  revalidatePath("/unicorn");
+}
+
+/**
+ * Paste-payload sandbox: run the pure listing parser + term matcher on a copied
+ * response body (DevTools → Network), no fetch. This is how the real listing
+ * format/path get validated offline — unicornauctions.com may block datacenter
+ * IPs, and dev sandboxes can't reach it either.
+ */
+export async function previewUnicornListing(
+  body: string,
+  format: UnicornConfig["format"],
+  baseUrl: string,
+  terms: unknown[],
+): Promise<UnicornPreviewResult> {
+  if (!body.trim()) return { ok: false, error: "Paste a listing payload first." };
+  const parsedTerms = terms.flatMap((t) => {
+    const r = unicornTermSchema.safeParse(t);
+    return r.success ? [r.data] : [];
+  });
+  try {
+    const page = parseUnicornListing(body, { format, baseUrl: baseUrl.trim() || "https://www.unicornauctions.com" });
+    const matches = matchLots(page.lots, parsedTerms);
+    return {
+      ok: true,
+      rawCount: page.lots.length,
+      matchedCount: matches.length,
+      descCoveragePct: Math.round(descriptionCoverage(page.lots) * 100),
+      hasMore: page.hasMore,
+      sample: (matches.length > 0 ? matches : page.lots.slice(0, 25).map((lot) => ({ lot, matchedTerms: [] as string[] })))
+        .slice(0, 50)
+        .map((m) => ({
+          title: m.lot.title,
+          url: m.lot.url,
+          currentBidDollars: m.lot.currentBidDollars,
+          matchedTerms: m.matchedTerms,
+        })),
+    };
+  } catch (err) {
+    return { ok: false, error: `Parse failed: ${(err as Error).message}` };
+  }
 }
