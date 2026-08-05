@@ -33,10 +33,15 @@ import {
   type UnicornScanState,
   type UnicornStoredLot,
 } from "@beacon/core";
-import { sleep, type Alert } from "@beacon/shared";
+import { identityForHost } from "@beacon/fetch";
+import { jitter, sleep, type Alert } from "@beacon/shared";
 import type { RunContext } from "./run.js";
 
 const SCAN_INTERVAL_MS = 24 * 3_600_000;
+// ±2 h of slop on the daily cadence. A request landing every 24.000 h is a
+// metronome, and a metronome is a robot signature no matter how low the volume;
+// 22–26 h drifts the slot around the clock and never repeats to the minute.
+const SCAN_JITTER_MS = 2 * 3_600_000;
 const SCAN_BUDGET_MS = 180_000;
 const ERROR_ALERT_AFTER = 3; // consecutive failed scans (≈ days) before one Discord warning
 
@@ -57,6 +62,30 @@ export interface UnicornScanOutcome {
   ran: boolean;
   newMatches: number;
   error?: string;
+}
+
+/**
+ * Headers coherent with a browser doing exactly what we're doing: an XHR from
+ * the site's own front-end to its API. httpPost deliberately sends no browser
+ * identity (it exists for Shopify/Discord server-to-server calls), so a bare
+ * POST here would carry NO User-Agent at all — a louder bot signal than the ten
+ * requests it's attached to. Reuses the same per-host identity machinery as
+ * site checks, so the profile is stable for 6–24 h rather than re-rolling every
+ * scan (a different browser from one IP each day is itself a tell).
+ */
+function browserHeaders(config: UnicornConfig, endpoint: string): Record<string, string> {
+  const identity = identityForHost(new URL(endpoint).hostname);
+  const { ua, ...clientHints } = identity.profile;
+  const origin = config.baseUrl.replace(/\/$/, "");
+  return {
+    "User-Agent": ua,
+    "Accept-Language": identity.acceptLanguage,
+    ...clientHints,
+    Origin: origin,
+    Referer: `${origin}/`,
+    // The site's own client sends this; Apollo uses it to force a CORS preflight.
+    "Apollo-Require-Preflight": "true",
+  };
 }
 
 function pageUrl(config: UnicornConfig, page: number): string {
@@ -85,7 +114,7 @@ async function fetchAllLots(
       const gql = config.graphql;
       body = await post(gql.endpoint, buildGraphqlBody(config, page), {
         signal,
-        headers: { Accept: "application/json", ...headers },
+        headers: { Accept: "*/*", ...browserHeaders(config, gql.endpoint), ...headers },
       });
     } else {
       body = await get(pageUrl(config, page), { kind, signal, ...(headers ? { headers } : {}) });
@@ -179,16 +208,25 @@ export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrid
 
   const state = parseUnicornScanState(await store.meta.get(UNICORN_STATE_META_KEY));
   const intervalMs = over.intervalMs ?? SCAN_INTERVAL_MS;
-  const due =
-    state.forceScanRequested === true ||
-    !state.lastScanAt ||
-    Date.now() - Date.parse(state.lastScanAt) >= intervalMs;
+  // Prefer the stored (jittered) due time; fall back to the flat interval for
+  // states written before nextDueAt existed, or when a test pins intervalMs.
+  const dueAt =
+    over.intervalMs !== undefined || !state.nextDueAt
+      ? (state.lastScanAt ? Date.parse(state.lastScanAt) : 0) + intervalMs
+      : Date.parse(state.nextDueAt);
+  const due = state.forceScanRequested === true || !state.lastScanAt || Date.now() >= dueAt;
   if (!due) return { ran: false, newMatches: 0 };
 
   // Stamp BEFORE fetching so a crash can't hammer the site every loop; also
   // consume the force flag so "Scan now" fires exactly once.
   const attemptAt = new Date().toISOString();
-  const stamped: UnicornScanState = { ...state, lastScanAt: attemptAt, forceScanRequested: false };
+  const jitterMs = over.intervalMs !== undefined ? 0 : SCAN_JITTER_MS;
+  const stamped: UnicornScanState = {
+    ...state,
+    lastScanAt: attemptAt,
+    nextDueAt: new Date(Date.now() + jitter(intervalMs, jitterMs)).toISOString(),
+    forceScanRequested: false,
+  };
   await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify(stamped));
 
   const controller = new AbortController();

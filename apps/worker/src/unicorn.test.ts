@@ -266,6 +266,46 @@ describe("maybeScanUnicorn", () => {
     expect((await loadState()).lastError).toContain("Signature has expired");
   });
 
+  it("sends browser-coherent headers — a POST with no User-Agent is itself a bot tell", async () => {
+    await saveConfig({ format: "graphql", pageDelayMs: 0, terms: [{ term: "weller" }] });
+    let headers: Record<string, string> = {};
+    await maybeScanUnicorn(ctx(), {
+      postImpl: async (_u, _b, opts) => {
+        headers = opts.headers ?? {};
+        return JSON.stringify({ data: { searchLots: { count: 1, next: "false", results: [] } } });
+      },
+    });
+    expect(headers["User-Agent"]).toMatch(/Mozilla\/5\.0/);
+    expect(headers["Accept-Language"]).toBeTruthy();
+    expect(headers["Origin"]).toBe("https://www.unicornauctions.com");
+    expect(headers["Referer"]).toBe("https://www.unicornauctions.com/");
+    // Client hints must match the UA they ship with, not be mixed and matched.
+    if (headers["Sec-CH-UA-Platform"]) {
+      const platform = headers["Sec-CH-UA-Platform"].replace(/"/g, "");
+      const uaHint = { Windows: "Windows NT", macOS: "Mac OS X", Linux: "Linux" }[platform];
+      if (uaHint) expect(headers["User-Agent"]).toContain(uaHint);
+    }
+  });
+
+  it("jitters the next due time instead of firing on an exact 24h metronome", async () => {
+    await saveConfig({ format: "graphql", pageDelayMs: 0, terms: [{ term: "weller" }] });
+    const ok = async () => JSON.stringify({ data: { searchLots: { count: 0, next: "false", results: [] } } });
+
+    await maybeScanUnicorn(ctx(), { postImpl: ok });
+    const state = await loadState();
+    const gapH = (Date.parse(state.nextDueAt!) - Date.parse(state.lastScanAt!)) / 3_600_000;
+    expect(gapH).toBeGreaterThanOrEqual(22);
+    expect(gapH).toBeLessThanOrEqual(26);
+
+    // And the stored due time actually gates the next pass.
+    expect((await maybeScanUnicorn(ctx(), { postImpl: ok })).ran).toBe(false);
+    await store.meta.set(
+      UNICORN_STATE_META_KEY,
+      JSON.stringify({ ...state, nextDueAt: new Date(Date.now() - 1000).toISOString() }),
+    );
+    expect((await maybeScanUnicorn(ctx(), { postImpl: ok })).ran).toBe(true);
+  });
+
   it("aborts instead of walking the archive when the roster comes back implausibly large", async () => {
     // Unicorn fails OPEN: a filter value it doesn't recognize returns all ~725k
     // historical lots rather than an error. Walking that would run for hours and

@@ -128,6 +128,10 @@ export interface UnicornStoredLot {
 
 export interface UnicornScanState {
   lastScanAt: string | null;
+  /** When the next scan becomes due, jittered at stamp time. Stored rather than
+   *  recomputed so the cadence is deterministic and visible on the dashboard —
+   *  and so requests never land on an exact 24.000h metronome. */
+  nextDueAt?: string | null;
   lastError: string | null;
   consecutiveFailures: number;
   /** One Discord warning per failure streak (cleared on success). */
@@ -145,6 +149,7 @@ export interface UnicornScanState {
 export function emptyUnicornScanState(): UnicornScanState {
   return {
     lastScanAt: null,
+    nextDueAt: null,
     lastError: null,
     consecutiveFailures: 0,
     rawLotCount: 0,

@@ -17,6 +17,18 @@ import { UnicornSandbox } from "../../components/UnicornSandbox";
 
 export const dynamic = "force-dynamic";
 
+/** "· next in ~19h" — the cadence is daily but jittered (22–26 h) so requests
+ *  never land on an exact metronome, so show the real due time. */
+function nextScanLabel(nextDueAt: string | null | undefined, enabled: boolean): string {
+  if (!enabled) return " · paused";
+  if (!nextDueAt) return "";
+  const ms = Date.parse(nextDueAt) - Date.now();
+  if (Number.isNaN(ms)) return "";
+  if (ms <= 0) return " · next scan due now";
+  const h = Math.round(ms / 3_600_000);
+  return h < 1 ? " · next in <1h" : ` · next in ~${h}h`;
+}
+
 export default async function UnicornPage() {
   const store = await getStore();
   const rawConfig = await store.meta.get(UNICORN_CONFIG_META_KEY);
@@ -47,7 +59,7 @@ export default async function UnicornPage() {
         <span className="rule" />
         <span className="muted mono" style={{ fontSize: 12 }}>
           {config
-            ? `last scan ${ago(state.lastScanAt)} · ${state.rawLotCount} lots scanned · ${lots.length} matched`
+            ? `last scan ${ago(state.lastScanAt)}${nextScanLabel(state.nextDueAt, config.enabled)} · ${state.rawLotCount} lots scanned · ${lots.length} matched`
             : "not configured"}
         </span>
       </div>
