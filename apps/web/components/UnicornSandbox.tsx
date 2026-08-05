@@ -10,7 +10,7 @@ import { previewUnicornListing } from "../app/actions";
 import type { UnicornPreviewResult } from "../lib/unicorn-forms";
 import type { UnicornTermInput } from "./UnicornTerms";
 
-type Format = "json_api" | "next_data" | "html";
+type Format = "json_api" | "next_data" | "html" | "graphql";
 
 export function UnicornSandbox({
   defaults,
@@ -43,6 +43,7 @@ export function UnicornSandbox({
         <div className="field">
           <label>Format</label>
           <select className="in" value={format} onChange={(e) => setFormat(e.target.value as Format)}>
+            <option value="graphql">graphql — a GraphQL POST response</option>
             <option value="json_api">json_api — a JSON XHR response</option>
             <option value="next_data">next_data — page HTML with __NEXT_DATA__</option>
             <option value="html">html — server-rendered lot cards</option>
@@ -74,8 +75,9 @@ export function UnicornSandbox({
       {result && result.ok && (
         <div style={{ marginTop: 10 }}>
           <div className={`preview-note ${result.rawCount === 0 ? "err" : "ok"}`}>
-            Parsed {result.rawCount} lot{result.rawCount === 1 ? "" : "s"} · {result.matchedCount} matched by your
-            terms · {result.descCoveragePct}% carry descriptions
+            Parsed {result.rawCount} lot{result.rawCount === 1 ? "" : "s"}
+            {result.total != null ? ` of ${result.total.toLocaleString("en-US")} the API reports` : ""} ·{" "}
+            {result.matchedCount} matched by your terms · {result.descCoveragePct}% carry descriptions
             {result.hasMore ? " · more pages detected" : ""}
             {result.rawCount === 0 ? " — wrong format branch, or the payload isn't the lot listing." : ""}
           </div>

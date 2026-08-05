@@ -17,8 +17,9 @@
 //   • The daily stamp is written BEFORE the fetch (harvest precedent), so even
 //     a crash-looping worker attempts at most once per interval.
 
-import { httpGet } from "@beacon/fetch";
+import { httpGet, httpPost } from "@beacon/fetch";
 import {
+  buildGraphqlBody,
   descriptionCoverage,
   matchLots,
   parseUnicornListing,
@@ -47,6 +48,8 @@ export interface UnicornScanOverrides {
   intervalMs?: number;
   budgetMs?: number;
   fetchImpl?: (url: string, opts: { kind: "document" | "api"; signal: AbortSignal; headers?: Record<string, string> }) => Promise<string>;
+  /** Test hook for the `graphql` (POST) path. */
+  postImpl?: (url: string, body: string, opts: { headers?: Record<string, string>; signal: AbortSignal }) => Promise<string>;
   sleepImpl?: (ms: number) => Promise<void>;
 }
 
@@ -71,13 +74,27 @@ async function fetchAllLots(
   log: (msg: string) => void,
 ): Promise<ReturnType<typeof parseUnicornListing>["lots"]> {
   const get = over.fetchImpl ?? ((url, opts) => httpGet(url, opts));
+  const post = over.postImpl ?? (async (url, body, opts) => (await httpPost(url, body, opts)).body);
   const wait = over.sleepImpl ?? sleep;
   const kind = config.format === "json_api" ? ("api" as const) : ("document" as const);
   const byId = new Map<string, ReturnType<typeof parseUnicornListing>["lots"][number]>();
 
   for (let page = 1; page <= config.maxPages; page++) {
-    const body = await get(pageUrl(config, page), { kind, signal, ...(headers ? { headers } : {}) });
-    const parsed = parseUnicornListing(body, { format: config.format, baseUrl: config.baseUrl });
+    let body: string;
+    if (config.format === "graphql") {
+      const gql = config.graphql!;
+      body = await post(gql.endpoint, buildGraphqlBody(config, page), {
+        signal,
+        headers: { Accept: "application/json", ...headers },
+      });
+    } else {
+      body = await get(pageUrl(config, page), { kind, signal, ...(headers ? { headers } : {}) });
+    }
+    const parsed = parseUnicornListing(body, {
+      format: config.format,
+      baseUrl: config.baseUrl,
+      lotUrlTemplate: config.lotUrlTemplate,
+    });
     let fresh = 0;
     for (const lot of parsed.lots) {
       if (!byId.has(lot.id)) fresh += 1;
@@ -160,10 +177,21 @@ export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrid
   const controller = new AbortController();
   const budget = setTimeout(() => controller.abort(), over.budgetMs ?? SCAN_BUDGET_MS);
   try {
+    if (config.format === "graphql" && !config.graphql) {
+      throw new Error('format is "graphql" but no `graphql` block is configured (needs endpoint + query).');
+    }
+
     let headers: Record<string, string> | undefined = config.requestHeaders;
-    if (config.cookieRef) {
-      const cookie = (await store.secrets.all())[config.cookieRef];
+    const authRef = config.graphql?.authTokenRef;
+    if (config.cookieRef || authRef) {
+      const secrets = await store.secrets.all();
+      const cookie = config.cookieRef ? secrets[config.cookieRef] : undefined;
       if (cookie) headers = { ...headers, Cookie: cookie };
+      const token = authRef ? secrets[authRef] : undefined;
+      if (token) headers = { ...headers, Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}` };
+      else if (authRef) {
+        log(`[unicorn] authTokenRef "${authRef}" has no stored secret — sending the request unauthenticated.`);
+      }
     }
 
     log(`[unicorn] Scanning (${config.terms.length} term(s))...`);

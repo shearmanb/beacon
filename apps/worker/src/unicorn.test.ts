@@ -185,6 +185,87 @@ describe("maybeScanUnicorn", () => {
     expect((await maybeScanUnicorn(ctx())).ran).toBe(false);
   });
 
+  it("graphql format: POSTs the query, pages via variables, and attaches the bearer token", async () => {
+    await store.secrets.set("unicorn_token", "tok-123");
+    await saveConfig({
+      baseUrl: "https://www.unicornauctions.com",
+      format: "graphql",
+      lotUrlTemplate: "/lots/{id}",
+      pageDelayMs: 0,
+      terms: [{ term: "weller", inName: true, inDesc: false }],
+      graphql: {
+        endpoint: "https://graphql.example.com/graphql",
+        operationName: "SearchLots",
+        query: "query SearchLots($input: SearchLotInput!) { searchLots(input: $input) { count } }",
+        pageSize: 2,
+        variables: { input: { page: "{page}", limit: "{limit}" } },
+        authTokenRef: "unicorn_token",
+      },
+    });
+
+    const posts: Array<{ url: string; body: string; auth?: string }> = [];
+    const lot = (uuid: string, title: string, amount: number | null) => ({
+      uuid,
+      title,
+      description: "desc",
+      currentBid: amount == null ? null : { amount },
+    });
+    const reply = (results: unknown[], next: string) =>
+      JSON.stringify({ data: { searchLots: { count: 4, next, results } } });
+
+    const over: UnicornScanOverrides = {
+      postImpl: async (url, body, opts) => {
+        posts.push({ url, body, auth: opts.headers?.["Authorization"] });
+        const page = (JSON.parse(body) as { variables: { input: { page: number } } }).variables.input.page;
+        return page === 1
+          ? reply([lot("a", "Weller 12", 425), lot("b", "Scotch 18", null)], "true")
+          : reply([lot("c", "Weller Antique", 300)], "false");
+      },
+    };
+
+    // Baseline, then a real scan so matches alert.
+    await maybeScanUnicorn(ctx(), over);
+    sent = [];
+    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {} }));
+    await maybeScanUnicorn(ctx(), { ...over, intervalMs: 0 });
+
+    expect(posts.every((p) => p.url === "https://graphql.example.com/graphql")).toBe(true);
+    expect(posts.every((p) => p.auth === "Bearer tok-123")).toBe(true);
+    // Paged until next:"false" — 2 pages per scan, 2 scans.
+    expect(posts).toHaveLength(4);
+    expect(JSON.parse(posts[0]!.body)).toMatchObject({
+      operationName: "SearchLots",
+      variables: { input: { page: 1, limit: 2 } },
+    });
+
+    const state = await loadState();
+    expect(state.rawLotCount).toBe(3);
+    expect(Object.keys(state.lots).sort()).toEqual(["a", "c"]); // both Wellers matched
+    expect(state.lots["a"]!.currentBidDollars).toBe(425);
+    expect(state.lots["a"]!.url).toBe("https://www.unicornauctions.com/lots/a");
+    expect(sent.map((s) => s.alert.product.title)).toEqual(
+      expect.arrayContaining([expect.stringContaining("Weller 12"), expect.stringContaining("Weller Antique")]),
+    );
+  });
+
+  it("graphql format: an errors-with-HTTP-200 body is recorded as a failure, not an empty scan", async () => {
+    await saveConfig({
+      format: "graphql",
+      pageDelayMs: 0,
+      terms: [{ term: "weller", inName: true, inDesc: false }],
+      graphql: {
+        endpoint: "https://graphql.example.com/graphql",
+        query: "query { searchLots { count } }",
+        variables: {},
+      },
+    });
+    const out = await maybeScanUnicorn(ctx(), {
+      postImpl: async () => JSON.stringify({ errors: [{ message: "Signature has expired" }], data: null }),
+    });
+    expect(out.error).toContain("Signature has expired");
+    expect((await loadState()).lastError).toContain("Signature has expired");
+  });
+
   it("appends new-match alerts to alert_history under the unicorn label", async () => {
     await saveConfig();
     const over = (bid: number, extra: unknown[] = []): UnicornScanOverrides => ({

@@ -38,10 +38,30 @@ export const unicornConfigSchema = z.object({
   enabled: z.boolean().default(true),
   baseUrl: z.string().url().default("https://www.unicornauctions.com"),
   /** Listing path with a {page} placeholder, e.g. "/api/lots?page={page}".
-   *  The default is a placeholder — set the real value from browser DevTools
-   *  (Network tab on the lots page) via the /unicorn advanced settings. */
+   *  Ignored by the `graphql` format, which uses its own endpoint.
+   *  Set the real value from browser DevTools (Network tab on the lots page)
+   *  via the /unicorn advanced settings. */
   listingPath: z.string().min(1).default("/auctions?page={page}"),
-  format: z.enum(["json_api", "next_data", "html"]).default("next_data"),
+  format: z.enum(["json_api", "next_data", "html", "graphql"]).default("next_data"),
+  /** How to build a lot's link when the feed carries no URL field (Unicorn's
+   *  GraphQL returns uuid/number only). Placeholders: {id}, {number}. */
+  lotUrlTemplate: z.string().optional(),
+  /** Required when format is "graphql": a POST request recipe. The query text
+   *  comes straight from DevTools → Payload; `variables` is that payload's
+   *  variables object with {page} / {offset} / {limit} placeholders dropped in
+   *  wherever it paginates, so paging is config rather than code. */
+  graphql: z
+    .object({
+      endpoint: z.string().url(),
+      operationName: z.string().optional(),
+      query: z.string().min(1),
+      variables: z.record(z.unknown()).default({}),
+      /** Substituted into {limit}; also drives {offset} = (page-1) * pageSize. */
+      pageSize: z.number().int().min(1).max(1000).default(100),
+      /** Secrets-table ref holding a bearer token, when the API needs auth. */
+      authTokenRef: z.string().optional(),
+    })
+    .optional(),
   maxPages: z.number().int().min(1).max(200).default(80),
   pageDelayMs: z.number().int().min(0).max(10_000).default(400),
   terms: z.array(unicornTermSchema).default([]),
@@ -158,9 +178,22 @@ function cleanText(s: string): string {
     .trim();
 }
 
-/** "$1,234.56" | "1234" | 1234 → dollars number; anything else → null. */
+/** "$1,234.56" | "1234" | 1234 | { amount } → dollars number; else null.
+ *  The nested-object case is how GraphQL APIs usually shape money (Unicorn:
+ *  `currentBid { amount currency }`). */
 function parseMoney(v: unknown): number | null {
   if (typeof v === "number") return Number.isFinite(v) ? v : null;
+  if (v !== null && typeof v === "object" && !Array.isArray(v)) {
+    for (const k of ["amount", "value", "price", "cents"]) {
+      const inner = (v as Raw)[k];
+      if (inner !== undefined && inner !== null) {
+        const n = parseMoney(inner);
+        // A `cents`-only shape is minor units; everything else is already dollars.
+        return n !== null && k === "cents" ? n / 100 : n;
+      }
+    }
+    return null;
+  }
   if (typeof v !== "string") return null;
   const m = v.replace(/[$,\s]/g, "");
   if (!m) return null;
@@ -192,7 +225,7 @@ const BID_KEYS = [
   "starting_bid",
 ];
 const DESC_KEYS = ["description", "desc", "details", "summary", "body", "notes"];
-const IMAGE_KEYS = ["image", "imageUrl", "image_url", "thumbnail", "thumb", "photo", "cover"];
+const IMAGE_KEYS = ["image", "imageUrl", "image_url", "thumbnail", "thumb", "photo", "photos", "cover"];
 
 function pick(raw: Raw, keys: string[]): unknown {
   for (const k of keys) {
@@ -208,7 +241,26 @@ function lotLike(v: unknown): v is Raw {
   return pick(raw, ID_KEYS) !== undefined && pick(raw, TITLE_KEYS) !== undefined;
 }
 
-function normalizeRawLot(raw: Raw, baseUrl: string): UnicornLot | null {
+/** Pull a usable image URL out of a string, a {url|src} object, or a numbered
+ *  photo set (Unicorn: `photos { photo1 … photo5 }`). */
+function firstImage(v: unknown): string | null {
+  if (typeof v === "string") return v || null;
+  if (v === null || typeof v !== "object" || Array.isArray(v)) return null;
+  const raw = v as Raw;
+  for (const k of ["url", "src", "photo1", "thumbnail", "full"]) {
+    if (typeof raw[k] === "string" && raw[k]) return raw[k] as string;
+  }
+  return null;
+}
+
+interface NormalizeOptions {
+  baseUrl: string;
+  /** Placeholders: {id}, {number}. Used when the feed carries no link field. */
+  lotUrlTemplate?: string | undefined;
+}
+
+function normalizeRawLot(raw: Raw, opts: NormalizeOptions): UnicornLot | null {
+  const { baseUrl, lotUrlTemplate } = opts;
   const idVal = pick(raw, ID_KEYS);
   const titleVal = pick(raw, TITLE_KEYS);
   if (idVal === undefined || titleVal === undefined) return null;
@@ -216,6 +268,8 @@ function normalizeRawLot(raw: Raw, baseUrl: string): UnicornLot | null {
   const title = cleanText(String(titleVal));
   if (!id || !title) return null;
 
+  // Link precedence: a real field in the feed, else the configured template,
+  // else a best-guess /lots/<id> so the tile is never link-less.
   let url = `${baseUrl.replace(/\/$/, "")}/lots/${encodeURIComponent(id)}`;
   const urlVal = pick(raw, URL_KEYS);
   if (typeof urlVal === "string" && urlVal.trim()) {
@@ -224,18 +278,20 @@ function normalizeRawLot(raw: Raw, baseUrl: string): UnicornLot | null {
     } catch {
       /* keep the constructed default */
     }
+  } else if (lotUrlTemplate) {
+    const num = raw["number"] ?? raw["lotNumber"] ?? raw["lot_number"] ?? "";
+    try {
+      url = new URL(
+        lotUrlTemplate.replace(/\{id\}/g, encodeURIComponent(id)).replace(/\{number\}/g, encodeURIComponent(String(num))),
+        baseUrl,
+      ).href;
+    } catch {
+      /* malformed template — keep the default */
+    }
   }
 
   const descVal = pick(raw, DESC_KEYS);
-  const imgVal = pick(raw, IMAGE_KEYS);
-  const image =
-    typeof imgVal === "string"
-      ? imgVal
-      : typeof (imgVal as Raw | undefined)?.["url"] === "string"
-        ? ((imgVal as Raw)["url"] as string)
-        : typeof (imgVal as Raw | undefined)?.["src"] === "string"
-          ? ((imgVal as Raw)["src"] as string)
-          : null;
+  const image = firstImage(pick(raw, IMAGE_KEYS));
 
   return {
     id,
@@ -278,8 +334,13 @@ function findHasMore(node: unknown, lotCount: number): boolean {
       if (typeof raw[k] === "boolean") return raw[k] as boolean;
     }
     for (const k of ["nextPage", "next_page", "next"]) {
-      if (k in raw && (typeof raw[k] === "number" || typeof raw[k] === "string")) return true;
-      if (k in raw && raw[k] === null) return false;
+      if (!(k in raw)) continue;
+      const v = raw[k];
+      if (v === null) return false;
+      // Unicorn's searchLots answers `next: "true"` — a stringified boolean, so
+      // "presence means more" would misread "false" as another page.
+      if (typeof v === "string") return v.trim().toLowerCase() !== "false" && v.trim() !== "";
+      if (typeof v === "number") return true;
     }
     const page = raw["page"] ?? raw["currentPage"] ?? raw["current_page"];
     const pages = raw["totalPages"] ?? raw["total_pages"] ?? raw["pageCount"] ?? raw["page_count"];
@@ -297,7 +358,10 @@ function findTotal(node: unknown): number | null {
   const scan = (n: unknown, depth: number): number | undefined => {
     if (depth > 3 || n === null || typeof n !== "object" || Array.isArray(n)) return undefined;
     const raw = n as Raw;
-    for (const k of ["total", "totalCount", "total_count", "totalResults", "total_results"]) {
+    // `count` is checked last and only on objects (never inside arrays), so a
+    // per-category count can't outrank a real total. Unicorn's searchLots uses
+    // it for the roster size — 4,635 lots in the August 2026 auction.
+    for (const k of ["total", "totalCount", "total_count", "totalResults", "total_results", "count"]) {
       if (typeof raw[k] === "number") return raw[k] as number;
     }
     for (const child of Object.values(raw)) {
@@ -309,9 +373,9 @@ function findTotal(node: unknown): number | null {
   return scan(node, 0) ?? null;
 }
 
-function parseJsonLots(data: unknown, baseUrl: string): UnicornListingPage {
+function parseJsonLots(data: unknown, opts: NormalizeOptions): UnicornListingPage {
   const lots = findLotArray(data)
-    .map((raw) => normalizeRawLot(raw, baseUrl))
+    .map((raw) => normalizeRawLot(raw, opts))
     .filter((l): l is UnicornLot => l !== null);
   return { lots: dedupeById(lots), hasMore: findHasMore(data, lots.length), total: findTotal(data) };
 }
@@ -377,25 +441,74 @@ function parseHtmlLots(html: string, baseUrl: string): UnicornListingPage {
 
 export function parseUnicornListing(
   body: string,
-  opts: { format: UnicornConfig["format"]; baseUrl: string },
+  opts: { format: UnicornConfig["format"]; baseUrl: string; lotUrlTemplate?: string | undefined },
 ): UnicornListingPage {
-  const { format, baseUrl } = opts;
-  if (format === "json_api") {
-    return parseJsonLots(JSON.parse(body), baseUrl);
+  const { format, baseUrl, lotUrlTemplate } = opts;
+  const norm: NormalizeOptions = { baseUrl, lotUrlTemplate };
+  if (format === "json_api" || format === "graphql") {
+    // GraphQL responses are just JSON; the lot-array walker finds
+    // data.searchLots.results on its own. A top-level `errors` array is the
+    // API reporting failure with HTTP 200, so surface it instead of "0 lots".
+    const data = JSON.parse(body) as Raw;
+    const errors = data?.["errors"];
+    if (Array.isArray(errors) && errors.length > 0) {
+      const first = errors[0] as Raw | undefined;
+      throw new Error(`GraphQL error: ${String(first?.["message"] ?? JSON.stringify(errors[0]))}`);
+    }
+    return parseJsonLots(data, norm);
   }
   if (format === "next_data") {
     const m = body.match(NEXT_DATA_RE);
     if (!m) {
       // Some payloads ARE the raw __NEXT_DATA__ JSON (pasted from DevTools).
       try {
-        return parseJsonLots(JSON.parse(body), baseUrl);
+        return parseJsonLots(JSON.parse(body), norm);
       } catch {
         throw new Error("No __NEXT_DATA__ script found in the page (and the body is not JSON).");
       }
     }
-    return parseJsonLots(JSON.parse(m[1]!.trim()), baseUrl);
+    return parseJsonLots(JSON.parse(m[1]!.trim()), norm);
   }
   return parseHtmlLots(body, baseUrl);
+}
+
+/** Substitute {page} / {offset} / {limit} anywhere in a GraphQL variables tree,
+ *  so pagination is expressed in config instead of hard-coded per API. String
+ *  placeholders that stand alone become real numbers ("{page}" -> 2). */
+export function substituteVariables(
+  vars: unknown,
+  ctx: { page: number; offset: number; limit: number },
+  depth = 0,
+): unknown {
+  if (depth > 10) return vars;
+  if (typeof vars === "string") {
+    const solo = vars.trim().match(/^\{(page|offset|limit)\}$/);
+    if (solo) return ctx[solo[1] as "page" | "offset" | "limit"];
+    return vars
+      .replace(/\{page\}/g, String(ctx.page))
+      .replace(/\{offset\}/g, String(ctx.offset))
+      .replace(/\{limit\}/g, String(ctx.limit));
+  }
+  if (Array.isArray(vars)) return vars.map((v) => substituteVariables(v, ctx, depth + 1));
+  if (vars !== null && typeof vars === "object") {
+    const out: Raw = {};
+    for (const [k, v] of Object.entries(vars as Raw)) out[k] = substituteVariables(v, ctx, depth + 1);
+    return out;
+  }
+  return vars;
+}
+
+/** Build the POST body for one page of a `graphql`-format scan. */
+export function buildGraphqlBody(config: UnicornConfig, page: number): string {
+  const gql = config.graphql;
+  if (!gql) throw new Error('format "graphql" requires a `graphql` config block (endpoint + query).');
+  const limit = gql.pageSize;
+  const variables = substituteVariables(gql.variables, { page, offset: (page - 1) * limit, limit });
+  return JSON.stringify({
+    ...(gql.operationName ? { operationName: gql.operationName } : {}),
+    query: gql.query,
+    variables,
+  });
 }
 
 // ── Matching ─────────────────────────────────────────────────────────────────

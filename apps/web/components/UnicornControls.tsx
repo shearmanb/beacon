@@ -11,11 +11,14 @@ export interface UnicornFetchConfig {
   enabled: boolean;
   baseUrl: string;
   listingPath: string;
-  format: "json_api" | "next_data" | "html";
+  format: "json_api" | "next_data" | "html" | "graphql";
   maxPages: number;
   pageDelayMs: number;
   cookieRef: string | null;
   requestHeaders: Record<string, string> | null;
+  lotUrlTemplate: string | null;
+  /** The POST recipe when format is "graphql" (endpoint/query/variables). */
+  graphql: Record<string, unknown> | null;
 }
 
 export function UnicornControls({
@@ -37,8 +40,10 @@ export function UnicornControls({
             format: config.format,
             maxPages: config.maxPages,
             pageDelayMs: config.pageDelayMs,
+            ...(config.lotUrlTemplate ? { lotUrlTemplate: config.lotUrlTemplate } : {}),
             ...(config.cookieRef ? { cookieRef: config.cookieRef } : {}),
             ...(config.requestHeaders ? { requestHeaders: config.requestHeaders } : {}),
+            ...(config.graphql ? { graphql: config.graphql } : {}),
           },
           null,
           2,
@@ -92,10 +97,15 @@ export function UnicornControls({
         </summary>
         <p className="hint" style={{ marginTop: 6 }}>
           How the job reaches the lot listing. Find the real values in browser DevTools (Network tab on
-          the lots page): a JSON XHR → <span className="mono">json_api</span> + its URL path; a Next.js
-          page payload → <span className="mono">next_data</span>; otherwise <span className="mono">html</span>.
-          Use <span className="mono">{"{page}"}</span> as the page-number placeholder. Validate with the
-          sandbox below before saving.
+          the lots page): a GraphQL POST → <span className="mono">graphql</span> plus a{" "}
+          <span className="mono">graphql</span> block holding the endpoint, the query text, and the
+          variables copied from the Payload tab; a plain JSON XHR → <span className="mono">json_api</span>{" "}
+          + its URL path; a Next.js page payload → <span className="mono">next_data</span>; otherwise{" "}
+          <span className="mono">html</span>. Put <span className="mono">{"{page}"}</span>,{" "}
+          <span className="mono">{"{offset}"}</span> or <span className="mono">{"{limit}"}</span> wherever
+          the request paginates — in the path for GET formats, or inside{" "}
+          <span className="mono">graphql.variables</span> for GraphQL. Validate with the sandbox below
+          before saving.
         </p>
         <textarea
           className="in mono"

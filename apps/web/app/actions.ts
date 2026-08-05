@@ -409,6 +409,7 @@ export async function previewUnicornListing(
       matchedCount: matches.length,
       descCoveragePct: Math.round(descriptionCoverage(page.lots) * 100),
       hasMore: page.hasMore,
+      total: page.total ?? null,
       sample: (matches.length > 0 ? matches : page.lots.slice(0, 25).map((lot) => ({ lot, matchedTerms: [] as string[] })))
         .slice(0, 50)
         .map((m) => ({

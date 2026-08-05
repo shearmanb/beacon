@@ -96,6 +96,8 @@ export default async function UnicornPage() {
               pageDelayMs: config.pageDelayMs,
               cookieRef: config.cookieRef ?? null,
               requestHeaders: config.requestHeaders ?? null,
+              lotUrlTemplate: config.lotUrlTemplate ?? null,
+              graphql: (config.graphql as Record<string, unknown> | undefined) ?? null,
             }}
             forceScanPending={state.forceScanRequested === true}
           />

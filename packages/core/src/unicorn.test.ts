@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildGraphqlBody,
   defaultUnicornConfig,
   descriptionCoverage,
   matchLots,
@@ -99,6 +100,105 @@ describe("parseUnicornListing", () => {
 
   it("json_api: throws on non-JSON so the job records a real error", () => {
     expect(() => parseUnicornListing("<html>block page</html>", { format: "json_api", baseUrl: BASE })).toThrow();
+  });
+});
+
+// Shaped from the real SearchLots response (DevTools, 2026-08-05): nested
+// currentBid { amount }, photos { photoN }, a stringified `next`, no url field.
+const GRAPHQL_FIXTURE = JSON.stringify({
+  data: {
+    searchLots: {
+      count: 4635,
+      next: "true",
+      previous: null,
+      results: [
+        {
+          uuid: "5f1e-aaa",
+          auctionUuid: "4a408679",
+          number: 12,
+          title: "Weller 12 Year",
+          description: "Wheated bourbon, 750ml.",
+          photos: { photo1: "https://cdn.example.com/a.jpg", photo2: null, __typename: "Photos" },
+          currentBid: { amount: 425, currency: "USD", __typename: "Bid" },
+          lowEstimate: 300,
+          __typename: "Lot",
+        },
+        {
+          uuid: "5f1e-bbb",
+          number: 13,
+          title: "Scotch Single Malt 18",
+          description: "Sherry cask.",
+          photos: null,
+          currentBid: null,
+          __typename: "Lot",
+        },
+      ],
+      categoryFilter: [{ category: "Bourbon", count: 2645, type: null, __typename: "CategoryFilter" }],
+      __typename: "SearchLotsResult",
+    },
+  },
+});
+
+describe("parseUnicornListing — graphql", () => {
+  it("reads data.searchLots.results with nested bids, photo sets, and a template URL", () => {
+    const page = parseUnicornListing(GRAPHQL_FIXTURE, {
+      format: "graphql",
+      baseUrl: BASE,
+      lotUrlTemplate: "/lots/{id}",
+    });
+    expect(page.lots).toHaveLength(2);
+    expect(page.total).toBe(4635);
+    expect(page.hasMore).toBe(true); // next: "true"
+
+    const weller = page.lots.find((l) => l.id === "5f1e-aaa")!;
+    expect(weller.title).toBe("Weller 12 Year");
+    expect(weller.currentBidDollars).toBe(425); // nested { amount }
+    expect(weller.image).toBe("https://cdn.example.com/a.jpg"); // photos.photo1
+    expect(weller.url).toBe(`${BASE}/lots/5f1e-aaa`);
+    expect(weller.description).toBe("Wheated bourbon, 750ml.");
+
+    const scotch = page.lots.find((l) => l.id === "5f1e-bbb")!;
+    expect(scotch.currentBidDollars).toBeNull(); // no bids yet
+    expect(scotch.image).toBeNull();
+  });
+
+  it('treats next: "false" as the last page, not another one', () => {
+    const last = GRAPHQL_FIXTURE.replace('"next":"true"', '"next":"false"');
+    expect(parseUnicornListing(last, { format: "graphql", baseUrl: BASE }).hasMore).toBe(false);
+  });
+
+  it("surfaces a GraphQL errors array instead of reporting zero lots", () => {
+    const body = JSON.stringify({ errors: [{ message: "Signature has expired" }], data: null });
+    expect(() => parseUnicornListing(body, { format: "graphql", baseUrl: BASE })).toThrow(/Signature has expired/);
+  });
+});
+
+describe("buildGraphqlBody", () => {
+  const cfg = (extra: Record<string, unknown> = {}) =>
+    validateUnicornConfig({
+      format: "graphql",
+      graphql: {
+        endpoint: "https://graphql.example.com/graphql",
+        operationName: "SearchLots",
+        query: "query SearchLots($input: SearchLotInput!) { searchLots(input: $input) { count } }",
+        pageSize: 100,
+        variables: { input: { page: "{page}", limit: "{limit}", offset: "{offset}", auctionUuid: "abc-123" } },
+        ...(extra as Record<string, unknown>),
+      },
+    }).config!;
+
+  it("substitutes page/offset/limit as real numbers and preserves the rest", () => {
+    const body = JSON.parse(buildGraphqlBody(cfg(), 3)) as {
+      operationName: string;
+      variables: { input: { page: number; limit: number; offset: number; auctionUuid: string } };
+    };
+    expect(body.operationName).toBe("SearchLots");
+    expect(body.variables.input).toEqual({ page: 3, limit: 100, offset: 200, auctionUuid: "abc-123" });
+  });
+
+  it("throws a clear error when the graphql block is missing", () => {
+    const bare = validateUnicornConfig({ format: "graphql" }).config!;
+    expect(() => buildGraphqlBody(bare, 1)).toThrow(/requires a `graphql` config block/);
   });
 });
 

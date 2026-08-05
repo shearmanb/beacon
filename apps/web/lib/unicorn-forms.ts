@@ -14,6 +14,9 @@ export interface UnicornPreviewResult {
   /** 0..100 — share of parsed lots carrying description text. */
   descCoveragePct?: number;
   hasMore?: boolean;
+  /** Roster size the API itself reports, when it says — lets you confirm the
+   *  scan will see the whole auction, not just page one. */
+  total?: number | null;
   sample?: Array<{
     title: string;
     url: string;
