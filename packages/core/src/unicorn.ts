@@ -37,31 +37,54 @@ export const unicornTermSchema = z.object({
 export const unicornConfigSchema = z.object({
   enabled: z.boolean().default(true),
   baseUrl: z.string().url().default("https://www.unicornauctions.com"),
+  /** Safety valve. Unicorn's API FAILS OPEN: an unrecognized filter value (e.g.
+   *  state "live" instead of "LIVE") silently returns the entire 725k-lot
+   *  historical archive instead of erroring. Scanning that would take hours and
+   *  alert on ancient lots, so a roster larger than this aborts the scan with a
+   *  loud error. 0 disables the check. */
+  maxExpectedLots: z.number().int().min(0).default(25_000),
   /** Listing path with a {page} placeholder, e.g. "/api/lots?page={page}".
    *  Ignored by the `graphql` format, which uses its own endpoint.
    *  Set the real value from browser DevTools (Network tab on the lots page)
    *  via the /unicorn advanced settings. */
   listingPath: z.string().min(1).default("/auctions?page={page}"),
-  format: z.enum(["json_api", "next_data", "html", "graphql"]).default("next_data"),
+  format: z.enum(["json_api", "next_data", "html", "graphql"]).default("graphql"),
   /** How to build a lot's link when the feed carries no URL field (Unicorn's
-   *  GraphQL returns uuid/number only). Placeholders: {id}, {number}. */
-  lotUrlTemplate: z.string().optional(),
-  /** Required when format is "graphql": a POST request recipe. The query text
-   *  comes straight from DevTools → Payload; `variables` is that payload's
-   *  variables object with {page} / {offset} / {limit} placeholders dropped in
-   *  wherever it paginates, so paging is config rather than code. */
+   *  searchLots returns uuid/number only). {id} is the lot id; any other
+   *  placeholder resolves against the raw lot object, e.g. {auctionUuid}. */
+  lotUrlTemplate: z.string().optional().default("/auction/{auctionUuid}/lot/{id}"),
+  /** The POST recipe for format "graphql". Defaults are the live Unicorn
+   *  Auctions API, verified 2026-08-05 — enabling the module needs no typing.
+   *  All of it stays editable so a schema change is a config fix, not a deploy.
+   *
+   *  Two API quirks are baked into the default `variables`:
+   *   • `state: "LIVE"` scopes to the auction currently running, so the weekly
+   *     auction rollover needs no config change (an auctionUuid would).
+   *   • `offset` is a 1-INDEXED PAGE NUMBER, not a record offset (offset 2 with
+   *     limit 500 returns lots 503+), hence {page} rather than {offset}.
+   *  searchLots needs no authentication for browsing. */
   graphql: z
     .object({
-      endpoint: z.string().url(),
-      operationName: z.string().optional(),
-      query: z.string().min(1),
-      variables: z.record(z.unknown()).default({}),
-      /** Substituted into {limit}; also drives {offset} = (page-1) * pageSize. */
-      pageSize: z.number().int().min(1).max(1000).default(100),
-      /** Secrets-table ref holding a bearer token, when the API needs auth. */
+      endpoint: z.string().url().default("https://graphql.beta.unicornauctions.com/graphql"),
+      operationName: z.string().optional().default("SearchLots"),
+      query: z
+        .string()
+        .min(1)
+        .default(
+          "query SearchLots($input: SearchLotInput!) {\n" +
+            "  searchLots(input: $input) {\n    count\n    next\n    results {\n" +
+            "      uuid\n      auctionUuid\n      number\n      title\n      description\n" +
+            "      state\n      endDatetime\n      currentBid { amount currency }\n" +
+            "      photos { photo1 }\n    }\n  }\n}",
+        ),
+      variables: z.record(z.unknown()).default({ input: { state: "LIVE", limit: "{limit}", offset: "{page}" } }),
+      /** Rows per request. Substituted into {limit}; also drives {offset} =
+       *  (page-1) * pageSize and {pageIndex} = page-1. Unicorn accepts 1000. */
+      pageSize: z.number().int().min(1).max(1000).default(500),
+      /** Secrets-table ref holding a bearer token, if the API ever needs auth. */
       authTokenRef: z.string().optional(),
     })
-    .optional(),
+    .default({}),
   maxPages: z.number().int().min(1).max(200).default(80),
   pageDelayMs: z.number().int().min(0).max(10_000).default(400),
   terms: z.array(unicornTermSchema).default([]),
@@ -279,14 +302,20 @@ function normalizeRawLot(raw: Raw, opts: NormalizeOptions): UnicornLot | null {
       /* keep the constructed default */
     }
   } else if (lotUrlTemplate) {
-    const num = raw["number"] ?? raw["lotNumber"] ?? raw["lot_number"] ?? "";
-    try {
-      url = new URL(
-        lotUrlTemplate.replace(/\{id\}/g, encodeURIComponent(id)).replace(/\{number\}/g, encodeURIComponent(String(num))),
-        baseUrl,
-      ).href;
-    } catch {
-      /* malformed template — keep the default */
+    // {id} is the resolved lot id; every other placeholder reads the raw lot,
+    // so a nested route like /auction/{auctionUuid}/lot/{id} is pure config.
+    const filled = lotUrlTemplate.replace(/\{(\w+)\}/g, (_m, key: string) => {
+      const v = key === "id" ? id : raw[key];
+      return v === undefined || v === null ? "" : encodeURIComponent(String(v));
+    });
+    // An unresolved placeholder would yield a broken link (…/lot//…) — fall
+    // back to the default rather than shipping a 404 into an alert.
+    if (!filled.includes("//") || filled.startsWith("http")) {
+      try {
+        url = new URL(filled, baseUrl).href;
+      } catch {
+        /* malformed template — keep the default */
+      }
     }
   }
 
@@ -472,20 +501,28 @@ export function parseUnicornListing(
   return parseHtmlLots(body, baseUrl);
 }
 
-/** Substitute {page} / {offset} / {limit} anywhere in a GraphQL variables tree,
- *  so pagination is expressed in config instead of hard-coded per API. String
- *  placeholders that stand alone become real numbers ("{page}" -> 2). */
-export function substituteVariables(
-  vars: unknown,
-  ctx: { page: number; offset: number; limit: number },
-  depth = 0,
-): unknown {
+export interface PageContext {
+  /** 1-indexed page number — what Unicorn's `offset` actually wants. */
+  page: number;
+  /** 0-indexed page number, for APIs that count pages from zero. */
+  pageIndex: number;
+  /** Record offset ((page-1) * limit), for true record-offset APIs. */
+  offset: number;
+  limit: number;
+}
+
+/** Substitute {page} / {pageIndex} / {offset} / {limit} anywhere in a GraphQL
+ *  variables tree, so pagination is expressed in config instead of hard-coded
+ *  per API — the three common conventions are all reachable. A placeholder
+ *  standing alone becomes a real number ("{page}" -> 2), not a string. */
+export function substituteVariables(vars: unknown, ctx: PageContext, depth = 0): unknown {
   if (depth > 10) return vars;
   if (typeof vars === "string") {
-    const solo = vars.trim().match(/^\{(page|offset|limit)\}$/);
-    if (solo) return ctx[solo[1] as "page" | "offset" | "limit"];
+    const solo = vars.trim().match(/^\{(page|pageIndex|offset|limit)\}$/);
+    if (solo) return ctx[solo[1] as keyof PageContext];
     return vars
       .replace(/\{page\}/g, String(ctx.page))
+      .replace(/\{pageIndex\}/g, String(ctx.pageIndex))
       .replace(/\{offset\}/g, String(ctx.offset))
       .replace(/\{limit\}/g, String(ctx.limit));
   }
@@ -503,7 +540,12 @@ export function buildGraphqlBody(config: UnicornConfig, page: number): string {
   const gql = config.graphql;
   if (!gql) throw new Error('format "graphql" requires a `graphql` config block (endpoint + query).');
   const limit = gql.pageSize;
-  const variables = substituteVariables(gql.variables, { page, offset: (page - 1) * limit, limit });
+  const variables = substituteVariables(gql.variables, {
+    page,
+    pageIndex: page - 1,
+    offset: (page - 1) * limit,
+    limit,
+  });
   return JSON.stringify({
     ...(gql.operationName ? { operationName: gql.operationName } : {}),
     query: gql.query,

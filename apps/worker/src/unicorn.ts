@@ -82,7 +82,7 @@ async function fetchAllLots(
   for (let page = 1; page <= config.maxPages; page++) {
     let body: string;
     if (config.format === "graphql") {
-      const gql = config.graphql!;
+      const gql = config.graphql;
       body = await post(gql.endpoint, buildGraphqlBody(config, page), {
         signal,
         headers: { Accept: "application/json", ...headers },
@@ -95,14 +95,31 @@ async function fetchAllLots(
       baseUrl: config.baseUrl,
       lotUrlTemplate: config.lotUrlTemplate,
     });
+
+    // Fail-open guard: Unicorn answers an unrecognized filter value by
+    // returning the whole ~725k-lot historical archive rather than erroring.
+    // Catch that on page 1 — scanning it would run for hours and alert on lots
+    // that closed years ago.
+    if (page === 1 && config.maxExpectedLots > 0 && (parsed.total ?? 0) > config.maxExpectedLots) {
+      throw new Error(
+        `Roster is ${parsed.total} lots, over the ${config.maxExpectedLots} sanity limit — the query is probably ` +
+          `not scoped to the current auction (check graphql.variables: state must be exactly "LIVE"). ` +
+          `Scan aborted rather than walking the full archive.`,
+      );
+    }
+
     let fresh = 0;
     for (const lot of parsed.lots) {
       if (!byId.has(lot.id)) fresh += 1;
       byId.set(lot.id, lot);
     }
     // Stop on an empty page, an all-repeats page (some backends serve the last
-    // page forever), or an explicit no-more signal.
-    if (parsed.lots.length === 0 || fresh === 0 || !parsed.hasMore) break;
+    // page forever), a short page (the classic last-page tell), or an explicit
+    // no-more signal. Unicorn needs the first three: its `next` stays "true"
+    // even past the end of the roster.
+    const pageSize = config.format === "graphql" ? config.graphql.pageSize : 0;
+    const shortPage = pageSize > 0 && parsed.lots.length < pageSize;
+    if (parsed.lots.length === 0 || fresh === 0 || shortPage || !parsed.hasMore) break;
     if (page === config.maxPages) {
       log(`[unicorn] Page cap hit (${config.maxPages}) with more pages available — raise maxPages if matches seem missing.`);
       break;
@@ -177,12 +194,8 @@ export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrid
   const controller = new AbortController();
   const budget = setTimeout(() => controller.abort(), over.budgetMs ?? SCAN_BUDGET_MS);
   try {
-    if (config.format === "graphql" && !config.graphql) {
-      throw new Error('format is "graphql" but no `graphql` block is configured (needs endpoint + query).');
-    }
-
     let headers: Record<string, string> | undefined = config.requestHeaders;
-    const authRef = config.graphql?.authTokenRef;
+    const authRef = config.graphql.authTokenRef;
     if (config.cookieRef || authRef) {
       const secrets = await store.secrets.all();
       const cookie = config.cookieRef ? secrets[config.cookieRef] : undefined;

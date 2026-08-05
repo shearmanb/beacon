@@ -140,6 +140,18 @@ const GRAPHQL_FIXTURE = JSON.stringify({
 });
 
 describe("parseUnicornListing — graphql", () => {
+  it("builds nested lot URLs from raw fields (/auction/{auctionUuid}/lot/{id})", () => {
+    const page = parseUnicornListing(GRAPHQL_FIXTURE, {
+      format: "graphql",
+      baseUrl: BASE,
+      lotUrlTemplate: "/auction/{auctionUuid}/lot/{id}",
+    });
+    expect(page.lots.find((l) => l.id === "5f1e-aaa")!.url).toBe(`${BASE}/auction/4a408679/lot/5f1e-aaa`);
+    // Lot 2 has no auctionUuid — rather than emit /auction//lot/… (a 404 in an
+    // alert), fall back to the default link shape.
+    expect(page.lots.find((l) => l.id === "5f1e-bbb")!.url).toBe(`${BASE}/lots/5f1e-bbb`);
+  });
+
   it("reads data.searchLots.results with nested bids, photo sets, and a template URL", () => {
     const page = parseUnicornListing(GRAPHQL_FIXTURE, {
       format: "graphql",
@@ -155,6 +167,7 @@ describe("parseUnicornListing — graphql", () => {
     expect(weller.currentBidDollars).toBe(425); // nested { amount }
     expect(weller.image).toBe("https://cdn.example.com/a.jpg"); // photos.photo1
     expect(weller.url).toBe(`${BASE}/lots/5f1e-aaa`);
+    expect(page.lots.find((l) => l.id === "5f1e-bbb")!.description).toBe("Sherry cask.");
     expect(weller.description).toBe("Wheated bourbon, 750ml.");
 
     const scotch = page.lots.find((l) => l.id === "5f1e-bbb")!;
@@ -196,9 +209,34 @@ describe("buildGraphqlBody", () => {
     expect(body.variables.input).toEqual({ page: 3, limit: 100, offset: 200, auctionUuid: "abc-123" });
   });
 
-  it("throws a clear error when the graphql block is missing", () => {
-    const bare = validateUnicornConfig({ format: "graphql" }).config!;
-    expect(() => buildGraphqlBody(bare, 1)).toThrow(/requires a `graphql` config block/);
+  it("offers {pageIndex} and {offset} for APIs that page differently", () => {
+    const c = validateUnicornConfig({
+      graphql: { variables: { a: "{page}", b: "{pageIndex}", c: "{offset}", d: "{limit}" }, pageSize: 50 },
+    }).config!;
+    expect((JSON.parse(buildGraphqlBody(c, 4)) as { variables: unknown }).variables).toEqual({
+      a: 4,
+      b: 3,
+      c: 150,
+      d: 50,
+    });
+  });
+
+  // The shipped defaults ARE the live Unicorn recipe (verified against the API
+  // 2026-08-05). Two of these encode non-obvious API behavior and would cause
+  // silent breakage if "tidied": `state: "LIVE"` is what scopes the query to
+  // the running auction (an unrecognized value returns the 725k-lot archive),
+  // and `offset` is a 1-INDEXED PAGE NUMBER, so it takes {page}, not {offset}.
+  it("ships defaults that are the verified live Unicorn recipe", () => {
+    const c = defaultUnicornConfig();
+    expect(c.format).toBe("graphql");
+    expect(c.graphql.endpoint).toBe("https://graphql.beta.unicornauctions.com/graphql");
+    expect(c.graphql.operationName).toBe("SearchLots");
+    expect(c.graphql.variables).toEqual({ input: { state: "LIVE", limit: "{limit}", offset: "{page}" } });
+    expect(c.lotUrlTemplate).toBe("/auction/{auctionUuid}/lot/{id}");
+    expect(c.maxExpectedLots).toBe(25_000);
+    // Never request consignor name/email — the site's own query includes them,
+    // but a stock watcher has no business pulling seller PII.
+    expect(c.graphql.query).not.toMatch(/consignor|email/i);
   });
 });
 
@@ -249,7 +287,8 @@ describe("config + state", () => {
     expect(bad.ok).toBe(false);
     expect(bad.error).toContain("baseUrl");
 
-    expect(defaultUnicornConfig().format).toBe("next_data");
+    // Default format is "graphql" — asserted in full by the defaults test above.
+    expect(defaultUnicornConfig().format).toBe("graphql");
   });
 
   it("parseUnicornScanState survives corrupt blobs", () => {

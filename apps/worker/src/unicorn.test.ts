@@ -266,6 +266,46 @@ describe("maybeScanUnicorn", () => {
     expect((await loadState()).lastError).toContain("Signature has expired");
   });
 
+  it("aborts instead of walking the archive when the roster comes back implausibly large", async () => {
+    // Unicorn fails OPEN: a filter value it doesn't recognize returns all ~725k
+    // historical lots rather than an error. Walking that would run for hours and
+    // alert on lots that closed years ago.
+    await saveConfig({ format: "graphql", maxExpectedLots: 25_000, pageDelayMs: 0, terms: [{ term: "weller" }] });
+    let pages = 0;
+    const out = await maybeScanUnicorn(ctx(), {
+      postImpl: async () => {
+        pages += 1;
+        return JSON.stringify({
+          data: { searchLots: { count: 725872, next: "true", results: [{ uuid: "x", title: "Weller 12" }] } },
+        });
+      },
+    });
+    expect(out.error).toMatch(/725872 lots, over the 25000 sanity limit/);
+    expect(pages).toBe(1); // caught on page 1, never paged on
+    expect((await loadState()).lots).toEqual({}); // no archive lots stored
+  });
+
+  it("stops on a short page — Unicorn's `next` stays \"true\" past the end of the roster", async () => {
+    await saveConfig({ format: "graphql", pageDelayMs: 0, terms: [{ term: "weller" }], graphql: { pageSize: 2 } });
+    const seen: number[] = [];
+    await maybeScanUnicorn(ctx(), {
+      postImpl: async (_u, body) => {
+        const page = (JSON.parse(body) as { variables: { input: { offset: number } } }).variables.input.offset;
+        seen.push(page);
+        const full = [
+          { uuid: `p${page}a`, title: "Weller A" },
+          { uuid: `p${page}b`, title: "Weller B" },
+        ];
+        // Page 2 is short (1 of 2) and still claims next:"true".
+        return JSON.stringify({
+          data: { searchLots: { count: 3, next: "true", results: page === 1 ? full : [{ uuid: "p2a", title: "Weller C" }] } },
+        });
+      },
+    });
+    expect(seen).toEqual([1, 2]); // stopped at the short page, no wasted 3rd call
+    expect((await loadState()).rawLotCount).toBe(3);
+  });
+
   it("appends new-match alerts to alert_history under the unicorn label", async () => {
     await saveConfig();
     const over = (bid: number, extra: unknown[] = []): UnicornScanOverrides => ({
