@@ -1117,6 +1117,35 @@ select.in.sched {
   color: var(--text);
 }
 
+/* Target-bottle rows (/unicorn). Fixed grid tracks rather than a wrapping flex
+   row, so the price block, keyword count and actions sit in the same columns on
+   every row no matter how long the bottle name or research note is. */
+.bottle-row {
+  display: grid;
+  grid-template-columns: minmax(230px, 1.7fr) 150px minmax(200px, 2fr) auto;
+  gap: 16px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.bottle-row:last-of-type {
+  border-bottom: none;
+}
+.bottle-name {
+  font-weight: 600;
+  line-height: 1.35;
+}
+.bottle-meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+.bottle-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
 /* ── Mobile ──────────────────────────────────────────────────────────────────
    The dashboard shipped with no media queries at all, so on a phone the header
    flex row squeezed .nav into a narrow column (one link per line, ~600px of
@@ -1221,6 +1250,19 @@ select.in.sched {
   }
   .ptable td .btn {
     width: 100%;
+  }
+
+  /* Bottle rows stack: four narrow columns are unreadable on a phone. */
+  .bottle-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 14px 0;
+  }
+  .bottle-actions {
+    justify-content: flex-start;
+  }
+  .bottle-actions .btn {
+    flex: 1;
   }
 
   /* History rows wrap rather than crushing the title between type and time. */

@@ -230,26 +230,69 @@ export function UnicornBottles({
         editing === b.id && draft ? (
           <div key={b.id}>{editor(draft, false)}</div>
         ) : (
-          <div key={b.id} className="list-item" style={{ padding: "10px 0", borderBottom: "1px solid var(--line)" }}>
-            <div style={{ display: "flex", gap: 10, alignItems: "baseline", flexWrap: "wrap" }}>
-              {b.rank && <span className="kind-chip">{b.rank}</span>}
-              <strong style={{ flex: 1, minWidth: 200 }}>{b.name}</strong>
-              <span className="mono muted" style={{ fontSize: 12 }}>
-                {b.maxHammerDollars != null
-                  ? `max hammer ${money(b.maxHammerDollars)} → ${money(allIn(b.maxHammerDollars, fees))} all-in`
-                  : "no max hammer set"}
-              </span>
+          // Fixed grid tracks (see .bottle-row) so every bottle's price block,
+          // keyword count and actions line up in the same columns regardless of
+          // how long its name or research note runs.
+          <div key={b.id} className="bottle-row">
+            <div>
+              <div className="bottle-name">
+                {b.rank && <span className="kind-chip" style={{ marginRight: 6 }}>{b.rank}</span>}
+                {b.name}
+              </div>
+              <div className="bottle-meta" style={{ marginTop: 4 }}>
+                {b.maxHammerDollars != null ? (
+                  <>
+                    max hammer <strong>{money(b.maxHammerDollars)}</strong> → {money(allIn(b.maxHammerDollars, fees))}{" "}
+                    all-in
+                  </>
+                ) : (
+                  <span className="faint">no max hammer set</span>
+                )}
+              </div>
             </div>
-            <div style={{ display: "flex", gap: 10, alignItems: "baseline", flexWrap: "wrap", marginTop: 4 }}>
-              {b.targetLowDollars != null && b.targetHighDollars != null && (
-                <span className="muted mono" style={{ fontSize: 12 }}>
-                  target {money(b.targetLowDollars)}–{money(b.targetHighDollars)}
-                </span>
-              )}
-              <span className={`pill ${termCountByBottle[b.id] ? "yes" : "no"}`}>
+
+            <div>
+              <div className="bottle-meta">
+                {b.targetLowDollars != null && b.targetHighDollars != null ? (
+                  <>
+                    target {money(b.targetLowDollars)}–{money(b.targetHighDollars)}
+                  </>
+                ) : (
+                  <span className="faint">no target set</span>
+                )}
+              </div>
+              <span
+                className={`pill ${termCountByBottle[b.id] ? "yes" : "no"}`}
+                style={{ marginTop: 6, display: "inline-block" }}
+                title={
+                  termCountByBottle[b.id]
+                    ? "Keywords are hunting for this bottle"
+                    : "No keyword points at this bottle yet — nothing will ever match it"
+                }
+              >
                 {termCountByBottle[b.id] ?? 0} keyword{(termCountByBottle[b.id] ?? 0) === 1 ? "" : "s"}
               </span>
-              <span className="spacer" style={{ flex: 1 }} />
+            </div>
+
+            <div>
+              {b.why && <p className="hint" style={{ margin: 0 }}>{b.why}</p>}
+              {b.notes && (
+                <p className="hint" style={{ margin: "6px 0 0", color: "var(--warn)" }}>
+                  📝 {b.notes}
+                </p>
+              )}
+              {b.links.length > 0 && (
+                <div style={{ marginTop: 6, display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {b.links.map((ln, i) => (
+                    <a key={i} href={ln.url} target="_blank" rel="noreferrer" style={{ fontSize: 12 }}>
+                      {ln.label || ln.url}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="bottle-actions">
               <button
                 className="btn"
                 disabled={pending}
@@ -269,25 +312,6 @@ export function UnicornBottles({
                 ✕
               </button>
             </div>
-            {b.why && (
-              <p className="hint" style={{ marginTop: 6 }}>
-                {b.why}
-              </p>
-            )}
-            {b.notes && (
-              <p className="hint" style={{ marginTop: 4, color: "var(--warn)" }}>
-                📝 {b.notes}
-              </p>
-            )}
-            {b.links.length > 0 && (
-              <div style={{ marginTop: 4, display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {b.links.map((ln, i) => (
-                  <a key={i} href={ln.url} target="_blank" rel="noreferrer" style={{ fontSize: 12 }}>
-                    {ln.label || ln.url}
-                  </a>
-                ))}
-              </div>
-            )}
           </div>
         ),
       )}
