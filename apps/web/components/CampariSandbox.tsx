@@ -78,12 +78,12 @@ export function CampariSandbox() {
               <tbody>
                 {result.sample.map((p, i) => (
                   <tr key={`${p.url}:${i}`}>
-                    <td>
+                    <td data-label="Product">
                       <a href={p.url} target="_blank" rel="noreferrer">
                         {p.title}
                       </a>
                     </td>
-                    <td>
+                    <td data-label="Status">
                       <span className={`pill ${p.available ? "yes" : "no"}`}>{p.available ? "buyable" : "info only"}</span>
                     </td>
                   </tr>

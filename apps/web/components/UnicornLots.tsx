@@ -130,22 +130,26 @@ export function UnicornLots({ lots, ignoredLots }: { lots: UnicornLotRow[]; igno
             <tbody>
               {filtered.map((lot) => (
                 <tr key={lot.id}>
-                  <td>
+                  {/* data-label carries the column head into the mobile
+                      stacked-card layout, where <thead> is hidden. */}
+                  <td data-label="Lot">
                     <a href={lot.url} target="_blank" rel="noreferrer">
                       {lot.title}
                     </a>
                   </td>
-                  <td className="mono">
+                  <td className="mono" data-label="Bid">
                     {lot.currentBidDollars != null ? `$${lot.currentBidDollars.toLocaleString("en-US")}` : "—"}
                   </td>
-                  <td>
+                  <td data-label="Keyword">
                     {lot.matchedTerms.map((t) => (
                       <span key={t} className="pill yes" style={{ marginRight: 4 }}>
                         {t}
                       </span>
                     ))}
                   </td>
-                  <td className="when">{seenLabel(lot.firstSeenAt)}</td>
+                  <td className="when" data-label="Seen">
+                    {seenLabel(lot.firstSeenAt)}
+                  </td>
                   <td>
                     <button
                       className="btn"

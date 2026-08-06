@@ -93,13 +93,15 @@ export function UnicornSandbox({
               <tbody>
                 {result.sample!.map((l, i) => (
                   <tr key={`${l.url}:${i}`}>
-                    <td>
+                    <td data-label="Lot">
                       <a href={l.url} target="_blank" rel="noreferrer">
                         {l.title}
                       </a>
                     </td>
-                    <td className="mono">{l.currentBidDollars != null ? `$${l.currentBidDollars.toLocaleString("en-US")}` : "—"}</td>
-                    <td>
+                    <td className="mono" data-label="Bid">
+                      {l.currentBidDollars != null ? `$${l.currentBidDollars.toLocaleString("en-US")}` : "—"}
+                    </td>
+                    <td data-label="Terms">
                       {l.matchedTerms.map((t) => (
                         <span key={t} className="pill yes" style={{ marginRight: 4 }}>
                           {t}

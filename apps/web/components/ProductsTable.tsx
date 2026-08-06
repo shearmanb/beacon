@@ -117,7 +117,9 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
             const isIgnored = ignoredSet.has(it.handle);
             return (
               <tr key={`${it.site}:${it.handle}`} style={isIgnored ? { opacity: 0.5 } : undefined}>
-                <td>
+                {/* data-label carries the column head into the mobile
+                    stacked-card layout, where <thead> is hidden. */}
+                <td data-label="Product">
                   {it.reveries && (
                     <span className="rev-flag" title="Reveries">
                       ✨
@@ -128,14 +130,18 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
                   </a>
                   {it.vendor && <span className="faint"> · {it.vendor}</span>}
                 </td>
-                <td className="muted">{it.site}</td>
-                <td className="mono">{it.minPrice != null ? `$${it.minPrice.toFixed(2)}` : "—"}</td>
-                <td>
+                <td className="muted" data-label="Site">
+                  {it.site}
+                </td>
+                <td className="mono" data-label="Price">
+                  {it.minPrice != null ? `$${it.minPrice.toFixed(2)}` : "—"}
+                </td>
+                <td data-label="Status">
                   <span className={`pill ${it.available ? "yes" : "no"}`}>
                     {it.available ? "in stock" : "sold out"}
                   </span>
                 </td>
-                <td className="mono muted" style={{ whiteSpace: "nowrap" }} title={addedLabel(it.firstSeen).full}>
+                <td className="mono muted" data-label="Added" style={{ whiteSpace: "nowrap" }} title={addedLabel(it.firstSeen).full}>
                   {addedLabel(it.firstSeen).short}
                 </td>
                 <td>

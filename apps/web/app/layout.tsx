@@ -9,6 +9,14 @@ export const metadata = {
   description: "Stock-monitoring dashboard",
 };
 
+// Explicit rather than relying on the framework default — the dashboard is read
+// on a phone as often as a laptop, and losing this silently reverts every
+// mobile layout rule to a 980px-wide zoomed-out render.
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 // Shown in the header so it's obvious which build is live. The live "updated"
 // time + Railway deploy ID render below via <DeployStamp /> (self-maintaining
 // from Railway env), so no hardcoded date to go stale here anymore.

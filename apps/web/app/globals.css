@@ -1108,3 +1108,118 @@ select.in.sched {
   background: color-mix(in srgb, var(--accent) 18%, var(--panel));
   color: var(--text);
 }
+
+/* ── Mobile ──────────────────────────────────────────────────────────────────
+   The dashboard shipped with no media queries at all, so on a phone the header
+   flex row squeezed .nav into a narrow column (one link per line, ~600px of
+   chrome before any content) and 5-column tables crushed lot titles into
+   8-line stacks. Card grids already use auto-fill/minmax and were fine.
+
+   Two changes: the nav gets its own full-width row, and tables become stacked
+   label/value cards (th text is carried over via each td's data-label). */
+@media (max-width: 720px) {
+  .app {
+    padding: 14px 12px 48px;
+  }
+
+  /* Header: wordmark + version + theme on row 1, nav across the full width of
+     row 2 so links flow several per line instead of one. */
+  .hdr {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  .hdr .spacer {
+    display: none;
+  }
+  .hdr .ver {
+    margin-left: auto;
+  }
+  .hdr .nav {
+    order: 10; /* everything else keeps source order on row 1 */
+    flex: 1 1 100%;
+    gap: 2px;
+  }
+  .wordmark {
+    font-size: 17px;
+  }
+  .nav a {
+    padding: 5px 8px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  .sect-hd {
+    flex-wrap: wrap;
+    margin: 18px 0 10px;
+  }
+
+  /* Filters: the search box takes its own row, the narrower controls share the
+     next one. */
+  .filters > .in:first-child {
+    flex: 1 1 100%;
+  }
+
+  /* Tables -> stacked cards. A phone can't show 5 columns without wrapping
+     titles into unreadable slivers, so each row becomes a labelled block. */
+  .ptable,
+  .ptable tbody,
+  .ptable tr,
+  .ptable td {
+    display: block;
+    width: 100%;
+  }
+  .ptable thead {
+    display: none; /* labels move into each cell via data-label */
+  }
+  .ptable tr {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  .ptable tr:hover td {
+    background: none;
+  }
+  .ptable td {
+    border-bottom: none;
+    padding: 3px 0;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .ptable td::before {
+    content: attr(data-label);
+    flex: 0 0 84px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  /* The first cell is the row's headline (lot / product name) — give it the
+     full width as a title rather than indenting it behind a label. */
+  .ptable td:first-child {
+    display: block;
+    font-size: 14px;
+    padding-bottom: 6px;
+  }
+  /* The action cell has no label and reads better as a full-width control. */
+  .ptable td:first-child::before,
+  .ptable td[data-label=""]::before,
+  .ptable td:not([data-label])::before {
+    display: none;
+  }
+  .ptable td .btn {
+    width: 100%;
+  }
+
+  /* History rows wrap rather than crushing the title between type and time. */
+  .evt {
+    flex-wrap: wrap;
+  }
+  .evt .when {
+    margin-left: auto;
+  }
+}

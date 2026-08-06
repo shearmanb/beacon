@@ -474,14 +474,16 @@ function PreviewPanel({ preview }: { preview: PreviewResult }) {
           <tbody>
             {preview.sample.map((p, i) => (
               <tr key={`${p.url}:${i}`}>
-                <td>
+                <td data-label="Product">
                   <a href={p.url} target="_blank" rel="noreferrer">
                     {p.title}
                   </a>
                   {p.vendor && <span className="faint"> · {p.vendor}</span>}
                 </td>
-                <td className="mono">{p.minPrice != null ? `$${p.minPrice.toFixed(2)}` : "—"}</td>
-                <td>
+                <td className="mono" data-label="Price">
+                  {p.minPrice != null ? `$${p.minPrice.toFixed(2)}` : "—"}
+                </td>
+                <td data-label="Status">
                   <span className={`pill ${p.available ? "yes" : "no"}`}>{p.available ? "in stock" : "sold out"}</span>
                 </td>
               </tr>
