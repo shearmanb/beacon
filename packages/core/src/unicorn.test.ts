@@ -273,6 +273,12 @@ describe("matchLots", () => {
   it("returns nothing with no active terms", () => {
     expect(matchLots(lots, [])).toEqual([]);
   });
+
+  it("skips lots the operator dismissed as false hits", () => {
+    const terms = [{ term: "weller", inName: true, inDesc: false }];
+    expect(matchLots(lots, terms).map((m) => m.lot.id)).toEqual(["1"]);
+    expect(matchLots(lots, terms, { ignoredIds: new Set(["1"]) })).toEqual([]);
+  });
 });
 
 describe("config + state", () => {

@@ -375,6 +375,52 @@ export async function updateUnicornConfig(patch: Record<string, unknown>): Promi
   return { ok: true };
 }
 
+/** Cap on remembered dismissals — lot ids are per-auction, so without a bound
+ *  this list would grow forever. Oldest entries fall off first. */
+const MAX_IGNORED_LOTS = 500;
+
+/**
+ * Dismiss a false-positive lot (or restore one). Ignored lots are filtered out
+ * before matching, so they never alert again. The lot is also dropped from scan
+ * state immediately, so the row disappears now instead of after the next scan.
+ */
+export async function ignoreUnicornLot(
+  lotId: string,
+  title: string,
+  ignored: boolean,
+): Promise<UnicornActionResult> {
+  const store = await getStore();
+  const raw = await store.meta.get(UNICORN_CONFIG_META_KEY);
+  if (!raw) return { ok: false, error: "Unicorn watcher is not configured yet." };
+  let existing: Record<string, unknown>;
+  try {
+    existing = JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    return { ok: false, error: "Stored config is not valid JSON — fix it in the fetch recipe editor." };
+  }
+
+  const current = (existing["ignoredLots"] as Array<{ id: string }> | undefined) ?? [];
+  const next = ignored
+    ? [...current.filter((l) => l.id !== lotId), { id: lotId, title, at: new Date().toISOString() }].slice(
+        -MAX_IGNORED_LOTS,
+      )
+    : current.filter((l) => l.id !== lotId);
+
+  const validated = validateUnicornConfig({ ...existing, ignoredLots: next });
+  if (!validated.ok) return { ok: false, error: validated.error ?? "Invalid config" };
+  await store.meta.set(UNICORN_CONFIG_META_KEY, JSON.stringify(validated.config));
+
+  if (ignored) {
+    const state = parseUnicornScanState(await store.meta.get(UNICORN_STATE_META_KEY));
+    if (state.lots[lotId]) {
+      const { [lotId]: _dropped, ...rest } = state.lots;
+      await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...state, lots: rest }));
+    }
+  }
+  revalidatePath("/unicorn");
+  return { ok: true };
+}
+
 /** "Scan now": flag the scan state; the worker's next ~60s loop picks it up. */
 export async function requestUnicornScan(): Promise<void> {
   const store = await getStore();

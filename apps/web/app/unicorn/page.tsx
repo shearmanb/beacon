@@ -13,6 +13,7 @@ import {
 } from "@beacon/core";
 import { UnicornControls } from "../../components/UnicornControls";
 import { UnicornTerms } from "../../components/UnicornTerms";
+import { UnicornLots } from "../../components/UnicornLots";
 import { UnicornSandbox } from "../../components/UnicornSandbox";
 
 export const dynamic = "force-dynamic";
@@ -114,60 +115,31 @@ export default async function UnicornPage() {
             forceScanPending={state.forceScanRequested === true}
           />
 
-          <div className="sect-hd" style={{ marginTop: 18 }}>
-            <h2>Watch terms</h2>
-            <span className="rule" />
-          </div>
-          <UnicornTerms terms={config.terms} />
+          {/* Collapsed once terms exist — day to day this page is for reading
+              matches, not editing the watchlist. Open by default while empty so
+              first-time setup is obvious. */}
+          <details className="card" style={{ marginTop: 18 }} open={config.terms.length === 0}>
+            <summary>
+              <h3 style={{ display: "inline" }}>
+                Watch terms{" "}
+                <span className="muted mono" style={{ fontSize: 12, fontWeight: "normal" }}>
+                  ({config.terms.length})
+                </span>
+              </h3>
+            </summary>
+            <div style={{ marginTop: 8 }}>
+              <UnicornTerms terms={config.terms} />
+            </div>
+          </details>
 
           <div className="sect-hd" style={{ marginTop: 18 }}>
             <h2>Matched lots</h2>
             <span className="rule" />
             <span className="muted mono" style={{ fontSize: 12 }}>
-              {lots.length} live
+              {state.lastScanAt ? `${lots.length} live` : "waiting on the first scan"}
             </span>
           </div>
-          <div className="card" style={{ padding: 0 }}>
-            {lots.length === 0 && (
-              <p className="muted" style={{ padding: 14 }}>
-                No matched lots{state.lastScanAt ? " in the current auction" : " yet — waiting on the first scan"}.
-              </p>
-            )}
-            {lots.length > 0 && (
-              <table className="ptable">
-                <thead>
-                  <tr>
-                    <th>Lot</th>
-                    <th>Current bid</th>
-                    <th>Matched</th>
-                    <th>First seen</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {lots.map((lot) => (
-                    <tr key={lot.id}>
-                      <td>
-                        <a href={lot.url} target="_blank" rel="noreferrer">
-                          {lot.title}
-                        </a>
-                      </td>
-                      <td className="mono">
-                        {lot.currentBidDollars != null ? `$${lot.currentBidDollars.toLocaleString("en-US")}` : "—"}
-                      </td>
-                      <td>
-                        {lot.matchedTerms.map((t) => (
-                          <span key={t} className="pill yes" style={{ marginRight: 4 }}>
-                            {t}
-                          </span>
-                        ))}
-                      </td>
-                      <td className="when">{ago(lot.firstSeenAt)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+          <UnicornLots lots={lots} ignoredLots={config.ignoredLots} />
         </>
       )}
 

@@ -266,6 +266,25 @@ describe("maybeScanUnicorn", () => {
     expect((await loadState()).lastError).toContain("Signature has expired");
   });
 
+  it("never alerts on or stores a dismissed lot, even when it still matches a term", async () => {
+    const weller = { id: 1, title: "Weller 12 Year", url: "/lots/1", current_bid: 100 };
+    const decoy = { id: 2, title: "Weller-branded glassware", url: "/lots/2", current_bid: 15 };
+    await saveConfig({ ...CONFIG, ignoredLots: [{ id: "2", title: "Weller-branded glassware", at: "" }] });
+
+    // Baseline, then a real scan.
+    const over = { fetchImpl: fetchFromPages({ "1": lotsPage([weller, decoy]) }) };
+    await maybeScanUnicorn(ctx(), over);
+    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {} }));
+    sent = [];
+    await maybeScanUnicorn(ctx(), { ...over, intervalMs: 0 });
+
+    const state = await loadState();
+    expect(Object.keys(state.lots)).toEqual(["1"]); // the decoy is never stored
+    expect(state.rawLotCount).toBe(2); // but it was still scanned
+    expect(sent).toHaveLength(1);
+    expect(sent[0]!.alert.product.title).toContain("Weller 12 Year");
+  });
+
   it("sends browser-coherent headers — a POST with no User-Agent is itself a bot tell", async () => {
     await saveConfig({ format: "graphql", pageDelayMs: 0, terms: [{ term: "weller" }] });
     let headers: Record<string, string> = {};

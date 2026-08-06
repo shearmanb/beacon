@@ -247,7 +247,10 @@ export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrid
 
     log(`[unicorn] Scanning (${config.terms.length} term(s))...`);
     const lots = await fetchAllLots(config, headers, controller.signal, over, log);
-    const matches = matchLots(lots, config.terms);
+    // Dismissed false positives never become matches: no alert, no stored lot,
+    // no row on the dashboard.
+    const ignoredIds = new Set(config.ignoredLots.map((l) => l.id));
+    const matches = matchLots(lots, config.terms, { ignoredIds });
 
     const now = new Date().toISOString();
     const nextLots: Record<string, UnicornStoredLot> = {};

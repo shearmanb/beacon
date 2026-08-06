@@ -88,6 +88,19 @@ export const unicornConfigSchema = z.object({
   maxPages: z.number().int().min(1).max(200).default(80),
   pageDelayMs: z.number().int().min(0).max(10_000).default(400),
   terms: z.array(unicornTermSchema).default([]),
+  /** False-positive lots the operator has dismissed. Kept in CONFIG rather than
+   *  scan state so the decision survives a re-baseline, and stored with the
+   *  title so the un-ignore list is readable. Lot ids are per-auction, so this
+   *  is capped when written (see the ignoreUnicornLot action). */
+  ignoredLots: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        title: z.string().default(""),
+        at: z.string().default(""),
+      }),
+    )
+    .default([]),
   /** Secrets-table ref for a session cookie, if the listing needs login. */
   cookieRef: z.string().optional(),
   /** Extra request headers (e.g. an API key header), stored as plain config. */
@@ -572,11 +585,16 @@ export interface UnicornMatch {
   matchedTerms: string[];
 }
 
-export function matchLots(lots: UnicornLot[], terms: UnicornTerm[]): UnicornMatch[] {
+export function matchLots(
+  lots: UnicornLot[],
+  terms: UnicornTerm[],
+  opts: { ignoredIds?: ReadonlySet<string> } = {},
+): UnicornMatch[] {
   const active = terms.filter((t) => t.term.trim().length > 0 && (t.inName || t.inDesc));
   if (active.length === 0) return [];
   const out: UnicornMatch[] = [];
   for (const lot of lots) {
+    if (opts.ignoredIds?.has(lot.id)) continue;
     const hasDesc = typeof lot.description === "string" && lot.description.trim().length > 0;
     const matched: string[] = [];
     for (const t of active) {
