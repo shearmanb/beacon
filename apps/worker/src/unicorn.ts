@@ -17,10 +17,11 @@
 //   • The daily stamp is written BEFORE the fetch (harvest precedent), so even
 //     a crash-looping worker attempts at most once per interval.
 
-import { httpGet, httpPost } from "@beacon/fetch";
+import { httpGet, httpPost, identityForHost } from "@beacon/fetch";
 import {
   buildGraphqlBody,
   descriptionCoverage,
+  estimateAllInDollars,
   matchLots,
   parseUnicornListing,
   parseUnicornScanState,
@@ -33,7 +34,6 @@ import {
   type UnicornScanState,
   type UnicornStoredLot,
 } from "@beacon/core";
-import { identityForHost } from "@beacon/fetch";
 import { jitter, sleep, type Alert } from "@beacon/shared";
 import type { RunContext } from "./run.js";
 
@@ -158,9 +158,34 @@ async function fetchAllLots(
   return [...byId.values()];
 }
 
-function buildAlert(match: UnicornMatch): Alert {
-  const { lot, matchedTerms } = match;
-  const bid = lot.currentBidDollars != null ? `$${lot.currentBidDollars.toLocaleString("en-US")}` : "no bid data";
+const money = (n: number): string => `$${Math.round(n).toLocaleString("en-US")}`;
+
+function buildAlert(match: UnicornMatch, config: UnicornConfig): Alert {
+  const { lot, matchedTerms, bottleIds } = match;
+  const bid = lot.currentBidDollars != null ? money(lot.currentBidDollars) : "no bid yet";
+  let note = `Unicorn Auctions match on "${matchedTerms.join('", "')}" — current bid ${bid}.`;
+
+  // When the keyword is linked to a target bottle, put the price discipline in
+  // the alert itself: the walk-away hammer, what the current bid really costs
+  // delivered, and whether it's already past the line. That decision is the
+  // whole point of tracking max hammer, and it should not require opening a
+  // spreadsheet on a phone.
+  const bottles = config.bottles.filter((b) => bottleIds.includes(b.id));
+  for (const b of bottles) {
+    const label = [b.rank, b.name].filter(Boolean).join(" · ");
+    note += `\n\n🎯 Target: ${label}`;
+    if (b.maxHammerDollars != null) {
+      note += `\nMax hammer ${money(b.maxHammerDollars)} (≈ ${money(estimateAllInDollars(b.maxHammerDollars, config.fees))} delivered)`;
+      if (lot.currentBidDollars != null) {
+        const allIn = estimateAllInDollars(lot.currentBidDollars, config.fees);
+        note +=
+          lot.currentBidDollars > b.maxHammerDollars
+            ? `\n⛔ Already ABOVE your max — bid is ${money(lot.currentBidDollars)} (≈ ${money(allIn)} delivered).`
+            : `\n✅ Under your max — currently ≈ ${money(allIn)} delivered, ${money(b.maxHammerDollars - lot.currentBidDollars)} of room left.`;
+      }
+    }
+    if (b.notes.trim()) note += `\n📝 ${b.notes.trim()}`;
+  }
   return {
     type: "new_product",
     product: {
@@ -169,7 +194,7 @@ function buildAlert(match: UnicornMatch): Alert {
       url: lot.url,
       minPrice: lot.currentBidDollars,
       image: lot.image ?? null,
-      note: `Unicorn Auctions match on "${matchedTerms.join('", "')}" — current bid ${bid}.`,
+      note,
     },
   };
 }
@@ -264,6 +289,7 @@ export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrid
         currentBidDollars: m.lot.currentBidDollars,
         image: m.lot.image ?? null,
         matchedTerms: m.matchedTerms,
+        bottleIds: m.bottleIds,
         firstSeenAt: prev?.firstSeenAt ?? now,
       };
     }
@@ -272,7 +298,7 @@ export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrid
     // "new" to an empty memory, and a term-list that already matches 30 live
     // lots shouldn't flood Discord on setup day.
     const firstScan = state.lastScanAt === null && Object.keys(state.lots).length === 0;
-    const alerts = firstScan ? [] : newMatches.map(buildAlert);
+    const alerts = firstScan ? [] : newMatches.map((m) => buildAlert(m, config));
 
     if (alerts.length > 0) {
       try {

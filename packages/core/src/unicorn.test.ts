@@ -3,6 +3,7 @@ import {
   buildGraphqlBody,
   defaultUnicornConfig,
   descriptionCoverage,
+  estimateAllInDollars,
   matchLots,
   parseUnicornListing,
   parseUnicornScanState,
@@ -304,6 +305,49 @@ describe("config + state", () => {
     const good = parseUnicornScanState('{"lastScanAt":"2026-08-01T00:00:00Z","lots":{"a":{"title":"t"}}}');
     expect(good.lastScanAt).toBe("2026-08-01T00:00:00Z");
     expect(Object.keys(good.lots)).toEqual(["a"]);
+  });
+});
+
+describe("bottles + fee model", () => {
+  it("carries the linked bottle through matching", () => {
+    const lots: UnicornLot[] = [
+      { id: "1", title: "Virgin Bourbon 7 Year 101", url: "u", currentBidDollars: 95 },
+      { id: "2", title: "Baker's 7 Year 107", url: "u", currentBidDollars: 300 },
+      { id: "3", title: "Something else entirely", url: "u", currentBidDollars: 10 },
+    ];
+    const matches = matchLots(lots, [
+      { term: "virgin bourbon", inName: true, inDesc: false, bottleId: "a4" },
+      { term: "baker's", inName: true, inDesc: false, bottleId: "a1" },
+      { term: "7 year", inName: true, inDesc: false }, // deliberately unlinked
+    ]);
+    expect(matches.find((m) => m.lot.id === "1")!.bottleIds).toEqual(["a4"]);
+    expect(matches.find((m) => m.lot.id === "2")!.bottleIds).toEqual(["a1"]);
+    // An unlinked term still matches; it just contributes no bottle.
+    expect(matches.find((m) => m.lot.id === "1")!.matchedTerms).toContain("7 year");
+    expect(matches.map((m) => m.lot.id)).not.toContain("3");
+  });
+
+  it("estimates delivered cost: premium, then tax/CC fee, then shipping", () => {
+    const fees = { buyerPremiumPct: 15, salesTaxPct: 10.25, shippingDollars: 25 };
+    // The operator's own reference point: a $375 hammer is the ~$500 ceiling.
+    expect(Math.round(estimateAllInDollars(375, fees))).toBe(500);
+    expect(Math.round(estimateAllInDollars(225, fees))).toBe(310);
+    // Order matters — tax applies to the premium-inclusive subtotal, and
+    // shipping is not taxed.
+    expect(estimateAllInDollars(100, fees)).toBeCloseTo(100 * 1.15 * 1.1025 + 25, 6);
+    expect(estimateAllInDollars(0, fees)).toBe(25);
+  });
+
+  it("validates a bottle with defaults and rejects a nameless one", () => {
+    const ok = validateUnicornConfig({
+      bottles: [{ id: "a1", name: "Early Baker's 7 Year", maxHammerDollars: 225 }],
+    });
+    expect(ok.ok).toBe(true);
+    const b = ok.config!.bottles[0]!;
+    expect(b).toMatchObject({ rank: "", why: "", notes: "", links: [], targetLowDollars: null });
+    expect(ok.config!.fees).toEqual({ buyerPremiumPct: 15, salesTaxPct: 10.25, shippingDollars: 25 });
+
+    expect(validateUnicornConfig({ bottles: [{ id: "x", name: "" }] }).ok).toBe(false);
   });
 });
 

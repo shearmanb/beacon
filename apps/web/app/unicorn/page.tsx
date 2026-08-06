@@ -14,6 +14,7 @@ import {
 import { UnicornControls } from "../../components/UnicornControls";
 import { UnicornTerms } from "../../components/UnicornTerms";
 import { UnicornLots } from "../../components/UnicornLots";
+import { UnicornBottles } from "../../components/UnicornBottles";
 import { UnicornSandbox } from "../../components/UnicornSandbox";
 
 export const dynamic = "force-dynamic";
@@ -48,8 +49,17 @@ export default async function UnicornPage() {
   }
 
   const lots = Object.entries(state.lots)
-    .map(([id, lot]) => ({ id, ...lot }))
+    .map(([id, lot]) => ({ ...lot, id, bottleIds: lot.bottleIds ?? [] }))
     .sort((a, b) => (a.firstSeenAt < b.firstSeenAt ? 1 : -1));
+  const bottles = config?.bottles ?? [];
+  const fees = config?.fees ?? { buyerPremiumPct: 15, salesTaxPct: 10.25, shippingDollars: 25 };
+  // How many keywords point at each bottle — surfaces a bottle nobody is
+  // actually hunting for, which is the failure mode of this whole linkage.
+  const termCountByBottle: Record<string, number> = {};
+  for (const t of config?.terms ?? []) {
+    if (t.bottleId) termCountByBottle[t.bottleId] = (termCountByBottle[t.bottleId] ?? 0) + 1;
+  }
+  const unlinkedTerms = (config?.terms ?? []).filter((t) => !t.bottleId).length;
   const anyDescTerms = (config?.terms ?? []).some((t) => t.inDesc);
   const descBlind = anyDescTerms && state.rawLotCount > 0 && state.descCoverage === 0;
 
@@ -115,6 +125,29 @@ export default async function UnicornPage() {
             forceScanPending={state.forceScanRequested === true}
           />
 
+          <div className="sect-hd" style={{ marginTop: 18 }}>
+            <h2>Target bottles</h2>
+            <span className="rule" />
+            <span className="muted mono" style={{ fontSize: 12 }}>
+              {bottles.length}
+            </span>
+          </div>
+          <UnicornBottles bottles={bottles} fees={fees} termCountByBottle={termCountByBottle} />
+
+          {config.notes.trim() && (
+            <details className="card" style={{ marginTop: 10 }}>
+              <summary className="hint" style={{ cursor: "pointer" }}>
+                Buying rules
+              </summary>
+              <pre
+                className="hint"
+                style={{ marginTop: 8, whiteSpace: "pre-wrap", fontFamily: "inherit" }}
+              >
+                {config.notes}
+              </pre>
+            </details>
+          )}
+
           {/* Collapsed once terms exist — day to day this page is for reading
               matches, not editing the watchlist. Open by default while empty so
               first-time setup is obvious. */}
@@ -123,12 +156,13 @@ export default async function UnicornPage() {
               <h3 style={{ display: "inline" }}>
                 Watch terms{" "}
                 <span className="muted mono" style={{ fontSize: 12, fontWeight: "normal" }}>
-                  ({config.terms.length})
+                  ({config.terms.length}
+                  {unlinkedTerms > 0 && bottles.length > 0 ? `, ${unlinkedTerms} unlinked` : ""})
                 </span>
               </h3>
             </summary>
             <div style={{ marginTop: 8 }}>
-              <UnicornTerms terms={config.terms} />
+              <UnicornTerms terms={config.terms} bottles={bottles} />
             </div>
           </details>
 
@@ -139,7 +173,7 @@ export default async function UnicornPage() {
               {state.lastScanAt ? `${lots.length} live` : "waiting on the first scan"}
             </span>
           </div>
-          <UnicornLots lots={lots} ignoredLots={config.ignoredLots} />
+          <UnicornLots lots={lots} ignoredLots={config.ignoredLots} bottles={bottles} fees={fees} />
         </>
       )}
 

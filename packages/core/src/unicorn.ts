@@ -32,7 +32,55 @@ export const unicornTermSchema = z.object({
   /** Match against the lot description (degrades to name-only when the listing
    *  feed carries no description text — see matchLots). */
   inDesc: z.boolean().default(false),
+  /** Which bottle this keyword is hunting for. Optional so a term can exist
+   *  before its bottle does (and so existing terms keep working), but the
+   *  dashboard nudges you to link them. */
+  bottleId: z.string().optional(),
 });
+
+/** A target bottle: the research, the price discipline, and the notes. Keywords
+ *  point at these, so a lot inherits "which bottle am I actually hunting" and
+ *  the walk-away price that goes with it. */
+export const unicornBottleSchema = z.object({
+  id: z.string().min(1),
+  /** Free-form priority label (A1, A2, …) — sorts the list, no semantics. */
+  rank: z.string().default(""),
+  name: z.string().min(1),
+  /** Why this bottle fits — the research note behind the target. */
+  why: z.string().default(""),
+  /** Sensible all-in target range, in dollars (delivered, not hammer). */
+  targetLowDollars: z.number().nullable().default(null),
+  targetHighDollars: z.number().nullable().default(null),
+  /** The walk-away number: the highest HAMMER price still worth bidding, after
+   *  which fees push the delivered cost past the ceiling. */
+  maxHammerDollars: z.number().nullable().default(null),
+  notes: z.string().default(""),
+  links: z
+    .array(z.object({ label: z.string().default(""), url: z.string() }))
+    .default([]),
+});
+
+/** Auction cost model. Unicorn's hammer price is not what you pay — a 15%
+ *  buyer's premium, then sales tax on the total, then shipping. Configurable
+ *  because every one of those numbers can change. */
+export const unicornFeesSchema = z
+  .object({
+    buyerPremiumPct: z.number().min(0).default(15),
+    salesTaxPct: z.number().min(0).default(10.25),
+    shippingDollars: z.number().min(0).default(25),
+  })
+  .default({});
+
+export type UnicornBottle = z.infer<typeof unicornBottleSchema>;
+export type UnicornFees = z.infer<typeof unicornFeesSchema>;
+
+/** Hammer price -> estimated delivered cost. Premium first, then tax on the
+ *  premium-inclusive subtotal, then shipping (verified against the operator's
+ *  own reference point: a $375 hammer lands at ~$500 delivered). */
+export function estimateAllInDollars(hammerDollars: number, fees: UnicornFees): number {
+  const withPremium = hammerDollars * (1 + fees.buyerPremiumPct / 100);
+  return withPremium * (1 + fees.salesTaxPct / 100) + fees.shippingDollars;
+}
 
 export const unicornConfigSchema = z.object({
   enabled: z.boolean().default(true),
@@ -88,6 +136,11 @@ export const unicornConfigSchema = z.object({
   maxPages: z.number().int().min(1).max(200).default(80),
   pageDelayMs: z.number().int().min(0).max(10_000).default(400),
   terms: z.array(unicornTermSchema).default([]),
+  /** Target bottles. Keywords link to these for organization + price discipline. */
+  bottles: z.array(unicornBottleSchema).default([]),
+  fees: unicornFeesSchema,
+  /** Free-text buying rules / general discipline notes shown on the page. */
+  notes: z.string().default(""),
   /** False-positive lots the operator has dismissed. Kept in CONFIG rather than
    *  scan state so the decision survives a re-baseline, and stored with the
    *  title so the un-ignore list is readable. Lot ids are per-auction, so this
@@ -136,6 +189,8 @@ export interface UnicornStoredLot {
   currentBidDollars: number | null;
   image?: string | null;
   matchedTerms: string[];
+  /** Target bottles this lot is a candidate for (via its matching keywords). */
+  bottleIds?: string[];
   firstSeenAt: string;
 }
 
@@ -583,6 +638,8 @@ export function termMatches(term: string, text: string): boolean {
 export interface UnicornMatch {
   lot: UnicornLot;
   matchedTerms: string[];
+  /** Bottles the matching terms point at (deduped, usually one). */
+  bottleIds: string[];
 }
 
 export function matchLots(
@@ -597,6 +654,7 @@ export function matchLots(
     if (opts.ignoredIds?.has(lot.id)) continue;
     const hasDesc = typeof lot.description === "string" && lot.description.trim().length > 0;
     const matched: string[] = [];
+    const bottleIds = new Set<string>();
     for (const t of active) {
       // A desc-only term degrades to name matching when the feed has no
       // description for this lot — better a name hit than silent blindness.
@@ -604,9 +662,12 @@ export function matchLots(
       const hit =
         (checkName && termMatches(t.term, lot.title)) ||
         (t.inDesc && hasDesc && termMatches(t.term, lot.description!));
-      if (hit) matched.push(t.term);
+      if (hit) {
+        matched.push(t.term);
+        if (t.bottleId) bottleIds.add(t.bottleId);
+      }
     }
-    if (matched.length > 0) out.push({ lot, matchedTerms: matched });
+    if (matched.length > 0) out.push({ lot, matchedTerms: matched, bottleIds: [...bottleIds] });
   }
   return out;
 }

@@ -379,6 +379,31 @@ export async function updateUnicornConfig(patch: Record<string, unknown>): Promi
  *  this list would grow forever. Oldest entries fall off first. */
 const MAX_IGNORED_LOTS = 500;
 
+/** Replace the target-bottle list (add / edit / remove all go through here).
+ *  Terms referencing a removed bottle are unlinked rather than left dangling. */
+export async function updateUnicornBottles(bottles: unknown[]): Promise<UnicornActionResult> {
+  const store = await getStore();
+  const raw = await store.meta.get(UNICORN_CONFIG_META_KEY);
+  if (!raw) return { ok: false, error: "Unicorn watcher is not configured yet." };
+  let existing: Record<string, unknown>;
+  try {
+    existing = JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    return { ok: false, error: "Stored config is not valid JSON — fix it in the fetch recipe editor." };
+  }
+
+  const liveIds = new Set(bottles.map((b) => (b as { id?: string }).id).filter(Boolean));
+  const terms = ((existing["terms"] as Array<Record<string, unknown>> | undefined) ?? []).map((t) =>
+    t["bottleId"] && !liveIds.has(t["bottleId"] as string) ? { ...t, bottleId: undefined } : t,
+  );
+
+  const validated = validateUnicornConfig({ ...existing, bottles, terms });
+  if (!validated.ok) return { ok: false, error: validated.error ?? "Invalid bottle list" };
+  await store.meta.set(UNICORN_CONFIG_META_KEY, JSON.stringify(validated.config));
+  revalidatePath("/unicorn");
+  return { ok: true };
+}
+
 /**
  * Dismiss a false-positive lot (or restore one). Ignored lots are filtered out
  * before matching, so they never alert again. The lot is also dropped from scan

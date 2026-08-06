@@ -266,6 +266,47 @@ describe("maybeScanUnicorn", () => {
     expect((await loadState()).lastError).toContain("Signature has expired");
   });
 
+  it("puts the target bottle and the walk-away verdict in the Discord alert", async () => {
+    await saveConfig({
+      ...CONFIG,
+      terms: [{ term: "virgin bourbon", inName: true, inDesc: false, bottleId: "a4" }],
+      bottles: [
+        {
+          id: "a4",
+          rank: "A4",
+          name: "Virgin Bourbon 7 Year, 101 proof",
+          maxHammerDollars: 175,
+          notes: "Best actual buy (B1).",
+        },
+      ],
+    });
+    const page = (bid: number) =>
+      lotsPage([{ id: 1, title: "Virgin Bourbon 7 Year 101 (1990s)", url: "/lots/1", current_bid: bid }]);
+
+    // Baseline, clear stored lots, then a real scan under the max.
+    await maybeScanUnicorn(ctx(), { fetchImpl: fetchFromPages({ "1": page(95) }) });
+    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {} }));
+    sent = [];
+    await maybeScanUnicorn(ctx(), { intervalMs: 0, fetchImpl: fetchFromPages({ "1": page(95) }) });
+
+    let note = sent[0]!.alert.product.note!;
+    expect(note).toContain("A4 · Virgin Bourbon 7 Year, 101 proof");
+    expect(note).toContain("Max hammer $175");
+    expect(note).toContain("✅ Under your max");
+    expect(note).toContain("$80 of room left"); // 175 - 95
+    expect(note).toContain("Best actual buy (B1).");
+
+    // Now above the max hammer.
+    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {} }));
+    sent = [];
+    await maybeScanUnicorn(ctx(), { intervalMs: 0, fetchImpl: fetchFromPages({ "1": page(400) }) });
+    note = sent[0]!.alert.product.note!;
+    expect(note).toContain("⛔ Already ABOVE your max");
+    expect(note).toContain("$532 delivered"); // 400 * 1.15 * 1.1025 + 25
+
+    expect((await loadState()).lots["1"]!.bottleIds).toEqual(["a4"]);
+  });
+
   it("never alerts on or stores a dismissed lot, even when it still matches a term", async () => {
     const weller = { id: 1, title: "Weller 12 Year", url: "/lots/1", current_bid: 100 };
     const decoy = { id: 2, title: "Weller-branded glassware", url: "/lots/2", current_bid: 15 };

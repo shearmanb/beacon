@@ -285,6 +285,8 @@ a:hover {
   border: 1px solid var(--line);
   border-radius: 4px;
   padding: 1px 5px;
+  display: inline-block; /* same fragmenting guard as .pill */
+  white-space: nowrap;
 }
 
 /* controls */
@@ -353,6 +355,12 @@ a:hover {
   padding: 1px 7px;
   border-radius: 999px;
   border: 1px solid var(--line2);
+  /* inline-block + nowrap so a multi-word value stays ONE chip. As a plain
+     inline span, a wrapping label ("virgin bourbon") draws a border around
+     each fragment and reads as two separate chips — which made one keyword
+     look like two on a phone. */
+  display: inline-block;
+  white-space: nowrap;
 }
 .pill.yes {
   color: var(--ok);
