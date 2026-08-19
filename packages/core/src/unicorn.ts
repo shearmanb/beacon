@@ -16,6 +16,7 @@
 // Discovery (which branch + listingPath) is a dashboard edit, not a deploy.
 
 import { z } from "zod";
+import { normalizeLotTitle } from "@beacon/shared";
 
 // Meta-table keys — the module's entire storage footprint.
 export const UNICORN_CONFIG_META_KEY = "unicorn_config";
@@ -74,13 +75,10 @@ export const unicornFeesSchema = z
 export type UnicornBottle = z.infer<typeof unicornBottleSchema>;
 export type UnicornFees = z.infer<typeof unicornFeesSchema>;
 
-/** Hammer price -> estimated delivered cost. Premium first, then tax on the
- *  premium-inclusive subtotal, then shipping (verified against the operator's
- *  own reference point: a $375 hammer lands at ~$500 delivered). */
-export function estimateAllInDollars(hammerDollars: number, fees: UnicornFees): number {
-  const withPremium = hammerDollars * (1 + fees.buyerPremiumPct / 100);
-  return withPremium * (1 + fees.salesTaxPct / 100) + fees.shippingDollars;
-}
+// The fee math itself lives in @beacon/shared so the dashboard's CLIENT
+// components can import it (this module is server-side — core pulls in the
+// fetch layer). Re-exported here so existing importers keep working.
+export { estimateAllInDollars, normalizeLotTitle } from "@beacon/shared";
 
 export const unicornConfigSchema = z.object({
   enabled: z.boolean().default(true),
@@ -192,6 +190,10 @@ export interface UnicornStoredLot {
   /** Target bottles this lot is a candidate for (via its matching keywords). */
   bottleIds?: string[];
   firstSeenAt: string;
+  /** How many identical-title lots this row stands for in the current auction
+   *  (1 = just itself). Unicorn routinely runs 20+ separate lots of the same
+   *  release; they collapse to one row and one alert. */
+  duplicateLots?: number;
 }
 
 export interface UnicornScanState {
@@ -212,6 +214,12 @@ export interface UnicornScanState {
   descCoverage: number;
   /** Matched lots only — the whole auction roster is never stored. */
   lots: Record<string, UnicornStoredLot>;
+  /** Cross-auction alert memory: normalized lot title -> last time we ALERTED
+   *  on it. Lot ids are per-auction, so `lots` (keyed by id) forgets everything
+   *  at the weekly rollover and every matched bottle re-alerts as new. This is
+   *  the equivalent of the site pipeline's `recentlySeen` guard. Pruned to
+   *  SEEN_TITLE_WINDOW and capped. */
+  seenTitles?: Record<string, string>;
 }
 
 export function emptyUnicornScanState(): UnicornScanState {
@@ -223,6 +231,7 @@ export function emptyUnicornScanState(): UnicornScanState {
     rawLotCount: 0,
     descCoverage: 0,
     lots: {},
+    seenTitles: {},
   };
 }
 
@@ -232,7 +241,12 @@ export function parseUnicornScanState(raw: string | null | undefined): UnicornSc
   try {
     const data = JSON.parse(raw) as Partial<UnicornScanState>;
     if (typeof data !== "object" || data === null || Array.isArray(data)) return emptyUnicornScanState();
-    return { ...emptyUnicornScanState(), ...data, lots: data.lots && typeof data.lots === "object" ? data.lots : {} };
+    return {
+      ...emptyUnicornScanState(),
+      ...data,
+      lots: data.lots && typeof data.lots === "object" ? data.lots : {},
+      seenTitles: data.seenTitles && typeof data.seenTitles === "object" ? data.seenTitles : {},
+    };
   } catch {
     return emptyUnicornScanState();
   }
@@ -645,13 +659,17 @@ export interface UnicornMatch {
 export function matchLots(
   lots: UnicornLot[],
   terms: UnicornTerm[],
-  opts: { ignoredIds?: ReadonlySet<string> } = {},
+  opts: { ignoredIds?: ReadonlySet<string>; ignoredTitles?: ReadonlySet<string> } = {},
 ): UnicornMatch[] {
   const active = terms.filter((t) => t.term.trim().length > 0 && (t.inName || t.inDesc));
   if (active.length === 0) return [];
   const out: UnicornMatch[] = [];
   for (const lot of lots) {
+    // Ignore by id AND by normalized title: lot ids are per-auction, so an
+    // id-only ignore silently expired at the weekly rollover and the dismissed
+    // false positive came back every week.
     if (opts.ignoredIds?.has(lot.id)) continue;
+    if (opts.ignoredTitles?.has(normalizeLotTitle(lot.title))) continue;
     const hasDesc = typeof lot.description === "string" && lot.description.trim().length > 0;
     const matched: string[] = [];
     const bottleIds = new Set<string>();

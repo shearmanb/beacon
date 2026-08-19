@@ -7,6 +7,7 @@
 // am I willing to pay".
 
 import { useState, useTransition } from "react";
+import { estimateAllInDollars, type AuctionFees } from "@beacon/shared";
 import { updateUnicornBottles, updateUnicornConfig } from "../app/actions";
 import { STARTER_BOTTLES, STARTER_NOTES } from "../lib/unicorn-starter";
 
@@ -22,17 +23,12 @@ export interface BottleRow {
   links: Array<{ label: string; url: string }>;
 }
 
-export interface FeeModel {
-  buyerPremiumPct: number;
-  salesTaxPct: number;
-  shippingDollars: number;
-}
+// Shared with the worker + the lots table — see @beacon/shared/auction.
+export type FeeModel = AuctionFees;
 
 const money = (n: number): string => `$${Math.round(n).toLocaleString("en-US")}`;
 
-function allIn(hammer: number, fees: FeeModel): number {
-  return hammer * (1 + fees.buyerPremiumPct / 100) * (1 + fees.salesTaxPct / 100) + fees.shippingDollars;
-}
+const allIn = estimateAllInDollars;
 
 const num = (v: string): number | null => {
   const t = v.trim();

@@ -50,6 +50,36 @@ const SYSTEMIC_MIN_SITES = 2;
 const TIGHT_INTERVAL_MIN = 15;
 const TIGHT_COOLDOWN_CAP_MS = 15 * 60_000;
 
+// ── Quarantine (2026-08-14) ──────────────────────────────────────────────────
+// A site that is BROKEN, not blocked — a 404 on a moved product page, a dead
+// paid API — never recovers on its own, and the alerting was built on the
+// assumption that failure is temporary. `cgf` reached 458 consecutive HTTP 404s
+// and `sharedpour_browser` 362 consecutive HTTP 402s (Browserbase billing):
+// each re-paged daily forever, and — worse — poisoned the aggregate signals,
+// since one permanently-dead site plus one transient failure satisfies
+// "every checked site failed this pass" and fires a false system_degraded.
+// After this many failures AND this long without a success, disable the site
+// with one clear page. Deliberately generous: a genuinely blocked host that
+// keeps 429ing recovers long before it trips this.
+const QUARANTINE_MIN_FAILURES = 25;
+const QUARANTINE_MIN_AGE_MS = 72 * 3_600_000;
+
+// ── Cross-site duplicate suppression (2026-08-14) ────────────────────────────
+// Four checkers watch sharedpour.com (t8ke, t8ke_all, reveries, provenance)
+// with overlapping rosters, so one drop paged four times (Aug 7, "The Eleventh
+// Hour"). Each site keeps its own tile, its own filters and its own alert
+// flags — nothing is consolidated away — but the same product on the same host
+// only reaches Discord once inside this window. Per-site opt-out:
+// `alerts.dedupeAcrossSites: false`.
+const CROSS_SITE_DEDUPE_MS = 60 * 60_000;
+const DEDUPE_KEYS_CAP = 400;
+const DEDUPE_META_KEY = "recent_alert_keys";
+// Above this many product alerts from ONE site in ONE pass, Discord gets a
+// single digest embed instead of N. History keeps every row either way.
+const SITE_DIGEST_THRESHOLD = 6;
+const DIGEST_MAX_LINES = 25;
+const PRODUCT_ALERT_TYPES = new Set(["new_product", "restock", "sold_out"]);
+
 // Site IDs we've already alerted about a config/adapter problem this process, so
 // the warning fires once per start instead of every ~60s loop.
 const warnedConfigSiteIds = new Set<string>();
@@ -162,6 +192,16 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     await maybeMirrorHistory({ store, dryRun, log });
   } catch (err) {
     log(`History mirror error (continuing): ${(err as Error).message}`);
+  }
+
+  // Daily OFF-BOX backup: site config, schedules, hand-curated meta blobs and
+  // product baselines pushed to the repo, so a lost Railway volume is
+  // recoverable (the on-volume snapshots live on the volume that just died).
+  try {
+    const { maybeBackupConfig } = await import("./backup-mirror.js");
+    await maybeBackupConfig({ store, dryRun, log });
+  } catch (err) {
+    log(`Config backup error (continuing): ${(err as Error).message}`);
   }
 
   // Unicorn Auctions watcher: ISOLATED side-job with its own meta storage,
@@ -301,6 +341,7 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     if (!dryRun) {
       await store.state.save(def.id, outcome.newState);
       if (outcome.events.length) await store.history.append(def.id, outcome.events);
+      if (await maybeQuarantine(ctx, def, outcome)) continue; // disabled + paged; skip the rest
     }
     results.push({ def, outcome });
 
@@ -321,6 +362,51 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
   await dispatch(ctx, results, baseDeps);
 
   return { anyImminentActive, checked };
+}
+
+// Auto-disable a site that has been failing the same way for days (2a). Returns
+// true when the site was quarantined this pass, so the caller drops it from the
+// pass results — a dead site must not count toward systemic-failure detection
+// or the host rollup, which is half of what made it harmful.
+async function maybeQuarantine(ctx: RunContext, def: SiteDefinition, outcome: SiteOutcome): Promise<boolean> {
+  const { store, channel, log = () => {} } = ctx;
+  if (outcome.ok) return false;
+  const failures = (outcome.newState.consecutiveErrors as number | undefined) ?? 0;
+  const since = outcome.newState.errorStreakSince as string | undefined;
+  if (failures < QUARANTINE_MIN_FAILURES) return false;
+  // No streak stamp yet (state written before this field existed) — start the
+  // clock now rather than quarantining on failure count alone.
+  if (!since) {
+    await store.state.save(def.id, { ...outcome.newState, errorStreakSince: new Date().toISOString() });
+    return false;
+  }
+  if (Date.now() - Date.parse(since) < QUARANTINE_MIN_AGE_MS) return false;
+
+  const days = Math.round((Date.now() - Date.parse(since)) / 86_400_000);
+  const lastError = (outcome.newState.lastError as string | undefined) ?? "unknown error";
+  await store.sites.upsert({ ...def, enabled: false });
+  const event: Alert = {
+    type: "site_error",
+    product: {
+      title: def.name,
+      url: sourceUrl(def),
+      note:
+        `⏸ Monitoring PAUSED for this site: ${failures} consecutive failures over ${days} day(s) with the same ` +
+        `error — this is broken, not blocked, and a permanently-failing checker also corrupts the ` +
+        `"all sites failing" and host-block signals for everything else.\nLast error: ${lastError}\n\n` +
+        `Nothing else is affected. Fix the source (⚙ on the tile) or the URL, then re-enable the site on the dashboard.`,
+    },
+  };
+  await store.history.append(def.id, [event]);
+  log(`[${def.name}] QUARANTINED after ${failures} failures over ${days}d — site disabled.`);
+  if (channel) {
+    try {
+      await channel.send(def.name, event);
+    } catch (err) {
+      log(`  Discord quarantine error: ${(err as Error).message}`);
+    }
+  }
+  return true;
 }
 
 // Host-level pin propagation (feedback loop): rate limits and bot scores are
@@ -441,8 +527,33 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
     failingByHost.set(host, [...(failingByHost.get(host) ?? []), def.name]);
   }
 
+  // Cross-site duplicate memory (2b) + per-pass send bookkeeping (3c).
+  const dedupeKeys = await loadDedupeKeys(store);
+  let dedupeDirty = false;
+
   for (const { def, outcome } of results) {
+    // Digest gate (3c): one site producing a pile of product alerts in a single
+    // pass (a whole collection going live, a re-baseline) becomes ONE embed.
+    const productEvents = outcome.events.filter((ev) => PRODUCT_ALERT_TYPES.has(ev.type) && ev.quiet !== true);
+    if (channel && productEvents.length > SITE_DIGEST_THRESHOLD) {
+      log(`  → ${productEvents.length} product alerts from ${def.name} — sending one digest`);
+      try {
+        await channel.send(def.name, buildSiteDigest(def, productEvents));
+      } catch (err) {
+        log(`  Discord digest error: ${(err as Error).message}`);
+      }
+      for (const ev of productEvents) {
+        const key = alertKey(def, ev);
+        if (key) {
+          dedupeKeys[key] = new Date().toISOString();
+          dedupeDirty = true;
+        }
+      }
+    }
+    const digested = productEvents.length > SITE_DIGEST_THRESHOLD ? new Set(productEvents) : new Set<Alert>();
+
     for (const ev of outcome.events) {
+      if (digested.has(ev)) continue; // already covered by this site's digest
       // self_healed is self-healing telemetry, not a problem to act on: record it
       // to history + the dashboard (⛑ chips / fetchVia state) but never page
       // Discord. Operator's call (2026-07-19) — only genuine problems should ping.
@@ -452,6 +563,23 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
       const historyOnly = ev.type === "baseline" || ev.type === "self_healed" || ev.quiet === true;
       log(`  → ${ev.type}: ${ev.product.title}${historyOnly ? " (history only)" : ""}`);
       if (historyOnly || !channel) continue;
+
+      // Same product, same host, more than one checker watching it: page once
+      // (2b). Every tile still records it in history and still shows it — only
+      // the Discord duplicate is dropped. Checked here, after the history-only
+      // gate, so a suppressed event never consumes the key.
+      if (def.alerts.dedupeAcrossSites !== false) {
+        const key = alertKey(def, ev);
+        if (key) {
+          const seenAt = dedupeKeys[key];
+          if (seenAt && Date.now() - Date.parse(seenAt) < CROSS_SITE_DEDUPE_MS) {
+            log(`     (duplicate of an alert already sent for this host — not re-paged)`);
+            continue;
+          }
+          dedupeKeys[key] = new Date().toISOString();
+          dedupeDirty = true;
+        }
+      }
 
       let note = ev.product.note ?? "";
       if (ev.type === "site_error") {
@@ -483,4 +611,66 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
       }
     }
   }
+
+  if (dedupeDirty) await saveDedupeKeys(store, dedupeKeys);
+}
+
+// ── Cross-site dedupe helpers (2b) ───────────────────────────────────────────
+// Identity is host + product handle + alert type: the same bottle on the same
+// store, however many checkers happen to see it. Site-level events (site_error,
+// self_healed, …) are never deduped — those are per-checker facts.
+function alertKey(def: SiteDefinition, ev: Alert): string | null {
+  if (!PRODUCT_ALERT_TYPES.has(ev.type) || !ev.product.handle) return null;
+  const host = hostOf(def);
+  return host ? `${host}|${ev.product.handle}|${ev.type}` : null;
+}
+
+async function loadDedupeKeys(store: BeaconStore): Promise<Record<string, string>> {
+  const raw = await store.meta.get(DEDUPE_META_KEY);
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return {};
+    const cutoff = Date.now() - CROSS_SITE_DEDUPE_MS;
+    const out: Record<string, string> = {};
+    for (const [k, v] of Object.entries(parsed as Record<string, string>)) {
+      if (typeof v === "string" && Date.parse(v) >= cutoff) out[k] = v;
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
+async function saveDedupeKeys(store: BeaconStore, keys: Record<string, string>): Promise<void> {
+  const entries = Object.entries(keys);
+  const bounded =
+    entries.length > DEDUPE_KEYS_CAP
+      ? Object.fromEntries(entries.sort((a, b) => Date.parse(b[1]) - Date.parse(a[1])).slice(0, DEDUPE_KEYS_CAP))
+      : keys;
+  try {
+    await store.meta.set(DEDUPE_META_KEY, JSON.stringify(bounded));
+  } catch {
+    /* best-effort: a failed write only costs a duplicate ping */
+  }
+}
+
+/** One embed standing in for a batch of this site's product alerts (3c). */
+function buildSiteDigest(def: SiteDefinition, events: Alert[]): Alert {
+  const label = (t: string): string => (t === "new_product" ? "NEW" : t === "restock" ? "BACK" : "GONE");
+  const lines = events
+    .slice(0, DIGEST_MAX_LINES)
+    .map((e) => `• [${label(e.type)}] ${e.product.title}${e.product.minPrice != null ? ` — $${e.product.minPrice}` : ""}`);
+  const extra = events.length - lines.length;
+  const kinds = [...new Set(events.map((e) => e.type))];
+  return {
+    type: kinds.length === 1 && kinds[0] === "new_product" ? "new_product" : "site_changed",
+    product: {
+      title: `${events.length} changes at ${def.name}`,
+      url: sourceUrl(def),
+      note:
+        `${lines.join("\n")}${extra > 0 ? `\n…and ${extra} more` : ""}\n\n` +
+        `Batched into one alert (more than ${SITE_DIGEST_THRESHOLD} at once) — full detail on the dashboard.`,
+    },
+  };
 }

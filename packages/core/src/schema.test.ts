@@ -11,7 +11,7 @@ describe("siteDefinitionSchema", () => {
       source: { kind: "shopify_rest", baseUrl: "https://sharedpour.com", collectionPath: "/collections/t8ke" },
     });
     expect(parsed.enabled).toBe(true); // default
-    expect(parsed.alerts).toEqual({ onNew: true, onRestock: true, onSoldOut: false, onSiteReset: true });
+    expect(parsed.alerts).toEqual({ onNew: true, onRestock: true, onSoldOut: false, onSiteReset: true, dedupeAcrossSites: true });
     expect(parsed.filters.titleContains).toEqual([]);
     expect(parsed.filters.availableOnly).toBe(false);
     expect(parsed.source.kind).toBe("shopify_rest");

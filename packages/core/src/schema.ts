@@ -27,6 +27,12 @@ export const alertFlagsSchema = z
     onRestock: z.boolean().default(true),
     onSoldOut: z.boolean().default(false),
     onSiteReset: z.boolean().default(true),
+    /** Page only once when several checkers on the SAME host see the same
+     *  product (overlapping rosters — e.g. four sharedpour.com watchers all
+     *  catching one drop). Every site keeps its own tile, filters and alert
+     *  flags; this only drops the duplicate Discord message. Set false on a
+     *  site you always want to hear from independently. */
+    dedupeAcrossSites: z.boolean().default(true),
   })
   .default({});
 

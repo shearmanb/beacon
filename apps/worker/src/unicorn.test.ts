@@ -226,7 +226,7 @@ describe("maybeScanUnicorn", () => {
     // Baseline, then a real scan so matches alert.
     await maybeScanUnicorn(ctx(), over);
     sent = [];
-    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {} }));
+    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {}, seenTitles: {} }));
     await maybeScanUnicorn(ctx(), { ...over, intervalMs: 0 });
 
     expect(posts.every((p) => p.url === "https://graphql.example.com/graphql")).toBe(true);
@@ -285,7 +285,7 @@ describe("maybeScanUnicorn", () => {
 
     // Baseline, clear stored lots, then a real scan under the max.
     await maybeScanUnicorn(ctx(), { fetchImpl: fetchFromPages({ "1": page(95) }) });
-    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {} }));
+    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {}, seenTitles: {} }));
     sent = [];
     await maybeScanUnicorn(ctx(), { intervalMs: 0, fetchImpl: fetchFromPages({ "1": page(95) }) });
 
@@ -297,7 +297,7 @@ describe("maybeScanUnicorn", () => {
     expect(note).toContain("Best actual buy (B1).");
 
     // Now above the max hammer.
-    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {} }));
+    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {}, seenTitles: {} }));
     sent = [];
     await maybeScanUnicorn(ctx(), { intervalMs: 0, fetchImpl: fetchFromPages({ "1": page(400) }) });
     note = sent[0]!.alert.product.note!;
@@ -315,7 +315,7 @@ describe("maybeScanUnicorn", () => {
     // Baseline, then a real scan.
     const over = { fetchImpl: fetchFromPages({ "1": lotsPage([weller, decoy]) }) };
     await maybeScanUnicorn(ctx(), over);
-    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {} }));
+    await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify({ ...(await loadState()), lots: {}, seenTitles: {} }));
     sent = [];
     await maybeScanUnicorn(ctx(), { ...over, intervalMs: 0 });
 
@@ -421,5 +421,77 @@ describe("maybeScanUnicorn", () => {
     expect(match?.title).toContain("Weller CYPB");
     const baseline = rows.find((r) => r.type === "baseline");
     expect(baseline?.siteId).toBe("unicorn_auctions");
+  });
+
+  // ── Cross-auction alert memory (2026-08-14) ───────────────────────────────
+  // Unicorn re-numbers every lot at the weekly rollover, so id-keyed memory
+  // forgot everything each Sunday: 90 pings for 46 distinct bottles in 5 days.
+  it("does not re-alert a bottle that comes back under a new lot id", async () => {
+    await saveConfig();
+    const scan = (id: number): UnicornScanOverrides => ({
+      intervalMs: 0,
+      fetchImpl: fetchFromPages({ "1": lotsPage([{ id, title: "Weller 12 Year", url: `/lots/${id}`, current_bid: 100 }]) }),
+    });
+    await maybeScanUnicorn(ctx(), scan(1)); // baseline
+    sent = [];
+    // Next week: same bottle, brand-new lot id — must stay quiet.
+    await maybeScanUnicorn(ctx(), scan(77));
+    expect(sent).toHaveLength(0);
+    expect(Object.keys((await loadState()).lots)).toEqual(["77"]); // still tracked
+  });
+
+  it("collapses duplicate listings of one bottle within a single scan", async () => {
+    await saveConfig();
+    const dupes = [1, 2, 3, 4].map((id) => ({ id, title: "Weller 12 Year", url: `/lots/${id}`, current_bid: 100 }));
+    await maybeScanUnicorn(ctx(), {
+      intervalMs: 0,
+      fetchImpl: fetchFromPages({ "1": lotsPage([{ id: 0, title: "Scotch", url: "/l/0" }]) }),
+    }); // baseline with no match
+    sent = [];
+    await maybeScanUnicorn(ctx(), { intervalMs: 0, fetchImpl: fetchFromPages({ "1": lotsPage(dupes) }) });
+
+    expect(sent).toHaveLength(1); // one bottle, one ping — not four
+    const state = await loadState();
+    expect(Object.keys(state.lots)).toEqual(["1"]);
+    expect(state.lots["1"]!.duplicateLots).toBe(4);
+  });
+
+  it("sends ONE digest embed when a scan turns up more new matches than the threshold", async () => {
+    await saveConfig({ ...CONFIG, terms: [{ term: "bourbon", inName: true, inDesc: false }] });
+    const many = Array.from({ length: 9 }, (_, i) => ({
+      id: i + 1,
+      title: `Bourbon Number ${i + 1}`,
+      url: `/lots/${i + 1}`,
+      current_bid: 50 + i,
+    }));
+    await maybeScanUnicorn(ctx(), {
+      intervalMs: 0,
+      fetchImpl: fetchFromPages({ "1": lotsPage([{ id: 0, title: "Scotch", url: "/l/0" }]) }),
+    }); // baseline
+    sent = [];
+    await maybeScanUnicorn(ctx(), { intervalMs: 0, fetchImpl: fetchFromPages({ "1": lotsPage(many) }) });
+
+    expect(sent).toHaveLength(1);
+    expect(sent[0]!.alert.product.title).toContain("9 new Unicorn matches");
+    expect(sent[0]!.alert.product.note).toContain("Bourbon Number 1");
+    // History still carries every individual match.
+    const rows = await store.history.recent(50);
+    expect(rows.filter((r) => r.type === "new_product")).toHaveLength(9);
+  });
+
+  it("keeps an ignored lot ignored after the auction re-numbers it", async () => {
+    await saveConfig({ ...CONFIG, ignoredLots: [{ id: "2", title: "Weller-branded glassware", at: "" }] });
+    const over: UnicornScanOverrides = {
+      intervalMs: 0,
+      fetchImpl: fetchFromPages({
+        // Same decoy, NEW id — the id-keyed ignore would have expired here.
+        "1": lotsPage([{ id: 501, title: "Weller-branded glassware", url: "/lots/501", current_bid: 15 }]),
+      }),
+    };
+    await maybeScanUnicorn(ctx(), over);
+    sent = [];
+    await maybeScanUnicorn(ctx(), over);
+    expect(sent).toHaveLength(0);
+    expect(Object.keys((await loadState()).lots)).toEqual([]);
   });
 });

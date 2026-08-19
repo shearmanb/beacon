@@ -5,3 +5,4 @@ export * from "./run.js";
 export * from "./loop.js";
 export * from "./identity-store.js";
 export * from "./env.js";
+export { restoreFromGithub, buildBackupBundle, type BackupBundle } from "./backup-mirror.js";

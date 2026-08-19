@@ -33,6 +33,10 @@ export function applyFilters(products: NormalizedProduct[], f: Filters): Normali
 
 export function toProductMap(products: NormalizedProduct[]): Record<string, NormalizedProduct> {
   const map: Record<string, NormalizedProduct> = {};
-  for (const p of products) map[p.handle] = p;
+  // `tags` is dropped here on purpose: filters run BEFORE this (on the raw
+  // fetched products), and nothing downstream — diff, the Discord embed, the
+  // dashboard Products table — reads tags off stored state. It was ~30% of the
+  // persisted state blob, re-serialized on every check, for nothing.
+  for (const p of products) map[p.handle] = { ...p, tags: [] };
   return map;
 }

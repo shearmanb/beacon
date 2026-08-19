@@ -26,8 +26,9 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { openStore, restoreLatest, snapshot, type BeaconStore } from "@beacon/db";
 import { DiscordChannel, type NotificationChannel } from "@beacon/notify";
-import { startLoop } from "@beacon/worker";
+import { restoreFromGithub, startLoop } from "@beacon/worker";
 import { runImport } from "@beacon/migrate";
+import { applyConfigFixes } from "./config-fixes.js";
 
 process.on("unhandledRejection", (reason) => {
   console.error(`[serve] unhandledRejection: ${reason instanceof Error ? reason.stack : String(reason)}`);
@@ -103,8 +104,33 @@ if (existing.length > 0) {
       console.log(`[serve] Restored ${afterRestore.length} site(s) from ${restored}.`);
       await page("Datastore restored from backup", `The volume looked lost (empty DB) but a backup was found and restored (${afterRestore.length} sites). Verify recent state/history.`);
     } else {
-      console.error(`[serve] No usable backup found — REFUSING to auto-seed stale baselines. Running with no sites until you intervene (set BEACON_FORCE_SEED=1 to re-seed from JSON).`);
-      await page("Datastore empty — manual action needed", "The DB is empty but was previously initialized (volume likely lost) and no backup was found. Refusing to auto-seed stale baselines to avoid a false-alert flood. Set BEACON_FORCE_SEED=1 to re-seed from the committed JSON, or restore a backup.");
+      // Layer 2: the on-volume snapshots died WITH the volume. Pull the daily
+      // off-box bundle (config + schedules + curated meta + product baselines)
+      // from the repo — the baselines are what keep a restore from paging every
+      // bottle on every shelf as a brand-new drop.
+      console.error(`[serve] No usable on-volume snapshot — trying the off-box backup bundle in the repo…`);
+      let offBox: { restored: boolean; sites: number; at?: string; reason?: string } = {
+        restored: false,
+        sites: 0,
+        reason: "not attempted",
+      };
+      try {
+        offBox = await restoreFromGithub(store);
+      } catch (err) {
+        offBox = { restored: false, sites: 0, reason: (err as Error).message };
+      }
+      if (offBox.restored) {
+        console.log(`[serve] Restored ${offBox.sites} site(s) from the off-box bundle (taken ${offBox.at}).`);
+        await page(
+          "Datastore restored from the off-box backup",
+          `The Railway volume looked lost (empty DB). Restored ${offBox.sites} site(s) + product baselines from the repo bundle taken ${offBox.at}. ` +
+            `NOT restored: the secrets table (Storefront tokens re-arm themselves via the daily harvest, within ~24 h) and alert history ` +
+            `(mirrored separately to analytics/alert_history.jsonl). Check the tiles.`,
+        );
+      } else {
+        console.error(`[serve] No usable backup found (${offBox.reason}) — REFUSING to auto-seed stale baselines. Running with no sites until you intervene (set BEACON_FORCE_SEED=1 to re-seed from JSON).`);
+        await page("Datastore empty — manual action needed", `The DB is empty but was previously initialized (volume likely lost) and no backup was found (${offBox.reason}). Refusing to auto-seed stale baselines to avoid a false-alert flood. Set BEACON_FORCE_SEED=1 to re-seed from the committed JSON, or restore a backup.`);
+      }
     }
   } else {
     // Genuine first boot (or an explicit forced re-seed).
@@ -114,234 +140,11 @@ if (existing.length > 0) {
   }
 }
 
-// ── One-time config amendments (idempotent, safe to delete once applied) ──────
-// 2026-07: sharedpour.com's bot protection started 403-ing datacenter IPs,
-// killing the REST checkers while the store loads fine in a browser. Give the
-// SharedPour shopify_rest sites the Storefront-API fallback (the adapter fails
-// over to the token-authenticated GraphQL channel on the canonical myshopify
-// domain when REST is blocked). No-ops on every boot after the first.
-{
-  const FALLBACK = { domain: "shared-pour.myshopify.com", accessTokenRef: "reveries_official_storefront_token" };
-  try {
-    const secrets = await store.secrets.all();
-    if (secrets[FALLBACK.accessTokenRef]) {
-      for (const row of await store.sites.list()) {
-        const src = row.definition.source as Record<string, unknown>;
-        if (src["kind"] !== "shopify_rest" || src["storefrontFallback"]) continue;
-        if (new URL(String(src["baseUrl"] ?? "")).hostname.replace(/^www\./, "") !== "sharedpour.com") continue;
-        await store.sites.upsert({ ...row.definition, source: { ...src, storefrontFallback: FALLBACK } });
-        console.log(`[serve] Amended ${row.id}: added Storefront-API fallback for blocked REST.`);
-      }
-    } else {
-      console.warn(`[serve] Skipping SharedPour fallback amendment — secret "${FALLBACK.accessTokenRef}" not found.`);
-    }
-  } catch (err) {
-    console.error(`[serve] Config amendment failed (continuing): ${(err as Error).message}`);
-  }
-}
-
-// ── One-time config amendment: dedicated SharedPour "Provenance" watcher ──────
-// 2026-07: the sharedpour_t8ke tile is scoped to the /collections/t8ke JSON, so
-// its title keywords only narrow THAT collection. A "Provenance" keyword there
-// matches nothing — Provenance bottles live in the general catalog, not the T8KE
-// collection (store search finds them; the collection JSON doesn't). Add a
-// separate store-root watcher that title-filters the whole catalog for
-// "Provenance" (same shape as sharedpour_reveries). Idempotent: creates the site
-// only once, and only when the Storefront token exists (sharedpour.com 403s
-// datacenter IPs, so the token-authed fallback is what actually carries it).
-// Safe to delete once confirmed applied in prod.
-{
-  const PROVENANCE_ID = "sharedpour_provenance";
-  const TOKEN_REF = "reveries_official_storefront_token";
-  try {
-    if (!(await store.sites.get(PROVENANCE_ID))) {
-      const secrets = await store.secrets.all();
-      if (secrets[TOKEN_REF]) {
-        await store.sites.upsert({
-          id: PROVENANCE_ID,
-          name: "SharedPour Provenance",
-          enabled: true,
-          schedule: "working_hours_heavy",
-          intervalMinutes: 20,
-          alerts: { onNew: true, onRestock: true, onSoldOut: true },
-          filters: { titleContains: ["Provenance"] },
-          source: {
-            kind: "shopify_rest",
-            baseUrl: "https://sharedpour.com",
-            storefrontFallback: { domain: "shared-pour.myshopify.com", accessTokenRef: TOKEN_REF },
-          },
-        });
-        console.log(`[serve] Added ${PROVENANCE_ID}: store-root SharedPour watcher for "Provenance" titles.`);
-      } else {
-        console.warn(`[serve] Skipping ${PROVENANCE_ID} amendment — secret "${TOKEN_REF}" not found.`);
-      }
-    }
-  } catch (err) {
-    console.error(`[serve] Provenance amendment failed (continuing): ${(err as Error).message}`);
-  }
-}
-
-// ── One-time config amendment: silence reveries_site_status content-change noise ─
-// 2026-07: thereveries.co/shop (Squarespace) rotates a same-length token the page
-// fingerprint can't strip, so `watchContentChange` fires "content changed" on pure
-// noise (≈61319→61319 chars). The signals that matter — the coming-soon/password
-// wall going UP (site_reset) and LIFTING (site_changed) — don't use the content
-// hash, so turn the generic net off. Idempotent (only acts while it's still on).
-// Safe to delete once confirmed applied in prod.
-{
-  try {
-    const row = await store.sites.get("reveries_site_status");
-    const src = row?.definition.source as Record<string, unknown> | undefined;
-    if (row && src?.["kind"] === "http_status" && src["watchContentChange"] !== false) {
-      await store.sites.upsert({ ...row.definition, source: { ...src, watchContentChange: false } });
-      console.log("[serve] Amended reveries_site_status: watchContentChange off (same-length token noise).");
-    }
-  } catch (err) {
-    console.error(`[serve] reveries_site_status amendment failed (continuing): ${(err as Error).message}`);
-  }
-}
-
-// ── One-time config amendment: reveries_official self-healing embed watch (R2) ──
-// 2026-07: thereveries.co/shop stopped embedding a collection — its Buy Button now
-// embeds a single PRODUCT (id 9001382805659), so the old collection query
-// (367215214747) returns 0 forever and nags. Point it at the product AND turn on
-// `discoverEmbedFrom` so the adapter re-reads the live ShopifyBuyInit embed off the
-// shop page each check — following the shop when it swaps product/collection again.
-// Clears state so the current (leftover) bottle re-baselines silently instead of
-// firing a false "new drop". Idempotent (acts only until discovery is configured).
-{
-  try {
-    const row = await store.sites.get("reveries_official");
-    const src = row?.definition.source as Record<string, unknown> | undefined;
-    if (row && src?.["kind"] === "shopify_graphql" && !src["discoverEmbedFrom"]) {
-      await store.sites.upsert({
-        ...row.definition,
-        source: { ...src, productId: "9001382805659", discoverEmbedFrom: "https://www.thereveries.co/shop" },
-      });
-      await store.state.clear("reveries_official");
-      console.log("[serve] Amended reveries_official: product-embed watch + self-healing id discovery (re-baselined).");
-    }
-  } catch (err) {
-    console.error(`[serve] reveries_official amendment failed (continuing): ${(err as Error).message}`);
-  }
-}
-
-// ── One-time config amendment: scope bourbon_concierge to its Reveries collection ─
-// 2026-07: thebourbonconcierge.com's checker scanned the WHOLE catalog (8+ pages
-// of 250) just to keyword-filter for "Reveries", and the host tar-pits the scan
-// pages deep (stalls on ~page 8) while a small probe passes. The store has a
-// dedicated /collections/reveries (~9 products) — scope the source to it so a
-// check is ONE request. Keyword filters still apply after fetch, unchanged.
-// Clears state so the next check re-baselines quietly and the stuck error/
-// cooldown bookkeeping is dropped. Idempotent (acts only while collectionPath is
-// unset). Safe to delete once confirmed applied in prod.
-{
-  try {
-    const row = await store.sites.get("bourbon_concierge");
-    const src = row?.definition.source as Record<string, unknown> | undefined;
-    if (row && src?.["kind"] === "shopify_rest" && !src["collectionPath"]) {
-      await store.sites.upsert({ ...row.definition, source: { ...src, collectionPath: "/collections/reveries" } });
-      await store.state.clear("bourbon_concierge");
-      console.log("[serve] Amended bourbon_concierge: scoped to /collections/reveries (was a full-catalog scan) — re-baselined.");
-    }
-  } catch (err) {
-    console.error(`[serve] bourbon_concierge amendment failed (continuing): ${(err as Error).message}`);
-  }
-}
-
-// ── One-time config amendment: data-tuned cadences (drop_windows / bar_evening) ─
-// 2026-07-16: mined the full alert history (v1 git archaeology + the v2 export,
-// May 17 → Jul 15, 49 deduped posting events): 47% of all bottle postings land
-// 11:00–13:00 ET, a Reveries-heavy evening window runs 17:00–20:00 with a small
-// 20:00–22:00 tail, and NOTHING has ever posted 22:00–08:00. Fountain Inn (a
-// bar) posts exclusively 15:24–19:39 ET. Two shared archetypes replace the
-// blanket working_hours_heavy: retailers get drop_windows; the bar gets
-// bar_evening (its old catch-all crawled overnight at 20 min for zero observed
-// postings). Guarded by a meta flag — runs ONCE, so later manual dashboard
-// schedule edits are never overridden by a redeploy. Safe to delete once
-// confirmed applied in prod.
-{
-  const FLAG = "amendment_cadence_20260716";
-  try {
-    if (!(await store.meta.get(FLAG))) {
-      await store.schedules.upsert("drop_windows", {
-        label: "📊 Drop Windows (data-tuned)",
-        rules: [
-          { fromHour: 9, toHour: 13, interval: 5 },
-          { fromHour: 17, toHour: 20, interval: 5 },
-          { fromHour: 8, toHour: 9, interval: 15 },
-          { fromHour: 13, toHour: 17, interval: 15 },
-          { fromHour: 20, toHour: 22, interval: 15 },
-          { fromHour: 22, toHour: 8, interval: 120 },
-          { defaultInterval: 120 },
-        ],
-      });
-      await store.schedules.upsert("bar_evening", {
-        label: "🍸 Bar Evening (data-tuned)",
-        rules: [
-          { fromHour: 15, toHour: 20, interval: 5 },
-          { fromHour: 12, toHour: 15, interval: 15 },
-          { fromHour: 20, toHour: 22, interval: 15 },
-          { fromHour: 22, toHour: 12, interval: 120 },
-          { defaultInterval: 120 },
-        ],
-      });
-      const assign: Record<string, string> = {
-        sharedpour_t8ke: "drop_windows",
-        sharedpour_t8ke_all: "drop_windows",
-        sharedpour_reveries: "drop_windows",
-        sharedpour_provenance: "drop_windows",
-        bourbon_concierge: "drop_windows",
-        fountain_inn_dc: "bar_evening",
-      };
-      for (const [id, schedule] of Object.entries(assign)) {
-        const row = await store.sites.get(id);
-        if (!row) continue; // site absent in this datastore — skip quietly
-        await store.sites.upsert({ ...row.definition, schedule });
-        console.log(`[serve] Amended ${id}: schedule → ${schedule}.`);
-      }
-      await store.meta.set(FLAG, new Date().toISOString());
-      console.log("[serve] Cadence amendment applied (drop_windows / bar_evening).");
-    }
-  } catch (err) {
-    console.error(`[serve] Cadence amendment failed (continuing): ${(err as Error).message}`);
-  }
-}
-
-// ── One-time config amendment: SharedPour real-browser TWIN (2026-07-24) ─────
-// The decisive experiment for the browser tier: a `browser`-kind checker that
-// opens sharedpour.com in a REAL Chromium (Browserbase session, persistent
-// profile) and reads the roster via the page's own fetch — from the server's
-// egress, through a real browser. Runs as a quiet twin next to the live
-// REST/Storefront checkers: hourly (Browserbase free-tier friendly), ALL
-// product alerts off — its job is to prove/compare, not to page. Promotion to
-// a live alerting tier happens only after its roster matches for several days.
-// Self-arming: created only once the Browserbase API key exists on the service
-// (the project id resolves automatically from the key — no PROJECT_ID var
-// needed); until then this block no-ops with a log line. Safe to delete once
-// promoted.
-{
-  const TWIN_ID = "sharedpour_browser";
-  try {
-    if (!process.env["BROWSERBASE_API_KEY"]) {
-      console.log(`[serve] Browser twin not armed — set BROWSERBASE_API_KEY to create ${TWIN_ID}.`);
-    } else if (!(await store.sites.get(TWIN_ID))) {
-      await store.sites.upsert({
-        id: TWIN_ID,
-        name: "SharedPour (browser twin)",
-        enabled: true,
-        schedule: "60",
-        intervalMinutes: 60,
-        alerts: { onNew: false, onRestock: false, onSoldOut: false, onSiteReset: false },
-        filters: { titleContains: ["Reveries"] },
-        source: { kind: "browser", baseUrl: "https://sharedpour.com", extract: "page_json", maxPages: 3 },
-      });
-      console.log(`[serve] Added ${TWIN_ID}: real-browser twin for sharedpour.com (hourly, alerts off).`);
-    }
-  } catch (err) {
-    console.error(`[serve] Browser-twin amendment failed (continuing): ${(err as Error).message}`);
-  }
-}
+// ── Config fixes (see apps/server/src/config-fixes.ts) ───────────────────────
+// Idempotent corrections re-applied every boot (they also survive a re-seed
+// from the legacy JSON), then one-shots latched on a meta flag so an operator's
+// dashboard decision is never overridden by a redeploy.
+await applyConfigFixes(store, (m) => console.log(`[serve] ${m}`));
 
 if (seedOnly) {
   store.close();

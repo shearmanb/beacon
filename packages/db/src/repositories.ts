@@ -2,7 +2,7 @@
 // instead of touching tables directly. Grouped onto one store object so callers
 // do `store.sites.list()`, `store.state.load(id)`, etc.
 
-import { asc, desc, eq, inArray, isNull, lte } from "drizzle-orm";
+import { asc, count, desc, eq, inArray, isNull, lte } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import type { Alert, ProductMap, ScheduleDefinition } from "@beacon/shared";
 import { siteDefinitionSchema, type SiteDefinition, type SiteState } from "@beacon/core";
@@ -180,8 +180,11 @@ function historyRepo(db: DB) {
       }
     },
     async count(): Promise<number> {
-      const rows = await db.select().from(t.alertHistory);
-      return rows.length;
+      // COUNT(*), not "select every row and take .length" — this is called to
+      // render a number on the dashboard and used to drag the whole 5,000-row
+      // table (payload blobs included) across the wire to do it.
+      const [row] = await db.select({ n: count() }).from(t.alertHistory);
+      return row?.n ?? 0;
     },
   };
 }
@@ -267,15 +270,17 @@ function commandsRepo(db: DB) {
         createdAt: new Date().toISOString(),
       });
     },
-    /** Return pending commands and mark them processed in one go. */
+    /** Claim pending commands: ONE atomic UPDATE … RETURNING, so a command
+     *  enqueued by the dashboard between the old select and its follow-up
+     *  UPDATE can no longer be marked processed without ever being run (and N
+     *  round-trips collapse to one). */
     async drainPending(): Promise<CommandRow[]> {
-      const pending = await db.select().from(t.commands).where(isNull(t.commands.processedAt));
-      if (pending.length === 0) return [];
-      const now = new Date().toISOString();
-      for (const c of pending) {
-        await db.update(t.commands).set({ processedAt: now }).where(eq(t.commands.id, c.id));
-      }
-      return pending.map((c) => ({ id: c.id, type: c.type, siteId: c.siteId, payload: c.payload, createdAt: c.createdAt }));
+      const claimed = await db
+        .update(t.commands)
+        .set({ processedAt: new Date().toISOString() })
+        .where(isNull(t.commands.processedAt))
+        .returning();
+      return claimed.map((c) => ({ id: c.id, type: c.type, siteId: c.siteId, payload: c.payload, createdAt: c.createdAt }));
     },
   };
 }

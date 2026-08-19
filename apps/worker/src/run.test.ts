@@ -274,4 +274,98 @@ describe("runOnce", () => {
     // And it's recorded in history under a null siteId.
     expect((await store.history.recent()).some((h) => h.type === "system_degraded")).toBe(true);
   });
+
+  // ── Cross-site duplicate suppression (2b) ─────────────────────────────────
+  it("pages once when two checkers on the same host see the same product", async () => {
+    // Two sites, same host, overlapping rosters — the sharedpour.com shape.
+    await store.sites.upsert({
+      id: "s2",
+      name: "Local Shop (second view)",
+      intervalMinutes: 20,
+      source: { kind: "shopify_rest", baseUrl: base },
+    });
+    await runOnce(ctx()); // baseline both
+    products = [...products, shopifyProduct("newbottle", true)];
+    await store.state.save("s1", { ...(await store.state.load("s1"))!, lastChecked: null });
+    await store.state.save("s2", { ...(await store.state.load("s2"))!, lastChecked: null });
+
+    await runOnce(ctx());
+    const pages = sent.filter((s) => s.alert.type === "new_product");
+    expect(pages).toHaveLength(1); // one drop, one ping — not one per checker
+    // But BOTH sites still recorded it: nothing is hidden from the dashboard.
+    const rows = (await store.history.recent(50)).filter((h) => h.type === "new_product");
+    expect(rows.map((r) => r.siteId).sort()).toEqual(["s1", "s2"]);
+  });
+
+  it("respects alerts.dedupeAcrossSites: false on a site that must always page", async () => {
+    await store.sites.upsert({
+      id: "s2",
+      name: "Independent View",
+      intervalMinutes: 20,
+      alerts: { dedupeAcrossSites: false },
+      source: { kind: "shopify_rest", baseUrl: base },
+    });
+    await runOnce(ctx());
+    products = [...products, shopifyProduct("newbottle", true)];
+    await store.state.save("s1", { ...(await store.state.load("s1"))!, lastChecked: null });
+    await store.state.save("s2", { ...(await store.state.load("s2"))!, lastChecked: null });
+
+    await runOnce(ctx());
+    expect(sent.filter((s) => s.alert.type === "new_product")).toHaveLength(2);
+  });
+
+  // ── Per-site digest (3c) ──────────────────────────────────────────────────
+  it("collapses a flood of product alerts from one site into a single digest", async () => {
+    await runOnce(ctx()); // baseline with 2 products
+    products = [...products, ...Array.from({ length: 9 }, (_, i) => shopifyProduct(`drop${i}`, true))];
+    await store.state.save("s1", { ...(await store.state.load("s1"))!, lastChecked: null });
+
+    await runOnce(ctx());
+    expect(sent).toHaveLength(1);
+    expect(sent[0]!.alert.product.title).toContain("9 changes");
+    expect(sent[0]!.alert.product.note).toContain("drop0");
+    // Every individual alert is still in history.
+    expect((await store.history.recent(50)).filter((h) => h.type === "new_product")).toHaveLength(9);
+  });
+
+  // ── Quarantine (2a) ───────────────────────────────────────────────────────
+  it("auto-disables a site that has failed the same way for days, and pages once", async () => {
+    await store.sites.upsert({
+      id: "dead",
+      name: "Gone Forever",
+      intervalMinutes: 20,
+      source: { kind: "shopify_rest", baseUrl: "http://127.0.0.1:9" },
+    });
+    // Simulate a long-running identical failure streak.
+    await store.state.save("dead", {
+      lastChecked: null,
+      consecutiveErrors: 40,
+      errorStreakSince: new Date(Date.now() - 5 * 86_400_000).toISOString(),
+      errorAlertSent: true,
+    });
+
+    await runOnce(ctx());
+    expect((await store.sites.get("dead"))?.enabled).toBe(false);
+    const page = sent.find((s) => s.alert.product.note?.includes("Monitoring PAUSED"));
+    expect(page).toBeDefined();
+    // A quarantined site is dropped from the pass, so it can't make a healthy
+    // pass look systemic or add a phantom checker to the host rollup.
+    expect(sent.map((s) => s.alert.type)).not.toContain("system_degraded");
+  });
+
+  it("does not quarantine a site whose failure streak is young", async () => {
+    await store.sites.upsert({
+      id: "flaky",
+      name: "Just Started Failing",
+      intervalMinutes: 20,
+      source: { kind: "shopify_rest", baseUrl: "http://127.0.0.1:9" },
+    });
+    await store.state.save("flaky", {
+      lastChecked: null,
+      consecutiveErrors: 40,
+      errorStreakSince: new Date(Date.now() - 3 * 3_600_000).toISOString(), // 3h
+    });
+    await runOnce(ctx());
+    expect((await store.sites.get("flaky"))?.enabled).toBe(true);
+  });
 });

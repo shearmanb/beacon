@@ -23,6 +23,7 @@ import {
   descriptionCoverage,
   estimateAllInDollars,
   matchLots,
+  normalizeLotTitle,
   parseUnicornListing,
   parseUnicornScanState,
   validateUnicornConfig,
@@ -44,6 +45,17 @@ const SCAN_INTERVAL_MS = 24 * 3_600_000;
 const SCAN_JITTER_MS = 2 * 3_600_000;
 const SCAN_BUDGET_MS = 180_000;
 const ERROR_ALERT_AFTER = 3; // consecutive failed scans (≈ days) before one Discord warning
+// Cross-auction alert memory (2026-08-14). Unicorn re-numbers every lot at the
+// weekly rollover, so id-keyed memory forgot everything each Sunday and the
+// whole matched roster re-alerted: 90 pings for 46 distinct bottles in 5 days,
+// one bottle sent 26 times. A bottle alerts once, then stays quiet for as long
+// as it keeps showing up; a genuine reappearance after a month alerts again.
+const SEEN_TITLE_WINDOW_MS = 30 * 24 * 3_600_000;
+const SEEN_TITLE_CAP = 2_000;
+// Above this many new matches in one scan, Discord gets ONE digest embed
+// instead of N. History always keeps the individual rows.
+const DIGEST_THRESHOLD = 6;
+const DIGEST_MAX_LINES = 25;
 
 // One log line per process when unconfigured, not one per ~60s loop.
 let warnedUnconfigured = false;
@@ -199,6 +211,36 @@ function buildAlert(match: UnicornMatch, config: UnicornConfig): Alert {
   };
 }
 
+/** One embed standing in for a batch of new matches. Ordered so the lots with a
+ *  target bottle (and the cheapest ones) read first — the digest has to survive
+ *  being read on a phone. */
+function buildDigestAlert(matches: UnicornMatch[], config: UnicornConfig): Alert {
+  const bottleName = (ids: string[]): string =>
+    config.bottles.find((b) => ids.includes(b.id))?.name ?? "";
+  const ranked = [...matches].sort((a, b) => {
+    const at = a.bottleIds.length > 0 ? 0 : 1;
+    const bt = b.bottleIds.length > 0 ? 0 : 1;
+    if (at !== bt) return at - bt;
+    return (a.lot.currentBidDollars ?? Infinity) - (b.lot.currentBidDollars ?? Infinity);
+  });
+  const lines = ranked.slice(0, DIGEST_MAX_LINES).map((m) => {
+    const bid = m.lot.currentBidDollars != null ? money(m.lot.currentBidDollars) : "no bid";
+    const target = bottleName(m.bottleIds);
+    return `• ${m.lot.title} — ${bid}${target ? ` (🎯 ${target})` : ""}`;
+  });
+  const extra = ranked.length - lines.length;
+  return {
+    type: "new_product",
+    product: {
+      title: `🦄 ${matches.length} new Unicorn matches`,
+      url: config.baseUrl,
+      note:
+        `${lines.join("\n")}${extra > 0 ? `\n…and ${extra} more` : ""}\n\n` +
+        `Full detail (all-in pricing, target bottles, filters) on the /unicorn page.`,
+    },
+  };
+}
+
 /** Run at most one scan per interval; never throws (the run.ts call site is
  *  belt-and-braces guarded anyway). */
 export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrides = {}): Promise<UnicornScanOutcome> {
@@ -273,16 +315,45 @@ export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrid
     log(`[unicorn] Scanning (${config.terms.length} term(s))...`);
     const lots = await fetchAllLots(config, headers, controller.signal, over, log);
     // Dismissed false positives never become matches: no alert, no stored lot,
-    // no row on the dashboard.
+    // no row on the dashboard. Ignoring is by id AND normalized title, because
+    // an id-only ignore expires at the next auction (see matchLots).
     const ignoredIds = new Set(config.ignoredLots.map((l) => l.id));
-    const matches = matchLots(lots, config.terms, { ignoredIds });
+    const ignoredTitles = new Set(
+      config.ignoredLots.map((l) => normalizeLotTitle(l.title)).filter((t) => t.length > 0),
+    );
+    const allMatches = matchLots(lots, config.terms, { ignoredIds, ignoredTitles });
+    // Collapse duplicate listings of the same bottle WITHIN one scan (Unicorn
+    // routinely runs 20+ separate lots of one release). The first listing wins
+    // and its stored row carries the count.
+    const matches: UnicornMatch[] = [];
+    const dupCounts = new Map<string, number>();
+    const seenThisScan = new Map<string, string>(); // normTitle -> winning lot id
+    for (const m of allMatches) {
+      const key = normalizeLotTitle(m.lot.title);
+      const winner = seenThisScan.get(key);
+      if (winner) {
+        dupCounts.set(winner, (dupCounts.get(winner) ?? 1) + 1);
+        continue;
+      }
+      seenThisScan.set(key, m.lot.id);
+      matches.push(m);
+    }
 
     const now = new Date().toISOString();
+    const seenCutoff = Date.now() - SEEN_TITLE_WINDOW_MS;
+    const prevSeenTitles = stamped.seenTitles ?? {};
     const nextLots: Record<string, UnicornStoredLot> = {};
     const newMatches: UnicornMatch[] = [];
+    let resurfaced = 0;
     for (const m of matches) {
       const prev = stamped.lots[m.lot.id];
-      if (!prev) newMatches.push(m);
+      if (!prev) {
+        // New lot id — but is it a bottle we've already told him about under a
+        // previous auction's id?
+        const seenAt = prevSeenTitles[normalizeLotTitle(m.lot.title)];
+        if (seenAt && Date.parse(seenAt) >= seenCutoff) resurfaced += 1;
+        else newMatches.push(m);
+      }
       nextLots[m.lot.id] = {
         title: m.lot.title,
         url: m.lot.url,
@@ -291,8 +362,25 @@ export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrid
         matchedTerms: m.matchedTerms,
         bottleIds: m.bottleIds,
         firstSeenAt: prev?.firstSeenAt ?? now,
+        duplicateLots: dupCounts.get(m.lot.id) ?? 1,
       };
     }
+
+    // Remember every matched bottle by normalized title, re-stamped on every
+    // scan: a bottle that stays on the block week after week stays quiet, and
+    // one that genuinely disappears for a month alerts again when it returns.
+    const nextSeenTitles: Record<string, string> = {};
+    for (const [title, ts] of Object.entries(prevSeenTitles)) {
+      if (Date.parse(ts) >= seenCutoff) nextSeenTitles[title] = ts;
+    }
+    for (const m of matches) nextSeenTitles[normalizeLotTitle(m.lot.title)] = now;
+    const seenEntries = Object.entries(nextSeenTitles);
+    const boundedSeenTitles =
+      seenEntries.length > SEEN_TITLE_CAP
+        ? Object.fromEntries(
+            seenEntries.sort((a, b) => Date.parse(b[1]) - Date.parse(a[1])).slice(0, SEEN_TITLE_CAP),
+          )
+        : nextSeenTitles;
 
     // First-ever scan baselines quietly (startup-quiet spirit): everything is
     // "new" to an empty memory, and a term-list that already matches 30 live
@@ -307,7 +395,13 @@ export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrid
         log(`[unicorn] history append failed (continuing): ${(err as Error).message}`);
       }
       if (channel) {
-        for (const alert of alerts) {
+        // Volume guard: a big auction can match a dozen bottles at once, and a
+        // dozen phone notifications in one second is how a real one gets
+        // swiped away. Above the threshold Discord gets ONE digest; the
+        // per-lot detail is already in history and on /unicorn.
+        const toSend =
+          alerts.length > DIGEST_THRESHOLD ? [buildDigestAlert(newMatches, config)] : alerts;
+        for (const alert of toSend) {
           try {
             await channel.send("Unicorn Auctions", alert);
           } catch (err) {
@@ -340,9 +434,16 @@ export async function maybeScanUnicorn(ctx: RunContext, over: UnicornScanOverrid
       rawLotCount: lots.length,
       descCoverage: descriptionCoverage(lots),
       lots: nextLots,
+      seenTitles: boundedSeenTitles,
     };
     await store.meta.set(UNICORN_STATE_META_KEY, JSON.stringify(next));
-    log(`[unicorn] Scan done: ${lots.length} lots, ${matches.length} matched, ${firstScan ? `${newMatches.length} baselined` : `${newMatches.length} new`}.`);
+    const collapsed = allMatches.length - matches.length;
+    log(
+      `[unicorn] Scan done: ${lots.length} lots, ${matches.length} matched` +
+        `${collapsed > 0 ? ` (+${collapsed} duplicate listing(s) collapsed)` : ""}, ` +
+        `${firstScan ? `${newMatches.length} baselined` : `${newMatches.length} new`}` +
+        `${resurfaced > 0 ? `, ${resurfaced} already-alerted bottle(s) re-listed under new lot ids (suppressed)` : ""}.`,
+    );
     return { ran: true, newMatches: firstScan ? 0 : newMatches.length };
   } catch (err) {
     const msg = controller.signal.aborted

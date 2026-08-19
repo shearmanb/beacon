@@ -11,6 +11,7 @@
 // bottle's max hammer, which is the actual buy/walk-away decision.
 
 import { useMemo, useState, useTransition } from "react";
+import { estimateAllInDollars, type AuctionFees } from "@beacon/shared";
 import { ignoreUnicornLot } from "../app/actions";
 
 export interface UnicornLotRow {
@@ -36,17 +37,11 @@ export interface BottleRef {
   maxHammerDollars: number | null;
 }
 
-export interface FeeModel {
-  buyerPremiumPct: number;
-  salesTaxPct: number;
-  shippingDollars: number;
-}
-
-/** Mirrors estimateAllInDollars in @beacon/core — premium, then tax/card fee on
- *  the premium-inclusive subtotal, then shipping. */
-function allInDollars(hammer: number, fees: FeeModel): number {
-  return hammer * (1 + fees.buyerPremiumPct / 100) * (1 + fees.salesTaxPct / 100) + fees.shippingDollars;
-}
+// The fee model + math live in @beacon/shared (pure, browser-safe) so the
+// dashboard and the worker's Discord alerts can never disagree about what a
+// bid actually costs delivered.
+export type FeeModel = AuctionFees;
+const allInDollars = estimateAllInDollars;
 
 const money = (n: number): string => `$${Math.round(n).toLocaleString("en-US")}`;
 

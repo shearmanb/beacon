@@ -11,47 +11,56 @@ mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
 
 ## Daily review findings (2026-08-14) — evidence from `analytics/alert_history.jsonl`
 
-Nothing shipped this session; these are the ranked findings from a full-app
-review. Reference tags match the review reply.
+Reference tags match the review reply. **Shipped the same session** (33 test
+files / 308 tests green, `next build` clean):
 
-**Live noise / broken things (act first)**
-- [ ] **1a Unicorn weekly-rollover flood.** Lot ids are per-auction, so the
-      Sunday rollover re-alerts the whole matched roster: **90 Discord pings
-      since Aug 5, only 46 distinct bottles, one bottle sent 26×** (Aug 10 alone:
-      75 pings). Fix = title-normalized `recentlySeen` memory (the site-side
-      guard already exists in `process-site.ts`) + in-scan title dedup + a
-      "N matches" digest embed over ~10. Also makes per-lot **ignore** work
-      across auctions — today an ignored id is forgotten next week. _S, no deps._
-- [ ] **1b `sharedpour_browser` twin is dead and paging.** 362 consecutive
-      **HTTP 402** (Browserbase billing) as of Aug 13, one `site_error` page per
-      day, and it pollutes the host rollup + systemic detection for sharedpour.com.
-      Disable the site or gate the twin on a live Browserbase quota. _XS._
-- [ ] **1c A permanently-broken site poisons the aggregate signals.** `cgf`
-      (ReserveBar 404) reached **458 consecutive failures** and caused most of the
-      `system_degraded` pages (`SYSTEMIC_MIN_SITES=2`: one dead site + one
-      transient = "all sites failing"). Need a quarantine: after N days of
-      identical failure, auto-disable (or exclude from systemic/host rollups) with
-      one page. _S._
-- [ ] **1d Four overlapping sharedpour.com checkers.** `t8ke`, `t8ke_all`,
-      `reveries`, `provenance` alerted the same "Eleventh Hour" drop 4× on Aug 7
-      and quadruple the request load on the host that blocks us. Collapse to one
-      root checker with keyword groups, or dedupe alerts per host+handle. _M._
+- [x] **1a Unicorn weekly-rollover flood** ✅ — cross-auction `seenTitles`
+      memory + in-scan duplicate collapse + digest embed over 6 matches +
+      title-keyed ignore. Was 90 pings / 46 distinct bottles in 5 days.
+- [x] **1b `sharedpour_browser` twin retired** ✅ — disabled via a one-shot
+      config fix (config + state kept; re-enable when Browserbase is funded).
+- [x] **1c/3b `serve.ts` amendments → `config-fixes.ts`** ✅ — CORRECTIONS
+      (every boot, idempotent) vs ONE_SHOTS (meta-latched, `legacyFlag`-aware).
+      Fixes the resurrect-a-deleted-site footgun; serve.ts 427 → 205 lines.
+- [x] **1e DB efficiency** ✅ — `COUNT(*)`, atomic `drainPending`, `tags`
+      stripped from persisted state.
+- [x] **1f Fee math deduplicated** ✅ — one copy in `@beacon/shared/auction.ts`.
+- [x] **2a Site quarantine** ✅ — ≥25 failures AND ≥72 h → auto-disable + one
+      page, and the site is dropped from the pass so it can't skew
+      systemic-failure detection or the host rollup.
+- [x] **2b Cross-site duplicate suppression** ✅ — one page per
+      `host|handle|type` per hour; every site keeps its own tile, filters,
+      alert flags and history rows. Opt out with `alerts.dedupeAcrossSites:false`.
+- [x] **2d Off-box backup + auto-restore** ✅ — daily bundle to
+      `analytics/backup/beacon-restore.json`; `serve.ts` restores from it when
+      the volume is lost. Secrets deliberately excluded.
+- [x] **3c Alert-volume digest** ✅ — >6 product alerts from one site in one
+      pass become a single embed (history keeps every row).
 
-**Structural**
-- [ ] **1e `serve.ts` one-time amendments (7 blocks, ~230 lines).** Two of them
-      (`sharedpour_provenance`, `sharedpour_browser`) are guarded by "does the
-      site exist" — deleting the site on the dashboard **resurrects it on the next
-      deploy**. Move all of them behind `meta` flags (the cadence block already
-      does this) and delete the applied ones. _XS–S._
-- [ ] **1f Fee math duplicated 3×** (`core/unicorn.ts` + `UnicornLots.tsx` +
-      `UnicornBottles.tsx`). Export one shared client-safe helper. _XS._
-- [ ] **1g Docs drift.** The browser tier / Browserbase, `/api/ops/*`, and the
-      Jul 28 observability batch are in the code but not in the CLAUDE.md v2
-      section or REBUILD.md. _XS._
+Still open from the review:
+
+- [ ] **1d Consolidate the four overlapping sharedpour.com checkers.** 2b
+      removed the duplicate *pings*, but four checkers still hit the one host
+      that actively blocks us. Collapse to one root checker with keyword
+      groups. _M._
+- [ ] **1g Docs drift** — the browser tier / `/api/ops/*` / the Jul 28
+      observability batch still aren't described in the CLAUDE.md v2 section or
+      REBUILD.md. _XS._
 - [ ] **1h Auth secret defaults to `"beam"`** (public in git history) when
       neither `BEACON_AUTH_SECRET` nor `BEACON_DASH_PASSWORD` is set, and the
-      cookie is a fixed HMAC with no expiry/rotation. Confirm the env var is set
-      in prod; consider refusing to boot on the default. _XS._
+      cookie never expires. Verify the env var is set in prod; consider
+      refusing to boot on the default. _XS._
+- [ ] **4b `HEALTHCHECK_URL` is still unset** — no external dead-man. 5 minutes
+      of setup, still the best value-per-effort item in the repo (see the
+      Infra section below for the exact steps). _User-side, no code._
+- [ ] **5r Blind-time invariant** — page when a site has gone too long without
+      a *body-backed* success, whatever guard is responsible. The one rule no
+      future guard can compose its way around. _S — recommended next._
+- [ ] **5t Unicorn bottle-level price history** (now cheap: `seenTitles` already
+      gives cross-auction identity). _M._
+- [ ] **5u Drop-window pre-flight probe.** _S._
+- [ ] **5v Weekly self-review digest** (noise ratio, silent sites, failure
+      rates) posted from the same history queries this review used. _S._
 
 ---
 

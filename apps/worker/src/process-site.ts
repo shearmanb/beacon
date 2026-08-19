@@ -105,6 +105,8 @@ export async function processSite({
       errorAlertSent: false,
       cooldownLevel: 0,
       cooldownUntil: null,
+      errorStreakSince: null,
+      lastSuccessAt: nowIso(),
       checkHistory,
       // Carry the failure log across recoveries. `result.state` is rebuilt from
       // scratch by the pipeline, so without this a single success erased every
@@ -332,6 +334,10 @@ function buildErrorOutcome(
     ...prev,
     lastChecked: nowIso,
     consecutiveErrors,
+    // When the CURRENT failure streak started. `consecutiveErrors` alone can't
+    // tell a fast-cadence site failing for an hour from a slow one failing for
+    // a week, and the quarantine rule (run.ts) needs the wall-clock age.
+    errorStreakSince: consecutiveErrors === 1 ? nowIso : ((prev.errorStreakSince as string | undefined) ?? nowIso),
     lastError: message,
     lastErrorAt: nowIso,
     errorAlertSent: alreadyAlerted || shouldAlert,
