@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-08-22T03:16:51.257Z",
+ "at": "2026-08-23T03:16:58.572Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -683,7 +683,7 @@
  },
  "states": {
   "sharedpour_t8ke": {
-   "lastChecked": "2026-08-22T01:48:51.837Z",
+   "lastChecked": "2026-08-23T01:48:36.838Z",
    "productCount": 23,
    "products": {
     "penelope-project-x-sa-cask-finish": {
@@ -794,18 +794,6 @@
      "url": "https://sharedpour.com/products/starlight-single-barrel-honey-cask-finished-rye-t8ke-single-barrel-select-25-8344-112-proof",
      "firstSeen": "2026-07-10T17:40:18.573Z"
     },
-    "hughes-belle-of-bedford-extra-aged-14-year-single-barrel-barrel-proof-rye-3861-t8ke-private-select": {
-     "handle": "hughes-belle-of-bedford-extra-aged-14-year-single-barrel-barrel-proof-rye-3861-t8ke-private-select",
-     "title": "Hughes \"Belle of Bedford\" Extra Aged 14 Year Single Barrel Barrel Proof Rye #3861 T8KE Private Select",
-     "vendor": "Hughes",
-     "productType": "Rye Whiskey",
-     "tags": [],
-     "minPrice": 149.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/bca06d0a-4659-0898-e702-bb4ac42fed6d.png?v=1785083634",
-     "url": "https://sharedpour.com/products/hughes-belle-of-bedford-extra-aged-14-year-single-barrel-barrel-proof-rye-3861-t8ke-private-select",
-     "firstSeen": "2026-08-20T13:20:12.792Z"
-    },
     "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke": {
      "handle": "el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke",
      "title": "El Jolgorio Mezcal Artesanal: Tepeztate Edition 40 T8KE Exclusive Batch",
@@ -817,6 +805,18 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/El_Jolgorio_Tepeztate_Edition_40_T8KE_Selection_Front.jpg?v=1757451767",
      "url": "https://sharedpour.com/products/el-jolgorio-mezcal-artesanal-tepeztate-edition-40-t8ke",
      "firstSeen": "2026-07-10T17:40:18.573Z"
+    },
+    "hughes-belle-of-bedford-extra-aged-14-year-single-barrel-barrel-proof-rye-3861-t8ke-private-select": {
+     "handle": "hughes-belle-of-bedford-extra-aged-14-year-single-barrel-barrel-proof-rye-3861-t8ke-private-select",
+     "title": "Hughes \"Belle of Bedford\" Extra Aged 14 Year Single Barrel Barrel Proof Rye #3861 T8KE Private Select",
+     "vendor": "Hughes",
+     "productType": "Rye Whiskey",
+     "tags": [],
+     "minPrice": 149.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/bca06d0a-4659-0898-e702-bb4ac42fed6d.png?v=1785083634",
+     "url": "https://sharedpour.com/products/hughes-belle-of-bedford-extra-aged-14-year-single-barrel-barrel-proof-rye-3861-t8ke-private-select",
+     "firstSeen": "2026-08-20T13:20:12.792Z"
     },
     "peerless-single-barrel-rye-t8ke-2026": {
      "handle": "peerless-single-barrel-rye-t8ke-2026",
@@ -965,15 +965,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:fc4b452dc3cdcab1833c6e4c96ef7a53\"",
+    "etag": "\"page_cache:45343637659:ProductListController:353265f210e72ecdc600af6c2f9b29a6\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-22T01:48:51.837Z",
+   "lastFullFetchAt": "2026-08-23T01:48:36.838Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-22T01:48:51.837Z",
+   "lastRestProbeAt": "2026-08-23T01:48:36.838Z",
    "countBaseline": 27,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -983,12 +983,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-22T01:48:51.837Z",
+   "lastSuccessAt": "2026-08-23T01:48:36.838Z",
    "lastSelfHealedPingAt": "2026-07-26T21:23:44.392Z",
    "lastAlertAt": "2026-08-20T13:20:12.793Z"
   },
   "sharedpour_reveries": {
-   "lastChecked": "2026-08-22T01:44:48.360Z",
+   "lastChecked": "2026-08-23T01:50:53.375Z",
    "productCount": 3,
    "products": {
     "the-reveries-8-year-black-is-the-new-orange": {
@@ -1030,16 +1030,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:57c4f530f23294232119c1b2ca7c766f\"",
+    "etag": "\"page_cache:45343637659:ProductListController:77ab34ccabb1ed7408dd48ef4dd16464\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-22T01:44:48.360Z",
+   "lastFullFetchAt": "2026-08-23T01:50:53.375Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-22T01:44:48.360Z",
-   "countBaseline": 126,
+   "lastRestProbeAt": "2026-08-23T01:50:53.375Z",
+   "countBaseline": 128,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -1048,12 +1048,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-22T01:44:48.360Z",
+   "lastSuccessAt": "2026-08-23T01:50:53.375Z",
    "lastSelfHealedPingAt": "2026-07-26T21:03:16.745Z",
    "lastAlertAt": "2026-08-20T16:56:10.067Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-08-22T01:52:12.546Z",
+   "lastChecked": "2026-08-23T01:50:59.434Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1070,15 +1070,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:7b851ba7e9b1be439c19350a0341ca2d\"",
+    "etag": "\"page_cache:66506555478:ProductListController:33df484eaba33442585e5aa59717cd98\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-22T01:52:12.546Z",
+   "lastFullFetchAt": "2026-08-23T01:50:59.434Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-22T01:52:12.546Z",
+   "lastRestProbeAt": "2026-08-23T01:50:59.434Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1088,12 +1088,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-22T01:52:12.546Z",
+   "lastSuccessAt": "2026-08-23T01:50:59.434Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-08-22T01:52:17.696Z",
+   "lastChecked": "2026-08-23T01:49:45.177Z",
    "productCount": 8,
    "products": {
     "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
@@ -1195,15 +1195,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:30aa348c76aed1d9ba11d2b79d93f1be\"",
+    "etag": "\"page_cache:57076547742:ProductListController:7b2cd013b29a9bde4554f3eb253cfe3d\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-22T01:52:17.696Z",
+   "lastFullFetchAt": "2026-08-23T01:49:45.177Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-22T01:52:17.696Z",
+   "lastRestProbeAt": "2026-08-23T01:49:45.177Z",
    "countBaseline": 8,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1213,12 +1213,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-22T01:52:17.696Z",
+   "lastSuccessAt": "2026-08-23T01:49:45.177Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-08-22T02:52:16.728Z",
+   "lastChecked": "2026-08-23T02:12:14.163Z",
    "products": {},
    "httpValidators": {
     "etag": "W/\"52a40e09ab4fdb84ddda9627a22ae6ea--gzip\"",
@@ -1236,10 +1236,10 @@
    "lastAlertAt": "2026-08-10T13:57:12.449Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-22T02:52:16.728Z"
+   "lastSuccessAt": "2026-08-23T02:12:14.163Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-08-22T02:18:08.086Z",
+   "lastChecked": "2026-08-23T02:38:29.428Z",
    "productCount": 1,
    "products": {
     "the-reveries-wire-to-wire": {
@@ -1271,7 +1271,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-22T02:18:08.086Z",
+   "lastSuccessAt": "2026-08-23T02:38:29.428Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-08-10T14:28:09.823Z"
   },
@@ -1607,7 +1607,7 @@
    "cooldownUntil": null
   },
   "sharedpour_provenance": {
-   "lastChecked": "2026-08-22T01:51:02.684Z",
+   "lastChecked": "2026-08-23T01:47:28.287Z",
    "productCount": 3,
    "products": {
     "provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel": {
@@ -1649,16 +1649,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:6ecee032f92a4e3ae434f6daa9bd8118\"",
+    "etag": "\"page_cache:45343637659:ProductListController:77ab34ccabb1ed7408dd48ef4dd16464\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-22T01:51:02.684Z",
+   "lastFullFetchAt": "2026-08-23T01:47:28.287Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-22T01:51:02.684Z",
-   "countBaseline": 126,
+   "lastRestProbeAt": "2026-08-23T01:47:28.287Z",
+   "countBaseline": 128,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -1667,12 +1667,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-22T01:51:02.684Z",
+   "lastSuccessAt": "2026-08-23T01:47:28.288Z",
    "lastSelfHealedPingAt": "2026-08-02T21:00:39.204Z",
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-08-22T01:51:06.256Z",
+   "lastChecked": "2026-08-23T01:49:49.447Z",
    "productCount": 36,
    "products": {
     "hughes-belle-of-bedford-extra-aged-14-year-single-barrel-barrel-proof-rye-3861-t8ke-private-select": {
@@ -2110,16 +2110,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:6ecee032f92a4e3ae434f6daa9bd8118\"",
+    "etag": "\"page_cache:45343637659:ProductListController:77ab34ccabb1ed7408dd48ef4dd16464\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-22T01:51:06.256Z",
+   "lastFullFetchAt": "2026-08-23T01:49:49.447Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-22T01:51:06.256Z",
-   "countBaseline": 126,
+   "lastRestProbeAt": "2026-08-23T01:49:49.447Z",
+   "countBaseline": 128,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2128,7 +2128,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-22T01:51:06.256Z",
+   "lastSuccessAt": "2026-08-23T01:49:49.447Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-08-20T19:11:22.106Z"
   },
