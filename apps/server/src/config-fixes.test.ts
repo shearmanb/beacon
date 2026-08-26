@@ -68,6 +68,61 @@ describe("config fixes (boot-time config corrections)", () => {
     expect((await store.sites.get("sharedpour_browser"))!.enabled).toBe(true);
   });
 
+  it("consolidates the sharedpour checkers into one watchlist without losing baselines", async () => {
+    const mkSite = (id: string, name: string, titleContains: string[], extra: Record<string, unknown> = {}) =>
+      store.sites.upsert({
+        id,
+        name,
+        intervalMinutes: 20,
+        source: { kind: "shopify_rest", baseUrl: "https://sharedpour.com", ...extra },
+        filters: { titleContains },
+      });
+    await mkSite("sharedpour_t8ke_all", "SharedPour T8KE (all)", ["T8ke"]);
+    await mkSite("sharedpour_t8ke", "SharedPour T8KE", ["T8ke"], { collectionPath: "/collections/t8ke" });
+    await mkSite("sharedpour_reveries", "SharedPour The Reveries", ["Reveries"]);
+    await mkSite("sharedpour_provenance", "SharedPour Provenance", ["Provenance"]);
+    const prod = (handle: string) => ({
+      handle,
+      title: handle,
+      url: `https://sharedpour.com/products/${handle}`,
+      tags: [],
+      available: true,
+    });
+    await store.state.save("sharedpour_t8ke_all", {
+      lastChecked: "2026-08-26T00:00:00.000Z",
+      products: { "t8ke-a": prod("t8ke-a") },
+      recentlySeen: { "t8ke-a": "2026-08-26T00:00:00.000Z" },
+    });
+    await store.state.save("sharedpour_reveries", {
+      lastChecked: "2026-08-26T00:00:00.000Z",
+      products: { "rev-a": prod("rev-a") },
+    });
+    await store.state.save("sharedpour_provenance", {
+      lastChecked: "2026-08-26T00:00:00.000Z",
+      products: { "prov-a": prod("prov-a") },
+    });
+
+    await applyConfigFixes(store, log);
+
+    const survivor = await store.sites.get("sharedpour_t8ke_all");
+    expect(survivor!.definition.name).toBe("SharedPour Watchlist");
+    expect(survivor!.definition.filters.titleContains).toEqual(["T8ke", "Reveries", "Provenance"]);
+    expect(survivor!.enabled).toBe(true);
+    for (const id of ["sharedpour_t8ke", "sharedpour_reveries", "sharedpour_provenance"]) {
+      expect((await store.sites.get(id))!.enabled).toBe(false); // disabled, never deleted
+    }
+    // Union baseline: retiree-only handles are present, so the widened filter
+    // cannot re-alert them as "new" on the first consolidated check.
+    const st = await store.state.load("sharedpour_t8ke_all");
+    expect(Object.keys(st!.products!).sort()).toEqual(["prov-a", "rev-a", "t8ke-a"]);
+    expect((st!["recentlySeen"] as Record<string, string>)["t8ke-a"]).toBeDefined();
+
+    // Operator later re-enables a retiree by hand — a redeploy must not re-retire it.
+    await store.sites.setEnabled("sharedpour_reveries", true);
+    await applyConfigFixes(store, log);
+    expect((await store.sites.get("sharedpour_reveries"))!.enabled).toBe(true);
+  });
+
   it("never recreates a site the operator deleted (the old resurrect-on-deploy bug)", async () => {
     await applyConfigFixes(store, log); // first boot: one-shots latch
     // Nothing in the fix list may create a site out of thin air on a later boot.

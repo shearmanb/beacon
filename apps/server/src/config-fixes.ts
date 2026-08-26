@@ -163,6 +163,55 @@ export const ONE_SHOTS: ConfigFix[] = [
     },
   },
   {
+    id: "consolidate_sharedpour_20260826",
+    description: "Merge the four sharedpour.com checkers into one root watchlist",
+    // Operator-approved (2026-08-26), goal: fewer blocks. Three of the four
+    // checkers fetched the IDENTICAL root products.json every cycle (they
+    // differ only by title keyword, and titleContains is already OR-matched),
+    // and the collection-scoped t8ke checker also title-filters, making it a
+    // strict subset of the root scan — so four checkers meant ~4× the request
+    // pressure on the one host whose WAF tightens exactly at drop time (the
+    // Jul 22 miss). One survivor now watches all three keywords. The retirees
+    // are DISABLED, never deleted: rollback is a dashboard click. The
+    // survivor's baseline is pre-merged with the retirees' rosters BEFORE the
+    // filter widens, so the widened filter can't fire a "new product" flood —
+    // and unlike a state-clear, a genuinely new bottle landing mid-migration
+    // still alerts instead of being swallowed by baseline suppression.
+    async run(store, log) {
+      type State = NonNullable<Awaited<ReturnType<BeaconStore["state"]["load"]>>>;
+      const survivor = await store.sites.get("sharedpour_t8ke_all");
+      if (!survivor) {
+        log("SharedPour consolidation skipped: sharedpour_t8ke_all not found (never recreated).");
+        return;
+      }
+      const retirees = ["sharedpour_t8ke", "sharedpour_reveries", "sharedpour_provenance"];
+      const state: State = (await store.state.load("sharedpour_t8ke_all")) ?? { lastChecked: null };
+      let products = { ...(state.products ?? {}) };
+      let recentlySeen = { ...((state["recentlySeen"] as Record<string, string> | undefined) ?? {}) };
+      for (const id of retirees) {
+        const s = await store.state.load(id);
+        // Survivor's own entries win collisions (spread last).
+        products = { ...(s?.products ?? {}), ...products };
+        recentlySeen = { ...((s?.["recentlySeen"] as Record<string, string> | undefined) ?? {}), ...recentlySeen };
+      }
+      await store.state.save("sharedpour_t8ke_all", { ...state, products, recentlySeen });
+      await store.sites.upsert({
+        ...survivor.definition,
+        name: "SharedPour Watchlist",
+        filters: { ...survivor.definition.filters, titleContains: ["T8ke", "Reveries", "Provenance"] },
+      });
+      log(
+        `Consolidated sharedpour: watchlist filters T8ke|Reveries|Provenance, baseline carries ${Object.keys(products).length} product(s).`,
+      );
+      for (const id of retirees) {
+        const row = await store.sites.get(id);
+        if (!row || !row.definition.enabled) continue;
+        await store.sites.upsert({ ...row.definition, enabled: false });
+        log(`Retired ${id} — merged into sharedpour_t8ke_all (disabled, not deleted).`);
+      }
+    },
+  },
+  {
     id: "retire_browser_twin_20260814",
     description: "Disable the Browserbase twin — 362 consecutive HTTP 402s",
     // The real-browser experiment (2026-07-24) ran out of Browserbase quota and

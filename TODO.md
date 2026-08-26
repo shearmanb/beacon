@@ -39,10 +39,14 @@ files / 308 tests green, `next build` clean):
 
 Still open from the review:
 
-- [ ] **1d Consolidate the four overlapping sharedpour.com checkers.** 2b
-      removed the duplicate *pings*, but four checkers still hit the one host
-      that actively blocks us. Collapse to one root checker with keyword
-      groups. _M._
+- [x] **1d Consolidate the four overlapping sharedpour.com checkers** ✅
+      (2026-08-26, operator-approved) — `consolidate_sharedpour_20260826`
+      one-shot: `sharedpour_t8ke_all` → "SharedPour Watchlist" with
+      `titleContains ["T8ke","Reveries","Provenance"]` (OR semantics already
+      existed, so no keyword-groups code was needed); its baseline pre-merged
+      with the retirees' rosters (no flood, no blind window); the other three
+      disabled, not deleted (rollback = one dashboard click). REST pressure on
+      the blocking host drops ~4× → 1× per due-cycle.
 - [ ] **1g Docs drift** — the browser tier / `/api/ops/*` / the Jul 28
       observability batch still aren't described in the CLAUDE.md v2 section or
       REBUILD.md. _XS._
