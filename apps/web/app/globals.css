@@ -1117,6 +1117,55 @@ select.in.sched {
   color: var(--text);
 }
 
+/* Site-cadence listing (/schedules): a 24h ET strip per site, one cell per
+   hour, colored by check intensity (t0 ≤5m · t1 ≤15m · t2 ≤60m · t3 slower),
+   with the current ET hour outlined. */
+.cadence-table td {
+  vertical-align: top;
+}
+.cad-strip {
+  display: flex;
+  gap: 1px;
+  width: 100%;
+  max-width: 420px;
+  height: 12px;
+}
+.cad-h {
+  flex: 1;
+  border-radius: 2px;
+  background: var(--line);
+}
+.cad-h.t0 {
+  background: var(--accent);
+}
+.cad-h.t1 {
+  background: color-mix(in srgb, var(--accent) 55%, var(--panel));
+}
+.cad-h.t2 {
+  background: color-mix(in srgb, var(--accent) 25%, var(--panel));
+}
+.cad-h.now {
+  outline: 1px solid var(--text);
+  outline-offset: 1px;
+}
+.cad-ticks {
+  display: flex;
+  justify-content: space-between;
+  max-width: 420px;
+  font-size: 9px;
+  color: var(--faint);
+  margin-top: 2px;
+}
+.cad-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+.cad-off {
+  opacity: 0.45;
+}
+
 /* Target-bottle rows (/unicorn). Fixed grid tracks rather than a wrapping flex
    row, so the price block, keyword count and actions sit in the same columns on
    every row no matter how long the bottle name or research note is. */
@@ -1250,6 +1299,16 @@ select.in.sched {
   }
   .ptable td .btn {
     width: 100%;
+  }
+
+  /* Cadence cell: the strip + ticks + chips need the full card width, so the
+     label sits above the content instead of beside it. */
+  .cadence-table td[data-label="cadence"] {
+    display: block;
+  }
+  .cadence-table td[data-label="cadence"]::before {
+    display: block;
+    margin-bottom: 4px;
   }
 
   /* Bottle rows stack: four narrow columns are unreadable on a phone. */
