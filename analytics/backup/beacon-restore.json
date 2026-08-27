@@ -1,11 +1,11 @@
 {
  "version": 1,
- "at": "2026-08-26T03:17:22.469Z",
+ "at": "2026-08-27T03:17:57.307Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
    "name": "SharedPour T8KE",
-   "enabled": true,
+   "enabled": false,
    "schedule": "drop_windows",
    "intervalMinutes": 20,
    "imminent": false,
@@ -47,7 +47,7 @@
   {
    "id": "sharedpour_reveries",
    "name": "SharedPour The Reveries",
-   "enabled": true,
+   "enabled": false,
    "schedule": "drop_windows",
    "intervalMinutes": 20,
    "imminent": false,
@@ -324,7 +324,7 @@
   {
    "id": "sharedpour_provenance",
    "name": "SharedPour Provenance",
-   "enabled": true,
+   "enabled": false,
    "schedule": "drop_windows",
    "intervalMinutes": 20,
    "imminent": false,
@@ -332,7 +332,8 @@
     "onNew": true,
     "onRestock": true,
     "onSoldOut": true,
-    "onSiteReset": true
+    "onSiteReset": true,
+    "dedupeAcrossSites": true
    },
    "filters": {
     "titleContains": [
@@ -360,7 +361,7 @@
   },
   {
    "id": "sharedpour_t8ke_all",
-   "name": "SharedPour T8KE (all)",
+   "name": "SharedPour Watchlist",
    "enabled": true,
    "schedule": "drop_windows",
    "imminent": false,
@@ -368,11 +369,14 @@
     "onNew": true,
     "onRestock": true,
     "onSoldOut": true,
-    "onSiteReset": true
+    "onSiteReset": true,
+    "dedupeAcrossSites": true
    },
    "filters": {
     "titleContains": [
-     "T8ke"
+     "T8ke",
+     "Reveries",
+     "Provenance"
     ],
     "titleExcludes": [],
     "vendorIs": [],
@@ -683,7 +687,7 @@
  },
  "states": {
   "sharedpour_t8ke": {
-   "lastChecked": "2026-08-26T01:46:55.998Z",
+   "lastChecked": "2026-08-26T07:57:48.015Z",
    "productCount": 23,
    "products": {
     "penelope-project-x-sa-cask-finish": {
@@ -965,15 +969,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:e7e45250ccef31b1467e0d1cfb546143\"",
+    "etag": "\"page_cache:45343637659:ProductListController:0519f13db8b7e417777ee68dee5f6082\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-26T01:46:55.998Z",
+   "lastFullFetchAt": "2026-08-26T07:57:48.015Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-26T01:46:55.998Z",
+   "lastRestProbeAt": "2026-08-26T07:57:48.015Z",
    "countBaseline": 26,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -983,12 +987,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-26T01:46:55.998Z",
+   "lastSuccessAt": "2026-08-26T07:57:48.016Z",
    "lastSelfHealedPingAt": "2026-07-26T21:23:44.392Z",
    "lastAlertAt": "2026-08-24T03:48:25.276Z"
   },
   "sharedpour_reveries": {
-   "lastChecked": "2026-08-26T01:49:02.448Z",
+   "lastChecked": "2026-08-26T08:37:17.686Z",
    "productCount": 3,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1030,15 +1034,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:a034cb26a2402b4f2fa2f464727fa031\"",
+    "etag": "\"page_cache:45343637659:ProductListController:74d97e9da13e3e888325931394f7e84d\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-26T01:34:38.968Z",
+   "lastFullFetchAt": "2026-08-26T08:37:17.686Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-26T01:34:38.968Z",
+   "lastRestProbeAt": "2026-08-26T08:37:17.686Z",
    "countBaseline": 120,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1048,12 +1052,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-26T01:49:02.448Z",
+   "lastSuccessAt": "2026-08-26T08:37:17.687Z",
    "lastSelfHealedPingAt": "2026-07-26T21:03:16.745Z",
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-08-26T01:54:16.459Z",
+   "lastChecked": "2026-08-27T01:56:35.389Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1070,15 +1074,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:639796d0a9da6e013df71a69f9198d24\"",
+    "etag": "\"page_cache:66506555478:ProductListController:a3d24f3dbddd052cea3c70c270039975\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-26T01:54:16.459Z",
+   "lastFullFetchAt": "2026-08-27T01:56:35.389Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-26T01:54:16.459Z",
+   "lastRestProbeAt": "2026-08-27T01:56:35.389Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1088,12 +1092,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-26T01:54:16.460Z",
+   "lastSuccessAt": "2026-08-27T01:56:35.389Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-08-26T01:50:05.701Z",
+   "lastChecked": "2026-08-27T01:56:40.893Z",
    "productCount": 8,
    "products": {
     "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
@@ -1195,15 +1199,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:a0b1ac6f43d6c1ec428b8f20ee81fe17\"",
+    "etag": "\"page_cache:57076547742:ProductListController:d9b2aa76c33432ad746afaa963629a30\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-26T01:50:05.701Z",
+   "lastFullFetchAt": "2026-08-27T01:56:40.893Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-26T01:50:05.701Z",
+   "lastRestProbeAt": "2026-08-27T01:56:40.893Z",
    "countBaseline": 8,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1213,12 +1217,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-26T01:50:05.701Z",
+   "lastSuccessAt": "2026-08-27T01:56:40.893Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-08-26T03:00:19.285Z",
+   "lastChecked": "2026-08-27T02:53:52.766Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1233,10 +1237,10 @@
    "lastAlertAt": "2026-08-25T19:33:45.872Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-26T03:00:19.286Z"
+   "lastSuccessAt": "2026-08-27T02:53:52.766Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-08-26T02:30:33.474Z",
+   "lastChecked": "2026-08-27T02:40:02.485Z",
    "productCount": 1,
    "products": {
     "the-reveries-wire-to-wire": {
@@ -1252,17 +1256,17 @@
      "firstSeen": "2026-08-10T14:28:09.823Z"
     }
    },
-   "emptyStreak": 8,
+   "emptyStreak": 31,
    "emptyAlertSent": true,
-   "emptyAlertAt": "2026-08-25T21:26:49.293Z",
+   "emptyAlertAt": "2026-08-26T22:27:24.746Z",
    "consecutiveErrors": 0,
    "errorAlertSent": false,
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-26T02:30:33.474Z",
+   "lastSuccessAt": "2026-08-27T02:40:02.486Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-08-25T21:26:49.293Z"
+   "lastAlertAt": "2026-08-26T22:27:24.746Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1596,7 +1600,7 @@
    "cooldownUntil": null
   },
   "sharedpour_provenance": {
-   "lastChecked": "2026-08-26T01:44:53.221Z",
+   "lastChecked": "2026-08-26T08:18:40.674Z",
    "productCount": 3,
    "products": {
     "provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel": {
@@ -1638,15 +1642,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:a034cb26a2402b4f2fa2f464727fa031\"",
+    "etag": "\"page_cache:45343637659:ProductListController:74d97e9da13e3e888325931394f7e84d\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-26T01:44:53.221Z",
+   "lastFullFetchAt": "2026-08-26T08:18:40.674Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-26T01:44:53.221Z",
+   "lastRestProbeAt": "2026-08-26T08:18:40.674Z",
    "countBaseline": 120,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1656,14 +1660,38 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-26T01:44:53.221Z",
+   "lastSuccessAt": "2026-08-26T08:18:40.675Z",
    "lastSelfHealedPingAt": "2026-08-02T21:00:39.204Z",
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-08-26T01:53:13.139Z",
-   "productCount": 33,
+   "lastChecked": "2026-08-27T01:46:22.497Z",
+   "productCount": 39,
    "products": {
+    "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
+     "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
+     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Island In The Sun\" #27706 Stuff & Whiskey Single Barrel Select",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 89.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-17at10.45.51.png?v=1786978009",
+     "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
+     "firstSeen": "2026-08-25T18:47:00.603Z"
+    },
+    "the-reveries-9-year-single-barrel-barrel-proof-selection-birthday-brunch-stuff-whiskey-exclusive": {
+     "handle": "the-reveries-9-year-single-barrel-barrel-proof-selection-birthday-brunch-stuff-whiskey-exclusive",
+     "title": "THE REVERIES: 9 Year Single Barrel Barrel Proof Selection \"Birthday Brunch\" Stuff & Whiskey Exclusive",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 109.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-17at10.46.34.png?v=1786978011",
+     "url": "https://sharedpour.com/products/the-reveries-9-year-single-barrel-barrel-proof-selection-birthday-brunch-stuff-whiskey-exclusive",
+     "firstSeen": "2026-08-25T18:47:00.603Z"
+    },
     "t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey": {
      "handle": "t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey",
      "title": "T8KE x Bull Run Distillery 9 Year Exclusive Single Barrel Barrel Proof American Whiskey",
@@ -1707,7 +1735,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 109.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/60f2882b-d6b4-7133-992b-9e36d287fe64.jpg?v=1779037044",
      "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-ky241-9-year-kentucky-bourbon",
      "firstSeen": "2026-08-20T13:00:48.293Z"
@@ -1735,6 +1763,18 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/7b38796f-4bfd-1496-d7c6-4ccdf9677790.jpg?v=1783861795",
      "url": "https://sharedpour.com/products/old-forester-100pf-endalz-x-t8ke",
      "firstSeen": "2026-08-19T21:05:30.642Z"
+    },
+    "the-reveries-8-year-black-is-the-new-orange": {
+     "handle": "the-reveries-8-year-black-is-the-new-orange",
+     "title": "THE REVERIES Single Barrel Kentucky Bourbon 8 Year #27385 \"Cask In Point: Black is the New Orange\" Select",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 79.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CIP8YR.png?v=1786732509",
+     "url": "https://sharedpour.com/products/the-reveries-8-year-black-is-the-new-orange",
+     "firstSeen": "2026-08-16T11:30:32.586Z"
     },
     "found-north-x-t8ke-the-eleventh-hour-19-year-exclusive-blend": {
      "handle": "found-north-x-t8ke-the-eleventh-hour-19-year-exclusive-blend",
@@ -1783,6 +1823,30 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ea0cec6-1621-ee9c-d16f-368a769082f8.jpg?v=1764513403",
      "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45",
      "firstSeen": "2026-07-16T20:43:05.999Z"
+    },
+    "provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel": {
+     "handle": "provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel",
+     "title": "Provenance Bourbon x Piedmont Environmental Council Barrel Strength Single Barrel",
+     "vendor": "1787 Provenance",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 99.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/8975a464-c0aa-1239-9cbe-18a77647e77b.png?v=1783251054",
+     "url": "https://sharedpour.com/products/provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel",
+     "firstSeen": "2026-07-10T16:44:13.354Z"
+    },
+    "provenance-small-batch-kentucky-straight-bourbon": {
+     "handle": "provenance-small-batch-kentucky-straight-bourbon",
+     "title": "Provenance Small Batch Kentucky Straight Bourbon",
+     "vendor": "1787 Provenance",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 49.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/76a443f3-4370-9b60-2506-1ae42040d8f2.png?v=1783250625",
+     "url": "https://sharedpour.com/products/provenance-small-batch-kentucky-straight-bourbon",
+     "firstSeen": "2026-07-10T16:44:13.354Z"
     },
     "collaborate-save-t8ke-exclusives-bundle": {
      "handle": "collaborate-save-t8ke-exclusives-bundle",
@@ -2059,19 +2123,31 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-16at07.12.45.png?v=1760613170",
      "url": "https://sharedpour.com/products/bardstown-bourbon-co-single-barrel-t8ke",
      "firstSeen": "2026-07-10T18:25:11.230Z"
+    },
+    "provenance-7-year-single-barrel-kentucky-straight-bourbon": {
+     "handle": "provenance-7-year-single-barrel-kentucky-straight-bourbon",
+     "title": "Provenance 7 Year Single Barrel Kentucky Straight Bourbon",
+     "vendor": "1787 Provenance",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 69.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/provenance-7-bottle-white_1.jpg?v=1756148006",
+     "url": "https://sharedpour.com/products/provenance-7-year-single-barrel-kentucky-straight-bourbon",
+     "firstSeen": "2026-07-10T16:44:13.354Z"
     }
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:a034cb26a2402b4f2fa2f464727fa031\"",
+    "etag": "\"page_cache:45343637659:ProductListController:b25d8e82342b95ff911262dbcc910807\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-26T01:53:13.139Z",
+   "lastFullFetchAt": "2026-08-27T01:31:56.224Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-26T01:53:13.139Z",
+   "lastRestProbeAt": "2026-08-27T01:31:56.224Z",
    "countBaseline": 120,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2081,9 +2157,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-26T01:53:13.140Z",
+   "lastSuccessAt": "2026-08-27T01:46:22.497Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-08-24T04:05:16.796Z"
+   "lastAlertAt": "2026-08-26T08:04:01.923Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
