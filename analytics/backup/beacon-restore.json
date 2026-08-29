@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-08-28T03:18:19.683Z",
+ "at": "2026-08-29T03:18:54.970Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1057,7 +1057,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-08-28T01:44:10.861Z",
+   "lastChecked": "2026-08-29T01:47:07.297Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1074,15 +1074,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:5cbdfd46af20f38edb25f668de251963\"",
+    "etag": "\"page_cache:66506555478:ProductListController:6f3a66f181fbd9be8b44b2999c0e3a64\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-28T01:44:10.860Z",
+   "lastFullFetchAt": "2026-08-29T01:47:07.297Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-28T01:44:10.860Z",
+   "lastRestProbeAt": "2026-08-29T01:47:07.297Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1092,12 +1092,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-28T01:44:10.861Z",
+   "lastSuccessAt": "2026-08-29T01:47:07.297Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-08-28T01:48:13.607Z",
+   "lastChecked": "2026-08-29T01:48:17.231Z",
    "productCount": 8,
    "products": {
     "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
@@ -1199,15 +1199,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:e59d40bde651417dbfec976048246588\"",
+    "etag": "\"page_cache:57076547742:ProductListController:c3475afbb41e05513620e223b4da329a\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-28T01:48:13.607Z",
+   "lastFullFetchAt": "2026-08-29T01:48:17.231Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-28T01:48:13.607Z",
+   "lastRestProbeAt": "2026-08-29T01:48:17.231Z",
    "countBaseline": 8,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1217,12 +1217,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-28T01:48:13.607Z",
+   "lastSuccessAt": "2026-08-29T01:48:17.231Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-08-28T03:01:11.062Z",
+   "lastChecked": "2026-08-29T02:54:22.601Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1237,10 +1237,10 @@
    "lastAlertAt": "2026-08-25T19:33:45.872Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-28T03:01:11.062Z"
+   "lastSuccessAt": "2026-08-29T02:54:22.601Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-08-28T02:42:11.760Z",
+   "lastChecked": "2026-08-29T03:02:39.926Z",
    "productCount": 1,
    "products": {
     "the-reveries-wire-to-wire": {
@@ -1256,17 +1256,17 @@
      "firstSeen": "2026-08-10T14:28:09.823Z"
     }
    },
-   "emptyStreak": 54,
+   "emptyStreak": 78,
    "emptyAlertSent": true,
-   "emptyAlertAt": "2026-08-27T23:26:39.299Z",
+   "emptyAlertAt": "2026-08-29T00:12:22.240Z",
    "consecutiveErrors": 0,
    "errorAlertSent": false,
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-28T02:42:11.760Z",
+   "lastSuccessAt": "2026-08-29T03:02:39.926Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-08-27T23:26:39.301Z"
+   "lastAlertAt": "2026-08-29T00:12:22.240Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1665,8 +1665,8 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-08-28T01:59:12.012Z",
-   "productCount": 39,
+   "lastChecked": "2026-08-29T01:45:04.116Z",
+   "productCount": 38,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
      "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
@@ -1811,18 +1811,6 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Week30Bundle.png?v=1784463345",
      "url": "https://sharedpour.com/products/barrell-craft-spirits-x-t8ke-synthesis-iii-ice-wine-collection",
      "firstSeen": "2026-08-02T21:32:12.856Z"
-    },
-    "nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45": {
-     "handle": "nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45",
-     "title": "NULU x T8KE Single Barrel Hazmat Kentucky Bourbon KY45",
-     "vendor": "Nulu",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 179.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ea0cec6-1621-ee9c-d16f-368a769082f8.jpg?v=1764513403",
-     "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky45",
-     "firstSeen": "2026-07-16T20:43:05.999Z"
     },
     "provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel": {
      "handle": "provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel",
@@ -2139,16 +2127,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:a717e672c1f382770be0f39ec8ab4011\"",
+    "etag": "\"page_cache:45343637659:ProductListController:1da2fa89a5be2f1837b99d9c4e4689f4\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-28T01:44:15.438Z",
+   "lastFullFetchAt": "2026-08-29T01:30:55.874Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-28T01:44:15.438Z",
-   "countBaseline": 121,
+   "lastRestProbeAt": "2026-08-29T01:30:55.874Z",
+   "countBaseline": 122,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2157,7 +2145,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-28T01:59:12.012Z",
+   "lastSuccessAt": "2026-08-29T01:45:04.116Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-08-26T08:04:01.923Z"
   },
