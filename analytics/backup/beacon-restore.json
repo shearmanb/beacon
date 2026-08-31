@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-08-30T03:19:16.428Z",
+ "at": "2026-08-31T03:20:08.067Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1057,7 +1057,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-08-30T01:49:09.824Z",
+   "lastChecked": "2026-08-31T01:51:06.199Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1074,15 +1074,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:c817495659539ffd9db018dceae0da3c\"",
+    "etag": "\"page_cache:66506555478:ProductListController:71fd8dfe6b28c0d0abfb3a7fe8fbbf67\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-30T01:49:09.824Z",
+   "lastFullFetchAt": "2026-08-31T01:37:18.778Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-30T01:49:09.824Z",
+   "lastRestProbeAt": "2026-08-31T01:37:18.778Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1092,12 +1092,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-30T01:49:09.824Z",
+   "lastSuccessAt": "2026-08-31T01:51:06.199Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-08-30T01:47:01.393Z",
+   "lastChecked": "2026-08-31T01:54:13.976Z",
    "productCount": 8,
    "products": {
     "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
@@ -1199,15 +1199,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:3937961f6f246355634bd4ff18facd25\"",
+    "etag": "\"page_cache:57076547742:ProductListController:43214cd4f183b465fe96959e555f296d\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-30T01:47:01.393Z",
+   "lastFullFetchAt": "2026-08-31T01:54:13.976Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-30T01:47:01.393Z",
+   "lastRestProbeAt": "2026-08-31T01:54:13.976Z",
    "countBaseline": 8,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1217,12 +1217,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-30T01:47:01.393Z",
+   "lastSuccessAt": "2026-08-31T01:54:13.976Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-08-30T02:30:19.410Z",
+   "lastChecked": "2026-08-31T02:44:13.766Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1237,10 +1237,10 @@
    "lastAlertAt": "2026-08-25T19:33:45.872Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-30T02:30:19.410Z"
+   "lastSuccessAt": "2026-08-31T02:44:13.766Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-08-30T02:45:20.271Z",
+   "lastChecked": "2026-08-31T02:32:16.057Z",
    "productCount": 1,
    "products": {
     "the-reveries-wire-to-wire": {
@@ -1256,17 +1256,17 @@
      "firstSeen": "2026-08-10T14:28:09.823Z"
     }
    },
-   "emptyStreak": 101,
+   "emptyStreak": 124,
    "emptyAlertSent": true,
-   "emptyAlertAt": "2026-08-30T00:31:48.397Z",
+   "emptyAlertAt": "2026-08-31T01:30:04.938Z",
    "consecutiveErrors": 0,
    "errorAlertSent": false,
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-30T02:45:20.271Z",
+   "lastSuccessAt": "2026-08-31T02:32:16.057Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-08-30T00:31:48.397Z"
+   "lastAlertAt": "2026-08-31T01:30:04.938Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1665,8 +1665,8 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-08-30T01:51:10.577Z",
-   "productCount": 38,
+   "lastChecked": "2026-08-31T01:53:12.133Z",
+   "productCount": 35,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
      "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
@@ -1678,18 +1678,6 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-17at10.45.51.png?v=1786978009",
      "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
-     "firstSeen": "2026-08-25T18:47:00.603Z"
-    },
-    "the-reveries-9-year-single-barrel-barrel-proof-selection-birthday-brunch-stuff-whiskey-exclusive": {
-     "handle": "the-reveries-9-year-single-barrel-barrel-proof-selection-birthday-brunch-stuff-whiskey-exclusive",
-     "title": "THE REVERIES: 9 Year Single Barrel Barrel Proof Selection \"Birthday Brunch\" Stuff & Whiskey Exclusive",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 109.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-17at10.46.34.png?v=1786978011",
-     "url": "https://sharedpour.com/products/the-reveries-9-year-single-barrel-barrel-proof-selection-birthday-brunch-stuff-whiskey-exclusive",
      "firstSeen": "2026-08-25T18:47:00.603Z"
     },
     "t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey": {
@@ -1704,18 +1692,6 @@
      "url": "https://sharedpour.com/products/t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey",
      "firstSeen": "2026-08-23T11:44:55.436Z"
     },
-    "hughes-belle-of-bedford-extra-aged-14-year-single-barrel-barrel-proof-rye-3861-t8ke-private-select": {
-     "handle": "hughes-belle-of-bedford-extra-aged-14-year-single-barrel-barrel-proof-rye-3861-t8ke-private-select",
-     "title": "Hughes \"Belle of Bedford\" Extra Aged 14 Year Single Barrel Barrel Proof Rye #3861 T8KE Private Select",
-     "vendor": "Hughes",
-     "productType": "Rye Whiskey",
-     "tags": [],
-     "minPrice": 149.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/bca06d0a-4659-0898-e702-bb4ac42fed6d.png?v=1785083634",
-     "url": "https://sharedpour.com/products/hughes-belle-of-bedford-extra-aged-14-year-single-barrel-barrel-proof-rye-3861-t8ke-private-select",
-     "firstSeen": "2026-08-20T13:22:42.808Z"
-    },
     "t8ke-x-new-louisville-barrel-house-the-bones-w113-8-year-double-oaked-wheated-kentucky-bourbon": {
      "handle": "t8ke-x-new-louisville-barrel-house-the-bones-w113-8-year-double-oaked-wheated-kentucky-bourbon",
      "title": "T8KE x NULU W113 8 Year Double Oaked Wheated Kentucky Bourbon",
@@ -1727,18 +1703,6 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00940.jpg?v=1780229732",
      "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-w113-8-year-double-oaked-wheated-kentucky-bourbon",
      "firstSeen": "2026-08-20T13:12:46.037Z"
-    },
-    "t8ke-x-new-louisville-barrel-house-the-bones-ky241-9-year-kentucky-bourbon": {
-     "handle": "t8ke-x-new-louisville-barrel-house-the-bones-ky241-9-year-kentucky-bourbon",
-     "title": "T8KE x New Louisville Barrel House \"THE BONES\" KY241 9 Year Kentucky Bourbon",
-     "vendor": "Nulu",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 109.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/60f2882b-d6b4-7133-992b-9e36d287fe64.jpg?v=1779037044",
-     "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-ky241-9-year-kentucky-bourbon",
-     "firstSeen": "2026-08-20T13:00:48.293Z"
     },
     "old-forester-single-barrel-bourbon-concierge-x-t8ke": {
      "handle": "old-forester-single-barrel-bourbon-concierge-x-t8ke",
@@ -2127,16 +2091,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:6904c8f16f584baa155e57ed2b094916\"",
+    "etag": "\"page_cache:45343637659:ProductListController:58039790214aa660ba8b518e7c5eee80\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-08-30T01:51:10.577Z",
+   "lastFullFetchAt": "2026-08-31T01:38:26.335Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-08-30T01:51:10.577Z",
-   "countBaseline": 123,
+   "lastRestProbeAt": "2026-08-31T01:38:26.335Z",
+   "countBaseline": 113,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2145,7 +2109,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-08-30T01:51:10.578Z",
+   "lastSuccessAt": "2026-08-31T01:53:12.133Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-08-26T08:04:01.923Z"
   },
