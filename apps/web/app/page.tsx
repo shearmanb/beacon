@@ -6,6 +6,7 @@ import { DiagnoseButton } from "../components/DiagnoseButton";
 import { ReveriesPanel } from "../components/ReveriesPanel";
 import { SitesView } from "../components/SitesView";
 import { isReveries } from "../lib/reveries";
+import { rosterIsLive, stockKey } from "../lib/live";
 import { getEffectiveInterval } from "@beacon/shared";
 import type { SiteDefinition } from "@beacon/core";
 
@@ -73,19 +74,31 @@ export default async function SitesPage() {
   // grid regardless of DB order. Stable sort keeps the enabled sites' order.
   cards.sort((a, b) => Number(b.row.enabled) - Number(a.row.enabled));
 
-  const trackedProducts = states.reduce(
-    (n, s) => n + Object.keys((s?.products as object | undefined) ?? {}).length,
+  // Only rosters still being checked count as tracked inventory — a disabled or
+  // long-silent site freezes its last product map forever (see lib/live.ts).
+  const trackedProducts = cards.reduce(
+    (n, { row, state }) =>
+      n +
+      (rosterIsLive(row.enabled, state?.lastChecked as string | null | undefined)
+        ? Object.keys((state?.products as object | undefined) ?? {}).length
+        : 0),
     0,
   );
 
-  // Reveries in stock across every site — the headline goal.
-  let reveriesInStock = 0;
+  // Reveries in stock across every site — the headline goal. Counted over LIVE
+  // rosters only and deduped by host+handle, so a retired checker's frozen
+  // snapshot can't report a sold-out bottle as stock and the several checkers
+  // watching one store can't count the same bottle twice.
+  const reveriesInStockKeys = new Set<string>();
   cards.forEach(({ row, state }) => {
+    if (!rosterIsLive(row.enabled, state?.lastChecked as string | null | undefined)) return;
     const products = (state?.products as Record<string, Record<string, unknown>> | undefined) ?? {};
     for (const p of Object.values(products)) {
-      if (p["available"] === true && isReveries(row.id, String(p["title"] ?? ""))) reveriesInStock += 1;
+      if (p["available"] === true && isReveries(row.id, String(p["title"] ?? "")))
+        reveriesInStockKeys.add(stockKey(String(p["url"] ?? ""), String(p["handle"] ?? "")));
     }
   });
+  const reveriesInStock = reveriesInStockKeys.size;
 
   // Most recent failed check across all sites, from the per-site checkHistory
   // already loaded for the PulseStrip (no extra query).
@@ -116,24 +129,53 @@ export default async function SitesPage() {
 
   // Reveries products in stock across every site, for the ✨ Reveries section.
   // Built from the products already loaded for the page (no extra query).
-  const reveriesProducts = cards
-    .flatMap(({ row, state }) => {
-      const products =
-        (state?.products as Record<string, Record<string, unknown>> | undefined) ?? {};
-      return Object.values(products)
-        .filter((p) => isReveries(row.id, String(p["title"] ?? "")))
-        .map((p) => ({
-          key: `${row.id}:${String(p["handle"])}`,
-          handle: String(p["handle"]),
-          site: row.name,
-          title: String(p["title"] ?? p["handle"]),
-          available: p["available"] === true,
-          minPrice: typeof p["minPrice"] === "number" ? (p["minPrice"] as number) : null,
-          vendor: (p["vendor"] as string | null) ?? null,
-          url: String(p["url"] ?? "#"),
-        }));
-    })
-    .sort((a, b) => Number(b.available) - Number(a.available) || a.title.localeCompare(b.title));
+  // A frozen roster still gets a tile (the bottle is real, and its history is
+  // worth seeing) but is marked `stale` rather than claimed to be in stock.
+  // Deduped by host+handle so overlapping checkers on one store show one tile,
+  // preferring the live entry — that is the one whose availability is current.
+  const reveriesByKey = new Map<
+    string,
+    {
+      key: string;
+      handle: string;
+      site: string;
+      title: string;
+      available: boolean;
+      stale: boolean;
+      minPrice: number | null;
+      vendor: string | null;
+      url: string;
+    }
+  >();
+  cards.forEach(({ row, state }) => {
+    const live = rosterIsLive(row.enabled, state?.lastChecked as string | null | undefined);
+    const products = (state?.products as Record<string, Record<string, unknown>> | undefined) ?? {};
+    for (const p of Object.values(products)) {
+      if (!isReveries(row.id, String(p["title"] ?? ""))) continue;
+      const handle = String(p["handle"]);
+      const url = String(p["url"] ?? "#");
+      const key = stockKey(url, handle);
+      // First live entry wins; a stale one only fills a slot no live site covers.
+      if (reveriesByKey.has(key) && !(live && reveriesByKey.get(key)!.stale)) continue;
+      reveriesByKey.set(key, {
+        key,
+        handle,
+        site: row.name,
+        title: String(p["title"] ?? p["handle"]),
+        available: live && p["available"] === true,
+        stale: !live,
+        minPrice: typeof p["minPrice"] === "number" ? (p["minPrice"] as number) : null,
+        vendor: (p["vendor"] as string | null) ?? null,
+        url,
+      });
+    }
+  });
+  const reveriesProducts = [...reveriesByKey.values()].sort(
+    (a, b) =>
+      Number(b.available) - Number(a.available) ||
+      Number(a.stale) - Number(b.stale) ||
+      a.title.localeCompare(b.title),
+  );
 
   const dayAgo = Date.now() - 86_400_000;
   const alerts24h = recentAlerts.filter(

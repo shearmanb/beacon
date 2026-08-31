@@ -13,6 +13,10 @@ export interface ProductRow {
   handle: string;
   title: string;
   available: boolean;
+  /** Roster frozen (checker disabled / silent >24h): last-known values, not
+   *  current stock. Forced false on `available` upstream, flagged here so the
+   *  row says so instead of quietly reading "sold out". */
+  stale?: boolean;
   minPrice: number | null;
   vendor: string | null;
   url: string;
@@ -49,8 +53,10 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
     const needle = q.trim().toLowerCase();
     return items.filter((it) => {
       if (site && it.site !== site) return false;
+      // A stale row is neither in stock nor sold out — it is unknown, so it
+      // matches neither availability filter.
       if (avail === "in" && !it.available) return false;
-      if (avail === "out" && it.available) return false;
+      if (avail === "out" && (it.available || it.stale)) return false;
       if (revOnly && !it.reveries) return false;
       if (!showIgnored && ignoredSet.has(it.handle)) return false;
       if (
@@ -137,8 +143,15 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
                   {it.minPrice != null ? `$${it.minPrice.toFixed(2)}` : "—"}
                 </td>
                 <td data-label="Status">
-                  <span className={`pill ${it.available ? "yes" : "no"}`}>
-                    {it.available ? "in stock" : "sold out"}
+                  <span
+                    className={`pill ${it.stale ? "stale" : it.available ? "yes" : "no"}`}
+                    title={
+                      it.stale
+                        ? "This checker is disabled or has not run in over 24h — last-known state, not current stock."
+                        : undefined
+                    }
+                  >
+                    {it.stale ? "not checked" : it.available ? "in stock" : "sold out"}
                   </span>
                 </td>
                 <td className="mono muted" data-label="Added" style={{ whiteSpace: "nowrap" }} title={addedLabel(it.firstSeen).full}>

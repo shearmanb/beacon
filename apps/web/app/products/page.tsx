@@ -1,6 +1,7 @@
 import { getStore } from "../../lib/store";
 import { ProductsTable, type ProductRow } from "../../components/ProductsTable";
 import { isReveries } from "../../lib/reveries";
+import { rosterIsLive } from "../../lib/live";
 
 export const dynamic = "force-dynamic";
 
@@ -15,13 +16,19 @@ export default async function ProductsPage() {
   const items: ProductRow[] = [];
   rows.forEach((row, i) => {
     const products = (states[i]?.products as Record<string, Record<string, unknown>> | undefined) ?? {};
+    // A disabled / long-silent checker freezes its roster: its `available` flags
+    // are a snapshot, not stock (see lib/live.ts). Rows stay listed — they are
+    // real products with real history — but are labelled, never counted as in
+    // stock, and never matched by the "in stock" filter.
+    const live = rosterIsLive(row.enabled, states[i]?.lastChecked as string | null | undefined);
     for (const p of Object.values(products)) {
       const title = String(p["title"] ?? p["handle"]);
       items.push({
         site: row.name,
         handle: String(p["handle"]),
         title,
-        available: p["available"] === true,
+        available: live && p["available"] === true,
+        stale: !live,
         minPrice: typeof p["minPrice"] === "number" ? (p["minPrice"] as number) : null,
         vendor: (p["vendor"] as string | null) ?? null,
         url: String(p["url"] ?? "#"),
@@ -32,7 +39,12 @@ export default async function ProductsPage() {
       });
     }
   });
-  items.sort((a, b) => Number(b.available) - Number(a.available) || a.title.localeCompare(b.title));
+  items.sort(
+    (a, b) =>
+      Number(b.available) - Number(a.available) ||
+      Number(a.stale) - Number(b.stale) ||
+      a.title.localeCompare(b.title),
+  );
 
   return (
     <>

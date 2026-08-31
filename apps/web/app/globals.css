@@ -1332,3 +1332,14 @@ select.in.sched {
     margin-left: auto;
   }
 }
+
+/* Frozen-roster marker: a disabled or long-silent checker still shows its last
+   known products, but they must never read as buyable stock. */
+.pill.stale {
+  color: var(--faint);
+  border-color: var(--line2);
+  border-style: dashed;
+}
+.rev-card.stale {
+  opacity: 0.55;
+}

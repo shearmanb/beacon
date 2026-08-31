@@ -17,6 +17,10 @@ export interface RevProduct {
   site: string;
   title: string;
   available: boolean;
+  /** Roster frozen (site disabled / not checked in >24h) — last-known values,
+   *  NOT current stock. Shown so the bottle is still visible, labelled so it
+   *  is never mistaken for something you can buy. */
+  stale?: boolean;
   minPrice: number | null;
   vendor: string | null;
   url: string;
@@ -28,7 +32,7 @@ const STORE_KEY = "beacon_reveries_level";
 
 function Tile({ p }: { p: RevProduct }) {
   return (
-    <div className={`rev-card ${p.available ? "in" : ""}`}>
+    <div className={`rev-card ${p.available ? "in" : ""} ${p.stale ? "stale" : ""}`}>
       <div className="rev-title">
         {p.url && p.url !== "#" ? (
           <a href={p.url} target="_blank" rel="noreferrer">
@@ -39,8 +43,15 @@ function Tile({ p }: { p: RevProduct }) {
         )}
       </div>
       <div className="rev-meta">
-        <span className={`pill ${p.available ? "yes" : "no"}`}>
-          {p.available ? "in stock" : "sold out"}
+        <span
+          className={`pill ${p.stale ? "stale" : p.available ? "yes" : "no"}`}
+          title={
+            p.stale
+              ? "This checker is disabled or has not run in over 24h — last-known state, not current stock."
+              : undefined
+          }
+        >
+          {p.stale ? "not checked" : p.available ? "in stock" : "sold out"}
         </span>
         <span className="mono">{p.minPrice != null ? `$${p.minPrice.toFixed(2)}` : "—"}</span>
       </div>
@@ -91,8 +102,11 @@ export function ReveriesPanel({
   // the other sold-out ones, so it's the first sold-out tile you reach scrolling.
   const compactOrder = [
     ...inStock,
+    // Stale (unchecked) tiles sink below genuinely sold-out ones — they are the
+    // least actionable thing in the row.
     ...soldOut.sort(
       (a, b) =>
+        Number(!!a.stale) - Number(!!b.stale) ||
         Number(b.handle === recentSoldOutHandle) - Number(a.handle === recentSoldOutHandle),
     ),
   ];
