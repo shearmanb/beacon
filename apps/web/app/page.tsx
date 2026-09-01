@@ -6,7 +6,8 @@ import { DiagnoseButton } from "../components/DiagnoseButton";
 import { ReveriesPanel } from "../components/ReveriesPanel";
 import { SitesView } from "../components/SitesView";
 import { isReveries } from "../lib/reveries";
-import { rosterIsLive, stockKey } from "../lib/live";
+import { rosterIsLive } from "../lib/live";
+import { countAllProducts, countLiveProducts, loadReveriesStock } from "../lib/stock";
 import { getEffectiveInterval } from "@beacon/shared";
 import type { SiteDefinition } from "@beacon/core";
 
@@ -76,29 +77,13 @@ export default async function SitesPage() {
 
   // Only rosters still being checked count as tracked inventory — a disabled or
   // long-silent site freezes its last product map forever (see lib/live.ts).
-  const trackedProducts = cards.reduce(
-    (n, { row, state }) =>
-      n +
-      (rosterIsLive(row.enabled, state?.lastChecked as string | null | undefined)
-        ? Object.keys((state?.products as object | undefined) ?? {}).length
-        : 0),
-    0,
-  );
-
-  // Reveries in stock across every site — the headline goal. Counted over LIVE
-  // rosters only and deduped by host+handle, so a retired checker's frozen
-  // snapshot can't report a sold-out bottle as stock and the several checkers
-  // watching one store can't count the same bottle twice.
-  const reveriesInStockKeys = new Set<string>();
-  cards.forEach(({ row, state }) => {
-    if (!rosterIsLive(row.enabled, state?.lastChecked as string | null | undefined)) return;
-    const products = (state?.products as Record<string, Record<string, unknown>> | undefined) ?? {};
-    for (const p of Object.values(products)) {
-      if (p["available"] === true && isReveries(row.id, String(p["title"] ?? "")))
-        reveriesInStockKeys.add(stockKey(String(p["url"] ?? ""), String(p["handle"] ?? "")));
-    }
-  });
-  const reveriesInStock = reveriesInStockKeys.size;
+  const trackedProducts = countLiveProducts(cards);
+  // How many products dashboard-wide are stuck on a frozen roster right now —
+  // the gap between "all" and "live". Surfaced as a header warning below when
+  // >0, so a retired/quarantined checker's stale inventory is visible instead
+  // of silently vanishing from the count (which is how the 2026-08-31 bug hid
+  // for days: the number just looked plausible).
+  const frozenProductCount = countAllProducts(cards) - trackedProducts;
 
   // Most recent failed check across all sites, from the per-site checkHistory
   // already loaded for the PulseStrip (no extra query).
@@ -127,55 +112,11 @@ export default async function SitesPage() {
   const liveMs = heartbeatMs ?? lastCheckMs;
   const workerStale = liveMs === null || liveMs > WORKER_STALE_MS;
 
-  // Reveries products in stock across every site, for the ✨ Reveries section.
-  // Built from the products already loaded for the page (no extra query).
-  // A frozen roster still gets a tile (the bottle is real, and its history is
-  // worth seeing) but is marked `stale` rather than claimed to be in stock.
-  // Deduped by host+handle so overlapping checkers on one store show one tile,
-  // preferring the live entry — that is the one whose availability is current.
-  const reveriesByKey = new Map<
-    string,
-    {
-      key: string;
-      handle: string;
-      site: string;
-      title: string;
-      available: boolean;
-      stale: boolean;
-      minPrice: number | null;
-      vendor: string | null;
-      url: string;
-    }
-  >();
-  cards.forEach(({ row, state }) => {
-    const live = rosterIsLive(row.enabled, state?.lastChecked as string | null | undefined);
-    const products = (state?.products as Record<string, Record<string, unknown>> | undefined) ?? {};
-    for (const p of Object.values(products)) {
-      if (!isReveries(row.id, String(p["title"] ?? ""))) continue;
-      const handle = String(p["handle"]);
-      const url = String(p["url"] ?? "#");
-      const key = stockKey(url, handle);
-      // First live entry wins; a stale one only fills a slot no live site covers.
-      if (reveriesByKey.has(key) && !(live && reveriesByKey.get(key)!.stale)) continue;
-      reveriesByKey.set(key, {
-        key,
-        handle,
-        site: row.name,
-        title: String(p["title"] ?? p["handle"]),
-        available: live && p["available"] === true,
-        stale: !live,
-        minPrice: typeof p["minPrice"] === "number" ? (p["minPrice"] as number) : null,
-        vendor: (p["vendor"] as string | null) ?? null,
-        url,
-      });
-    }
-  });
-  const reveriesProducts = [...reveriesByKey.values()].sort(
-    (a, b) =>
-      Number(b.available) - Number(a.available) ||
-      Number(a.stale) - Number(b.stale) ||
-      a.title.localeCompare(b.title),
-  );
+  // Reveries products in stock across every site, for the ✨ Reveries section —
+  // deduped by bottle and gated by roster liveness (see lib/stock.ts).
+  const reveriesProducts = loadReveriesStock(cards);
+  // Reveries in stock across every site — the headline goal.
+  const reveriesInStock = reveriesProducts.filter((p) => p.available).length;
 
   const dayAgo = Date.now() - 86_400_000;
   const alerts24h = recentAlerts.filter(
@@ -201,17 +142,29 @@ export default async function SitesPage() {
 
   // Live state of the Reveries storefront's password / coming-soon wall, from the
   // reveries_site_status monitor (pageReset = wall up). The leading indicator of
-  // a drop, surfaced in the header at a glance.
-  const revStatusState = cards.find((c) => c.row.id === "reveries_site_status")?.state;
-  const reveriesSite: "open" | "blocked" | "unknown" = !revStatusState?.lastChecked
+  // a drop, surfaced in the header at a glance. Gated through rosterIsLive (same
+  // enabled+fresh check the product surfaces use) so a disabled or long-silent
+  // monitor reads "unknown" instead of confidently repeating its last answer
+  // forever — this indicator had the exact bug lib/stock.ts fixes for stock.
+  const revStatusCard = cards.find((c) => c.row.id === "reveries_site_status");
+  const revStatusState = revStatusCard?.state;
+  const revStatusLive = rosterIsLive(revStatusCard?.row.enabled ?? false, revStatusState?.lastChecked);
+  const reveriesSite: "open" | "blocked" | "unknown" = !revStatusLive
     ? "unknown"
-    : revStatusState.pageReset === true
+    : revStatusState?.pageReset === true
       ? "blocked"
       : "open";
+  const revStatusUnknownWhy = !revStatusCard
+    ? "Reveries site status unknown — the monitor doesn't exist."
+    : !revStatusCard.row.enabled
+      ? "Reveries site status monitor is disabled — status unknown, not necessarily open."
+      : !revStatusState?.lastChecked
+        ? "Reveries site status unknown — the monitor hasn't checked yet."
+        : "Reveries site status monitor hasn't checked in over 24h — status unknown, not necessarily open.";
   const reveriesSiteView = {
     open: { label: "open", color: "var(--ok)", title: "thereveries.co is open — no password / coming-soon wall" },
     blocked: { label: "🌊 wall up", color: "#f39c12", title: "thereveries.co is behind its coming-soon / password wall — a drop is likely being prepped" },
-    unknown: { label: "—", color: "var(--faint)", title: "Reveries site status unknown — the monitor hasn't checked yet" },
+    unknown: { label: "—", color: "var(--faint)", title: revStatusUnknownWhy },
   }[reveriesSite];
 
   const imminentCount = rows.filter((r) => r.enabled && r.definition.imminent).length;
@@ -261,6 +214,18 @@ export default async function SitesPage() {
           <span className="k">Tracked products</span>
           <span className="v">{trackedProducts}</span>
         </div>
+        {frozenProductCount > 0 && (
+          <div className="stat">
+            <span className="k">Frozen</span>
+            <span
+              className="v"
+              style={{ color: "var(--warn)" }}
+              title="Products from disabled or long-silent checkers — last-known state, not current stock (see the ✨ Reveries panel or the Products page for which ones, marked 'not checked')."
+            >
+              {frozenProductCount}
+            </span>
+          </div>
+        )}
         <div className="stat">
           <span className="k">Alerts (24h)</span>
           <span className="v">{alerts24h}</span>
