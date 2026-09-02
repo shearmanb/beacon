@@ -654,10 +654,14 @@ body {
 }
 
 /* ===== site tile density modes (full / compact / micro) ===== */
-/* The schedule + cadence readouts exist only for the density modes — hidden in
-   full so the default tile is unchanged. */
-.site-stat.st-schedule,
-.site-stat.st-cadence {
+/* Schedule NAME stays hidden in full — it's redundant with the schedule
+   dropdown sitting right below it. Cadence (the resolved effective interval
+   in minutes, right now) is NOT redundant with anything on the full tile and
+   was hidden here too, which meant the one editable view had no way to see
+   what a schedule choice actually resolves to (2026-09-02: a flat numeric
+   schedule like "5 min" runs that literally, 24/7 — Cadence is how you'd
+   notice that instead of assuming a named schedule's day/night variation). */
+.site-stat.st-schedule {
   display: none;
 }
 
