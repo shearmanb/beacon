@@ -8,7 +8,10 @@ import { SitesView } from "../components/SitesView";
 import { isReveries } from "../lib/reveries";
 import { rosterIsLive } from "../lib/live";
 import { countAllProducts, countLiveProducts, loadReveriesStock } from "../lib/stock";
-import { getEffectiveInterval } from "@beacon/shared";
+import { nowInterval } from "../lib/cadence";
+import { predictedNextCheckAt, formatEta } from "../lib/nextcheck";
+import { NextCheckIn } from "../components/NextCheckIn";
+import { parseWindowRules } from "../lib/site-forms";
 import type { SiteDefinition } from "@beacon/core";
 
 export const dynamic = "force-dynamic";
@@ -287,8 +290,22 @@ export default async function SitesPage() {
           const def = row.definition;
           const url = siteUrl(def);
           // Density-mode readouts: effective cadence in minutes (micro) + the
-          // human schedule label (compact).
-          const cadenceMins = getEffectiveInterval(def, schedules);
+          // human schedule label (compact). nowInterval (not the raw
+          // getEffectiveInterval) so this stays imminent-aware — it used to
+          // silently disagree with /schedules' CadenceTable during imminent
+          // mode, since only that page called the imminent-aware helper.
+          const cadenceMins = nowInterval(def, schedules);
+          // Predicted next-check instant, run through the exact same formula
+          // the worker uses (see lib/nextcheck.ts) — a read-only prediction,
+          // not a new scheduling decision.
+          const nextCheckAtIso = predictedNextCheckAt(
+            row.enabled,
+            def,
+            state?.lastChecked as string | null | undefined,
+            state?.cooldownUntil as string | null | undefined,
+            schedules,
+          );
+          const nextCheckLabel = formatEta(nextCheckAtIso);
           const schedVal = String(def.schedule ?? def.intervalMinutes ?? "");
           const schedLabel =
             scheduleOptions.find((o) => o.value === schedVal)?.label ?? (schedVal || "—");
@@ -362,6 +379,10 @@ export default async function SitesPage() {
                   <span className="val" title="Effective check interval right now (schedule-resolved).">
                     {cadenceMins}m
                   </span>
+                </div>
+                <div className="site-stat st-nextcheck">
+                  <span className="k">Next check</span>
+                  <NextCheckIn predictedAt={nextCheckAtIso} initialLabel={nextCheckLabel} />
                 </div>
                 {def.imminent && (
                   <div className="site-stat st-mode">
@@ -456,6 +477,7 @@ export default async function SitesPage() {
               <div className="site-controls-wrap">
                 <SiteControls
                   siteId={row.id}
+                  siteName={row.name}
                   enabled={row.enabled}
                   imminent={def.imminent}
                   schedule={String(def.schedule ?? def.intervalMinutes ?? "")}
@@ -464,6 +486,7 @@ export default async function SitesPage() {
                   imminentDuration={def.imminentDurationMinutes ?? null}
                   titleContains={def.filters?.titleContains ?? []}
                   sourceJson={JSON.stringify(def.source, null, 2)}
+                  currentWindow={parseWindowRules(schedules[`${row.id}_window`]?.rules)}
                 />
               </div>
               {Array.isArray(state?.checkHistory) && (state!.checkHistory as unknown[]).length > 0 && (
