@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-02T03:21:35.094Z",
+ "at": "2026-09-03T03:21:46.776Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -217,7 +217,7 @@
    "id": "reveries_official",
    "name": "The Reveries Official Shop",
    "enabled": true,
-   "schedule": "60",
+   "schedule": "reveries_official_window",
    "intervalMinutes": 30,
    "imminent": false,
    "imminentIntervalMinutes": 2,
@@ -227,7 +227,8 @@
     "onNew": true,
     "onRestock": true,
     "onSoldOut": true,
-    "onSiteReset": true
+    "onSiteReset": true,
+    "dedupeAcrossSites": true
    },
    "filters": {
     "titleContains": [],
@@ -620,6 +621,19 @@
     },
     {
      "defaultInterval": 120
+    }
+   ]
+  },
+  "reveries_official_window": {
+   "label": "The Reveries Official Shop window",
+   "rules": [
+    {
+     "fromHour": 10,
+     "toHour": 16,
+     "interval": 5
+    },
+    {
+     "defaultInterval": 60
     }
    ]
   }
@@ -1057,7 +1071,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-02T01:51:07.295Z",
+   "lastChecked": "2026-09-03T01:49:24.163Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1074,15 +1088,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:e644275028ba20304e9b371711e0988f\"",
+    "etag": "\"page_cache:66506555478:ProductListController:d287880c80cf0628249e6a64be77f1d2\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-02T01:51:07.295Z",
+   "lastFullFetchAt": "2026-09-03T01:49:24.163Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-02T01:51:07.295Z",
+   "lastRestProbeAt": "2026-09-03T01:49:24.163Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1092,12 +1106,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-02T01:51:07.295Z",
+   "lastSuccessAt": "2026-09-03T01:49:24.163Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-02T01:46:03.448Z",
+   "lastChecked": "2026-09-03T01:52:21.997Z",
    "productCount": 8,
    "products": {
     "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
@@ -1199,15 +1213,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:728942de51645e1ebd7a2ff8506a3367\"",
+    "etag": "\"page_cache:57076547742:ProductListController:ef4e0733b0aed6ddf0d55b3d0db7e24e\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-02T01:31:45.044Z",
+   "lastFullFetchAt": "2026-09-03T01:52:21.997Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-02T01:31:45.044Z",
+   "lastRestProbeAt": "2026-09-03T01:52:21.997Z",
    "countBaseline": 8,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1217,12 +1231,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-02T01:46:03.448Z",
+   "lastSuccessAt": "2026-09-03T01:52:21.997Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-02T02:13:49.945Z",
+   "lastChecked": "2026-09-03T03:17:44.087Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1237,10 +1251,10 @@
    "lastAlertAt": "2026-08-25T19:33:45.872Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-02T02:13:49.945Z"
+   "lastSuccessAt": "2026-09-03T03:17:44.087Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-02T02:35:21.451Z",
+   "lastChecked": "2026-09-03T03:15:41.825Z",
    "productCount": 1,
    "products": {
     "the-reveries-wire-to-wire": {
@@ -1256,17 +1270,17 @@
      "firstSeen": "2026-08-10T14:28:09.823Z"
     }
    },
-   "emptyStreak": 170,
+   "emptyStreak": 253,
    "emptyAlertSent": true,
-   "emptyAlertAt": "2026-09-02T02:35:21.451Z",
+   "emptyAlertAt": "2026-09-03T03:15:41.825Z",
    "consecutiveErrors": 0,
    "errorAlertSent": false,
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-02T02:35:21.451Z",
+   "lastSuccessAt": "2026-09-03T03:15:41.825Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-09-02T02:35:21.451Z"
+   "lastAlertAt": "2026-09-03T03:15:41.825Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1665,7 +1679,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-02T01:47:10.047Z",
+   "lastChecked": "2026-09-03T01:52:28.191Z",
    "productCount": 34,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -2079,15 +2093,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:74112796a7dc45c924535c93efd2bc05\"",
+    "etag": "\"page_cache:45343637659:ProductListController:3bf70acdc4b4302af4224ba2c527e734\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-02T01:47:10.047Z",
+   "lastFullFetchAt": "2026-09-03T01:38:25.092Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-02T01:47:10.047Z",
+   "lastRestProbeAt": "2026-09-03T01:38:25.092Z",
    "countBaseline": 112,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2097,7 +2111,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-02T01:47:10.047Z",
+   "lastSuccessAt": "2026-09-03T01:52:28.191Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-09-02T00:29:47.701Z"
   },
