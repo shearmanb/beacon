@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-03T03:21:46.776Z",
+ "at": "2026-09-04T03:22:41.685Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1071,7 +1071,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-03T01:49:24.163Z",
+   "lastChecked": "2026-09-04T01:53:55.927Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1088,15 +1088,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:d287880c80cf0628249e6a64be77f1d2\"",
+    "etag": "\"page_cache:66506555478:ProductListController:d8ff149e438c93645dd6962e0a17d24e\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-03T01:49:24.163Z",
+   "lastFullFetchAt": "2026-09-04T01:53:55.926Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-03T01:49:24.163Z",
+   "lastRestProbeAt": "2026-09-04T01:53:55.926Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1106,50 +1106,14 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-03T01:49:24.163Z",
+   "lastSuccessAt": "2026-09-04T01:53:55.927Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-03T01:52:21.997Z",
-   "productCount": 8,
+   "lastChecked": "2026-09-04T01:44:55.646Z",
+   "productCount": 5,
    "products": {
-    "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711": {
-     "handle": "the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711",
-     "title": "THE REVERIES: Behemoth 14 Year Single Barrel Kentucky Straight Bourbon (#25711)",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 289,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/THE_REVERIES__Behemoth_14_Year_single_barrel_Kentucky_Straight_Bourbon_25711.png?v=1779377185",
-     "url": "https://thebourbonconcierge.com/products/the-reveries-behemoth-14-year-kentucky-straight-bourbon-25711",
-     "firstSeen": "2026-07-11T20:16:48.295Z"
-    },
-    "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1": {
-     "handle": "the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1",
-     "title": "THE REVERIES: THE DEEP Kentucky Straight Bourbon Finished In French Oak Casks (Tide #1)",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 129.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/THE_REVERIES__THE_DEEP_Kentucky_Straight_Bourbon_Finished_In_French_Oak_Casks_Tide_1.png?v=1779377219",
-     "url": "https://thebourbonconcierge.com/products/the-reveries-the-deep-kentucky-straight-bourbon-finished-in-french-oak-casks-tide-1",
-     "firstSeen": "2026-07-11T20:16:48.295Z"
-    },
-    "the-reveries-17-year-single-barrel-fadens-finest-exclusive-single-barrel-129-7-proof": {
-     "handle": "the-reveries-17-year-single-barrel-fadens-finest-exclusive-single-barrel-129-7-proof",
-     "title": "THE REVERIES 17 Year Single Barrel \"Faden's Finest\" Exclusive Single Barrel - 129.7 Proof",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 399,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/THE_REVERIES_17_Year_Single_Barrel__Faden_s_Finest__Exclusive_Single_Barrel_-_129.7_Proof.png?v=1777399288",
-     "url": "https://thebourbonconcierge.com/products/the-reveries-17-year-single-barrel-fadens-finest-exclusive-single-barrel-129-7-proof",
-     "firstSeen": "2026-07-11T20:16:48.295Z"
-    },
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
      "handle": "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon",
      "title": "THE REVERIES \"007\" 7 Year Single Barrel Barrel Strength Bourbon",
@@ -1213,16 +1177,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:ef4e0733b0aed6ddf0d55b3d0db7e24e\"",
+    "etag": "\"page_cache:57076547742:ProductListController:bf0b328b72d3f3e25ae0e6b3cb2f1653\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-03T01:52:21.997Z",
+   "lastFullFetchAt": "2026-09-04T01:30:35.133Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-03T01:52:21.997Z",
-   "countBaseline": 8,
+   "lastRestProbeAt": "2026-09-04T01:30:35.134Z",
+   "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -1231,12 +1195,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-03T01:52:21.997Z",
+   "lastSuccessAt": "2026-09-04T01:44:55.646Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-03T03:17:44.087Z",
+   "lastChecked": "2026-09-04T03:04:28.174Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1251,10 +1215,10 @@
    "lastAlertAt": "2026-08-25T19:33:45.872Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-03T03:17:44.087Z"
+   "lastSuccessAt": "2026-09-04T03:04:28.174Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-03T03:15:41.825Z",
+   "lastChecked": "2026-09-04T03:13:38.170Z",
    "productCount": 1,
    "products": {
     "the-reveries-wire-to-wire": {
@@ -1270,7 +1234,7 @@
      "firstSeen": "2026-08-10T14:28:09.823Z"
     }
    },
-   "emptyStreak": 253,
+   "emptyStreak": 334,
    "emptyAlertSent": true,
    "emptyAlertAt": "2026-09-03T03:15:41.825Z",
    "consecutiveErrors": 0,
@@ -1278,7 +1242,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-03T03:15:41.825Z",
+   "lastSuccessAt": "2026-09-04T03:13:38.170Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-03T03:15:41.825Z"
   },
@@ -1679,8 +1643,8 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-03T01:52:28.191Z",
-   "productCount": 34,
+   "lastChecked": "2026-09-04T01:58:02.336Z",
+   "productCount": 31,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
      "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
@@ -1705,18 +1669,6 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC01276.jpg?v=1786881348",
      "url": "https://sharedpour.com/products/t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey",
      "firstSeen": "2026-08-23T11:44:55.436Z"
-    },
-    "t8ke-x-new-louisville-barrel-house-the-bones-w113-8-year-double-oaked-wheated-kentucky-bourbon": {
-     "handle": "t8ke-x-new-louisville-barrel-house-the-bones-w113-8-year-double-oaked-wheated-kentucky-bourbon",
-     "title": "T8KE x NULU W113 8 Year Double Oaked Wheated Kentucky Bourbon",
-     "vendor": "Nulu",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 99.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00940.jpg?v=1780229732",
-     "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-w113-8-year-double-oaked-wheated-kentucky-bourbon",
-     "firstSeen": "2026-08-20T13:12:46.037Z"
     },
     "old-forester-100pf-endalz-x-t8ke": {
      "handle": "old-forester-100pf-endalz-x-t8ke",
@@ -1892,11 +1844,13 @@
      "vendor": "Bardstown Bourbon Company",
      "productType": "Bourbon",
      "tags": [],
-     "minPrice": 89.99,
+     "minPrice": 79.99,
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
      "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T18:25:11.230Z",
+     "prevPrice": 89.99,
+     "priceChangedAt": "2026-09-03T19:34:03.549Z"
     },
     "peerless-single-barrel-bourbon-t8ke-2026": {
      "handle": "peerless-single-barrel-bourbon-t8ke-2026",
@@ -1976,23 +1930,13 @@
      "vendor": "L'Encantada",
      "productType": "Armagnac",
      "tags": [],
-     "minPrice": 74.99,
+     "minPrice": 69.99,
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f96d2467-738c-b849-927c-03416b9f11ff.jpg?v=1771159501",
      "url": "https://sharedpour.com/products/pm-spirits-project-t8ke-armagnac-bourbon-concierge-105-8-prf",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
-    },
-    "nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky186": {
-     "handle": "nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky186",
-     "title": "NULU x T8KE Single Barrel Hazmat Kentucky Bourbon KY186",
-     "vendor": "Nulu",
-     "productType": "",
-     "tags": [],
-     "minPrice": 179.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/54355f83-7483-3e73-de49-04c3ec0d4424.jpg?v=1764513339",
-     "url": "https://sharedpour.com/products/nulu-x-t8ke-single-barrel-hazmat-kentucky-bourbon-ky186",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T18:25:11.230Z",
+     "prevPrice": 74.99,
+     "priceChangedAt": "2026-09-03T19:34:03.549Z"
     },
     "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive": {
      "handle": "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive",
@@ -2004,18 +1948,6 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f7f2a6fa-844a-bd29-8fa6-93a9a0be0341.jpg?v=1768742030",
      "url": "https://sharedpour.com/products/barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
-    },
-    "bull-run-distillery-17-year-t8ke-apf-183-single-barrel-straight-american-whiskey-pinot-noir-finish-selection-copy": {
-     "handle": "bull-run-distillery-17-year-t8ke-apf-183-single-barrel-straight-american-whiskey-pinot-noir-finish-selection-copy",
-     "title": "Bull Run Distillery 17 Year T8KE APF-183 Single Barrel Straight American Whiskey Pinot Noir Finish Selection",
-     "vendor": "Bull Run",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 89.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6f16bdc1-e850-c3f4-425f-f65fe96287f6.jpg?v=1766328186",
-     "url": "https://sharedpour.com/products/bull-run-distillery-17-year-t8ke-apf-183-single-barrel-straight-american-whiskey-pinot-noir-finish-selection-copy",
      "firstSeen": "2026-07-10T18:25:11.230Z"
     },
     "bull-run-distillery-9-year-straight-bourbon-sherry-finish": {
@@ -2093,16 +2025,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:3bf70acdc4b4302af4224ba2c527e734\"",
+    "etag": "\"page_cache:45343637659:ProductListController:85f049e7f28618df7b27d7a1f6e44902\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-03T01:38:25.092Z",
+   "lastFullFetchAt": "2026-09-04T01:43:52.813Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-03T01:38:25.092Z",
-   "countBaseline": 112,
+   "lastRestProbeAt": "2026-09-04T01:43:52.813Z",
+   "countBaseline": 108,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2111,7 +2043,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-03T01:52:28.191Z",
+   "lastSuccessAt": "2026-09-04T01:58:02.336Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-09-02T00:29:47.701Z"
   },
