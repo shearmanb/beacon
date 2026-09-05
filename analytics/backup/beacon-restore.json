@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-04T03:22:41.685Z",
+ "at": "2026-09-05T03:23:33.723Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -180,7 +180,8 @@
     "onNew": false,
     "onRestock": false,
     "onSoldOut": false,
-    "onSiteReset": true
+    "onSiteReset": true,
+    "dedupeAcrossSites": true
    },
    "filters": {
     "titleContains": [],
@@ -366,6 +367,8 @@
    "enabled": true,
    "schedule": "drop_windows",
    "imminent": false,
+   "imminentSince": null,
+   "scheduleBeforeImminent": null,
    "alerts": {
     "onNew": true,
     "onRestock": true,
@@ -1071,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-04T01:53:55.927Z",
+   "lastChecked": "2026-09-05T01:59:56.609Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1088,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:d8ff149e438c93645dd6962e0a17d24e\"",
+    "etag": "\"page_cache:66506555478:ProductListController:f5659aa20833af46ce0120e032528ed8\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-04T01:53:55.926Z",
+   "lastFullFetchAt": "2026-09-05T01:59:56.609Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-04T01:53:55.926Z",
+   "lastRestProbeAt": "2026-09-05T01:59:56.609Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1106,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-04T01:53:55.927Z",
+   "lastSuccessAt": "2026-09-05T01:59:56.609Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-04T01:44:55.646Z",
+   "lastChecked": "2026-09-05T01:50:42.894Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1177,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:bf0b328b72d3f3e25ae0e6b3cb2f1653\"",
+    "etag": "\"page_cache:57076547742:ProductListController:4a6ffe201b0a4849c1184e2c5677e4f3\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-04T01:30:35.133Z",
+   "lastFullFetchAt": "2026-09-05T01:50:42.894Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-04T01:30:35.134Z",
+   "lastRestProbeAt": "2026-09-05T01:50:42.894Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1195,56 +1198,199 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-04T01:44:55.646Z",
+   "lastSuccessAt": "2026-09-05T01:50:42.894Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-04T03:04:28.174Z",
+   "lastChecked": "2026-09-05T02:42:10.143Z",
    "products": {},
-   "httpValidators": null,
-   "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-   "contentLen": 0,
-   "pageReset": true,
-   "resetAlertSent": true,
-   "resetReason": "Coming Soon / password wall detected at https://www.thereveries.co/shop (HTTP 401/403)\nNew wave likely 2–14 days away.",
+   "httpValidators": {
+    "etag": "W/\"6de594257556456ae96e2ad9ee982460\"",
+    "lastModified": null
+   },
+   "contentHash": "48f1baac76d3784d36963a372e049f00d8449ab1",
+   "contentLen": 59871,
+   "pageReset": false,
+   "resetAlertSent": false,
+   "resetReason": null,
    "consecutiveErrors": 0,
    "errorAlertSent": false,
    "cooldownLevel": 0,
    "cooldownUntil": null,
-   "lastAlertAt": "2026-08-25T19:33:45.872Z",
+   "lastAlertAt": "2026-09-04T17:57:58.031Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-04T03:04:28.174Z"
+   "lastSuccessAt": "2026-09-05T02:42:10.143Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-04T03:13:38.170Z",
-   "productCount": 1,
+   "lastChecked": "2026-09-05T02:55:09.880Z",
+   "productCount": 12,
    "products": {
-    "the-reveries-wire-to-wire": {
-     "handle": "the-reveries-wire-to-wire",
-     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Bluegrass Barrel Pickers: Wire to Wire\" 8 Year Selection",
+    "the-reveries-8-year-black-is-the-new-orange": {
+     "handle": "the-reveries-8-year-black-is-the-new-orange",
+     "title": "THE REVERIES Single Barrel Kentucky Bourbon 8 Year #27385 \"Cask In Point: Black is the New Orange\" Select",
      "vendor": "The Reveries",
      "productType": "Whiskey",
      "tags": [],
      "minPrice": 79.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CIP8YR.png?v=1786732509",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
+     "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
+     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Island In The Sun\" #27706 Stuff & Whiskey Single Barrel Select",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 89.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-17at10.45.51.png?v=1786978009",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-10-year-the-gavel-grain-society-opening-bid-single-barrel-select-indiana-straight-bourbon-selection": {
+     "handle": "the-reveries-10-year-the-gavel-grain-society-opening-bid-single-barrel-select-indiana-straight-bourbon-selection",
+     "title": "THE REVERIES 10 Year \"The Gavel & Grain Society: Opening Bid\" Single Barrel Select Indiana Straight Bourbon *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 129.99,
      "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/GavelGrainOpeningBid10yr.png?v=1782398200",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-mash-journey-27454": {
+     "handle": "the-reveries-mash-journey-27454",
+     "title": "THE REVERIES 7 Year Single Barrel #27454 \"GAMBIT\" Kentucky Straight Bourbon T8KE Select *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 79.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/GAMBIT.png?v=1780671568",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-wire-to-wire": {
+     "handle": "the-reveries-wire-to-wire",
+     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Bluegrass Barrel Pickers: Wire to Wire\" 8 Year Selection *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 79.99,
+     "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/BluegrassW2W.png?v=1782137041",
      "url": "https://www.thereveries.co/shop",
      "firstSeen": "2026-08-10T14:28:09.823Z"
+    },
+    "the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection": {
+     "handle": "the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection",
+     "title": "THE REVERIES 8 Year Single Barrel #27394 \"Certified Pimp\" Liberty Barrel Club Private Barrel *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 84.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CertifiedPimp.png?v=1778249299",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-single-barrel-arrivals-barrel-strength-bourbon": {
+     "handle": "the-reveries-single-barrel-arrivals-barrel-strength-bourbon",
+     "title": "THE REVERIES 10 Year Single Barrel \"Arrivals\" Barrel Strength Bourbon T8ke Reserve Cask *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 119.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RevPlaceholder.png?v=1773967832",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-8-year-single-barrel-wake-of-the-ship-barrel-strength-bourbon-t8ke-reserve-cask": {
+     "handle": "the-reveries-8-year-single-barrel-wake-of-the-ship-barrel-strength-bourbon-t8ke-reserve-cask",
+     "title": "The Reveries: 8 Year Single Barrel \"Wake of the Ship\" #27440 Barrel Strength Bourbon T8ke Reserve Cask *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 84.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RevPlaceholder.png?v=1773967832",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-10-year-single-barrel-the-dread-barrel-strength-bourbon-t8ke-reserve-cask": {
+     "handle": "the-reveries-10-year-single-barrel-the-dread-barrel-strength-bourbon-t8ke-reserve-cask",
+     "title": "THE REVERIES: 10 Year Single Barrel \"THE DREAD\" Barrel Strength Bourbon T8KE Reserve Cask *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 119.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/58c9cb55-3d9c-21b3-52e1-39a3c9b50208.jpg?v=1777813773",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-10-year-single-barrel-bourbon-2ten90-dram-warriors-single-barrel-selection": {
+     "handle": "the-reveries-10-year-single-barrel-bourbon-2ten90-dram-warriors-single-barrel-selection",
+     "title": "THE REVERIES 10 Year Single Barrel Bourbon \"2TEN90: Dram Warriors\" Single Barrel Selection *NO HOLDS or COMBINES**",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 124.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/REV10_8.jpg?v=1777589195",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-8-year-single-barrel-bourbon-2ten90-single-barrel-selection": {
+     "handle": "the-reveries-8-year-single-barrel-bourbon-2ten90-single-barrel-selection",
+     "title": "THE REVERIES 8 Year Single Barrel Bourbon \"2TEN90: Back For More\" Single Barrel Selection *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 84.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/REV10_8_7ecbde00-e717-4899-98b3-0225f86f4be1.jpg?v=1777589223",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-10-year-single-barrel-sinister-glee-t8ke-reserve-cask-strength-selection": {
+     "handle": "the-reveries-10-year-single-barrel-sinister-glee-t8ke-reserve-cask-strength-selection",
+     "title": "THE REVERIES 10 Year Single Barrel \"Sinister Glee\" T8KE Reserve Cask Strength Selection *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 119.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RevPlaceholder.png?v=1773967832",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-09-04T17:05:42.815Z"
     }
    },
-   "emptyStreak": 334,
-   "emptyAlertSent": true,
-   "emptyAlertAt": "2026-09-03T03:15:41.825Z",
+   "httpValidators": null,
+   "fetchVia": null,
+   "fetchViaReason": null,
+   "discoveredEmbed": {
+    "type": "collection",
+    "id": "327871824027"
+   },
+   "countBaseline": 13,
+   "driftStreak": 0,
+   "driftAlertSent": false,
+   "driftAlertAt": null,
    "consecutiveErrors": 0,
    "errorAlertSent": false,
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-04T03:13:38.170Z",
+   "lastSuccessAt": "2026-09-05T02:55:09.880Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-09-03T03:15:41.825Z"
+   "lastAlertAt": "2026-09-05T02:55:09.880Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1643,9 +1789,117 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-04T01:58:02.336Z",
-   "productCount": 31,
+   "lastChecked": "2026-09-05T01:51:44.951Z",
+   "productCount": 40,
    "products": {
+    "the-reveries-10-year-the-gavel-grain-society-opening-bid-single-barrel-select-indiana-straight-bourbon-selection": {
+     "handle": "the-reveries-10-year-the-gavel-grain-society-opening-bid-single-barrel-select-indiana-straight-bourbon-selection",
+     "title": "THE REVERIES 10 Year \"The Gavel & Grain Society: Opening Bid\" Single Barrel Select Indiana Straight Bourbon *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 129.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/GavelGrainOpeningBid10yr.png?v=1782398200",
+     "url": "https://sharedpour.com/products/the-reveries-10-year-the-gavel-grain-society-opening-bid-single-barrel-select-indiana-straight-bourbon-selection",
+     "firstSeen": "2026-09-04T16:58:40.077Z"
+    },
+    "the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection": {
+     "handle": "the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection",
+     "title": "THE REVERIES 10 Year \"Average Joe's Ten Years Gone\" Single Barrel Select Indiana Straight Bourbon *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 119.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/AJWTenYearsGone.png?v=1782308995",
+     "url": "https://sharedpour.com/products/the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection",
+     "firstSeen": "2026-09-04T16:58:40.077Z"
+    },
+    "the-reveries-mash-journey-27454": {
+     "handle": "the-reveries-mash-journey-27454",
+     "title": "THE REVERIES 7 Year Single Barrel #27454 \"GAMBIT\" Kentucky Straight Bourbon T8KE Select *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 79.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/GAMBIT.png?v=1780671568",
+     "url": "https://sharedpour.com/products/the-reveries-mash-journey-27454",
+     "firstSeen": "2026-09-04T16:58:40.077Z"
+    },
+    "the-reveries-wire-to-wire": {
+     "handle": "the-reveries-wire-to-wire",
+     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Bluegrass Barrel Pickers: Wire to Wire\" 8 Year Selection *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 79.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/BluegrassW2W.png?v=1782137041",
+     "url": "https://sharedpour.com/products/the-reveries-wire-to-wire",
+     "firstSeen": "2026-09-04T16:58:40.077Z"
+    },
+    "the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection": {
+     "handle": "the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection",
+     "title": "THE REVERIES 8 Year Single Barrel #27394 \"Certified Pimp\" Liberty Barrel Club Private Barrel *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 84.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CertifiedPimp.png?v=1778249299",
+     "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-27394-certified-pimp-liberty-barrel-select-private-barrel-selection",
+     "firstSeen": "2026-09-04T16:58:40.077Z"
+    },
+    "the-reveries-10-year-single-barrel-the-dread-barrel-strength-bourbon-t8ke-reserve-cask": {
+     "handle": "the-reveries-10-year-single-barrel-the-dread-barrel-strength-bourbon-t8ke-reserve-cask",
+     "title": "THE REVERIES: 10 Year Single Barrel \"THE DREAD\" Barrel Strength Bourbon T8KE Reserve Cask *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 119.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/58c9cb55-3d9c-21b3-52e1-39a3c9b50208.jpg?v=1777813773",
+     "url": "https://sharedpour.com/products/the-reveries-10-year-single-barrel-the-dread-barrel-strength-bourbon-t8ke-reserve-cask",
+     "firstSeen": "2026-09-04T16:58:40.077Z"
+    },
+    "the-reveries-10-year-single-barrel-bourbon-2ten90-dram-warriors-single-barrel-selection": {
+     "handle": "the-reveries-10-year-single-barrel-bourbon-2ten90-dram-warriors-single-barrel-selection",
+     "title": "THE REVERIES 10 Year Single Barrel Bourbon \"2TEN90: Dram Warriors\" Single Barrel Selection *NO HOLDS or COMBINES**",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 124.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/REV10_8.jpg?v=1777589195",
+     "url": "https://sharedpour.com/products/the-reveries-10-year-single-barrel-bourbon-2ten90-dram-warriors-single-barrel-selection",
+     "firstSeen": "2026-09-04T16:58:40.077Z"
+    },
+    "the-reveries-8-year-single-barrel-bourbon-2ten90-single-barrel-selection": {
+     "handle": "the-reveries-8-year-single-barrel-bourbon-2ten90-single-barrel-selection",
+     "title": "THE REVERIES 8 Year Single Barrel Bourbon \"2TEN90: Back For More\" Single Barrel Selection *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 84.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/REV10_8_7ecbde00-e717-4899-98b3-0225f86f4be1.jpg?v=1777589223",
+     "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-bourbon-2ten90-single-barrel-selection",
+     "firstSeen": "2026-09-04T16:58:40.077Z"
+    },
+    "the-reveries-10-year-single-barrel-sinister-glee-t8ke-reserve-cask-strength-selection": {
+     "handle": "the-reveries-10-year-single-barrel-sinister-glee-t8ke-reserve-cask-strength-selection",
+     "title": "THE REVERIES 10 Year Single Barrel \"Sinister Glee\" T8KE Reserve Cask Strength Selection *NO HOLDS OR COMBINES*",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 119.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RevPlaceholder.png?v=1773967832",
+     "url": "https://sharedpour.com/products/the-reveries-10-year-single-barrel-sinister-glee-t8ke-reserve-cask-strength-selection",
+     "firstSeen": "2026-09-04T16:58:40.077Z"
+    },
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
      "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
      "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Island In The Sun\" #27706 Stuff & Whiskey Single Barrel Select",
@@ -2025,16 +2279,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:85f049e7f28618df7b27d7a1f6e44902\"",
+    "etag": "\"page_cache:45343637659:ProductListController:0428cf1a08d31817f5982d855b524210\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-04T01:43:52.813Z",
+   "lastFullFetchAt": "2026-09-05T01:51:44.951Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-04T01:43:52.813Z",
-   "countBaseline": 108,
+   "lastRestProbeAt": "2026-09-05T01:51:44.951Z",
+   "countBaseline": 116,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2043,9 +2297,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-04T01:58:02.336Z",
+   "lastSuccessAt": "2026-09-05T01:51:44.951Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-02T00:29:47.701Z"
+   "lastAlertAt": "2026-09-04T20:19:32.620Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
