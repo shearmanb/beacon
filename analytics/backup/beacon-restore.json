@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-06T03:24:20.057Z",
+ "at": "2026-09-07T03:24:53.786Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-06T01:52:51.254Z",
+   "lastChecked": "2026-09-07T01:52:58.540Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:d6c273c314cd5be747efb3767c73d323\"",
+    "etag": "\"page_cache:66506555478:ProductListController:931ca86ecd89065b5258c7a8c15cb26b\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-06T01:52:51.254Z",
+   "lastFullFetchAt": "2026-09-07T01:52:58.540Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-06T01:52:51.254Z",
+   "lastRestProbeAt": "2026-09-07T01:52:58.540Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-06T01:52:51.254Z",
+   "lastSuccessAt": "2026-09-07T01:52:58.540Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-06T01:45:31.302Z",
+   "lastChecked": "2026-09-07T01:48:42.843Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:49b281cd35f70dae2063b7d9fa1c4421\"",
+    "etag": "\"page_cache:57076547742:ProductListController:5a837443d251365d80b1746e6fbb8d67\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-06T01:45:31.302Z",
+   "lastFullFetchAt": "2026-09-07T01:48:42.843Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-06T01:45:31.302Z",
+   "lastRestProbeAt": "2026-09-07T01:48:42.843Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-06T01:45:31.302Z",
+   "lastSuccessAt": "2026-09-07T01:48:42.843Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-06T02:16:57.950Z",
+   "lastChecked": "2026-09-07T02:32:48.895Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,10 +1218,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-06T02:16:57.950Z"
+   "lastSuccessAt": "2026-09-07T02:32:48.895Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-06T02:57:16.144Z",
+   "lastChecked": "2026-09-07T03:18:54.680Z",
    "productCount": 8,
    "products": {
     "the-reveries-8-year-black-is-the-new-orange": {
@@ -1337,7 +1337,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-06T02:57:16.144Z",
+   "lastSuccessAt": "2026-09-07T03:18:54.680Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-05T02:55:09.880Z"
   },
@@ -1738,7 +1738,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-06T01:51:49.216Z",
+   "lastChecked": "2026-09-07T01:47:35.401Z",
    "productCount": 35,
    "products": {
     "the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection": {
@@ -2168,15 +2168,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:1aedb606148627b6544f62bb1543d1b6\"",
+    "etag": "\"page_cache:45343637659:ProductListController:fab0ba8bdffd867a58cdf051bc88af25\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-06T01:51:49.215Z",
+   "lastFullFetchAt": "2026-09-07T01:47:35.401Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-06T01:51:49.215Z",
+   "lastRestProbeAt": "2026-09-07T01:47:35.401Z",
    "countBaseline": 108,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2186,7 +2186,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-06T01:51:49.216Z",
+   "lastSuccessAt": "2026-09-07T01:47:35.401Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-09-05T03:44:48.433Z"
   },
