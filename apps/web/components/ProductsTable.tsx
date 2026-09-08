@@ -17,6 +17,9 @@ export interface ProductRow {
    *  current stock. Forced false on `available` upstream, flagged here so the
    *  row says so instead of quietly reading "sold out". */
   stale?: boolean;
+  /** Storefront behind its password / coming-soon wall: loaded in the shop
+   *  backend, not buyable. Forced false on `available` upstream. */
+  walled?: boolean;
   minPrice: number | null;
   vendor: string | null;
   url: string;
@@ -24,7 +27,7 @@ export interface ProductRow {
   firstSeen: string | null;
 }
 
-type Avail = "all" | "in" | "out";
+type Avail = "all" | "in" | "wall" | "out";
 
 // Compact "when added" label. Short absolute date is the primary read (a stable
 // value that doesn't need re-rendering), with a relative "ago" + exact time in
@@ -54,9 +57,10 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
     return items.filter((it) => {
       if (site && it.site !== site) return false;
       // A stale row is neither in stock nor sold out — it is unknown, so it
-      // matches neither availability filter.
+      // matches neither availability filter. A walled row is its own bucket.
       if (avail === "in" && !it.available) return false;
-      if (avail === "out" && (it.available || it.stale)) return false;
+      if (avail === "wall" && !it.walled) return false;
+      if (avail === "out" && (it.available || it.stale || it.walled)) return false;
       if (revOnly && !it.reveries) return false;
       if (!showIgnored && ignoredSet.has(it.handle)) return false;
       if (
@@ -89,6 +93,7 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
         <select className="in" value={avail} onChange={(e) => setAvail(e.target.value as Avail)}>
           <option value="all">Any status</option>
           <option value="in">In stock</option>
+          <option value="wall">Behind wall</option>
           <option value="out">Sold out</option>
         </select>
         <label className="check">
@@ -144,14 +149,16 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
                 </td>
                 <td data-label="Status">
                   <span
-                    className={`pill ${it.stale ? "stale" : it.available ? "yes" : "no"}`}
+                    className={`pill ${it.stale ? "stale" : it.walled ? "wall" : it.available ? "yes" : "no"}`}
                     title={
                       it.stale
                         ? "This checker is disabled or has not run in over 24h — last-known state, not current stock."
-                        : undefined
+                        : it.walled
+                          ? "The shop is behind its password / coming-soon wall right now — loaded in the store's backend, not buyable until it opens."
+                          : undefined
                     }
                   >
-                    {it.stale ? "not checked" : it.available ? "in stock" : "sold out"}
+                    {it.stale ? "not checked" : it.walled ? "🌊 behind wall" : it.available ? "in stock" : "sold out"}
                   </span>
                 </td>
                 <td className="mono muted" data-label="Added" style={{ whiteSpace: "nowrap" }} title={addedLabel(it.firstSeen).full}>

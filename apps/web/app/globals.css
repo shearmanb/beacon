@@ -1347,3 +1347,13 @@ select.in.sched {
 .rev-card.stale {
   opacity: 0.55;
 }
+/* Behind-wall marker (2026-09-08): the storefront is password / coming-soon
+   walled right now, so a bottle the shop backend reports as available is
+   loaded but not buyable. Amber, matching the header's "🌊 wall up" read. */
+.pill.wall {
+  color: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 40%, transparent);
+}
+.rev-card.wall {
+  border-color: color-mix(in srgb, var(--warn) 35%, var(--line));
+}

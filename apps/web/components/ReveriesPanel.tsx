@@ -21,6 +21,9 @@ export interface RevProduct {
    *  NOT current stock. Shown so the bottle is still visible, labelled so it
    *  is never mistaken for something you can buy. */
   stale?: boolean;
+  /** Storefront behind its password / coming-soon wall right now — loaded in
+   *  the shop backend, not buyable. Forced off `available` upstream. */
+  walled?: boolean;
   minPrice: number | null;
   vendor: string | null;
   url: string;
@@ -32,7 +35,7 @@ const STORE_KEY = "beacon_reveries_level";
 
 function Tile({ p }: { p: RevProduct }) {
   return (
-    <div className={`rev-card ${p.available ? "in" : ""} ${p.stale ? "stale" : ""}`}>
+    <div className={`rev-card ${p.available ? "in" : ""} ${p.walled ? "wall" : ""} ${p.stale ? "stale" : ""}`}>
       <div className="rev-title">
         {p.url && p.url !== "#" ? (
           <a href={p.url} target="_blank" rel="noreferrer">
@@ -44,14 +47,16 @@ function Tile({ p }: { p: RevProduct }) {
       </div>
       <div className="rev-meta">
         <span
-          className={`pill ${p.stale ? "stale" : p.available ? "yes" : "no"}`}
+          className={`pill ${p.stale ? "stale" : p.walled ? "wall" : p.available ? "yes" : "no"}`}
           title={
             p.stale
               ? "This checker is disabled or has not run in over 24h — last-known state, not current stock."
-              : undefined
+              : p.walled
+                ? "The shop is behind its password / coming-soon wall right now. This bottle is loaded in the store's backend (Shopify reports units on hand) but the page is closed, so it can't be bought until the wall drops."
+                : undefined
           }
         >
-          {p.stale ? "not checked" : p.available ? "in stock" : "sold out"}
+          {p.stale ? "not checked" : p.walled ? "🌊 behind wall" : p.available ? "in stock" : "sold out"}
         </span>
         <span className="mono">{p.minPrice != null ? `$${p.minPrice.toFixed(2)}` : "—"}</span>
       </div>
@@ -97,11 +102,14 @@ export function ReveriesPanel({
   };
 
   const inStock = products.filter((p) => p.available);
-  const soldOut = products.filter((p) => !p.available);
-  // Compact row order: in-stock first, then the freshest sold-out tile ahead of
-  // the other sold-out ones, so it's the first sold-out tile you reach scrolling.
+  const walled = products.filter((p) => !p.available && p.walled);
+  const soldOut = products.filter((p) => !p.available && !p.walled);
+  // Compact row order: in-stock first, then bottles staged behind the wall
+  // (the likely next drop), then the freshest sold-out tile ahead of the other
+  // sold-out ones, so it's the first sold-out tile you reach scrolling.
   const compactOrder = [
     ...inStock,
+    ...walled,
     // Stale (unchecked) tiles sink below genuinely sold-out ones — they are the
     // least actionable thing in the row.
     ...soldOut.sort(
@@ -136,7 +144,20 @@ export function ReveriesPanel({
       <div className="rev-meta-line">
         <span className="rev-count">
           <b style={{ color: inStock.length > 0 ? "var(--ok)" : undefined }}>{inStock.length}</b> in
-          stock · {products.length} tracked
+          stock
+          {walled.length > 0 && (
+            <>
+              {" "}
+              ·{" "}
+              <span
+                style={{ color: "var(--warn)" }}
+                title="Loaded in the shop's backend but the storefront is behind its password / coming-soon wall — not buyable until it opens."
+              >
+                {walled.length} behind wall
+              </span>
+            </>
+          )}{" "}
+          · {products.length} tracked
         </span>
         {lastDrop && (
           <span className="rev-last">

@@ -120,6 +120,10 @@ export default async function SitesPage() {
   const reveriesProducts = loadReveriesStock(cards);
   // Reveries in stock across every site — the headline goal.
   const reveriesInStock = reveriesProducts.filter((p) => p.available).length;
+  // Bottles loaded in the shop backend while the storefront is walled — the
+  // 2026-09-08 phantom: Shopify said "available", the page said "Come Back
+  // Later". Shown as its own stat, never counted as in stock.
+  const reveriesBehindWall = reveriesProducts.filter((p) => p.walled).length;
 
   const dayAgo = Date.now() - 86_400_000;
   const alerts24h = recentAlerts.filter(
@@ -207,6 +211,18 @@ export default async function SitesPage() {
             {reveriesInStock}
           </span>
         </div>
+        {reveriesBehindWall > 0 && (
+          <div className="stat">
+            <span className="k">Behind wall</span>
+            <span
+              className="v"
+              style={{ color: "var(--warn)" }}
+              title="Reveries bottles the shop's backend reports as available while the storefront is behind its password / coming-soon wall — loaded, not buyable. See the ✨ panel."
+            >
+              🌊 {reveriesBehindWall}
+            </span>
+          </div>
+        )}
         <div className="stat">
           <span className="k">Reveries site</span>
           <span className="v" style={{ color: reveriesSiteView.color }} title={reveriesSiteView.title}>

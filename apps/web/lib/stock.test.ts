@@ -28,6 +28,24 @@ function site(
   return { row, state };
 }
 
+/** An http_status wall monitor for `url` (the reveries_site_status shape). */
+function wallMonitor(
+  url: string,
+  opts: { enabled?: boolean; lastChecked?: string | null; pageReset?: boolean } = {},
+): SiteCard {
+  const row = {
+    id: "reveries_site_status",
+    name: "The Reveries Site Status",
+    enabled: opts.enabled ?? true,
+    sourceKind: "http_status",
+    definition: { source: { kind: "http_status", url } },
+  } as unknown as SiteRow;
+  const state = { lastChecked: opts.lastChecked ?? iso(0), pageReset: opts.pageReset ?? true } as SiteState;
+  return { row, state };
+}
+
+const REV_SHOP = "https://www.thereveries.co/shop";
+
 describe("loadReveriesStock", () => {
   it("reproduces the 2026-08-31 bug fix: a disabled site's frozen bottle is never in-stock", () => {
     // "Average Joe's Ten Years Gone" — Beacon itself recorded this sold_out on
@@ -113,6 +131,86 @@ describe("loadReveriesStock", () => {
     ];
     const stock = loadReveriesStock(cards);
     expect(stock.map((p) => p.handle)).toEqual(["a-in-stock", "b-sold-out", "c-stale"]);
+  });
+});
+
+describe("loadReveriesStock — storefront wall gate (2026-09-08)", () => {
+  it("a bottle Shopify reports available behind a walled storefront is 'behind wall', never in stock", () => {
+    // reveries_official reads the shared-pour Storefront API: 8 bottles
+    // availableForSale while thereveries.co/shop sat on "Come Back Later".
+    const cards = [
+      wallMonitor(REV_SHOP, { pageReset: true }),
+      site("reveries_official", {
+        products: [product({ handle: "arrivals", title: "THE REVERIES 10 Year Arrivals", url: REV_SHOP, available: true })],
+      }),
+    ];
+    const stock = loadReveriesStock(cards);
+    expect(stock).toHaveLength(1);
+    expect(stock[0].available).toBe(false);
+    expect(stock[0].walled).toBe(true);
+    expect(stock[0].stale).toBe(false);
+  });
+
+  it("does not gate when the wall is down", () => {
+    const cards = [
+      wallMonitor(REV_SHOP, { pageReset: false }),
+      site("reveries_official", { products: [product({ handle: "a", url: REV_SHOP, available: true })] }),
+    ];
+    const stock = loadReveriesStock(cards);
+    expect(stock[0].available).toBe(true);
+    expect(stock[0].walled).toBe(false);
+  });
+
+  it("a disabled or long-silent wall monitor gates nothing (unknown is not 'walled')", () => {
+    const prod = () => [product({ handle: "a", url: REV_SHOP, available: true })];
+    const disabled = [wallMonitor(REV_SHOP, { enabled: false }), site("reveries_official", { products: prod() })];
+    const silent = [
+      wallMonitor(REV_SHOP, { lastChecked: iso(2 * 86_400_000) }),
+      site("reveries_official", { products: prod() }),
+    ];
+    expect(loadReveriesStock(disabled)[0].walled).toBe(false);
+    expect(loadReveriesStock(disabled)[0].available).toBe(true);
+    expect(loadReveriesStock(silent)[0].walled).toBe(false);
+  });
+
+  it("only gates products on the walled host — the same bottle on sharedpour.com is untouched", () => {
+    const cards = [
+      wallMonitor(REV_SHOP),
+      site("reveries_official", { products: [product({ handle: "gambit", title: "GAMBIT", url: REV_SHOP })] }),
+      site("sharedpour_t8ke_all", { products: [product({ handle: "gambit", title: "THE REVERIES GAMBIT" })] }),
+    ];
+    const stock = loadReveriesStock(cards);
+    const bySite = Object.fromEntries(stock.map((p) => [p.site, p]));
+    expect(bySite["reveries_official"].walled).toBe(true);
+    expect(bySite["sharedpour_t8ke_all"].walled).toBe(false);
+    expect(bySite["sharedpour_t8ke_all"].available).toBe(true);
+  });
+
+  it("matches the host with or without www.", () => {
+    const cards = [
+      wallMonitor("https://thereveries.co/shop"),
+      site("reveries_official", { products: [product({ handle: "a", url: REV_SHOP })] }),
+    ];
+    expect(loadReveriesStock(cards)[0].walled).toBe(true);
+  });
+
+  it("sorts walled bottles after in-stock and before sold-out / stale", () => {
+    const cards = [
+      wallMonitor(REV_SHOP),
+      site("reveries_official", {
+        products: [
+          product({ handle: "w-walled", title: "W walled", url: REV_SHOP, available: true }),
+          product({ handle: "s-sold-out", title: "S sold out", available: false }),
+          product({ handle: "i-in-stock", title: "I in stock", available: true }),
+        ],
+      }),
+      site("sharedpour_reveries", {
+        enabled: false,
+        lastChecked: iso(5 * 86_400_000),
+        products: [product({ handle: "f-frozen", title: "F frozen", available: true })],
+      }),
+    ];
+    expect(loadReveriesStock(cards).map((p) => p.handle)).toEqual(["i-in-stock", "w-walled", "s-sold-out", "f-frozen"]);
   });
 });
 

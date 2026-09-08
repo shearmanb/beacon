@@ -39,3 +39,68 @@ export function stockKey(url: string, handle: string): string {
   }
   return `${host}|${handle}`;
 }
+
+// ---------------------------------------------------------------------------
+// Storefront walls — the second way "in stock" lies (2026-09-08).
+//
+// Shopify's `available` / `availableForSale` is a WAREHOUSE fact: units exist in
+// inventory. It says nothing about whether a customer can reach a checkout. The
+// Reveries shop (thereveries.co) is a Squarespace page embedding a Shopify Buy
+// Button from the shared-pour store; between drops the page sits behind a
+// "Come Back Later" password wall while the products stay loaded — and
+// available — in the Shopify backend. reveries_official reads that backend
+// (Storefront GraphQL) so it kept reporting 8 bottles "in stock" behind a wall
+// nobody can get through. Beacon already KNEW the wall was up (the
+// reveries_site_status http_status monitor had `pageReset: true` and had paged
+// about it) — the two signals were just never joined.
+//
+// The join is host-based and needs no per-site config: any live http_status
+// monitor currently reporting a wall gates every product whose public URL is
+// on the same host. Add a monitor for a host and every stock surface for that
+// host inherits the gate.
+
+/** Hostname of a URL without a leading "www." — the identity of a storefront
+ *  for wall-gating (thereveries.co and www.thereveries.co are one shop). */
+export function storeHost(url: string): string {
+  let host = "";
+  try {
+    host = new URL(url).host;
+  } catch {
+    host = url.replace(/^https?:\/\//, "").split("/")[0] ?? "";
+  }
+  host = host.toLowerCase().replace(/^www\./, "");
+  // Only host-shaped strings count — a "#" placeholder URL is not a store.
+  return /^[a-z0-9.-]+$/.test(host) ? host : "";
+}
+
+/** Minimal shape of a site card this gate needs (matches lib/stock.ts SiteCard). */
+export interface WallSource {
+  row: { enabled: boolean; sourceKind: string; definition?: { source?: unknown } };
+  state: { lastChecked?: string | null; pageReset?: boolean } | undefined;
+}
+
+/**
+ * Hosts whose storefront is currently behind a password / coming-soon wall,
+ * per a LIVE http_status monitor (same enabled + <24h gate as rosters — a
+ * disabled or wedged monitor gates nothing, it just reads "unknown").
+ */
+export function walledHosts(cards: WallSource[]): Set<string> {
+  const walls = new Set<string>();
+  for (const { row, state } of cards) {
+    if (row.sourceKind !== "http_status") continue;
+    if (!rosterIsLive(row.enabled, state?.lastChecked)) continue;
+    if (state?.pageReset !== true) continue;
+    const src = row.definition?.source as { url?: unknown } | undefined;
+    if (typeof src?.url !== "string") continue;
+    const host = storeHost(src.url);
+    if (host) walls.add(host);
+  }
+  return walls;
+}
+
+/** Is this product's public page on a storefront that is currently walled? */
+export function behindWall(productUrl: string, walls: Set<string>): boolean {
+  if (walls.size === 0) return false;
+  const host = storeHost(productUrl);
+  return host !== "" && walls.has(host);
+}

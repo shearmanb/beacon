@@ -7,7 +7,7 @@
 import type { SiteRow } from "@beacon/db";
 import type { SiteState } from "@beacon/core";
 import type { NormalizedProduct } from "@beacon/shared";
-import { rosterIsLive, stockKey } from "./live";
+import { behindWall, rosterIsLive, stockKey, walledHosts } from "./live";
 import { isReveries } from "./reveries";
 
 export interface SiteCard {
@@ -24,6 +24,10 @@ export interface StockProduct {
   /** Roster frozen (site disabled / not checked in >24h): last-known values,
    *  not current stock. */
   stale: boolean;
+  /** Storefront is behind a password / coming-soon wall right now (per a live
+   *  http_status monitor on the same host): the bottle is loaded in the shop's
+   *  backend but nobody can buy it — never counted as in stock. */
+  walled: boolean;
   minPrice: number | null;
   vendor: string | null;
   url: string;
@@ -38,10 +42,13 @@ function productsOf(state: SiteState | undefined): NormalizedProduct[] {
  * host+handle (several checkers can watch the same store — four watched
  * sharedpour.com before the 2026-08-26 consolidation) and gated by roster
  * liveness, so a disabled or long-silent checker's last-known `available`
- * can never outrank a live checker's current read of the same bottle.
+ * can never outrank a live checker's current read of the same bottle — and by
+ * the storefront wall, so a bottle loaded behind a password page is "behind
+ * wall", not "in stock" (see lib/live.ts walledHosts).
  */
 export function loadReveriesStock(cards: SiteCard[]): StockProduct[] {
   const byKey = new Map<string, StockProduct>();
+  const walls = walledHosts(cards);
   for (const { row, state } of cards) {
     const live = rosterIsLive(row.enabled, state?.lastChecked);
     for (const p of productsOf(state)) {
@@ -50,22 +57,27 @@ export function loadReveriesStock(cards: SiteCard[]): StockProduct[] {
       const existing = byKey.get(key);
       // First live entry wins; a stale one only fills a slot no live site covers.
       if (existing && !(live && existing.stale)) continue;
+      const walled = live && behindWall(p.url, walls);
       byKey.set(key, {
         key,
         handle: p.handle,
         site: row.name,
         title: p.title || p.handle,
-        available: live && p.available === true,
+        available: live && !walled && p.available === true,
         stale: !live,
+        walled,
         minPrice: p.minPrice ?? null,
         vendor: p.vendor ?? null,
         url: p.url || "#",
       });
     }
   }
+  // Order: in stock, then behind-wall (the likely next drop — worth seeing),
+  // then sold out, frozen rosters last.
   return [...byKey.values()].sort(
     (a, b) =>
       Number(b.available) - Number(a.available) ||
+      Number(b.walled) - Number(a.walled) ||
       Number(a.stale) - Number(b.stale) ||
       a.title.localeCompare(b.title),
   );

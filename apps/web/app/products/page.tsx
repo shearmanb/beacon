@@ -1,7 +1,7 @@
 import { getStore } from "../../lib/store";
 import { ProductsTable, type ProductRow } from "../../components/ProductsTable";
 import { isReveries } from "../../lib/reveries";
-import { rosterIsLive } from "../../lib/live";
+import { behindWall, rosterIsLive, walledHosts } from "../../lib/live";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +13,11 @@ export default async function ProductsPage() {
     store.ignored.set(),
   ]);
 
+  // Storefronts currently behind a password / coming-soon wall, per a live
+  // http_status monitor (see lib/live.ts): a product on such a host is loaded
+  // in the shop backend but not buyable, so it must not read "in stock".
+  const walls = walledHosts(rows.map((row, i) => ({ row, state: states[i] })));
+
   const items: ProductRow[] = [];
   rows.forEach((row, i) => {
     const products = (states[i]?.products as Record<string, Record<string, unknown>> | undefined) ?? {};
@@ -23,15 +28,18 @@ export default async function ProductsPage() {
     const live = rosterIsLive(row.enabled, states[i]?.lastChecked as string | null | undefined);
     for (const p of Object.values(products)) {
       const title = String(p["title"] ?? p["handle"]);
+      const url = String(p["url"] ?? "#");
+      const walled = live && behindWall(url, walls);
       items.push({
         site: row.name,
         handle: String(p["handle"]),
         title,
-        available: live && p["available"] === true,
+        available: live && !walled && p["available"] === true,
         stale: !live,
+        walled,
         minPrice: typeof p["minPrice"] === "number" ? (p["minPrice"] as number) : null,
         vendor: (p["vendor"] as string | null) ?? null,
-        url: String(p["url"] ?? "#"),
+        url,
         reveries: isReveries(row.id, title),
         // When Beacon first observed this product (stamped by the worker's
         // annotateProducts). Absent for pre-annotation / freshly-baselined rows.
@@ -42,6 +50,7 @@ export default async function ProductsPage() {
   items.sort(
     (a, b) =>
       Number(b.available) - Number(a.available) ||
+      Number(b.walled) - Number(a.walled) ||
       Number(a.stale) - Number(b.stale) ||
       a.title.localeCompare(b.title),
   );
