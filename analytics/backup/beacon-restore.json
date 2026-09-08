@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-07T03:24:53.786Z",
+ "at": "2026-09-08T03:25:05.212Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-07T01:52:58.540Z",
+   "lastChecked": "2026-09-08T01:48:49.505Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:931ca86ecd89065b5258c7a8c15cb26b\"",
+    "etag": "\"page_cache:66506555478:ProductListController:c6edf2058fb094c2f62e425b578c1e7e\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-07T01:52:58.540Z",
+   "lastFullFetchAt": "2026-09-08T01:34:21.986Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-07T01:52:58.540Z",
+   "lastRestProbeAt": "2026-09-08T01:34:21.986Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-07T01:52:58.540Z",
+   "lastSuccessAt": "2026-09-08T01:48:49.505Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-07T01:48:42.843Z",
+   "lastChecked": "2026-09-08T01:49:51.559Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:5a837443d251365d80b1746e6fbb8d67\"",
+    "etag": "\"page_cache:57076547742:ProductListController:5eed63151da9683d72ed4d52e450a06e\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-07T01:48:42.843Z",
+   "lastFullFetchAt": "2026-09-08T01:49:51.559Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-07T01:48:42.843Z",
+   "lastRestProbeAt": "2026-09-08T01:49:51.559Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-07T01:48:42.843Z",
+   "lastSuccessAt": "2026-09-08T01:49:51.559Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-07T02:32:48.895Z",
+   "lastChecked": "2026-09-08T03:02:21.150Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,24 +1218,12 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-07T02:32:48.895Z"
+   "lastSuccessAt": "2026-09-08T03:02:21.151Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-07T03:18:54.680Z",
-   "productCount": 8,
+   "lastChecked": "2026-09-08T02:20:04.477Z",
+   "productCount": 7,
    "products": {
-    "the-reveries-8-year-black-is-the-new-orange": {
-     "handle": "the-reveries-8-year-black-is-the-new-orange",
-     "title": "THE REVERIES Single Barrel Kentucky Bourbon 8 Year #27385 \"Cask In Point: Black is the New Orange\" Select",
-     "vendor": "The Reveries",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 79.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CIP8YR.png?v=1786732509",
-     "url": "https://www.thereveries.co/shop",
-     "firstSeen": "2026-09-04T17:05:42.815Z"
-    },
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
      "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
      "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Island In The Sun\" #27706 Stuff & Whiskey Single Barrel Select",
@@ -1250,7 +1238,7 @@
     },
     "the-reveries-mash-journey-27454": {
      "handle": "the-reveries-mash-journey-27454",
-     "title": "THE REVERIES 7 Year Single Barrel #27454 \"GAMBIT\" Kentucky Straight Bourbon T8KE Select *NO HOLDS OR COMBINES*",
+     "title": "THE REVERIES 7 Year Single Barrel #27454 \"GAMBIT\" Kentucky Straight Bourbon T8KE Select *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Whiskey",
      "tags": [],
@@ -1262,7 +1250,7 @@
     },
     "the-reveries-wire-to-wire": {
      "handle": "the-reveries-wire-to-wire",
-     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Bluegrass Barrel Pickers: Wire to Wire\" 8 Year Selection *NO HOLDS OR COMBINES*",
+     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Bluegrass Barrel Pickers: Wire to Wire\" 8 Year Selection *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Whiskey",
      "tags": [],
@@ -1274,7 +1262,7 @@
     },
     "the-reveries-single-barrel-arrivals-barrel-strength-bourbon": {
      "handle": "the-reveries-single-barrel-arrivals-barrel-strength-bourbon",
-     "title": "THE REVERIES 10 Year Single Barrel \"Arrivals\" Barrel Strength Bourbon T8ke Reserve Cask *NO HOLDS OR COMBINES*",
+     "title": "THE REVERIES 10 Year Single Barrel \"Arrivals\" Barrel Strength Bourbon T8ke Reserve Cask *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Whiskey",
      "tags": [],
@@ -1286,7 +1274,7 @@
     },
     "the-reveries-8-year-single-barrel-wake-of-the-ship-barrel-strength-bourbon-t8ke-reserve-cask": {
      "handle": "the-reveries-8-year-single-barrel-wake-of-the-ship-barrel-strength-bourbon-t8ke-reserve-cask",
-     "title": "The Reveries: 8 Year Single Barrel \"Wake of the Ship\" #27440 Barrel Strength Bourbon T8ke Reserve Cask *NO HOLDS OR COMBINES*",
+     "title": "The Reveries: 8 Year Single Barrel \"Wake of the Ship\" #27440 Barrel Strength Bourbon T8ke Reserve Cask *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Whiskey",
      "tags": [],
@@ -1298,7 +1286,7 @@
     },
     "the-reveries-10-year-single-barrel-bourbon-2ten90-dram-warriors-single-barrel-selection": {
      "handle": "the-reveries-10-year-single-barrel-bourbon-2ten90-dram-warriors-single-barrel-selection",
-     "title": "THE REVERIES 10 Year Single Barrel Bourbon \"2TEN90: Dram Warriors\" Single Barrel Selection *NO HOLDS or COMBINES**",
+     "title": "THE REVERIES 10 Year Single Barrel Bourbon \"2TEN90: Dram Warriors\" Single Barrel Selection *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Whiskey",
      "tags": [],
@@ -1310,7 +1298,7 @@
     },
     "the-reveries-8-year-single-barrel-bourbon-2ten90-single-barrel-selection": {
      "handle": "the-reveries-8-year-single-barrel-bourbon-2ten90-single-barrel-selection",
-     "title": "THE REVERIES 8 Year Single Barrel Bourbon \"2TEN90: Back For More\" Single Barrel Selection *NO HOLDS OR COMBINES*",
+     "title": "THE REVERIES 8 Year Single Barrel Bourbon \"2TEN90: Back For More\" Single Barrel Selection *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Whiskey",
      "tags": [],
@@ -1328,7 +1316,7 @@
     "type": "collection",
     "id": "327871824027"
    },
-   "countBaseline": 8,
+   "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -1337,7 +1325,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-07T03:18:54.680Z",
+   "lastSuccessAt": "2026-09-08T02:20:04.477Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-05T02:55:09.880Z"
   },
@@ -1738,12 +1726,12 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-07T01:47:35.401Z",
-   "productCount": 35,
+   "lastChecked": "2026-09-08T01:56:57.524Z",
+   "productCount": 34,
    "products": {
     "the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection": {
      "handle": "the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection",
-     "title": "THE REVERIES 10 Year \"Average Joe's Ten Years Gone\" Single Barrel Select Indiana Straight Bourbon *NO HOLDS OR COMBINES*",
+     "title": "THE REVERIES 10 Year \"Average Joe's Ten Years Gone\" Single Barrel Select Indiana Straight Bourbon *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Bourbon",
      "tags": [],
@@ -1755,7 +1743,7 @@
     },
     "the-reveries-mash-journey-27454": {
      "handle": "the-reveries-mash-journey-27454",
-     "title": "THE REVERIES 7 Year Single Barrel #27454 \"GAMBIT\" Kentucky Straight Bourbon T8KE Select *NO HOLDS OR COMBINES*",
+     "title": "THE REVERIES 7 Year Single Barrel #27454 \"GAMBIT\" Kentucky Straight Bourbon T8KE Select *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Bourbon",
      "tags": [],
@@ -1767,7 +1755,7 @@
     },
     "the-reveries-wire-to-wire": {
      "handle": "the-reveries-wire-to-wire",
-     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Bluegrass Barrel Pickers: Wire to Wire\" 8 Year Selection *NO HOLDS OR COMBINES*",
+     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Bluegrass Barrel Pickers: Wire to Wire\" 8 Year Selection *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Bourbon",
      "tags": [],
@@ -1779,7 +1767,7 @@
     },
     "the-reveries-10-year-single-barrel-bourbon-2ten90-dram-warriors-single-barrel-selection": {
      "handle": "the-reveries-10-year-single-barrel-bourbon-2ten90-dram-warriors-single-barrel-selection",
-     "title": "THE REVERIES 10 Year Single Barrel Bourbon \"2TEN90: Dram Warriors\" Single Barrel Selection *NO HOLDS or COMBINES**",
+     "title": "THE REVERIES 10 Year Single Barrel Bourbon \"2TEN90: Dram Warriors\" Single Barrel Selection *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Bourbon",
      "tags": [],
@@ -1791,7 +1779,7 @@
     },
     "the-reveries-8-year-single-barrel-bourbon-2ten90-single-barrel-selection": {
      "handle": "the-reveries-8-year-single-barrel-bourbon-2ten90-single-barrel-selection",
-     "title": "THE REVERIES 8 Year Single Barrel Bourbon \"2TEN90: Back For More\" Single Barrel Selection *NO HOLDS OR COMBINES*",
+     "title": "THE REVERIES 8 Year Single Barrel Bourbon \"2TEN90: Back For More\" Single Barrel Selection *NO HOLDS*",
      "vendor": "The Reveries",
      "productType": "Bourbon",
      "tags": [],
@@ -1836,18 +1824,6 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/7b38796f-4bfd-1496-d7c6-4ccdf9677790.jpg?v=1783861795",
      "url": "https://sharedpour.com/products/old-forester-100pf-endalz-x-t8ke",
      "firstSeen": "2026-08-19T21:05:30.642Z"
-    },
-    "the-reveries-8-year-black-is-the-new-orange": {
-     "handle": "the-reveries-8-year-black-is-the-new-orange",
-     "title": "THE REVERIES Single Barrel Kentucky Bourbon 8 Year #27385 \"Cask In Point: Black is the New Orange\" Select",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 79.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CIP8YR.png?v=1786732509",
-     "url": "https://sharedpour.com/products/the-reveries-8-year-black-is-the-new-orange",
-     "firstSeen": "2026-08-16T11:30:32.586Z"
     },
     "found-north-x-t8ke-the-eleventh-hour-19-year-exclusive-blend": {
      "handle": "found-north-x-t8ke-the-eleventh-hour-19-year-exclusive-blend",
@@ -2168,16 +2144,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:fab0ba8bdffd867a58cdf051bc88af25\"",
+    "etag": "\"page_cache:45343637659:ProductListController:ba3153f492af5a252b0fd3b30c942f2c\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-07T01:47:35.401Z",
+   "lastFullFetchAt": "2026-09-08T01:56:57.524Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-07T01:47:35.401Z",
-   "countBaseline": 108,
+   "lastRestProbeAt": "2026-09-08T01:56:57.524Z",
+   "countBaseline": 107,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2186,9 +2162,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-07T01:47:35.401Z",
+   "lastSuccessAt": "2026-09-08T01:56:57.525Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-05T03:44:48.433Z"
+   "lastAlertAt": "2026-09-07T13:46:55.133Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
