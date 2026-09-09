@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-08T03:25:05.212Z",
+ "at": "2026-09-09T03:25:32.200Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-08T01:48:49.505Z",
+   "lastChecked": "2026-09-09T01:47:21.412Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:c6edf2058fb094c2f62e425b578c1e7e\"",
+    "etag": "\"page_cache:66506555478:ProductListController:91a3a450415c4eff3210ea40d97a8110\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-08T01:34:21.986Z",
+   "lastFullFetchAt": "2026-09-09T01:47:21.411Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-08T01:34:21.986Z",
+   "lastRestProbeAt": "2026-09-09T01:47:21.411Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-08T01:48:49.505Z",
+   "lastSuccessAt": "2026-09-09T01:47:21.412Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-08T01:49:51.559Z",
+   "lastChecked": "2026-09-09T01:58:23.631Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:5eed63151da9683d72ed4d52e450a06e\"",
+    "etag": "\"page_cache:57076547742:ProductListController:beb2cd76ba0c50ac47d58ef055fa36e2\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-08T01:49:51.559Z",
+   "lastFullFetchAt": "2026-09-09T01:58:23.631Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-08T01:49:51.559Z",
+   "lastRestProbeAt": "2026-09-09T01:58:23.631Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-08T01:49:51.559Z",
+   "lastSuccessAt": "2026-09-09T01:58:23.631Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-08T03:02:21.150Z",
+   "lastChecked": "2026-09-09T02:54:32.557Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,10 +1218,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-08T03:02:21.151Z"
+   "lastSuccessAt": "2026-09-09T02:54:32.557Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-08T02:20:04.477Z",
+   "lastChecked": "2026-09-09T03:02:25.459Z",
    "productCount": 7,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1303,7 +1303,7 @@
      "productType": "Whiskey",
      "tags": [],
      "minPrice": 84.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/REV10_8_7ecbde00-e717-4899-98b3-0225f86f4be1.jpg?v=1777589223",
      "url": "https://www.thereveries.co/shop",
      "firstSeen": "2026-09-04T17:05:42.815Z"
@@ -1325,9 +1325,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-08T02:20:04.477Z",
+   "lastSuccessAt": "2026-09-09T03:02:25.459Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-09-05T02:55:09.880Z"
+   "lastAlertAt": "2026-09-08T17:10:41.116Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1726,7 +1726,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-08T01:56:57.524Z",
+   "lastChecked": "2026-09-09T01:50:23.051Z",
    "productCount": 34,
    "products": {
     "the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection": {
@@ -1784,7 +1784,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 84.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/REV10_8_7ecbde00-e717-4899-98b3-0225f86f4be1.jpg?v=1777589223",
      "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-bourbon-2ten90-single-barrel-selection",
      "firstSeen": "2026-09-04T16:58:40.077Z"
@@ -2144,15 +2144,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:ba3153f492af5a252b0fd3b30c942f2c\"",
+    "etag": "\"page_cache:45343637659:ProductListController:019633090612a52d30e4aa1e71ceabc2\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-08T01:56:57.524Z",
+   "lastFullFetchAt": "2026-09-09T01:50:23.051Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-08T01:56:57.524Z",
+   "lastRestProbeAt": "2026-09-09T01:50:23.051Z",
    "countBaseline": 107,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2162,9 +2162,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-08T01:56:57.525Z",
+   "lastSuccessAt": "2026-09-09T01:50:23.051Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-07T13:46:55.133Z"
+   "lastAlertAt": "2026-09-08T17:10:45.574Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
