@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-10T03:25:45.726Z",
+ "at": "2026-09-11T03:26:18.111Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-10T01:47:53.485Z",
+   "lastChecked": "2026-09-11T01:57:35.584Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:2299534d88f5b81af8131ca1cb146a2c\"",
+    "etag": "\"page_cache:66506555478:ProductListController:8530ccbe0b89e4ea9b9c93c2d2678264\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-10T01:47:53.484Z",
+   "lastFullFetchAt": "2026-09-11T01:57:35.584Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-10T01:47:53.484Z",
+   "lastRestProbeAt": "2026-09-11T01:57:35.584Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-10T01:47:53.485Z",
+   "lastSuccessAt": "2026-09-11T01:57:35.584Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-10T01:49:58.809Z",
+   "lastChecked": "2026-09-11T01:47:22.593Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:c9ce0fdb7dc9b8f6555fbef836d55e6c\"",
+    "etag": "\"page_cache:57076547742:ProductListController:dc6605924c05fb4523caf52e699fcc9c\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-10T01:49:58.809Z",
+   "lastFullFetchAt": "2026-09-11T01:47:22.593Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-10T01:49:58.809Z",
+   "lastRestProbeAt": "2026-09-11T01:47:22.593Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-10T01:49:58.809Z",
+   "lastSuccessAt": "2026-09-11T01:47:22.593Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-10T03:09:06.739Z",
+   "lastChecked": "2026-09-11T02:46:21.099Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,10 +1218,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-10T03:09:06.739Z"
+   "lastSuccessAt": "2026-09-11T02:46:21.099Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-10T03:21:51.592Z",
+   "lastChecked": "2026-09-11T03:13:33.282Z",
    "productCount": 7,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1325,7 +1325,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-10T03:21:51.592Z",
+   "lastSuccessAt": "2026-09-11T03:13:33.282Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-08T17:10:41.116Z"
   },
@@ -1726,7 +1726,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-10T01:48:57.328Z",
+   "lastChecked": "2026-09-11T01:47:26.324Z",
    "productCount": 34,
    "products": {
     "the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection": {
@@ -1736,7 +1736,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 119.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/AJWTenYearsGone.png?v=1782308995",
      "url": "https://sharedpour.com/products/the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection",
      "firstSeen": "2026-09-04T16:58:40.077Z"
@@ -1979,9 +1979,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
      "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026",
-     "firstSeen": "2026-07-10T18:25:11.230Z",
-     "prevPrice": 89.99,
-     "priceChangedAt": "2026-09-03T19:34:03.549Z"
+     "firstSeen": "2026-07-10T18:25:11.230Z"
     },
     "peerless-single-barrel-bourbon-t8ke-2026": {
      "handle": "peerless-single-barrel-bourbon-t8ke-2026",
@@ -2053,9 +2051,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f96d2467-738c-b849-927c-03416b9f11ff.jpg?v=1771159501",
      "url": "https://sharedpour.com/products/pm-spirits-project-t8ke-armagnac-bourbon-concierge-105-8-prf",
-     "firstSeen": "2026-07-10T18:25:11.230Z",
-     "prevPrice": 74.99,
-     "priceChangedAt": "2026-09-03T19:34:03.549Z"
+     "firstSeen": "2026-07-10T18:25:11.230Z"
     },
     "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive": {
      "handle": "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive",
@@ -2144,15 +2140,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:88fe8e8e337c129d8705d3d790210eb7\"",
+    "etag": "\"page_cache:45343637659:ProductListController:f83b345b9697c6563b6e6535b11194cd\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-10T01:48:57.328Z",
+   "lastFullFetchAt": "2026-09-11T01:33:01.254Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-10T01:48:57.328Z",
+   "lastRestProbeAt": "2026-09-11T01:33:01.254Z",
    "countBaseline": 107,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2162,9 +2158,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-10T01:48:57.329Z",
+   "lastSuccessAt": "2026-09-11T01:47:26.324Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-08T17:10:45.574Z"
+   "lastAlertAt": "2026-09-11T01:01:22.787Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
