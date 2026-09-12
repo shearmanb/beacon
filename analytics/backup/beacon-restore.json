@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-11T03:26:18.111Z",
+ "at": "2026-09-12T03:27:07.163Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-11T01:57:35.584Z",
+   "lastChecked": "2026-09-12T01:47:50.939Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:8530ccbe0b89e4ea9b9c93c2d2678264\"",
+    "etag": "\"page_cache:66506555478:ProductListController:0c9ea19ee0d2cc3551b99d91cf60c940\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-11T01:57:35.584Z",
+   "lastFullFetchAt": "2026-09-12T01:47:50.938Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-11T01:57:35.584Z",
+   "lastRestProbeAt": "2026-09-12T01:47:50.938Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-11T01:57:35.584Z",
+   "lastSuccessAt": "2026-09-12T01:47:50.939Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-11T01:47:22.593Z",
+   "lastChecked": "2026-09-12T01:47:55.757Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:dc6605924c05fb4523caf52e699fcc9c\"",
+    "etag": "\"page_cache:57076547742:ProductListController:58fa88b69f3e04249ecc2bc7425f4b87\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-11T01:47:22.593Z",
+   "lastFullFetchAt": "2026-09-12T01:47:55.757Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-11T01:47:22.593Z",
+   "lastRestProbeAt": "2026-09-12T01:47:55.757Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-11T01:47:22.593Z",
+   "lastSuccessAt": "2026-09-12T01:47:55.757Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-11T02:46:21.099Z",
+   "lastChecked": "2026-09-12T02:33:48.977Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,10 +1218,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-11T02:46:21.099Z"
+   "lastSuccessAt": "2026-09-12T02:33:48.977Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-11T03:13:33.282Z",
+   "lastChecked": "2026-09-12T03:08:48.832Z",
    "productCount": 7,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1325,7 +1325,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-11T03:13:33.282Z",
+   "lastSuccessAt": "2026-09-12T03:08:48.832Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-08T17:10:41.116Z"
   },
@@ -1726,9 +1726,69 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-11T01:47:26.324Z",
-   "productCount": 34,
+   "lastChecked": "2026-09-12T01:53:19.906Z",
+   "productCount": 36,
    "products": {
+    "bull-run-distillery-19-year-single-barrel-barrel-proof-american-whiskey": {
+     "handle": "bull-run-distillery-19-year-single-barrel-barrel-proof-american-whiskey",
+     "title": "T8KE x Bull Run Distillery 19 Year Exclusive Single Barrel Barrel Proof American Whiskey",
+     "vendor": "Bull Run",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 99.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d70b7c98-bdcd-f61d-d0df-bb400054791d.jpg?v=1786881405",
+     "url": "https://sharedpour.com/products/bull-run-distillery-19-year-single-barrel-barrel-proof-american-whiskey",
+     "firstSeen": "2026-09-11T21:27:41.310Z"
+    },
+    "elijah-craig": {
+     "handle": "elijah-craig",
+     "title": "Elijah Craig 9 Year Old: T8KE x 61 Candles Private Barrel Kentucky Bourbon Whiskey",
+     "vendor": "heaven hill",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 89.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/b90c1d80-de96-5ae2-f534-6b24727a296a.jpg?v=1786881461",
+     "url": "https://sharedpour.com/products/elijah-craig",
+     "firstSeen": "2026-09-11T19:31:53.794Z"
+    },
+    "blue-note-bourbon-end-alz-need-to-upate": {
+     "handle": "blue-note-bourbon-end-alz-need-to-upate",
+     "title": "Blue Note “PURPLE NOTE” Juke Joint Single Barrel Barrel Proof EndAlz x T8KE Single Barrel",
+     "vendor": "Blue Note",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 59.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a18ae016-d0fe-5010-9866-cd9e6a361e3a.jpg?v=1786276979",
+     "url": "https://sharedpour.com/products/blue-note-bourbon-end-alz-need-to-upate",
+     "firstSeen": "2026-09-11T19:15:28.099Z"
+    },
+    "t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml": {
+     "handle": "t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml",
+     "title": "Barrell Craft Spirits x T8ke Synthesis I, II, III Tasting Kit (3x 200ml)",
+     "vendor": "Barrell Craft Spirits",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 30,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1255213e-491a-fec6-72f3-e9e0e63fa29a.png?v=1770052416",
+     "url": "https://sharedpour.com/products/t8ke-x-barrell-craft-spirits-synthesis-i-ii-iii-tasting-kit-3x-200ml",
+     "firstSeen": "2026-09-11T18:58:11.368Z"
+    },
+    "cinco-sentidos-chino-con-alto": {
+     "handle": "cinco-sentidos-chino-con-alto",
+     "title": "Cinco Sentidos Chino con Alto T8KE x Aficionados Group Exclusive Selection",
+     "vendor": "Cinco Sentidos",
+     "productType": "Agave",
+     "tags": [],
+     "minPrice": 179.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/18052874-ffae-0189-4151-9f4357c715a1.jpg?v=1788090384",
+     "url": "https://sharedpour.com/products/cinco-sentidos-chino-con-alto",
+     "firstSeen": "2026-09-11T12:34:34.587Z"
+    },
     "the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection": {
      "handle": "the-reveries-10-year-average-joes-ten-years-gone-single-barrel-select-kentucky-straight-bourbon-selection",
      "title": "THE REVERIES 10 Year \"Average Joe's Ten Years Gone\" Single Barrel Select Indiana Straight Bourbon *NO HOLDS*",
@@ -1939,11 +1999,13 @@
      "vendor": "Nulu",
      "productType": "Bourbon",
      "tags": [],
-     "minPrice": 199.99,
+     "minPrice": 179.99,
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00937.jpg?v=1780229848",
      "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-ky172-8-year-hazmat-kentucky-bourbon",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T18:25:11.230Z",
+     "prevPrice": 199.99,
+     "priceChangedAt": "2026-09-11T22:01:33.656Z"
     },
     "t8ke-x-new-louisville-barrel-house-the-bones-ky170-8-year-hazmat-kentucky-bourbon": {
      "handle": "t8ke-x-new-louisville-barrel-house-the-bones-ky170-8-year-hazmat-kentucky-bourbon",
@@ -1951,11 +2013,13 @@
      "vendor": "Nulu",
      "productType": "Bourbon",
      "tags": [],
-     "minPrice": 199.99,
+     "minPrice": 179.99,
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00930.jpg?v=1780229829",
      "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-ky170-8-year-hazmat-kentucky-bourbon",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T18:25:11.230Z",
+     "prevPrice": 199.99,
+     "priceChangedAt": "2026-09-11T21:55:24.382Z"
     },
     "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select": {
      "handle": "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select",
@@ -1979,30 +2043,6 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
      "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
-    },
-    "peerless-single-barrel-bourbon-t8ke-2026": {
-     "handle": "peerless-single-barrel-bourbon-t8ke-2026",
-     "title": "Peerless Distilling Single Barrel Barrel Strength Bourbon T8KE r/Bourbon Private Select #190809107",
-     "vendor": "Kentucky Peerless",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 119.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1ed701c0-c225-0860-f47e-2b31b11b47ba.jpg?v=1778417939",
-     "url": "https://sharedpour.com/products/peerless-single-barrel-bourbon-t8ke-2026",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
-    },
-    "peerless-single-barrel-rye-t8ke-2026": {
-     "handle": "peerless-single-barrel-rye-t8ke-2026",
-     "title": "Peerless Distilling Single Barrel Barrel Strength Rye T8KE r/Bourbon Private Select (2026)",
-     "vendor": "Kentucky Peerless",
-     "productType": "Rye Whiskey",
-     "tags": [],
-     "minPrice": 119.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f6e1b297-b0dd-184a-39cc-a63f5c2b2ac0.jpg?v=1778418010",
-     "url": "https://sharedpour.com/products/peerless-single-barrel-rye-t8ke-2026",
      "firstSeen": "2026-07-10T18:25:11.230Z"
     },
     "scotch-malt-whisky-society-44-196-properly-nutty-t8ke-x-smws-exclusive-single-cask-18-year-speyside": {
@@ -2063,18 +2103,6 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f7f2a6fa-844a-bd29-8fa6-93a9a0be0341.jpg?v=1768742030",
      "url": "https://sharedpour.com/products/barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
-    },
-    "bull-run-distillery-9-year-straight-bourbon-sherry-finish": {
-     "handle": "bull-run-distillery-9-year-straight-bourbon-sherry-finish",
-     "title": "Bull Run Distillery 9 Year Straight Bourbon Sherry Finish T8KE Single Barrel",
-     "vendor": "Bull Run",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 59.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/194cd3cf-d641-3375-1266-08175f787b64.jpg?v=1766328052",
-     "url": "https://sharedpour.com/products/bull-run-distillery-9-year-straight-bourbon-sherry-finish",
      "firstSeen": "2026-07-10T18:25:11.230Z"
     },
     "aged-ore-4-bottle-caddy-t8ke-limited-release-branded-edition-v-2": {
@@ -2140,16 +2168,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:f83b345b9697c6563b6e6535b11194cd\"",
+    "etag": "\"page_cache:45343637659:ProductListController:7153548d9d5283341a5057e8b9a303d7\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-11T01:33:01.254Z",
+   "lastFullFetchAt": "2026-09-12T01:38:38.749Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-11T01:33:01.254Z",
-   "countBaseline": 107,
+   "lastRestProbeAt": "2026-09-12T01:38:38.749Z",
+   "countBaseline": 112,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2158,9 +2186,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-11T01:47:26.324Z",
+   "lastSuccessAt": "2026-09-12T01:53:19.906Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-11T01:01:22.787Z"
+   "lastAlertAt": "2026-09-11T21:49:58.197Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
