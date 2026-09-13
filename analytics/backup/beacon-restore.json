@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-12T03:27:07.163Z",
+ "at": "2026-09-13T03:27:29.558Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-12T01:47:50.939Z",
+   "lastChecked": "2026-09-13T01:49:26.891Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:0c9ea19ee0d2cc3551b99d91cf60c940\"",
+    "etag": "\"page_cache:66506555478:ProductListController:eb4f6d69012cc8562f8725b39db73767\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-12T01:47:50.938Z",
+   "lastFullFetchAt": "2026-09-13T01:49:26.891Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-12T01:47:50.938Z",
+   "lastRestProbeAt": "2026-09-13T01:49:26.891Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-12T01:47:50.939Z",
+   "lastSuccessAt": "2026-09-13T01:49:26.891Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-12T01:47:55.757Z",
+   "lastChecked": "2026-09-13T01:57:24.438Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:58fa88b69f3e04249ecc2bc7425f4b87\"",
+    "etag": "\"page_cache:57076547742:ProductListController:cfebe3929ca835686e000e9475270d15\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-12T01:47:55.757Z",
+   "lastFullFetchAt": "2026-09-13T01:57:24.438Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-12T01:47:55.757Z",
+   "lastRestProbeAt": "2026-09-13T01:57:24.438Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-12T01:47:55.757Z",
+   "lastSuccessAt": "2026-09-13T01:57:24.438Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-12T02:33:48.977Z",
+   "lastChecked": "2026-09-13T03:09:39.167Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,10 +1218,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-12T02:33:48.977Z"
+   "lastSuccessAt": "2026-09-13T03:09:39.167Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-12T03:08:48.832Z",
+   "lastChecked": "2026-09-13T02:34:13.678Z",
    "productCount": 7,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1325,7 +1325,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-12T03:08:48.832Z",
+   "lastSuccessAt": "2026-09-13T02:34:13.678Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-08T17:10:41.116Z"
   },
@@ -1726,7 +1726,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-12T01:53:19.906Z",
+   "lastChecked": "2026-09-13T01:50:29.470Z",
    "productCount": 36,
    "products": {
     "bull-run-distillery-19-year-single-barrel-barrel-proof-american-whiskey": {
@@ -2168,15 +2168,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:7153548d9d5283341a5057e8b9a303d7\"",
+    "etag": "\"page_cache:45343637659:ProductListController:44e87a9bd7c14abedb657c5e7e2f8c09\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-12T01:38:38.749Z",
+   "lastFullFetchAt": "2026-09-13T01:36:08.770Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-12T01:38:38.749Z",
+   "lastRestProbeAt": "2026-09-13T01:36:08.770Z",
    "countBaseline": 112,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2186,7 +2186,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-12T01:53:19.906Z",
+   "lastSuccessAt": "2026-09-13T01:50:29.470Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-09-11T21:49:58.197Z"
   },
