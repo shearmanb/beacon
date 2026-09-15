@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-14T03:27:53.528Z",
+ "at": "2026-09-15T03:28:44.491Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-14T01:48:18.462Z",
+   "lastChecked": "2026-09-15T01:58:18.128Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:075ceeb901015f7dd04269121c726cea\"",
+    "etag": "\"page_cache:66506555478:ProductListController:77cf2e5b58275faf364d64f23d53bdce\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-14T01:48:18.462Z",
+   "lastFullFetchAt": "2026-09-15T01:58:18.128Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-14T01:48:18.462Z",
+   "lastRestProbeAt": "2026-09-15T01:58:18.128Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-14T01:48:18.462Z",
+   "lastSuccessAt": "2026-09-15T01:58:18.128Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-14T01:58:25.255Z",
+   "lastChecked": "2026-09-15T01:50:24.581Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:b0000fc3e3ee7117d1951c63e078b91d\"",
+    "etag": "\"page_cache:57076547742:ProductListController:0fc896f80f410684234cfdc7ecb55448\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-14T01:58:25.255Z",
+   "lastFullFetchAt": "2026-09-15T01:50:24.581Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-14T01:58:25.255Z",
+   "lastRestProbeAt": "2026-09-15T01:50:24.581Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-14T01:58:25.255Z",
+   "lastSuccessAt": "2026-09-15T01:50:24.581Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-14T02:38:58.461Z",
+   "lastChecked": "2026-09-15T02:34:39.145Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,10 +1218,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-14T02:38:58.461Z"
+   "lastSuccessAt": "2026-09-15T02:34:39.146Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-14T03:04:29.284Z",
+   "lastChecked": "2026-09-15T03:13:42.638Z",
    "productCount": 9,
    "products": {
     "the-reveries-9-year-single-barrel-27723-avalanche-selection": {
@@ -1267,7 +1267,7 @@
      "productType": "Whiskey",
      "tags": [],
      "minPrice": 79.99,
-     "available": false,
+     "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/GAMBIT.png?v=1780671568",
      "url": "https://www.thereveries.co/shop",
      "firstSeen": "2026-09-04T17:05:42.815Z"
@@ -1279,7 +1279,7 @@
      "productType": "Whiskey",
      "tags": [],
      "minPrice": 79.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/BluegrassW2W.png?v=1782137041",
      "url": "https://www.thereveries.co/shop",
      "firstSeen": "2026-08-10T14:28:09.823Z"
@@ -1349,9 +1349,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-14T03:04:29.284Z",
+   "lastSuccessAt": "2026-09-15T03:13:42.638Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-09-14T01:02:30.629Z"
+   "lastAlertAt": "2026-09-15T00:04:24.057Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1750,7 +1750,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-14T01:59:34.380Z",
+   "lastChecked": "2026-09-15T01:46:20.926Z",
    "productCount": 39,
    "products": {
     "the-reveries-9-year-kentucky-single-barrel-27136-aftershock-selection": {
@@ -1868,7 +1868,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 79.99,
-     "available": false,
+     "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/GAMBIT.png?v=1780671568",
      "url": "https://sharedpour.com/products/the-reveries-mash-journey-27454",
      "firstSeen": "2026-09-04T16:58:40.077Z"
@@ -1880,7 +1880,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 79.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/BluegrassW2W.png?v=1782137041",
      "url": "https://sharedpour.com/products/the-reveries-wire-to-wire",
      "firstSeen": "2026-09-04T16:58:40.077Z"
@@ -2228,16 +2228,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:0e6910e61f490ffd8aa6b299e0e8ed7c\"",
+    "etag": "\"page_cache:45343637659:ProductListController:1e676b2b21d60fe419729b82fac8856a\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-14T01:59:34.380Z",
+   "lastFullFetchAt": "2026-09-15T01:46:20.926Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-14T01:59:34.380Z",
-   "countBaseline": 115,
+   "lastRestProbeAt": "2026-09-15T01:46:20.926Z",
+   "countBaseline": 114,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2246,9 +2246,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-14T01:59:34.381Z",
+   "lastSuccessAt": "2026-09-15T01:46:20.927Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-14T00:27:29.723Z"
+   "lastAlertAt": "2026-09-14T23:55:13.292Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
