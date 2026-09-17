@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-16T03:29:17.348Z",
+ "at": "2026-09-17T03:29:44.074Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-16T01:51:05.111Z",
+   "lastChecked": "2026-09-17T01:54:34.311Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:40a83acdf8d577a7c43de8cf7fea3242\"",
+    "etag": "\"page_cache:66506555478:ProductListController:459aacee3e0a15ff77c980dd290116c2\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-16T01:51:05.111Z",
+   "lastFullFetchAt": "2026-09-17T01:39:40.202Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-16T01:51:05.111Z",
+   "lastRestProbeAt": "2026-09-17T01:39:40.202Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-16T01:51:05.111Z",
+   "lastSuccessAt": "2026-09-17T01:54:34.311Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-16T01:58:10.683Z",
+   "lastChecked": "2026-09-17T01:48:38.697Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:85cbe1781cd4c5ba7449aae5668dd16e\"",
+    "etag": "\"page_cache:57076547742:ProductListController:1d199740791fed1647813098cf9882f1\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-16T01:58:10.683Z",
+   "lastFullFetchAt": "2026-09-17T01:48:38.697Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-16T01:58:10.683Z",
+   "lastRestProbeAt": "2026-09-17T01:48:38.697Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-16T01:58:10.683Z",
+   "lastSuccessAt": "2026-09-17T01:48:38.697Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-16T03:06:22.924Z",
+   "lastChecked": "2026-09-17T02:53:39.208Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,10 +1218,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-16T03:06:22.924Z"
+   "lastSuccessAt": "2026-09-17T02:53:39.208Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-16T03:23:22.245Z",
+   "lastChecked": "2026-09-17T03:06:40.612Z",
    "productCount": 8,
    "products": {
     "the-reveries-9-year-single-barrel-27723-avalanche-selection": {
@@ -1337,7 +1337,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-16T03:23:22.245Z",
+   "lastSuccessAt": "2026-09-17T03:06:40.613Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-15T17:23:56.179Z"
   },
@@ -1738,8 +1738,8 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-16T01:51:09.099Z",
-   "productCount": 38,
+   "lastChecked": "2026-09-17T01:55:37.888Z",
+   "productCount": 37,
    "products": {
     "the-reveries-9-year-kentucky-single-barrel-27136-aftershock-selection": {
      "handle": "the-reveries-9-year-kentucky-single-barrel-27136-aftershock-selection",
@@ -1920,18 +1920,6 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/7b38796f-4bfd-1496-d7c6-4ccdf9677790.jpg?v=1783861795",
      "url": "https://sharedpour.com/products/old-forester-100pf-endalz-x-t8ke",
      "firstSeen": "2026-08-19T21:05:30.642Z"
-    },
-    "found-north-x-t8ke-the-eleventh-hour-19-year-exclusive-blend": {
-     "handle": "found-north-x-t8ke-the-eleventh-hour-19-year-exclusive-blend",
-     "title": "Found North x T8KE \"The Eleventh Hour\" 19 Year Exclusive Blend",
-     "vendor": "Found North",
-     "productType": "Canadian Whisky",
-     "tags": [],
-     "minPrice": 229.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC01150.jpg?v=1785509791",
-     "url": "https://sharedpour.com/products/found-north-x-t8ke-the-eleventh-hour-19-year-exclusive-blend",
-     "firstSeen": "2026-08-07T17:13:43.762Z"
     },
     "barrell-craft-spirits-x-t8ke-synthesis-iii-cask-strength-ratafia-de-champagne-finished-bourbon-rye-blend": {
      "handle": "barrell-craft-spirits-x-t8ke-synthesis-iii-cask-strength-ratafia-de-champagne-finished-bourbon-rye-blend",
@@ -2204,16 +2192,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:a6b864c824db6460c0161f68f33339fd\"",
+    "etag": "\"page_cache:45343637659:ProductListController:b6eb44ec3176b95eb6e5b269421a1ff4\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-16T01:36:38.969Z",
+   "lastFullFetchAt": "2026-09-17T01:55:37.888Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-16T01:36:38.969Z",
-   "countBaseline": 113,
+   "lastRestProbeAt": "2026-09-17T01:55:37.888Z",
+   "countBaseline": 112,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2222,7 +2210,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-16T01:51:09.099Z",
+   "lastSuccessAt": "2026-09-17T01:55:37.888Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-09-15T17:32:07.925Z"
   },
