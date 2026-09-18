@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-17T03:29:44.074Z",
+ "at": "2026-09-18T03:30:02.366Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-17T01:54:34.311Z",
+   "lastChecked": "2026-09-18T01:48:57.281Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:459aacee3e0a15ff77c980dd290116c2\"",
+    "etag": "\"page_cache:66506555478:ProductListController:d861233c696440816a3c4a5a4946bc3e\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-17T01:39:40.202Z",
+   "lastFullFetchAt": "2026-09-18T01:48:57.281Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-17T01:39:40.202Z",
+   "lastRestProbeAt": "2026-09-18T01:48:57.281Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-17T01:54:34.311Z",
+   "lastSuccessAt": "2026-09-18T01:48:57.281Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-17T01:48:38.697Z",
+   "lastChecked": "2026-09-18T01:47:47.683Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:1d199740791fed1647813098cf9882f1\"",
+    "etag": "\"page_cache:57076547742:ProductListController:e04a34e3d855884e2230f2902f8d25c8\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-17T01:48:38.697Z",
+   "lastFullFetchAt": "2026-09-18T01:47:47.683Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-17T01:48:38.697Z",
+   "lastRestProbeAt": "2026-09-18T01:47:47.683Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-17T01:48:38.697Z",
+   "lastSuccessAt": "2026-09-18T01:47:47.683Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-17T02:53:39.208Z",
+   "lastChecked": "2026-09-18T02:46:18.924Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,36 +1218,12 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-17T02:53:39.208Z"
+   "lastSuccessAt": "2026-09-18T02:46:18.924Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-17T03:06:40.612Z",
-   "productCount": 8,
+   "lastChecked": "2026-09-18T03:08:02.950Z",
+   "productCount": 6,
    "products": {
-    "the-reveries-9-year-single-barrel-27723-avalanche-selection": {
-     "handle": "the-reveries-9-year-single-barrel-27723-avalanche-selection",
-     "title": "THE REVERIES 9 Year Single Barrel #27723 \"Avalanche\" Selection",
-     "vendor": "The Reveries",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 99.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1000115604.jpg?v=1789218580",
-     "url": "https://www.thereveries.co/shop",
-     "firstSeen": "2026-09-13T23:53:49.806Z"
-    },
-    "the-reveries-9-year-kentucky-single-barrel-27136-aftershock-selection": {
-     "handle": "the-reveries-9-year-kentucky-single-barrel-27136-aftershock-selection",
-     "title": "THE REVERIES 10 Year Single Barrel #27136 \"Aftershock\" Selection",
-     "vendor": "The Reveries",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 119.99,
-     "available": false,
-     "image": null,
-     "url": "https://www.thereveries.co/shop",
-     "firstSeen": "2026-09-14T01:02:30.629Z"
-    },
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
      "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
      "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Island In The Sun\" #27706 Stuff & Whiskey Single Barrel Select",
@@ -1328,7 +1304,7 @@
     "type": "collection",
     "id": "327871824027"
    },
-   "countBaseline": 8,
+   "countBaseline": 6,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -1337,7 +1313,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-17T03:06:40.613Z",
+   "lastSuccessAt": "2026-09-18T03:08:02.950Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-15T17:23:56.179Z"
   },
@@ -1738,20 +1714,20 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-17T01:55:37.888Z",
-   "productCount": 37,
+   "lastChecked": "2026-09-18T01:49:03.338Z",
+   "productCount": 36,
    "products": {
-    "the-reveries-9-year-kentucky-single-barrel-27136-aftershock-selection": {
-     "handle": "the-reveries-9-year-kentucky-single-barrel-27136-aftershock-selection",
-     "title": "THE REVERIES 10 Year Single Barrel #27136 \"Aftershock\" Selection",
-     "vendor": "The Reveries",
+    "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon": {
+     "handle": "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon",
+     "title": "New Louisville Barrel House x T8KE “T8KE Honey” Single Barrel Barrel Proof Bourbon Selection",
+     "vendor": "Nulu",
      "productType": "Bourbon",
      "tags": [],
-     "minPrice": 119.99,
-     "available": false,
-     "image": null,
-     "url": "https://sharedpour.com/products/the-reveries-9-year-kentucky-single-barrel-27136-aftershock-selection",
-     "firstSeen": "2026-09-14T00:27:29.723Z"
+     "minPrice": 129.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/0021f962-f338-f333-55fe-499b711ef77c.jpg?v=1789309256",
+     "url": "https://sharedpour.com/products/new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon",
+     "firstSeen": "2026-09-17T11:38:55.490Z"
     },
     "the-reveries-x-hohp-the-reveries-single-cask-avalanche-aftershock-bundle": {
      "handle": "the-reveries-x-hohp-the-reveries-single-cask-avalanche-aftershock-bundle",
@@ -1763,18 +1739,6 @@
      "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1000115603.jpg?v=1789218552",
      "url": "https://sharedpour.com/products/the-reveries-x-hohp-the-reveries-single-cask-avalanche-aftershock-bundle",
-     "firstSeen": "2026-09-13T23:17:22.202Z"
-    },
-    "the-reveries-9-year-single-barrel-27723-avalanche-selection": {
-     "handle": "the-reveries-9-year-single-barrel-27723-avalanche-selection",
-     "title": "THE REVERIES 9 Year Single Barrel #27723 \"Avalanche\" Selection",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 99.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/1000115604.jpg?v=1789218580",
-     "url": "https://sharedpour.com/products/the-reveries-9-year-single-barrel-27723-avalanche-selection",
      "firstSeen": "2026-09-13T23:17:22.202Z"
     },
     "bull-run-distillery-19-year-single-barrel-barrel-proof-american-whiskey": {
@@ -2192,16 +2156,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:b6eb44ec3176b95eb6e5b269421a1ff4\"",
+    "etag": "\"page_cache:45343637659:ProductListController:f16c99b528bb17a71734026f2a715ba7\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-17T01:55:37.888Z",
+   "lastFullFetchAt": "2026-09-18T01:49:03.338Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-17T01:55:37.888Z",
-   "countBaseline": 112,
+   "lastRestProbeAt": "2026-09-18T01:49:03.338Z",
+   "countBaseline": 111,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2210,9 +2174,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-17T01:55:37.888Z",
+   "lastSuccessAt": "2026-09-18T01:49:03.338Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-15T17:32:07.925Z"
+   "lastAlertAt": "2026-09-17T11:38:55.491Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
