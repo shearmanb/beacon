@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-19T03:30:55.792Z",
+ "at": "2026-09-20T03:31:50.946Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-19T01:46:39.130Z",
+   "lastChecked": "2026-09-20T01:57:25.637Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:525bc20e954dfea837756214fc7dd1bb\"",
+    "etag": "\"page_cache:66506555478:ProductListController:daf9f2d3d914a64fc56445d302658ab9\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-19T01:32:12.910Z",
+   "lastFullFetchAt": "2026-09-20T01:57:25.637Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-19T01:32:12.910Z",
+   "lastRestProbeAt": "2026-09-20T01:57:25.637Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-19T01:46:39.130Z",
+   "lastSuccessAt": "2026-09-20T01:57:25.637Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-19T01:48:43.370Z",
+   "lastChecked": "2026-09-20T01:47:14.690Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:1d9d8766f1428760e495a98efaa5b353\"",
+    "etag": "\"page_cache:57076547742:ProductListController:bdd525e0442241fa54d46d59f74de208\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-19T01:48:43.370Z",
+   "lastFullFetchAt": "2026-09-20T01:47:14.690Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-19T01:48:43.370Z",
+   "lastRestProbeAt": "2026-09-20T01:47:14.690Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-19T01:48:43.370Z",
+   "lastSuccessAt": "2026-09-20T01:47:14.690Z",
    "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-19T02:59:37.972Z",
+   "lastChecked": "2026-09-20T02:38:37.292Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,10 +1218,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-19T02:59:37.972Z"
+   "lastSuccessAt": "2026-09-20T02:38:37.292Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-19T03:01:42.355Z",
+   "lastChecked": "2026-09-20T03:12:43.336Z",
    "productCount": 4,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1289,7 +1289,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-19T03:01:42.355Z",
+   "lastSuccessAt": "2026-09-20T03:12:43.337Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-18T17:34:36.971Z"
   },
@@ -1690,7 +1690,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-19T01:47:42.947Z",
+   "lastChecked": "2026-09-20T01:49:18.631Z",
    "productCount": 32,
    "products": {
     "provenance-bourbon-the-eleventh-hour-limited-edition-festival-exclusive-blend": {
@@ -1808,7 +1808,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 84.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/7b38796f-4bfd-1496-d7c6-4ccdf9677790.jpg?v=1783861795",
      "url": "https://sharedpour.com/products/old-forester-100pf-endalz-x-t8ke",
      "firstSeen": "2026-08-19T21:05:30.642Z"
@@ -2082,15 +2082,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:1fba690dd7afc4995a156f39cba58448\"",
+    "etag": "\"page_cache:45343637659:ProductListController:5ae1c7ebbd9f95e3051cbfd4805e3dc2\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-19T01:47:42.947Z",
+   "lastFullFetchAt": "2026-09-20T01:34:45.747Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-19T01:47:42.947Z",
+   "lastRestProbeAt": "2026-09-20T01:34:45.747Z",
    "countBaseline": 107,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2100,9 +2100,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-19T01:47:42.947Z",
+   "lastSuccessAt": "2026-09-20T01:49:18.631Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-18T18:31:33.420Z"
+   "lastAlertAt": "2026-09-19T21:41:16.854Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
