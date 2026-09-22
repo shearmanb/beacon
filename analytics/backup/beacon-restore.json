@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-21T03:32:50.388Z",
+ "at": "2026-09-22T03:32:51.920Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1074,7 +1074,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-21T01:54:06.634Z",
+   "lastChecked": "2026-09-22T01:52:19.170Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1091,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:33a33376fa4a4f4362c7e7d7aced1281\"",
+    "etag": "\"page_cache:66506555478:ProductListController:5c67578583637db3ae5f4f45ab5fc524\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-21T01:54:06.634Z",
+   "lastFullFetchAt": "2026-09-22T01:38:10.235Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-21T01:54:06.634Z",
+   "lastRestProbeAt": "2026-09-22T01:38:10.235Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1109,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-21T01:54:06.634Z",
+   "lastSuccessAt": "2026-09-22T01:52:19.170Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-21T01:47:54.796Z",
+   "lastChecked": "2026-09-22T01:47:15.455Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1180,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:65332f8bf3d2d1a2068a9d8c781d9b00\"",
+    "etag": "\"page_cache:57076547742:ProductListController:8b69bd8809cb8205cceedd615442a8ed\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-21T01:47:54.796Z",
+   "lastFullFetchAt": "2026-09-22T01:47:15.455Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-21T01:47:54.796Z",
+   "lastRestProbeAt": "2026-09-22T01:47:15.455Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1198,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-21T01:47:54.796Z",
-   "lastSelfHealedPingAt": "2026-08-02T21:28:48.582Z",
+   "lastSuccessAt": "2026-09-22T01:47:15.455Z",
+   "lastSelfHealedPingAt": "2026-09-21T14:14:55.814Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-21T03:16:29.513Z",
+   "lastChecked": "2026-09-22T02:36:54.630Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,10 +1218,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-21T03:16:29.513Z"
+   "lastSuccessAt": "2026-09-22T02:36:54.630Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-21T02:55:36.830Z",
+   "lastChecked": "2026-09-22T03:00:52.552Z",
    "productCount": 4,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1267,7 +1267,7 @@
      "productType": "Whiskey",
      "tags": [],
      "minPrice": 124.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/REV10_8.jpg?v=1777589195",
      "url": "https://www.thereveries.co/shop",
      "firstSeen": "2026-09-04T17:05:42.815Z"
@@ -1289,9 +1289,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-21T02:55:36.831Z",
+   "lastSuccessAt": "2026-09-22T03:00:52.553Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-09-18T17:34:36.971Z"
+   "lastAlertAt": "2026-09-21T23:58:09.427Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1690,7 +1690,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-21T01:50:05.159Z",
+   "lastChecked": "2026-09-22T01:43:06.072Z",
    "productCount": 32,
    "products": {
     "provenance-bourbon-the-eleventh-hour-limited-edition-festival-exclusive-blend": {
@@ -1772,7 +1772,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 124.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/REV10_8.jpg?v=1777589195",
      "url": "https://sharedpour.com/products/the-reveries-10-year-single-barrel-bourbon-2ten90-dram-warriors-single-barrel-selection",
      "firstSeen": "2026-09-04T16:58:40.077Z"
@@ -2082,15 +2082,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:38119d52ef1a33ba03ad8f59bbea2f0b\"",
+    "etag": "\"page_cache:45343637659:ProductListController:6401db8319412a33a5824c153e9366b3\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-21T01:35:40.880Z",
+   "lastFullFetchAt": "2026-09-22T01:43:06.072Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-21T01:35:40.880Z",
+   "lastRestProbeAt": "2026-09-22T01:43:06.072Z",
    "countBaseline": 107,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2100,9 +2100,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-21T01:50:05.159Z",
+   "lastSuccessAt": "2026-09-22T01:43:06.073Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-19T21:41:16.854Z"
+   "lastAlertAt": "2026-09-21T23:13:15.855Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
