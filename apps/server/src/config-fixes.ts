@@ -212,6 +212,21 @@ export const ONE_SHOTS: ConfigFix[] = [
     },
   },
   {
+    id: "rename_russells_reserve_20260922",
+    description: "Shorten the Russell's Reserve tile name",
+    // Operator ask: drop "Limited" from the tile. The dashboard has no rename
+    // control, so it rides a one-shot. Only the display name changes: the id,
+    // source, alert settings and enabled flag stay as they are (the site stays
+    // off until it's re-enabled on the dashboard). One-shot, so a later rename
+    // on the dashboard is never undone.
+    async run(store, log) {
+      const row = await store.sites.get("russells_reserve_limited");
+      if (!row || row.definition.name === "Russell's Reserve") return;
+      await store.sites.upsert({ ...row.definition, name: "Russell's Reserve" });
+      log("Renamed russells_reserve_limited tile to \"Russell's Reserve\".");
+    },
+  },
+  {
     id: "retire_browser_twin_20260814",
     description: "Disable the Browserbase twin — 362 consecutive HTTP 402s",
     // The real-browser experiment (2026-07-24) ran out of Browserbase quota and

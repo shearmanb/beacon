@@ -166,7 +166,7 @@
       }
     },
     {
-      "name": "Russell's Reserve Limited",
+      "name": "Russell's Reserve",
       "id": "russells_reserve_limited",
       "enabled": true,
       "strategy": "purchasable_state_monitor",
