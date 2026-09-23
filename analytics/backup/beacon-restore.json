@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-22T03:32:51.920Z",
+ "at": "2026-09-23T03:32:55.472Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -292,9 +292,9 @@
   },
   {
    "id": "russells_reserve_limited",
-   "name": "Russell's Reserve Limited",
-   "enabled": false,
-   "schedule": "15",
+   "name": "Russell's Reserve",
+   "enabled": true,
+   "schedule": "20",
    "intervalMinutes": 30,
    "imminent": false,
    "imminentIntervalMinutes": 5,
@@ -302,7 +302,8 @@
     "onNew": true,
     "onRestock": true,
     "onSoldOut": false,
-    "onSiteReset": true
+    "onSiteReset": true,
+    "dedupeAcrossSites": true
    },
    "filters": {
     "titleContains": [],
@@ -1074,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-22T01:52:19.170Z",
+   "lastChecked": "2026-09-23T01:49:20.140Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1091,15 +1092,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:5c67578583637db3ae5f4f45ab5fc524\"",
+    "etag": "\"page_cache:66506555478:ProductListController:3655e732018af97f7f2029f8dea95ae2\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-22T01:38:10.235Z",
+   "lastFullFetchAt": "2026-09-23T01:49:20.140Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-22T01:38:10.235Z",
+   "lastRestProbeAt": "2026-09-23T01:49:20.140Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1109,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-22T01:52:19.170Z",
+   "lastSuccessAt": "2026-09-23T01:49:20.140Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-22T01:47:15.455Z",
+   "lastChecked": "2026-09-23T01:46:14.013Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1180,15 +1181,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:8b69bd8809cb8205cceedd615442a8ed\"",
+    "etag": "\"page_cache:57076547742:ProductListController:5ec0030b5c39896db6d8af01d71ff60a\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-22T01:47:15.455Z",
+   "lastFullFetchAt": "2026-09-23T01:46:14.013Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-22T01:47:15.455Z",
+   "lastRestProbeAt": "2026-09-23T01:46:14.013Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1198,12 +1199,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-22T01:47:15.455Z",
+   "lastSuccessAt": "2026-09-23T01:46:14.013Z",
    "lastSelfHealedPingAt": "2026-09-21T14:14:55.814Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-22T02:36:54.630Z",
+   "lastChecked": "2026-09-23T03:24:43.324Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1218,10 +1219,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-22T02:36:54.630Z"
+   "lastSuccessAt": "2026-09-23T03:24:43.324Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-22T03:00:52.552Z",
+   "lastChecked": "2026-09-23T03:23:34.908Z",
    "productCount": 4,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1289,7 +1290,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-22T03:00:52.553Z",
+   "lastSuccessAt": "2026-09-23T03:23:34.908Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-21T23:58:09.427Z"
   },
@@ -1456,13 +1457,13 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-06-25T17:57:28.581Z",
-   "productCount": 12,
+   "lastChecked": "2026-09-23T03:29:56.412Z",
+   "productCount": 11,
    "products": {
     "10-year-old-bourbon": {
      "handle": "10-year-old-bourbon",
      "title": "10 Year Old Bourbon",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1475,7 +1476,7 @@
     "6-year-old-rye": {
      "handle": "6-year-old-rye",
      "title": "6 Year Old Rye",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1488,7 +1489,7 @@
     "10-year-old-bourbon-and-6-year-old-rye": {
      "handle": "10-year-old-bourbon-and-6-year-old-rye",
      "title": "10 Year Old Bourbon & 6 Year Old rye",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1501,7 +1502,7 @@
     "single-barrel-bourbon": {
      "handle": "single-barrel-bourbon",
      "title": "Single Barrel Bourbon",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1514,7 +1515,7 @@
     "single-barrel-rye": {
      "handle": "single-barrel-rye",
      "title": "Single Barrel Rye",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1524,23 +1525,10 @@
      "cta": "Add to cart",
      "firstSeen": "2026-06-18T19:21:43.163Z"
     },
-    "private-barrel-bourbon": {
-     "handle": "private-barrel-bourbon",
-     "title": "Private Barrel Selection #1",
-     "vendor": "Russell's Reserve Limited",
-     "productType": null,
-     "tags": [],
-     "minPrice": null,
-     "available": true,
-     "image": null,
-     "url": "https://www.russellsreserve.com/en-us/our-products/private-barrel-bourbon/",
-     "cta": "ADD TO CART",
-     "firstSeen": "2026-06-18T19:21:43.163Z"
-    },
     "private-barrel-bourbon-2": {
      "handle": "private-barrel-bourbon-2",
      "title": "Private Barrel Selection #2",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1553,7 +1541,7 @@
     "private-barrel-selection-3": {
      "handle": "private-barrel-selection-3",
      "title": "Private Barrel Selection #3",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1566,7 +1554,7 @@
     "13-year-old-bourbon": {
      "handle": "13-year-old-bourbon",
      "title": "13 Year Old Bourbon",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1579,7 +1567,7 @@
     "15-year-old-bourbon": {
      "handle": "15-year-old-bourbon",
      "title": "15 Year Old Bourbon",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1592,7 +1580,7 @@
     "single-rickhouse": {
      "handle": "single-rickhouse",
      "title": "Single Rickhouse",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1605,7 +1593,7 @@
     "15-year-old-bourbon-13-year-old-bourbon": {
      "handle": "15-year-old-bourbon-13-year-old-bourbon",
      "title": "15 Year Old Bourbon & 13 Year Old Bourbon",
-     "vendor": "Russell's Reserve Limited",
+     "vendor": "Russell's Reserve",
      "productType": null,
      "tags": [],
      "minPrice": null,
@@ -1616,13 +1604,23 @@
     }
    },
    "httpValidators": {
-    "etag": "\"b3ded69a\"",
-    "lastModified": "Thu, 25 Jun 2026 16:21:06 GMT"
+    "etag": "\"9e20ddef\"",
+    "lastModified": "Wed, 23 Sep 2026 00:27:44 GMT"
    },
+   "fetchVia": null,
+   "fetchViaReason": null,
+   "countBaseline": 11,
+   "driftStreak": 0,
+   "driftAlertSent": false,
+   "driftAlertAt": null,
    "consecutiveErrors": 0,
    "errorAlertSent": false,
    "cooldownLevel": 0,
-   "cooldownUntil": null
+   "cooldownUntil": null,
+   "errorStreakSince": null,
+   "lastSuccessAt": "2026-09-23T03:29:56.412Z",
+   "lastSelfHealedPingAt": null,
+   "lastAlertAt": null
   },
   "sharedpour_provenance": {
    "lastChecked": "2026-08-26T08:18:40.674Z",
@@ -1690,7 +1688,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-22T01:43:06.072Z",
+   "lastChecked": "2026-09-23T01:58:21.920Z",
    "productCount": 32,
    "products": {
     "provenance-bourbon-the-eleventh-hour-limited-edition-festival-exclusive-blend": {
@@ -1736,7 +1734,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 89.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/b90c1d80-de96-5ae2-f534-6b24727a296a.jpg?v=1786881461",
      "url": "https://sharedpour.com/products/elijah-craig",
      "firstSeen": "2026-09-11T19:31:53.794Z"
@@ -2082,16 +2080,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:6401db8319412a33a5824c153e9366b3\"",
+    "etag": "\"page_cache:45343637659:ProductListController:07a54b6f7f1c4a4b9d0516089332dfda\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-22T01:43:06.072Z",
+   "lastFullFetchAt": "2026-09-23T01:58:21.920Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-22T01:43:06.072Z",
-   "countBaseline": 107,
+   "lastRestProbeAt": "2026-09-23T01:58:21.920Z",
+   "countBaseline": 108,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2100,9 +2098,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-22T01:43:06.073Z",
+   "lastSuccessAt": "2026-09-23T01:58:21.920Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-21T23:13:15.855Z"
+   "lastAlertAt": "2026-09-22T21:44:02.030Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
