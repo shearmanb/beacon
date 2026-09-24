@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-23T03:32:55.472Z",
+ "at": "2026-09-24T03:33:34.697Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1075,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-23T01:49:20.140Z",
+   "lastChecked": "2026-09-24T01:48:37.969Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1092,15 +1092,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:3655e732018af97f7f2029f8dea95ae2\"",
+    "etag": "\"page_cache:66506555478:ProductListController:4f6753d81d3c3fb9f2080fe28bd5eeeb\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-23T01:49:20.140Z",
+   "lastFullFetchAt": "2026-09-24T01:34:21.939Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-23T01:49:20.140Z",
+   "lastRestProbeAt": "2026-09-24T01:34:21.939Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1110,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-23T01:49:20.140Z",
+   "lastSuccessAt": "2026-09-24T01:48:37.969Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-23T01:46:14.013Z",
+   "lastChecked": "2026-09-24T01:48:42.335Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1181,15 +1181,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:5ec0030b5c39896db6d8af01d71ff60a\"",
+    "etag": "\"page_cache:57076547742:ProductListController:ed37c5aeb1fd6ce58b919b2e08f8e914\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-23T01:46:14.013Z",
+   "lastFullFetchAt": "2026-09-24T01:48:42.334Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-23T01:46:14.013Z",
+   "lastRestProbeAt": "2026-09-24T01:48:42.334Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1199,12 +1199,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-23T01:46:14.013Z",
+   "lastSuccessAt": "2026-09-24T01:48:42.335Z",
    "lastSelfHealedPingAt": "2026-09-21T14:14:55.814Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-23T03:24:43.324Z",
+   "lastChecked": "2026-09-24T03:15:35.397Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1219,10 +1219,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-23T03:24:43.324Z"
+   "lastSuccessAt": "2026-09-24T03:15:35.397Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-23T03:23:34.908Z",
+   "lastChecked": "2026-09-24T03:08:36.742Z",
    "productCount": 4,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1290,7 +1290,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-23T03:23:34.908Z",
+   "lastSuccessAt": "2026-09-24T03:08:36.743Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-21T23:58:09.427Z"
   },
@@ -1457,7 +1457,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-09-23T03:29:56.412Z",
+   "lastChecked": "2026-09-24T03:10:35.931Z",
    "productCount": 11,
    "products": {
     "10-year-old-bourbon": {
@@ -1604,8 +1604,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"9e20ddef\"",
-    "lastModified": "Wed, 23 Sep 2026 00:27:44 GMT"
+    "etag": "\"41aa8742\"",
+    "lastModified": "Wed, 23 Sep 2026 22:29:45 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1618,7 +1618,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-23T03:29:56.412Z",
+   "lastSuccessAt": "2026-09-24T03:10:35.931Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": null
   },
@@ -1688,7 +1688,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-23T01:58:21.920Z",
+   "lastChecked": "2026-09-24T01:48:46.786Z",
    "productCount": 32,
    "products": {
     "provenance-bourbon-the-eleventh-hour-limited-edition-festival-exclusive-blend": {
@@ -1698,7 +1698,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 149.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-07at12.27.37.png?v=1786120077",
      "url": "https://sharedpour.com/products/provenance-bourbon-the-eleventh-hour-limited-edition-festival-exclusive-blend",
      "firstSeen": "2026-09-18T18:31:33.419Z"
@@ -2080,15 +2080,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:07a54b6f7f1c4a4b9d0516089332dfda\"",
+    "etag": "\"page_cache:45343637659:ProductListController:98a7ff1bf179fcb03db1aeacf815c9dd\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-23T01:58:21.920Z",
+   "lastFullFetchAt": "2026-09-24T01:48:46.786Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-23T01:58:21.920Z",
+   "lastRestProbeAt": "2026-09-24T01:48:46.786Z",
    "countBaseline": 108,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2098,9 +2098,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-23T01:58:21.920Z",
+   "lastSuccessAt": "2026-09-24T01:48:46.787Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-22T21:44:02.030Z"
+   "lastAlertAt": "2026-09-23T23:33:19.166Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
