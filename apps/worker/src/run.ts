@@ -14,7 +14,7 @@
 
 import { buildAdapterDeps, diagnoseSite, getAdapter, hasAdapter, registerAdapter, siteDefinitionSchema, sourceUrl, type AdapterDeps, type SiteDefinition } from "@beacon/core";
 import { expireIdentity } from "@beacon/fetch";
-import { sleep, jitter, shouldCheck, getEffectiveInterval, type Alert } from "@beacon/shared";
+import { sleep, jitter, shouldCheck, getEffectiveInterval, getEtDay, getEtHour, type Alert, type Schedules } from "@beacon/shared";
 import type { NotificationChannel } from "@beacon/notify";
 import type { BeaconStore, SiteRow } from "@beacon/db";
 import { applyCommands } from "./commands.js";
@@ -63,6 +63,20 @@ const TIGHT_COOLDOWN_CAP_MS = 15 * 60_000;
 // keeps 429ing recovers long before it trips this.
 const QUARANTINE_MIN_FAILURES = 25;
 const QUARANTINE_MIN_AGE_MS = 72 * 3_600_000;
+
+// ── Blind-time invariant (2026-09) ───────────────────────────────────────────
+// Every silent blackout so far was a COMPOSITION of guards that were each
+// reasonable alone: cooldown ladder + sub-threshold errors (Jul 22), 304s
+// trusted forever, frozen rosters. Rather than patch each guard, one rule no
+// future guard can compose its way around: if an enabled site has gone longer
+// than max(BLIND_MIN_MS, BLIND_INTERVAL_MULT × its interval) without a
+// successful check — for ANY reason, including never being attempted — page
+// once (then daily), naming which guard is holding it. Skipped while another
+// health page for the site is already open (errorAlertSent inside 24 h), so
+// it only speaks when nothing else has.
+const BLIND_MIN_MS = 90 * 60_000;
+const BLIND_INTERVAL_MULT = 3;
+const BLIND_REALERT_MS = 24 * 3_600_000;
 
 // ── Cross-site duplicate suppression (2026-08-14) ────────────────────────────
 // Four checkers watch sharedpour.com (t8ke, t8ke_all, reveries, provenance)
@@ -361,7 +375,78 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
 
   await dispatch(ctx, results, baseDeps);
 
+  if (!dryRun) {
+    try {
+      await checkBlindTime(ctx, rows, schedules);
+    } catch (err) {
+      log(`Blind-time check error (continuing): ${(err as Error).message}`);
+    }
+  }
+
   return { anyImminentActive, checked };
+}
+
+/** How long a site may go without a successful check before it counts as blind.
+ *  Uses the larger of the interval now and at the last success, so a schedule
+ *  switching from a slow overnight cadence to a tight morning one can't page
+ *  on the transition. */
+export function blindThresholdMs(def: SiteDefinition, schedules: Schedules, lastSuccessMs: number): number {
+  const at = (d: Date) => getEffectiveInterval(def, schedules, { hour: getEtHour(d), day: getEtDay(d) });
+  const interval = Math.max(at(new Date()), at(new Date(lastSuccessMs)));
+  return Math.max(BLIND_MIN_MS, BLIND_INTERVAL_MULT * interval * 60_000);
+}
+
+async function checkBlindTime(ctx: RunContext, rows: SiteRow[], schedules: Schedules): Promise<void> {
+  const { store, channel, log = () => {} } = ctx;
+  const now = Date.now();
+  for (const row of rows) {
+    const def = row.definition;
+    if (!def.enabled) continue;
+    const state = await store.state.load(def.id);
+    // Never succeeded: nothing to measure from — first-check failures page
+    // through the normal error path.
+    const lastSuccessMs = state?.lastSuccessAt ? Date.parse(state.lastSuccessAt as string) : NaN;
+    if (!state || !Number.isFinite(lastSuccessMs)) continue;
+    const blindMs = now - lastSuccessMs;
+    if (blindMs < blindThresholdMs(def, schedules, lastSuccessMs)) continue;
+    const lastPage = state.errorAlertAt ? Date.parse(state.errorAlertAt as string) : NaN;
+    if (state.errorAlertSent === true && Number.isFinite(lastPage) && now - lastPage < BLIND_REALERT_MS) continue;
+
+    const errors = (state.consecutiveErrors as number | undefined) ?? 0;
+    const cooldownUntil = state.cooldownUntil ? Date.parse(state.cooldownUntil as string) : 0;
+    const why =
+      cooldownUntil > now
+        ? `held by a rate-limit cooldown until ${new Date(cooldownUntil).toISOString().slice(11, 16)} UTC after ${errors} failure(s)`
+        : errors > 0
+          ? `${errors} consecutive failure(s) since, below the page threshold` +
+            (state.lastError ? ` (last: ${String(state.lastError).slice(0, 160)})` : "")
+          : "no failures recorded — it simply hasn't been checked (schedule, config or adapter problem?)";
+    const hours = (blindMs / 3_600_000).toFixed(1);
+    const nowIso = new Date(now).toISOString();
+    const event: Alert = {
+      type: "site_error",
+      product: {
+        title: def.name,
+        url: sourceUrl(def),
+        note:
+          `🕳 Blind for ${hours} h — no successful check since ${String(state.lastSuccessAt).slice(0, 16)}Z. ` +
+          `Why: ${why}.\nA drop in this gap would be missed. Hit 🩺 Diagnose on the tile, or turn on Imminent ` +
+          `to force checks through the cooldown.`,
+      },
+    };
+    // Mark a health page as open, so recovery sends site_recovered and the
+    // daily cadence is shared with the ordinary site_error re-page.
+    await store.state.save(def.id, { ...state, errorAlertSent: true, errorAlertAt: nowIso, blindAlertAt: nowIso });
+    await store.history.append(def.id, [event]);
+    log(`[${def.name}] BLIND for ${hours}h — ${why}`);
+    if (channel) {
+      try {
+        await channel.send(def.name, event);
+      } catch (err) {
+        log(`  Discord blind-time error: ${(err as Error).message}`);
+      }
+    }
+  }
 }
 
 // Auto-disable a site that has been failing the same way for days (2a). Returns

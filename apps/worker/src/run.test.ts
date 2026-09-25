@@ -275,6 +275,48 @@ describe("runOnce", () => {
     expect((await store.history.recent()).some((h) => h.type === "system_degraded")).toBe(true);
   });
 
+  // ── Blind-time invariant (2026-09) ────────────────────────────────────────
+  it("pages once when guards compose into a blackout (cooldown + sub-threshold errors)", async () => {
+    const ago = (m: number) => new Date(Date.now() - m * 60_000).toISOString();
+    // Jul 22 shape: last good check 3 h ago, 3 failures (< the 5 page threshold),
+    // now held by a long cooldown so the loop skips it — nothing else would page.
+    await store.state.save("s1", {
+      lastChecked: ago(20),
+      lastSuccessAt: ago(180),
+      products: {},
+      consecutiveErrors: 3,
+      lastError: "HTTP 503",
+      cooldownUntil: new Date(Date.now() + 120 * 60_000).toISOString(),
+    });
+    const res = await runOnce(ctx());
+    expect(res.checked).toBe(0); // skipped by cooldown
+    const pages = sent.filter((s) => s.alert.type === "site_error");
+    expect(pages).toHaveLength(1);
+    expect(pages[0]!.alert.product.note).toContain("Blind for 3.0 h");
+    expect(pages[0]!.alert.product.note).toContain("cooldown");
+
+    // Same pass state next loop: still blind, but no second page inside 24 h.
+    await runOnce(ctx());
+    expect(sent.filter((s) => s.alert.type === "site_error")).toHaveLength(1);
+
+    // Recovery closes it like any other health page.
+    await store.state.save("s1", { ...(await store.state.load("s1"))!, cooldownUntil: null, lastChecked: null });
+    await runOnce(ctx());
+    expect(sent.map((s) => s.alert.type)).toContain("site_recovered");
+  });
+
+  it("stays silent for a healthy site and within the interval-scaled threshold", async () => {
+    await runOnce(ctx()); // baseline — lastSuccessAt = now
+    await runOnce(ctx());
+    // 50 min without success on a 20m site is under max(90m, 3×20m).
+    await store.state.save("s1", {
+      ...(await store.state.load("s1"))!,
+      lastSuccessAt: new Date(Date.now() - 50 * 60_000).toISOString(),
+    });
+    await runOnce(ctx());
+    expect(sent).toHaveLength(0);
+  });
+
   // ── Cross-site duplicate suppression (2b) ─────────────────────────────────
   it("pages once when two checkers on the same host see the same product", async () => {
     // Two sites, same host, overlapping rosters — the sharedpour.com shape.
