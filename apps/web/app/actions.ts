@@ -54,6 +54,23 @@ export async function runNow(siteId?: string): Promise<void> {
 export async function setMonitoring(siteId: string, enabled: boolean): Promise<void> {
   const store = await getStore();
   await store.sites.setEnabled(siteId, enabled);
+  if (enabled) {
+    // A fresh start: the failure streak from before it was disabled (often a
+    // quarantine) must not carry over, or one transient error on the first
+    // check re-quarantines it; enabledAt restarts the blind-time clock.
+    const state = await store.state.load(siteId);
+    if (state) {
+      await store.state.save(siteId, {
+        ...state,
+        consecutiveErrors: 0,
+        errorStreakSince: null,
+        errorAlertSent: false,
+        cooldownLevel: 0,
+        cooldownUntil: null,
+        enabledAt: new Date().toISOString(),
+      });
+    }
+  }
   revalidatePath("/");
 }
 

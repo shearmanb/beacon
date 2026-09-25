@@ -95,6 +95,25 @@ describe("runSiteCheck", () => {
     expect(emptyRealertMs(20)).toBe(7 * 24 * 3_600_000); // capped weekly
   });
 
+  it("an empty roster keeps the adapter's channel bookkeeping (a pin survives)", async () => {
+    const result = await runSiteCheck(
+      site(),
+      { lastChecked: "2026-06-22T00:00:00Z", products: { a: prod("a", true) }, preferFallback: true, countBaseline: 40 },
+      stub({
+        kind: "products",
+        products: [],
+        pageCount: 1,
+        via: "storefront_fallback",
+        viaReason: "pinned",
+        stateExtras: { preferFallback: true, fallbackStreak: 4 },
+      } as FetchResult),
+    );
+    expect(result.state.preferFallback).toBe(true);
+    expect(result.state.fallbackStreak).toBe(4);
+    expect(result.state.fetchVia).toBe("storefront_fallback");
+    expect(result.state.countBaseline).toBe(40);
+  });
+
   it("fires site_reset on an open -> blocked signal transition", async () => {
     const result = await runSiteCheck(
       site(),

@@ -18,7 +18,7 @@ import { sleep, jitter, shouldCheck, getEffectiveInterval, getEtDay, getEtHour, 
 import type { NotificationChannel } from "@beacon/notify";
 import type { BeaconStore, SiteRow } from "@beacon/db";
 import { applyCommands } from "./commands.js";
-import { processSite, type SiteOutcome } from "./process-site.js";
+import { isBlockLikeFailure, processSite, type SiteOutcome } from "./process-site.js";
 
 export const DEFAULT_IMMINENT_DURATION_MIN = 20;
 // Wall-clock ceiling for a single site's check (fetch + parse). The fetch layer
@@ -63,6 +63,11 @@ const TIGHT_COOLDOWN_CAP_MS = 15 * 60_000;
 // keeps 429ing recovers long before it trips this.
 const QUARANTINE_MIN_FAILURES = 25;
 const QUARANTINE_MIN_AGE_MS = 72 * 3_600_000;
+// "Failing the same way": the last N logged failures share one status (or one
+// message when status-less), and none of them is a block (401/403/429/430/503
+// or a stall) — three days of WAF blocking must never auto-disable the
+// watchlist that exists for drop nights (2026-09 review).
+const QUARANTINE_SAME_ERROR_N = 5;
 
 // ── Blind-time invariant (2026-09) ───────────────────────────────────────────
 // Every silent blackout so far was a COMPOSITION of guards that were each
@@ -370,7 +375,13 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
   }
 
   if (!dryRun && newlyPinnedHosts.size > 0) {
-    await propagateHostPins(ctx, rows, newlyPinnedHosts);
+    // State + history for this pass are already saved; a throw here would skip
+    // dispatch and lose those alerts for good (diff never re-fires them).
+    try {
+      await propagateHostPins(ctx, rows, newlyPinnedHosts);
+    } catch (err) {
+      log(`Host pin propagation error (continuing): ${(err as Error).message}`);
+    }
   }
 
   await dispatch(ctx, results, baseDeps);
@@ -405,12 +416,24 @@ async function checkBlindTime(ctx: RunContext, rows: SiteRow[], schedules: Sched
     const state = await store.state.load(def.id);
     // Never succeeded: nothing to measure from — first-check failures page
     // through the normal error path.
-    const lastSuccessMs = state?.lastSuccessAt ? Date.parse(state.lastSuccessAt as string) : NaN;
+    // A site re-enabled on the dashboard starts its clock at the re-enable, not
+    // at a success from weeks ago (else its first failure pages "blind 30 d").
+    const stamps = [state?.lastSuccessAt, state?.enabledAt]
+      .map((v) => (typeof v === "string" ? Date.parse(v) : NaN))
+      .filter(Number.isFinite);
+    const lastSuccessMs = stamps.length > 0 ? Math.max(...stamps) : NaN;
     if (!state || !Number.isFinite(lastSuccessMs)) continue;
     const blindMs = now - lastSuccessMs;
     if (blindMs < blindThresholdMs(def, schedules, lastSuccessMs)) continue;
     const lastPage = state.errorAlertAt ? Date.parse(state.errorAlertAt as string) : NaN;
-    if (state.errorAlertSent === true && Number.isFinite(lastPage) && now - lastPage < BLIND_REALERT_MS) continue;
+    const pageAge = Number.isFinite(lastPage) ? now - lastPage : Infinity;
+    if (state.errorAlertSent === true) {
+      if (pageAge < BLIND_REALERT_MS) continue;
+      // A failing site already has an open page and re-pages daily on its next
+      // failed check (with the 🩺 auto-diagnosis) — don't pre-empt that. Only
+      // step in if even that daily re-page has gone missing for a second day.
+      if (((state.consecutiveErrors as number | undefined) ?? 0) > 0 && pageAge < 2 * BLIND_REALERT_MS) continue;
+    }
 
     const errors = (state.consecutiveErrors as number | undefined) ?? 0;
     const cooldownUntil = state.cooldownUntil ? Date.parse(state.cooldownUntil as string) : 0;
@@ -466,6 +489,17 @@ async function maybeQuarantine(ctx: RunContext, def: SiteDefinition, outcome: Si
     return false;
   }
   if (Date.now() - Date.parse(since) < QUARANTINE_MIN_AGE_MS) return false;
+  const tail = ((outcome.newState.errorLog as Array<{ message?: string; statusCode?: number | null }> | undefined) ?? [])
+    .slice(-QUARANTINE_SAME_ERROR_N);
+  const sig = (e: { message?: string; statusCode?: number | null }) =>
+    e.statusCode != null ? `status:${e.statusCode}` : `msg:${e.message ?? ""}`;
+  if (
+    tail.length < QUARANTINE_SAME_ERROR_N ||
+    tail.some((e) => isBlockLikeFailure(e.statusCode, e.message ?? "")) ||
+    new Set(tail.map(sig)).size > 1
+  ) {
+    return false;
+  }
 
   const days = Math.round((Date.now() - Date.parse(since)) / 86_400_000);
   const lastError = (outcome.newState.lastError as string | undefined) ?? "unknown error";
@@ -602,7 +636,9 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
     return;
   }
 
-  systemicAlerted = false;
+  // Reset only on evidence of recovery: most passes check 0-1 sites, and a
+  // pass that proves nothing must not re-arm the page for the same episode.
+  if (results.some((r) => r.outcome.ok)) systemicAlerted = false;
 
   // Host-level view (3c): which hosts have 2+ failing checkers this pass.
   const failingByHost = new Map<string, string[]>();
@@ -613,7 +649,7 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
   }
 
   // Cross-site duplicate memory (2b) + per-pass send bookkeeping (3c).
-  const dedupeKeys = await loadDedupeKeys(store);
+  const dedupeKeys = await loadDedupeKeys(store).catch(() => ({}) as Record<string, string>);
   let dedupeDirty = false;
 
   for (const { def, outcome } of results) {
@@ -624,15 +660,12 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
       log(`  → ${productEvents.length} product alerts from ${def.name} — sending one digest`);
       try {
         await channel.send(def.name, buildSiteDigest(def, productEvents));
-      } catch (err) {
-        log(`  Discord digest error: ${(err as Error).message}`);
-      }
-      for (const ev of productEvents) {
-        const key = alertKey(def, ev);
-        if (key) {
-          dedupeKeys[key] = new Date().toISOString();
-          dedupeDirty = true;
+        for (const ev of productEvents) {
+          if (recordDedupe(dedupeKeys, def, ev)) dedupeDirty = true;
         }
+      } catch (err) {
+        // Not stamped: a sibling checker's copy may still deliver it.
+        log(`  Discord digest error: ${(err as Error).message}`);
       }
     }
     const digested = productEvents.length > SITE_DIGEST_THRESHOLD ? new Set(productEvents) : new Set<Alert>();
@@ -655,14 +688,13 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
       // gate, so a suppressed event never consumes the key.
       if (def.alerts.dedupeAcrossSites !== false) {
         const key = alertKey(def, ev);
-        if (key) {
-          const seenAt = dedupeKeys[key];
-          if (seenAt && Date.now() - Date.parse(seenAt) < CROSS_SITE_DEDUPE_MS) {
-            log(`     (duplicate of an alert already sent for this host — not re-paged)`);
-            continue;
-          }
-          dedupeKeys[key] = new Date().toISOString();
-          dedupeDirty = true;
+        const seen = key ? parseDedupeEntry(dedupeKeys[key]) : null;
+        // Only a DIFFERENT checker's sighting counts as a duplicate: the same
+        // checker can only repeat a transition after the opposite one (a
+        // sell-out it may not even alert on), so its repeat is a real event.
+        if (seen && seen.siteId !== def.id && Date.now() - seen.at < CROSS_SITE_DEDUPE_MS) {
+          log(`     (duplicate of an alert already sent for this store — not re-paged)`);
+          continue;
         }
       }
 
@@ -691,6 +723,9 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
 
       try {
         await channel.send(def.name, note === ev.product.note ? ev : { ...ev, product: { ...ev.product, note } });
+        // Stamped only after a successful send: if Discord failed here, a
+        // sibling checker's copy of the same alert must still get through.
+        if (recordDedupe(dedupeKeys, def, ev)) dedupeDirty = true;
       } catch (err) {
         log(`  Discord error: ${(err as Error).message}`);
       }
@@ -723,6 +758,27 @@ export function storeOf(def: SiteDefinition): string | null {
   return shop ? shop.toLowerCase() : hostOf(def);
 }
 
+/** Remember a delivered product alert. Any other transition recorded for the
+ *  same store+handle is cleared, so the key only suppresses a true duplicate
+ *  sighting of THIS transition: restock → sold out → restock again inside the
+ *  window (cart holds expiring at a drop — the real buy window) pages twice. */
+function recordDedupe(keys: Record<string, string>, def: SiteDefinition, ev: Alert): boolean {
+  const key = alertKey(def, ev);
+  if (!key) return false;
+  const prefix = key.slice(0, key.lastIndexOf("|") + 1);
+  for (const k of Object.keys(keys)) if (k.startsWith(prefix) && k !== key) delete keys[k];
+  keys[key] = `${new Date().toISOString()}|${def.id}`;
+  return true;
+}
+
+/** Entry format `<iso>|<siteId>`; legacy entries are a bare ISO string. */
+function parseDedupeEntry(v: string | undefined): { at: number; siteId: string | null } | null {
+  if (!v) return null;
+  const bar = v.indexOf("|");
+  const at = Date.parse(bar < 0 ? v : v.slice(0, bar));
+  return Number.isFinite(at) ? { at, siteId: bar < 0 ? null : v.slice(bar + 1) } : null;
+}
+
 async function loadDedupeKeys(store: BeaconStore): Promise<Record<string, string>> {
   const raw = await store.meta.get(DEDUPE_META_KEY);
   if (!raw) return {};
@@ -732,7 +788,8 @@ async function loadDedupeKeys(store: BeaconStore): Promise<Record<string, string
     const cutoff = Date.now() - CROSS_SITE_DEDUPE_MS;
     const out: Record<string, string> = {};
     for (const [k, v] of Object.entries(parsed as Record<string, string>)) {
-      if (typeof v === "string" && Date.parse(v) >= cutoff) out[k] = v;
+      const entry = typeof v === "string" ? parseDedupeEntry(v) : null;
+      if (entry && entry.at >= cutoff) out[k] = v;
     }
     return out;
   } catch {
@@ -744,7 +801,11 @@ async function saveDedupeKeys(store: BeaconStore, keys: Record<string, string>):
   const entries = Object.entries(keys);
   const bounded =
     entries.length > DEDUPE_KEYS_CAP
-      ? Object.fromEntries(entries.sort((a, b) => Date.parse(b[1]) - Date.parse(a[1])).slice(0, DEDUPE_KEYS_CAP))
+      ? Object.fromEntries(
+          entries
+            .sort((a, b) => (parseDedupeEntry(b[1])?.at ?? 0) - (parseDedupeEntry(a[1])?.at ?? 0))
+            .slice(0, DEDUPE_KEYS_CAP),
+        )
       : keys;
   try {
     await store.meta.set(DEDUPE_META_KEY, JSON.stringify(bounded));

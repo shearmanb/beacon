@@ -215,13 +215,18 @@ export async function processSite({
     // Reappearance guard: suppress "new product" for handles we saw recently —
     // they didn't launch, they came back into view (channel flip / partial
     // fetch). Recorded as a quiet history note so the suppression is auditable.
+    // Older memories only explain a reappearance when the roster's VIEW changed
+    // this check (channel flip, or a truncated fallback roster); on a steady,
+    // complete channel a handle gone ≥24 h and back is a real relist and pages.
     const seenCutoff = Date.now() - RESEEN_WINDOW_MS;
     const prevSeen = (prevState?.recentlySeen as Record<string, string> | undefined) ?? {};
+    const viewChanged =
+      newVia !== prevVia || prevState?.fallbackTruncated === true || newState.fallbackTruncated === true;
     const reappeared: string[] = [];
     alerts = alerts.filter((a) => {
       if (a.type !== "new_product" || !a.product.handle) return true;
       const seenAt = prevSeen[a.product.handle];
-      if (seenAt && Date.parse(seenAt) >= seenCutoff) {
+      if (seenAt && (Date.parse(seenAt) >= seenCutoff || viewChanged)) {
         reappeared.push(a.product.title);
         return false;
       }
@@ -234,7 +239,7 @@ export async function processSite({
           title: site.name,
           url: sourceUrl(site),
           note:
-            `${reappeared.length} product(s) reappeared within 24 h (channel switch or partial fetch) — ` +
+            `${reappeared.length} product(s) reappeared (seen within 24 h, or back into view after a channel switch / partial fetch) — ` +
             `duplicate "new product" alert(s) suppressed: ${reappeared.slice(0, 3).join(", ")}` +
             (reappeared.length > 3 ? ", …" : ""),
         },
@@ -245,15 +250,17 @@ export async function processSite({
     // capped by recency so state stays bounded). CRITICAL: absence from a
     // fallback-channel roster is NOT evidence of removal — that channel has
     // partial visibility (truncation / channel publishing), which is the whole
-    // reason the guard exists. So while this check ran via the fallback, FREEZE
-    // memory (re-stamp carried entries instead of decaying them); a long pinned
-    // period must not expire REST-only products and re-alert them as "new" when
-    // REST finally recovers. Decay only runs under the authoritative channel.
+    // reason the guard exists. So while this check ran via the fallback, never
+    // EXPIRE memory: a long pinned period must not forget REST-only products and
+    // re-alert them as "new" when REST recovers (that flip is `viewChanged`
+    // above). Timestamps stay TRUE last-seen times — re-stamping them (the old
+    // freeze) made every remembered handle "seen <24 h" forever, silently
+    // swallowing a genuine relist while pinned (2026-09 review). Decay only
+    // runs under the authoritative channel.
     const partialView = newVia != null;
     const seen: Record<string, string> = {};
     for (const [h, ts] of Object.entries(prevSeen)) {
-      if (partialView) seen[h] = nowIso();
-      else if (Date.parse(ts) >= seenCutoff) seen[h] = ts;
+      if (partialView || Date.parse(ts) >= seenCutoff) seen[h] = ts;
     }
     if (newState.products) {
       for (const h of Object.keys(newState.products)) seen[h] = nowIso();
@@ -287,6 +294,14 @@ export async function processSite({
 // a stall: the host accepted the connection and left it hanging (tar-pit bot
 // mitigation). Functionally a block, so it gets the same cooldown + wording.
 const STALL_RE = /aborted (fetch|post)ing|deadline exceeded|socket idle timeout/i;
+
+/** A failure that says "blocked / rate-limited", not "broken": these recover
+ *  on their own, so they must never count toward quarantine. 503 is the
+ *  challenge-mode WAF answer (Jul 22). */
+export function isBlockLikeFailure(statusCode: number | null | undefined, message: string): boolean {
+  if (statusCode == null) return STALL_RE.test(message);
+  return [401, 403, 429, 430, 503].includes(statusCode);
+}
 
 function buildErrorOutcome(
   site: SiteDefinition,

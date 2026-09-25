@@ -305,6 +305,18 @@ describe("runOnce", () => {
     expect(sent.map((s) => s.alert.type)).toContain("site_recovered");
   });
 
+  it("a re-enabled site's blind clock starts at the re-enable, not a weeks-old success", async () => {
+    await store.state.save("s1", {
+      lastChecked: new Date(Date.now() - 5 * 60_000).toISOString(),
+      lastSuccessAt: new Date(Date.now() - 30 * 86_400_000).toISOString(),
+      enabledAt: new Date(Date.now() - 10 * 60_000).toISOString(),
+      products: {},
+      consecutiveErrors: 1,
+    });
+    await runOnce(ctx());
+    expect(sent.filter((s) => s.alert.product.note?.includes("Blind"))).toHaveLength(0);
+  });
+
   it("stays silent for a healthy site and within the interval-scaled threshold", async () => {
     await runOnce(ctx()); // baseline — lastSuccessAt = now
     await runOnce(ctx());
@@ -360,6 +372,42 @@ describe("runOnce", () => {
     expect(sent.filter((s) => s.alert.type === "new_product")).toHaveLength(1);
   });
 
+  it("still pages a second restock after a sell-out inside the dedupe window", async () => {
+    // Drop-time cart holds: restock → sold out → back again 10 min later is the
+    // real buy window and must page every time, not look like a duplicate.
+    const recheck = async () => {
+      await store.state.save("s1", { ...(await store.state.load("s1"))!, lastChecked: null });
+      await runOnce(ctx());
+    };
+    products = [shopifyProduct("a", false), shopifyProduct("b", true)];
+    await runOnce(ctx()); // baseline: a sold out
+    products = [shopifyProduct("a", true), shopifyProduct("b", true)];
+    await recheck();
+    products = [shopifyProduct("a", false), shopifyProduct("b", true)];
+    await recheck();
+    products = [shopifyProduct("a", true), shopifyProduct("b", true)];
+    await recheck();
+    // onSoldOut defaults off: the sell-out is silent, yet the second restock still pages.
+    expect(sent.map((s) => s.alert.type)).toEqual(["restock", "restock"]);
+  });
+
+  it("a failed Discord send doesn't suppress a sibling checker's copy", async () => {
+    await store.sites.upsert({ id: "s2", name: "Second view", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: base } });
+    await runOnce(ctx()); // baseline both
+    products = [...products, shopifyProduct("newbottle", true)];
+    for (const id of ["s1", "s2"]) await store.state.save(id, { ...(await store.state.load(id))!, lastChecked: null });
+    let calls = 0;
+    const flaky: NotificationChannel = {
+      name: "flaky",
+      send: async (site, alert) => {
+        if (calls++ === 0) throw new Error("discord 502");
+        sent.push({ site, alert });
+      },
+    };
+    await runOnce(ctx({ channel: flaky }));
+    expect(sent.filter((s) => s.alert.type === "new_product")).toHaveLength(1);
+  });
+
   it("respects alerts.dedupeAcrossSites: false on a site that must always page", async () => {
     await store.sites.upsert({
       id: "s2",
@@ -392,21 +440,28 @@ describe("runOnce", () => {
   });
 
   // ── Quarantine (2a) ───────────────────────────────────────────────────────
-  it("auto-disables a site that has failed the same way for days, and pages once", async () => {
-    await store.sites.upsert({
-      id: "dead",
-      name: "Gone Forever",
-      intervalMinutes: 20,
-      source: { kind: "shopify_rest", baseUrl: "http://127.0.0.1:9" },
-    });
-    // Simulate a long-running identical failure streak.
+  const failingSite = async (status: number) => {
+    respond = (req, res) => {
+      if (req.url?.startsWith("/gone")) {
+        res.writeHead(status);
+        res.end("nope");
+        return;
+      }
+      defaultRespond(req, res);
+    };
+    await store.sites.upsert({ id: "dead", name: "Gone Forever", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: `${base}/gone` } });
     await store.state.save("dead", {
       lastChecked: null,
       consecutiveErrors: 40,
       errorStreakSince: new Date(Date.now() - 5 * 86_400_000).toISOString(),
       errorAlertSent: true,
+      errorAlertAt: new Date().toISOString(),
+      errorLog: Array.from({ length: 4 }, () => ({ ts: "t", message: `HTTP ${status}`, statusCode: status })),
     });
+  };
 
+  it("auto-disables a site that has failed the same way for days, and pages once", async () => {
+    await failingSite(404);
     await runOnce(ctx());
     expect((await store.sites.get("dead"))?.enabled).toBe(false);
     const page = sent.find((s) => s.alert.product.note?.includes("Monitoring PAUSED"));
@@ -414,6 +469,12 @@ describe("runOnce", () => {
     // A quarantined site is dropped from the pass, so it can't make a healthy
     // pass look systemic or add a phantom checker to the host rollup.
     expect(sent.map((s) => s.alert.type)).not.toContain("system_degraded");
+  });
+
+  it("never quarantines a site that is BLOCKED (days of 403s), only broken", async () => {
+    await failingSite(403);
+    await runOnce(ctx());
+    expect((await store.sites.get("dead"))?.enabled).toBe(true);
   });
 
   it("does not quarantine a site whose failure streak is young", async () => {

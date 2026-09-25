@@ -83,6 +83,8 @@ export function emptyFetchGuard({
       lastChecked: new Date().toISOString(),
       productCount: prevCount,
       products: prevProducts,
+      // The drift guard's healthy-yield memory: an empty spell must not erase it.
+      countBaseline: prev?.countBaseline ?? null,
       emptyStreak,
       emptyAlertSent: alreadySent || alertNow,
       emptyAlertCount: alertNow ? alertsSent + 1 : alertsSent,

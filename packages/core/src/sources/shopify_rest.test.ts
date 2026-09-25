@@ -385,6 +385,26 @@ describe("shopifyRestAdapter storefront fallback", () => {
     expect(result.stateExtras?.["fallbackStreak"]).toBe(0);
   });
 
+  it("preferred channel: a due REST probe that errors (HTTP 500) stays pinned instead of failing the check", async () => {
+    handler = (req, res) => {
+      if (req.method === "POST" && req.url?.startsWith("/api/graphql")) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ data: { products: { pageInfo: { hasNextPage: false }, nodes: [storefrontNode("a", true, "10.00")] } } }));
+        return;
+      }
+      res.writeHead(500);
+      res.end("upstream exploded");
+    };
+    const thirteenHoursAgo = new Date(Date.now() - 13 * 3_600_000).toISOString();
+    const prev: PrevState = { preferFallback: true, fallbackStreak: 9, lastRestProbeAt: thirteenHoursAgo };
+    const result = await shopifyRestAdapter.fetch(makeFallbackSite(), prev, fallbackDeps);
+    if (result.kind !== "products") throw new Error("expected products");
+    expect(result.via).toBe("storefront_fallback");
+    expect(result.stateExtras?.["preferFallback"]).toBe(true);
+    // Probe clock advanced: the next REST probe is ~12 h out, not every check.
+    expect(Date.parse(result.stateExtras?.["lastRestProbeAt"] as string)).toBeGreaterThan(Date.now() - 60_000);
+  });
+
   it("flags stateExtras.fallbackTruncated when the fallback hits its page cap with catalog left", async () => {
     // Every GraphQL page claims more pages exist — the adapter must stop at its
     // cap AND surface the truncation (tile ⚠ hint), not silently under-report.

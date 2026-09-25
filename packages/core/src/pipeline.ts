@@ -53,6 +53,15 @@ export async function runSiteCheck(
   }
 
   const prevProducts: ProductMap = (prev?.products as ProductMap | undefined) ?? {};
+  // Channel bookkeeping the adapter reports on EVERY products result. The
+  // guards below build their state from scratch, and dropping these there
+  // silently un-pinned a Storefront-pinned site on one empty/small roster and
+  // logged a false "primary reachable again" flip (2026-09 review).
+  const channel = {
+    fetchVia: result.via ?? null,
+    fetchViaReason: result.viaReason ?? null,
+    ...(result.stateExtras ?? {}),
+  };
 
   // Keyed on the *raw* fetch being empty, so a legitimate filter-miss (empty
   // filtered set from a non-empty fetch) is unaffected.
@@ -64,7 +73,7 @@ export async function runSiteCheck(
       threshold: result.emptyGuardThreshold ?? DEFAULT_EMPTY_GUARD_THRESHOLD,
       note: result.emptyGuardNote ?? DEFAULT_EMPTY_GUARD_NOTE,
     });
-    if (guarded) return guarded;
+    if (guarded) return { ...guarded, state: { ...guarded.state, ...channel } };
   }
 
   // Structure-drift guard (3a): a non-zero but anomalously small yield against a
@@ -72,7 +81,7 @@ export async function runSiteCheck(
   // rather than wiping state and flooding on recovery. Returns null on healthy
   // yields, along with the baseline bookkeeping to carry forward.
   const yieldEval = assessYield({ site, prev, prevProducts, rawCount: result.products.length });
-  if (yieldEval.drift) return yieldEval.drift;
+  if (yieldEval.drift) return { ...yieldEval.drift, state: { ...yieldEval.drift.state, ...channel } };
 
   const filtered = applyFilters(result.products, site.filters);
   const productMap = toProductMap(filtered);
@@ -90,11 +99,9 @@ export async function runSiteCheck(
       pageCount: result.pageCount,
       httpValidators: result.validators ?? null,
       // Which channel produced the roster ("storefront_fallback" when the
-      // primary was blocked); null on a normal primary fetch so recovery clears it.
-      fetchVia: result.via ?? null,
-      fetchViaReason: result.viaReason ?? null,
-      // Adapter feedback-loop telemetry (channel preference, probe stamps, …).
-      ...(result.stateExtras ?? {}),
+      // primary was blocked; null on a normal primary fetch so recovery clears
+      // it) + adapter feedback-loop telemetry (channel preference, probe stamps).
+      ...channel,
       ...yieldEval.tracking,
     },
     alerts,

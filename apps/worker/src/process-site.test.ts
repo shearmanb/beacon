@@ -300,21 +300,43 @@ describe("channel-flap damping + reappearance guard", () => {
     expect(Date.parse(seen["a"]!)).toBeGreaterThan(Date.now() - 60_000);
   });
 
-  it("FREEZES recentlySeen on fallback checks — a long pinned period must not expire REST-only products", async () => {
-    // "x" is invisible on the Storefront channel and its stamp is near expiry.
-    // A fallback check must re-stamp it (absence there proves nothing), so a
-    // REST recovery days later still counts as a reappearance, not a launch.
-    const nearExpiry = new Date(Date.now() - 23 * 3_600_000).toISOString();
+  it("KEEPS (never expires) recentlySeen on fallback checks, without faking fresh timestamps", async () => {
+    // "x" is invisible on the Storefront channel. A fallback check must keep it
+    // (absence there proves nothing) but must NOT re-stamp it to now — a fake
+    // fresh stamp made every remembered handle "seen <24 h" forever.
+    const old = new Date(Date.now() - 30 * 3_600_000).toISOString();
     const prev: SiteState = {
       lastChecked: "t",
       products: { a: prod("a", true) },
       fetchVia: "storefront_fallback", // steady on the fallback (no transition ping)
-      recentlySeen: { a: new Date().toISOString(), x: nearExpiry },
+      recentlySeen: { a: new Date().toISOString(), x: old },
     };
     const out = await processSite({ site: site(), prevState: prev, adapter: fallback([prod("a", true)]), deps, ignored: noneIgnored });
     const seen = out.newState.recentlySeen as Record<string, string>;
     expect(Object.keys(seen).sort()).toEqual(["a", "x"]);
-    expect(Date.parse(seen["x"]!)).toBeGreaterThan(Date.parse(nearExpiry)); // refreshed, not decayed
+    expect(seen["x"]).toBe(old);
+  });
+
+  it("REST recovery after a long pin: an old memory still suppresses the flood (view changed)", async () => {
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      fetchVia: "storefront_fallback",
+      recentlySeen: { a: new Date().toISOString(), x: new Date(Date.now() - 5 * 24 * 3_600_000).toISOString() },
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: ok([prod("a", true), prod("x", true)]), deps, ignored: noneIgnored });
+    expect(out.events.filter((e) => e.type === "new_product")).toHaveLength(0);
+  });
+
+  it("a real relist while pinned (steady fallback channel, gone 3 days) still pages", async () => {
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      fetchVia: "storefront_fallback",
+      recentlySeen: { a: new Date().toISOString(), x: new Date(Date.now() - 3 * 24 * 3_600_000).toISOString() },
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: fallback([prod("a", true), prod("x", true)]), deps, ignored: noneIgnored });
+    expect(out.events.filter((e) => e.type === "new_product").map((e) => e.product.handle)).toEqual(["x"]);
   });
 
   it("still DECAYS recentlySeen under the authoritative REST channel", async () => {

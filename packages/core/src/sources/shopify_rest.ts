@@ -202,17 +202,26 @@ export const shopifyRestAdapter: SourceAdapter = {
       // Recognize a stall whether OUR guard fired or httpGet's own socket-idle/
       // deadline tripped first (a silent tar-pit) — otherwise the fallback never
       // engages on a host that just hangs the connection.
-      const stalled = isRestStall(err, { stallFired, parentAborted: deps?.signal?.aborted === true });
-      if (fb && token && !storefrontAlreadyFailed && (blocked || stalled)) {
+      const parentAborted = deps?.signal?.aborted === true;
+      const stalled = isRestStall(err, { stallFired, parentAborted });
+      // The 12-hourly recovery probe of a PINNED site: any REST failure (a 500,
+      // an HTML body, a 404 on a moved path) just means "not recovered yet".
+      // Rethrowing it failed the whole check every time — re-probing forever,
+      // paging site_error and marching toward quarantine while the Storefront
+      // channel was perfectly healthy (2026-09 review).
+      const probing = preferFallback && restProbeDue && !parentAborted;
+      if (fb && token && !storefrontAlreadyFailed && (blocked || stalled || probing)) {
         const reason = blocked
           ? `products.json blocked with HTTP ${status}`
-          : `products.json stalled — the host accepted the connection but never answered (tar-pit, a bot-mitigation tactic)`;
+          : stalled
+            ? `products.json stalled — the host accepted the connection but never answered (tar-pit, a bot-mitigation tactic)`
+            : `REST recovery probe failed (${(err as Error).message.slice(0, 120)}) — staying on the Storefront API`;
         console.warn(`[${site.name}] ${reason} — failing over to Storefront API on ${fb.domain}.`);
         try {
           const result = await fetchViaStorefront(src, fb, token, origin, reason, deps);
           const streak = fallbackStreak + 1;
           return withExtras(result, {
-            preferFallback: streak >= PREFER_FALLBACK_AFTER,
+            preferFallback: probing || streak >= PREFER_FALLBACK_AFTER,
             fallbackStreak: streak,
             lastRestProbeAt: new Date().toISOString(),
           });
