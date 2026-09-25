@@ -248,6 +248,26 @@ describe("termMatches", () => {
     expect(termMatches("weller 12", "Weller Special Reserve")).toBe(false);
     expect(termMatches("", "anything")).toBe(false);
   });
+
+  it("matches whole words only (2026-09 false positives)", () => {
+    expect(termMatches("country ham", "1996 Veuve Clicquot Rose — a country house champagne")).toBe(false);
+    expect(termMatches("dant", "Includes a pewter pendant")).toBe(false);
+    expect(termMatches("dant", "J.W. Dant Bottled-in-Bond")).toBe(true);
+    expect(termMatches("weller 12", "Weller 120 Proof")).toBe(false);
+  });
+
+  it("ignores apostrophes and a plural s, so 'bookers' finds Booker's", () => {
+    expect(termMatches("bookers", "Booker's 25th Anniversary")).toBe(true);
+    expect(termMatches("baker's", "BAKER’S 13 Year")).toBe(true);
+    expect(termMatches("pirate bottle", "Pirate Bottles lot of two")).toBe(true);
+  });
+
+  it("phrase mode requires adjacent words, in order (descriptions)", () => {
+    const desc = "A blend of Heaven Hill's oldest barrels, bottled at 20 years old.";
+    expect(termMatches("old heaven hill", desc)).toBe(true); // title-style: any order
+    expect(termMatches("old heaven hill", desc, "phrase")).toBe(false);
+    expect(termMatches("old heaven hill", "Distilled at Old Heaven Hill in 1985.", "phrase")).toBe(true);
+  });
 });
 
 describe("matchLots", () => {

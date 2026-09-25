@@ -1,7 +1,8 @@
 "use client";
 
 // Watchlist editor for the Unicorn module: each term matches lot names and/or
-// descriptions (all words present, any order, case-insensitive). Saves replace
+// descriptions (whole words, case-insensitive; any order in names, an exact
+// phrase in descriptions — see termMatches). Saves replace
 // the whole terms array via updateUnicornConfig — write-confirmed, same
 // discipline as every other dashboard edit.
 
@@ -137,7 +138,9 @@ export function UnicornTerms({
         </button>
       </div>
       <p className="hint" style={{ marginTop: 6 }}>
-        All words must appear (any order): &ldquo;weller 12&rdquo; matches &ldquo;1— Weller 12 Year&rdquo;.
+        Whole words, any order in names: &ldquo;weller 12&rdquo; matches &ldquo;1— Weller 12 Year&rdquo; (not
+        &ldquo;Weller 120&rdquo;). Descriptions need the exact phrase. Apostrophes are ignored
+        (&ldquo;bookers&rdquo; finds &ldquo;Booker&rsquo;s&rdquo;).
         Adding a term surfaces its existing matches as alerts on the next scan.
       </p>
       {error && <div className="preview-note err" style={{ marginTop: 8 }}>{error}</div>}

@@ -642,11 +642,38 @@ export function buildGraphqlBody(config: UnicornConfig, page: number): string {
 
 // ── Matching ─────────────────────────────────────────────────────────────────
 
-/** Case-insensitive all-words-present: "weller 12" hits "1—Weller 12 Year". */
-export function termMatches(term: string, text: string): boolean {
-  const hay = text.toLowerCase();
-  const words = term.toLowerCase().split(/\s+/).filter(Boolean);
-  return words.length > 0 && words.every((w) => hay.includes(w));
+/** Whole-word tokens, apostrophes dropped so "Booker's" == "bookers". */
+function tokens(s: string): string[] {
+  return s
+    .toLowerCase()
+    .replace(/['‘’`]/g, "")
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+}
+
+/** Whole-word equality, tolerant of a trailing plural "s" either way. */
+function wordEq(a: string, b: string): boolean {
+  return a === b || a === b + "s" || a + "s" === b;
+}
+
+/**
+ * Case-insensitive whole-word match. `all` (titles — short, so any order is
+ * fine): every term word present: "weller 12" hits "1—Weller 12 Year".
+ * `phrase` (descriptions — long prose): the words must be adjacent, in order.
+ * Substring matching (the old behavior) hit "ham" in "champagne" and "dant" in
+ * "pendant"; any-order matching on prose hit "Old Heaven Hill" on every lot
+ * whose description said "Heaven Hill … 20 years old"; and "bookers" never
+ * matched "Booker's" at all (2026-09 review: 36 live lots missed).
+ */
+export function termMatches(term: string, text: string, mode: "all" | "phrase" = "all"): boolean {
+  const words = tokens(term);
+  if (words.length === 0) return false;
+  const hay = tokens(text);
+  if (mode === "all") return words.every((w) => hay.some((t) => wordEq(t, w)));
+  for (let i = 0; i + words.length <= hay.length; i++) {
+    if (words.every((w, j) => wordEq(hay[i + j]!, w))) return true;
+  }
+  return false;
 }
 
 export interface UnicornMatch {
@@ -679,7 +706,7 @@ export function matchLots(
       const checkName = t.inName || (t.inDesc && !hasDesc);
       const hit =
         (checkName && termMatches(t.term, lot.title)) ||
-        (t.inDesc && hasDesc && termMatches(t.term, lot.description!));
+        (t.inDesc && hasDesc && termMatches(t.term, lot.description!, "phrase"));
       if (hit) {
         matched.push(t.term);
         if (t.bottleId) bottleIds.add(t.bottleId);

@@ -616,13 +616,26 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
 }
 
 // ── Cross-site dedupe helpers (2b) ───────────────────────────────────────────
-// Identity is host + product handle + alert type: the same bottle on the same
+// Identity is store + product handle + alert type: the same bottle on the same
 // store, however many checkers happen to see it. Site-level events (site_error,
 // self_healed, …) are never deduped — those are per-checker facts.
 function alertKey(def: SiteDefinition, ev: Alert): string | null {
   if (!PRODUCT_ALERT_TYPES.has(ev.type) || !ev.product.handle) return null;
-  const host = hostOf(def);
-  return host ? `${host}|${ev.product.handle}|${ev.type}` : null;
+  const store = storeOf(def);
+  return store ? `${store}|${ev.product.handle}|${ev.type}` : null;
+}
+
+/** The backing store a checker reads. Shopify sources that name their
+ *  `*.myshopify.com` domain (Storefront source or fallback) key on it, so two
+ *  front doors onto one store — thereveries.co's Buy Button and sharedpour.com,
+ *  both shared-pour.myshopify.com — page a drop once, not twice 7 min apart
+ *  (2026-09 review: 25 of 178 product pages were this duplicate). Everything
+ *  else keys on the public host. */
+export function storeOf(def: SiteDefinition): string | null {
+  const src = def.source as { kind: string; domain?: string; storefrontFallback?: { domain?: string } };
+  const shop =
+    src.kind === "shopify_graphql" ? src.domain : src.kind === "shopify_rest" ? src.storefrontFallback?.domain : undefined;
+  return shop ? shop.toLowerCase() : hostOf(def);
 }
 
 async function loadDedupeKeys(store: BeaconStore): Promise<Record<string, string>> {

@@ -297,6 +297,27 @@ describe("runOnce", () => {
     expect(rows.map((r) => r.siteId).sort()).toEqual(["s1", "s2"]);
   });
 
+  it("pages once when two front doors onto one Shopify store see the same product", async () => {
+    // thereveries.co + sharedpour.com shape: different public hosts, one
+    // backing *.myshopify.com store named in each source's config.
+    const fallback = { domain: "shared-pour.myshopify.com", accessTokenRef: "t" };
+    const s1 = (await store.sites.get("s1"))!.definition;
+    await store.sites.upsert({ ...s1, source: { ...s1.source, storefrontFallback: fallback } });
+    await store.sites.upsert({
+      id: "s2",
+      name: "Same store, other door",
+      intervalMinutes: 20,
+      source: { kind: "shopify_rest", baseUrl: base.replace("127.0.0.1", "localhost"), storefrontFallback: fallback },
+    });
+    await runOnce(ctx());
+    products = [...products, shopifyProduct("newbottle", true)];
+    await store.state.save("s1", { ...(await store.state.load("s1"))!, lastChecked: null });
+    await store.state.save("s2", { ...(await store.state.load("s2"))!, lastChecked: null });
+
+    await runOnce(ctx());
+    expect(sent.filter((s) => s.alert.type === "new_product")).toHaveLength(1);
+  });
+
   it("respects alerts.dedupeAcrossSites: false on a site that must always page", async () => {
     await store.sites.upsert({
       id: "s2",

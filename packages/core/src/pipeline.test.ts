@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { runSiteCheck, type SiteState } from "./pipeline.js";
+import { emptyRealertMs } from "./empty_guard.js";
 import { siteDefinitionSchema, type SiteDefinition } from "./schema.js";
 import type { FetchResult, SourceAdapter } from "./sources/types.js";
 import type { NormalizedProduct } from "@beacon/shared";
@@ -78,6 +79,20 @@ describe("runSiteCheck", () => {
     expect(result.alerts[0]!.type).toBe("site_reset");
     expect(result.state.products).toEqual({ a: prod("a", true) }); // preserved
     expect(result.state.emptyAlertSent).toBe(true);
+  });
+
+  it("empty-guard reminders back off (24h, 48h, … weekly) instead of paging daily", async () => {
+    const hoursAgo = (h: number) => new Date(Date.now() - h * 3_600_000).toISOString();
+    const empty = () => stub({ kind: "products", products: [], pageCount: 1 });
+    const base = { lastChecked: hoursAgo(0.1), products: { a: prod("a", true) }, emptyStreak: 50, emptyAlertSent: true };
+    // Two alerts already sent: next reminder is due at 48h, not 24h.
+    const early = await runSiteCheck(site(), { ...base, emptyAlertAt: hoursAgo(30), emptyAlertCount: 2 }, empty());
+    expect(early.alerts).toEqual([]);
+    const due = await runSiteCheck(site(), { ...base, emptyAlertAt: hoursAgo(49), emptyAlertCount: 2 }, empty());
+    expect(due.alerts).toHaveLength(1);
+    expect(due.state.emptyAlertCount).toBe(3);
+    expect(emptyRealertMs(1)).toBe(24 * 3_600_000);
+    expect(emptyRealertMs(20)).toBe(7 * 24 * 3_600_000); // capped weekly
   });
 
   it("fires site_reset on an open -> blocked signal transition", async () => {
