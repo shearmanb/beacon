@@ -225,6 +225,10 @@ if (!noWeb) {
 
   startWeb();
   console.log("[serve] Dashboard starting (supervised)…");
+  if (!process.env["BEACON_DASH_PASSWORD"]) {
+    // The dashboard fails closed without it (apps/web/lib/auth.ts) — say why in the logs too.
+    console.warn("[serve] BEACON_DASH_PASSWORD is not set — the dashboard will refuse every login until it is.");
+  }
 } else {
   console.log("[serve] Web disabled (BEACON_NO_WEB=1).");
 }

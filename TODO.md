@@ -9,6 +9,32 @@ mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
 
 ---
 
+## Review 2026-09-25 — evidence from `analytics/alert_history.jsonl` (Aug 26 → Sep 23)
+
+Shipped:
+- [x] **1a Unicorn false matches**: substring + any-order matching ("ham" in
+      "champagne", "Old Heaven Hill" on every Heaven Hill prose blurb) and a
+      miss ("bookers" never matched "Booker's": 36 live lots). Whole-word,
+      apostrophe/plural tolerant, descriptions need the exact phrase.
+- [x] **1a Empty-shop reminders**: daily → 24/48/96 h then weekly.
+- [x] **1a Cross-store duplicates**: dedupe keyed on the myshopify store, so
+      thereveries.co + sharedpour.com (same store) page a drop once (was 25
+      of 178 product pages).
+- [x] **1b Blind-time invariant** (5r), **2a auth hardening** (1h),
+      **2b docs** (1g).
+
+Operator actions:
+- [ ] **1c Widen `drop_windows` 15m shoulder 8–9 → 6–9 ET** (edit that rule on
+      /schedules; the 22–8 @120 rule then only bites 22–6). Evidence: 6–8 AM
+      detections at 6:19, 7:30, 7:38, 7:44 (Aug 16 → Sep 17), all on the 120m
+      cadence, so real listing times could be up to 2 h earlier. Cost: ~8 extra
+      requests/day per site. _No code._
+- [ ] **4a `HEALTHCHECK_URL`**: still unset. _No code._
+- [ ] Confirm `BEACON_DASH_PASSWORD` is set on Railway **before** this deploy:
+      the dashboard now refuses logins without it (worker unaffected).
+
+---
+
 ## Daily review findings (2026-08-14) — evidence from `analytics/alert_history.jsonl`
 
 Reference tags match the review reply. **Shipped the same session** (33 test
@@ -47,17 +73,17 @@ Still open from the review:
       with the retirees' rosters (no flood, no blind window); the other three
       disabled, not deleted (rollback = one dashboard click). REST pressure on
       the blocking host drops ~4× → 1× per due-cycle.
-- [ ] **1g Docs drift** — the browser tier / `/api/ops/*` / the Jul 28
+- [x] **1g Docs drift** ✅ (2026-09-25, REBUILD.md structure/env/ops API) — the browser tier / `/api/ops/*` / the Jul 28
       observability batch still aren't described in the CLAUDE.md v2 section or
       REBUILD.md. _XS._
-- [ ] **1h Auth secret defaults to `"beam"`** (public in git history) when
+- [x] **1h Auth secret defaults to `"beam"`** ✅ (2026-09-25: fails closed in prod, 30-day signed expiry) (public in git history) when
       neither `BEACON_AUTH_SECRET` nor `BEACON_DASH_PASSWORD` is set, and the
       cookie never expires. Verify the env var is set in prod; consider
       refusing to boot on the default. _XS._
 - [ ] **4b `HEALTHCHECK_URL` is still unset** — no external dead-man. 5 minutes
       of setup, still the best value-per-effort item in the repo (see the
       Infra section below for the exact steps). _User-side, no code._
-- [ ] **5r Blind-time invariant** — page when a site has gone too long without
+- [x] **5r Blind-time invariant** ✅ (2026-09-25) — page when a site has gone too long without
       a *body-backed* success, whatever guard is responsible. The one rule no
       future guard can compose its way around. _S — recommended next._
 - [ ] **5t Unicorn bottle-level price history** (now cheap: `seenTitles` already
@@ -83,9 +109,9 @@ engage/recover transition with the why in `fetchViaReason`) and the per-tile
 Storefront fallback from the server's own IP and verdicts "Railway blocked?"
 in plain English. Follow-ups:
 
-- **Delete the one-time `serve.ts` amendment** (SharedPour fallback injection)
-  once the prod logs show `[serve] Amended sharedpour_…` (or the ⛑ chip appears).
-  Size XS · no deps · no risk.
+- ~~Delete the one-time `serve.ts` amendment~~ — superseded (2026-09-25): it
+  lives on as an idempotent CORRECTION in `config-fixes.ts`, deliberately kept
+  so a re-seed from the root JSON re-arms the fallback.
 - **Watch the fallback in prod.** If the Storefront API is *also* blocked from
   Railway, the remaining lever is a residential/rotating egress proxy (adds a
   paid dep — on-demand only) or moving the checker cadence way down. Decide only

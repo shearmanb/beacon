@@ -12,7 +12,13 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
           Enter
         </button>
       </form>
-      {searchParams.error && <p style={{ color: "var(--err)", marginBottom: 0 }}>Wrong password.</p>}
+      {searchParams.error && (
+        <p style={{ color: "var(--err)", marginBottom: 0 }}>
+          {searchParams.error === "unset"
+            ? "No dashboard password is configured. Set BEACON_DASH_PASSWORD in the Railway variables and redeploy."
+            : "Wrong password."}
+        </p>
+      )}
     </div>
   );
 }

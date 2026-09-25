@@ -9,12 +9,29 @@
 // Uses Web Crypto (globalThis.crypto.subtle), available in both the Edge
 // middleware runtime and the Node server-action runtime, so one helper serves
 // both. The secret resolves identically in both, so tokens always verify.
+// v2 (2026-09): the token carries a signed issue time and expires server-side
+// after 30 days, and production never falls back to the public "beam" default.
 
-const PAYLOAD = "beacon-auth-v1";
+const PAYLOAD = "beacon-auth-v2";
 const encoder = new TextEncoder();
+/** Server-side session lifetime, enforced from the signed issue time — a
+ *  copied cookie stops working after this even if the browser keeps it. */
+export const AUTH_MAX_AGE_S = 60 * 60 * 24 * 30;
+const CLOCK_SKEW_S = 300;
+// Local-dev convenience only. It is public in git history, so production
+// never falls back to it: with no password configured the dashboard fails
+// closed (login refused, every cookie invalid) instead of opening to "beam".
+const DEV_FALLBACK = "beam";
 
-function authSecret(): string {
-  return process.env.BEACON_AUTH_SECRET ?? process.env.BEACON_DASH_PASSWORD ?? "beam";
+/** The dashboard password, or null when production has none configured. */
+export function configuredPassword(): string | null {
+  const p = process.env.BEACON_DASH_PASSWORD;
+  if (p) return p;
+  return process.env.NODE_ENV === "production" ? null : DEV_FALLBACK;
+}
+
+function authSecret(): string | null {
+  return process.env.BEACON_AUTH_SECRET || configuredPassword();
 }
 
 async function hmacHex(message: string, key: string): Promise<string> {
@@ -29,17 +46,32 @@ async function hmacHex(message: string, key: string): Promise<string> {
   return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-/** The signed cookie value to set after a correct password. */
-export function issueAuthToken(): Promise<string> {
-  return hmacHex(PAYLOAD, authSecret());
+function safeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
 }
 
-/** Constant-time-ish compare of a presented cookie against the expected token. */
-export async function verifyAuthToken(token: string | undefined | null): Promise<boolean> {
-  if (!token) return false;
-  const expected = await issueAuthToken();
-  if (token.length !== expected.length) return false;
-  let diff = 0;
-  for (let i = 0; i < token.length; i++) diff |= token.charCodeAt(i) ^ expected.charCodeAt(i);
-  return diff === 0;
+/** The signed cookie value to set after a correct password: `<issuedAt>.<hmac>`. */
+export async function issueAuthToken(nowS: number = Math.floor(Date.now() / 1000)): Promise<string> {
+  const secret = authSecret();
+  if (!secret) throw new Error("No dashboard password configured (BEACON_DASH_PASSWORD).");
+  return `${nowS}.${await hmacHex(`${PAYLOAD}|${nowS}`, secret)}`;
+}
+
+/** Valid signature AND issued within AUTH_MAX_AGE_S. */
+export async function verifyAuthToken(
+  token: string | undefined | null,
+  nowS: number = Math.floor(Date.now() / 1000),
+): Promise<boolean> {
+  const secret = authSecret();
+  if (!token || !secret) return false;
+  const dot = token.indexOf(".");
+  if (dot <= 0) return false;
+  const iatText = token.slice(0, dot);
+  if (!/^\d{1,12}$/.test(iatText)) return false;
+  const iat = Number(iatText);
+  if (nowS - iat > AUTH_MAX_AGE_S || iat - nowS > CLOCK_SKEW_S) return false;
+  return safeEqual(token.slice(dot + 1), await hmacHex(`${PAYLOAD}|${iat}`, secret));
 }
