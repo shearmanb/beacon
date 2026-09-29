@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-09-28T03:35:29.794Z",
+ "at": "2026-09-29T03:36:06.330Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1075,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-09-28T01:58:09.288Z",
+   "lastChecked": "2026-09-29T01:53:33.345Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1097,10 +1097,10 @@
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-28T01:43:58.338Z",
+   "lastFullFetchAt": "2026-09-29T01:53:33.345Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-28T01:43:58.338Z",
+   "lastRestProbeAt": "2026-09-29T01:53:33.345Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1110,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-28T01:58:09.288Z",
+   "lastSuccessAt": "2026-09-29T01:53:33.345Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-09-28T01:48:08.183Z",
+   "lastChecked": "2026-09-29T01:51:29.328Z",
    "productCount": 5,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1181,15 +1181,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:51cd027322a3dec109ab68f7fbcd7c50\"",
+    "etag": "\"page_cache:57076547742:ProductListController:1b0fac620ba318cf50959bb000e8b8df\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-28T01:48:08.183Z",
+   "lastFullFetchAt": "2026-09-29T01:51:29.328Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-28T01:48:08.183Z",
+   "lastRestProbeAt": "2026-09-29T01:51:29.328Z",
    "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1199,12 +1199,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-28T01:48:08.183Z",
+   "lastSuccessAt": "2026-09-29T01:51:29.328Z",
    "lastSelfHealedPingAt": "2026-09-21T14:14:55.814Z",
    "lastAlertAt": "2026-08-16T11:56:21.656Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-09-28T02:34:35.409Z",
+   "lastChecked": "2026-09-29T03:24:12.147Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1219,10 +1219,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-28T02:34:35.409Z"
+   "lastSuccessAt": "2026-09-29T03:24:12.148Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-09-28T03:19:24.954Z",
+   "lastChecked": "2026-09-29T03:23:01.302Z",
    "productCount": 3,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1232,7 +1232,7 @@
      "productType": "Whiskey",
      "tags": [],
      "minPrice": 89.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-17at10.45.51.png?v=1786978009",
      "url": "https://www.thereveries.co/shop",
      "firstSeen": "2026-09-04T17:05:42.815Z"
@@ -1278,9 +1278,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-28T03:19:24.954Z",
+   "lastSuccessAt": "2026-09-29T03:23:01.302Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-09-21T23:58:09.427Z"
+   "lastAlertAt": "2026-09-28T19:55:14.862Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1445,7 +1445,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-09-28T03:30:28.583Z",
+   "lastChecked": "2026-09-29T03:29:09.649Z",
    "productCount": 11,
    "products": {
     "10-year-old-bourbon": {
@@ -1592,8 +1592,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"345056f3\"",
-    "lastModified": "Mon, 28 Sep 2026 01:25:51 GMT"
+    "etag": "\"f2105ad9\"",
+    "lastModified": "Mon, 28 Sep 2026 23:29:40 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1606,7 +1606,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-28T03:30:28.583Z",
+   "lastSuccessAt": "2026-09-29T03:29:09.649Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": null
   },
@@ -1676,7 +1676,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-09-28T01:56:12.029Z",
+   "lastChecked": "2026-09-29T01:50:25.143Z",
    "productCount": 26,
    "products": {
     "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon": {
@@ -1710,7 +1710,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 89.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-17at10.45.51.png?v=1786978009",
      "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
      "firstSeen": "2026-08-25T18:47:00.603Z"
@@ -1994,15 +1994,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:3847853ffe94b92063919fec83a1c732\"",
+    "etag": "\"page_cache:45343637659:ProductListController:c6fc8a1397d412db7a28c06410635e37\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-09-28T01:56:12.028Z",
+   "lastFullFetchAt": "2026-09-29T01:50:25.143Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-09-28T01:56:12.028Z",
+   "lastRestProbeAt": "2026-09-29T01:50:25.143Z",
    "countBaseline": 104,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2012,9 +2012,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-09-28T01:56:12.029Z",
+   "lastSuccessAt": "2026-09-29T01:50:25.144Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-09-23T23:33:19.166Z"
+   "lastAlertAt": "2026-09-28T20:04:34.445Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
