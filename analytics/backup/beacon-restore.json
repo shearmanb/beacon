@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-10-02T03:36:57.407Z",
+ "at": "2026-10-03T03:36:59.263Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1075,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-10-02T01:48:33.944Z",
+   "lastChecked": "2026-10-03T01:49:02.507Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1092,15 +1092,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:bf353b2b36fb337d0ee1a3f28101f38d\"",
+    "etag": "\"page_cache:66506555478:ProductListController:d12fdb0c3f4b29b424b3e9b75e58519e\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-02T01:48:33.944Z",
+   "lastFullFetchAt": "2026-10-03T01:49:02.507Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-02T01:48:33.944Z",
+   "lastRestProbeAt": "2026-10-03T01:49:02.507Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1110,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-02T01:48:33.944Z",
+   "lastSuccessAt": "2026-10-03T01:49:02.507Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-10-02T01:59:48.153Z",
+   "lastChecked": "2026-10-03T01:44:55.472Z",
    "productCount": 7,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1178,18 +1178,6 @@
      "url": "https://thebourbonconcierge.com/products/the-reveries-murder-of-crows-rare-release-bespoke-blend",
      "firstSeen": "2026-08-16T11:56:21.656Z"
     },
-    "the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof": {
-     "handle": "the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof",
-     "title": "THE REVERIES \"Lancero\" 9 Year Single Barrel Barrel Strength Bourbon (127.5 Proof)",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 109.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/20261001_134558.jpg?v=1790877720",
-     "url": "https://thebourbonconcierge.com/products/the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof",
-     "firstSeen": "2026-10-01T19:09:11.204Z"
-    },
     "the-reveries-wanton-weasel-10-year-single-barrel-barrel-strength-rye": {
      "handle": "the-reveries-wanton-weasel-10-year-single-barrel-barrel-strength-rye",
      "title": "THE REVERIES \"Wanton Weasel\" 10 Year Single Barrel Barrel Strength Rye (120.3 Proof)",
@@ -1201,19 +1189,31 @@
      "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/20261001_134524.jpg?v=1790877681",
      "url": "https://thebourbonconcierge.com/products/the-reveries-wanton-weasel-10-year-single-barrel-barrel-strength-rye",
      "firstSeen": "2026-10-01T19:09:11.204Z"
+    },
+    "the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof": {
+     "handle": "the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof",
+     "title": "THE REVERIES \"Lancero\" 9 Year Single Barrel Barrel Strength Bourbon (127.5 Proof)",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 109.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/20261001_134558.jpg?v=1790877720",
+     "url": "https://thebourbonconcierge.com/products/the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof",
+     "firstSeen": "2026-10-01T19:09:11.204Z"
     }
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:23cfbb6b11a6c05e8205e31375e09126\"",
+    "etag": "\"page_cache:57076547742:ProductListController:3dd5a62e6716018661cbb2e18c2116dd\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-02T01:59:48.153Z",
+   "lastFullFetchAt": "2026-10-03T01:44:55.472Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-02T01:59:48.153Z",
+   "lastRestProbeAt": "2026-10-03T01:44:55.472Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1223,12 +1223,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-02T01:59:48.153Z",
+   "lastSuccessAt": "2026-10-03T01:44:55.472Z",
    "lastSelfHealedPingAt": "2026-09-21T14:14:55.814Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-10-02T03:17:04.476Z",
+   "lastChecked": "2026-10-03T03:24:57.330Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1243,10 +1243,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-02T03:17:04.476Z"
+   "lastSuccessAt": "2026-10-03T03:24:57.330Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-10-02T02:54:03.115Z",
+   "lastChecked": "2026-10-03T03:02:47.991Z",
    "productCount": 3,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1302,7 +1302,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-02T02:54:03.115Z",
+   "lastSuccessAt": "2026-10-03T03:02:47.992Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-28T19:55:14.862Z"
   },
@@ -1469,7 +1469,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-10-02T03:29:56.310Z",
+   "lastChecked": "2026-10-03T03:26:03.338Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1642,8 +1642,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"d319f3a4\"",
-    "lastModified": "Thu, 01 Oct 2026 23:25:59 GMT"
+    "etag": "\"9bf20c9c\"",
+    "lastModified": "Fri, 02 Oct 2026 21:39:43 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1656,7 +1656,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-02T03:29:56.310Z",
+   "lastSuccessAt": "2026-10-03T03:26:03.338Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1726,7 +1726,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-10-02T01:51:44.525Z",
+   "lastChecked": "2026-10-03T01:52:07.527Z",
    "productCount": 26,
    "products": {
     "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon": {
@@ -2044,15 +2044,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:33b1da793d616b12316a026887fb390b\"",
+    "etag": "\"page_cache:45343637659:ProductListController:c3877d807b721891c6717aef303649a0\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-02T01:51:44.525Z",
+   "lastFullFetchAt": "2026-10-03T01:52:07.527Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-02T01:51:44.525Z",
+   "lastRestProbeAt": "2026-10-03T01:52:07.527Z",
    "countBaseline": 102,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2062,7 +2062,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-02T01:51:44.525Z",
+   "lastSuccessAt": "2026-10-03T01:52:07.529Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-09-30T13:00:23.213Z"
   },
