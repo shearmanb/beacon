@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-10-03T03:36:59.263Z",
+ "at": "2026-10-04T03:37:24.544Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1075,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-10-03T01:49:02.507Z",
+   "lastChecked": "2026-10-04T01:47:55.467Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1092,15 +1092,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:d12fdb0c3f4b29b424b3e9b75e58519e\"",
+    "etag": "\"page_cache:66506555478:ProductListController:928c00adccb71b47ed0f55728ad1378f\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-03T01:49:02.507Z",
+   "lastFullFetchAt": "2026-10-04T01:47:55.467Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-03T01:49:02.507Z",
+   "lastRestProbeAt": "2026-10-04T01:47:55.467Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1110,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-03T01:49:02.507Z",
+   "lastSuccessAt": "2026-10-04T01:47:55.467Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-10-03T01:44:55.472Z",
+   "lastChecked": "2026-10-04T01:51:01.388Z",
    "productCount": 7,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1205,15 +1205,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:3dd5a62e6716018661cbb2e18c2116dd\"",
+    "etag": "\"page_cache:57076547742:ProductListController:28602ae3736c7bc45763646b744e6052\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-03T01:44:55.472Z",
+   "lastFullFetchAt": "2026-10-04T01:51:01.388Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-03T01:44:55.472Z",
+   "lastRestProbeAt": "2026-10-04T01:51:01.388Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1223,12 +1223,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-03T01:44:55.472Z",
+   "lastSuccessAt": "2026-10-04T01:51:01.388Z",
    "lastSelfHealedPingAt": "2026-09-21T14:14:55.814Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-10-03T03:24:57.330Z",
+   "lastChecked": "2026-10-04T03:20:42.260Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1243,10 +1243,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-03T03:24:57.330Z"
+   "lastSuccessAt": "2026-10-04T03:20:42.260Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-10-03T03:02:47.991Z",
+   "lastChecked": "2026-10-04T03:15:40.339Z",
    "productCount": 3,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1302,7 +1302,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-03T03:02:47.992Z",
+   "lastSuccessAt": "2026-10-04T03:15:40.340Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-28T19:55:14.862Z"
   },
@@ -1469,7 +1469,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-10-03T03:26:03.338Z",
+   "lastChecked": "2026-10-04T03:28:28.659Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1642,8 +1642,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"9bf20c9c\"",
-    "lastModified": "Fri, 02 Oct 2026 21:39:43 GMT"
+    "etag": "\"5bf5d458\"",
+    "lastModified": "Sat, 03 Oct 2026 19:28:06 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1656,7 +1656,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-03T03:26:03.338Z",
+   "lastSuccessAt": "2026-10-04T03:28:28.659Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1726,7 +1726,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-10-03T01:52:07.527Z",
+   "lastChecked": "2026-10-04T01:45:51.015Z",
    "productCount": 26,
    "products": {
     "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon": {
@@ -2044,15 +2044,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:c3877d807b721891c6717aef303649a0\"",
+    "etag": "\"page_cache:45343637659:ProductListController:61d00aad57e787a664c8f1ae37fa01c6\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-03T01:52:07.527Z",
+   "lastFullFetchAt": "2026-10-04T01:45:51.015Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-03T01:52:07.527Z",
+   "lastRestProbeAt": "2026-10-04T01:45:51.015Z",
    "countBaseline": 102,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2062,7 +2062,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-03T01:52:07.529Z",
+   "lastSuccessAt": "2026-10-04T01:45:51.015Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-09-30T13:00:23.213Z"
   },
