@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-10-08T03:38:41.777Z",
+ "at": "2026-10-09T03:39:12.301Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1075,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-10-08T01:51:43.258Z",
+   "lastChecked": "2026-10-09T01:51:19.568Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1092,15 +1092,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:5fff06bc665b156118abb6f577c762ca\"",
+    "etag": "\"page_cache:66506555478:ProductListController:af6a35cb5d3db451be6fb47103ec2805\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-08T01:51:43.257Z",
+   "lastFullFetchAt": "2026-10-09T01:51:19.568Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-08T01:51:43.257Z",
+   "lastRestProbeAt": "2026-10-09T01:51:19.568Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1110,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-08T01:51:43.258Z",
+   "lastSuccessAt": "2026-10-09T01:51:19.568Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-10-08T01:45:38.183Z",
+   "lastChecked": "2026-10-09T01:50:17.543Z",
    "productCount": 7,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1205,15 +1205,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:bf0412ae0b9e4ca8638b543094e8cb3f\"",
+    "etag": "\"page_cache:57076547742:ProductListController:8c394f27d724e2b70a5f893add162194\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-08T01:45:38.183Z",
+   "lastFullFetchAt": "2026-10-09T01:50:17.543Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-08T01:45:38.183Z",
+   "lastRestProbeAt": "2026-10-09T01:50:17.543Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1223,12 +1223,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-08T01:45:38.183Z",
+   "lastSuccessAt": "2026-10-09T01:50:17.543Z",
    "lastSelfHealedPingAt": "2026-10-06T13:00:45.826Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-10-08T03:19:32.290Z",
+   "lastChecked": "2026-10-09T02:33:17.691Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1243,10 +1243,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-08T03:19:32.290Z"
+   "lastSuccessAt": "2026-10-09T02:33:17.691Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-10-08T03:21:38.668Z",
+   "lastChecked": "2026-10-09T03:00:17.463Z",
    "productCount": 3,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
@@ -1302,7 +1302,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-08T03:21:38.668Z",
+   "lastSuccessAt": "2026-10-09T03:00:17.464Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-28T19:55:14.862Z"
   },
@@ -1469,7 +1469,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-10-08T03:33:41.433Z",
+   "lastChecked": "2026-10-09T03:17:36.070Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1642,8 +1642,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"ffaac869\"",
-    "lastModified": "Wed, 07 Oct 2026 23:19:45 GMT"
+    "etag": "\"e822655e\"",
+    "lastModified": "Thu, 08 Oct 2026 21:25:23 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1656,7 +1656,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-08T03:33:41.433Z",
+   "lastSuccessAt": "2026-10-09T03:17:36.070Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1726,7 +1726,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-10-08T01:52:51.771Z",
+   "lastChecked": "2026-10-09T01:52:21.356Z",
    "productCount": 27,
    "products": {
     "old-carter-very-small-batch-bourbon-8-130-prf-bourbon-concierge": {
@@ -2056,16 +2056,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:28b0b4b190d98f0060406ca1a88bf682\"",
+    "etag": "\"page_cache:45343637659:ProductListController:c3fe2684f193752e13f2be73e6e5731b\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-08T01:52:51.771Z",
+   "lastFullFetchAt": "2026-10-09T01:52:21.356Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-08T01:52:51.771Z",
-   "countBaseline": 106,
+   "lastRestProbeAt": "2026-10-09T01:52:21.356Z",
+   "countBaseline": 107,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2074,7 +2074,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-08T01:52:51.772Z",
+   "lastSuccessAt": "2026-10-09T01:52:21.356Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-10-05T17:13:02.565Z"
   },
