@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-10-09T03:39:12.301Z",
+ "at": "2026-10-10T03:39:45.566Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1075,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-10-09T01:51:19.568Z",
+   "lastChecked": "2026-10-10T01:57:45.348Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1092,15 +1092,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:af6a35cb5d3db451be6fb47103ec2805\"",
+    "etag": "\"page_cache:66506555478:ProductListController:0427e9581147ed24f635086f9956b45c\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-09T01:51:19.568Z",
+   "lastFullFetchAt": "2026-10-10T01:42:47.655Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-09T01:51:19.568Z",
+   "lastRestProbeAt": "2026-10-10T01:42:47.655Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1110,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-09T01:51:19.568Z",
+   "lastSuccessAt": "2026-10-10T01:57:45.348Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-10-09T01:50:17.543Z",
+   "lastChecked": "2026-10-10T01:44:48.365Z",
    "productCount": 7,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1205,15 +1205,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:8c394f27d724e2b70a5f893add162194\"",
+    "etag": "\"page_cache:57076547742:ProductListController:ef68e1e7442a281f9dc8b2f4fc160f3a\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-09T01:50:17.543Z",
+   "lastFullFetchAt": "2026-10-10T01:44:48.365Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-09T01:50:17.543Z",
+   "lastRestProbeAt": "2026-10-10T01:44:48.365Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1223,12 +1223,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-09T01:50:17.543Z",
+   "lastSuccessAt": "2026-10-10T01:44:48.365Z",
    "lastSelfHealedPingAt": "2026-10-06T13:00:45.826Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-10-09T02:33:17.691Z",
+   "lastChecked": "2026-10-10T03:28:37.995Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1243,12 +1243,24 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-09T02:33:17.691Z"
+   "lastSuccessAt": "2026-10-10T03:28:37.995Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-10-09T03:00:17.463Z",
-   "productCount": 3,
+   "lastChecked": "2026-10-10T03:02:18.068Z",
+   "productCount": 5,
    "products": {
+    "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select": {
+     "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select",
+     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Lucky 7\" #T7 Tier 7 Single Barrel Select",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 79.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6EFE0454-9D30-4E8E-BCBA-1CC6B19C02A5.png?v=1787953275",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-10-09T18:27:42.493Z"
+    },
     "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
      "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
      "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Island In The Sun\" #27706 Stuff & Whiskey Single Barrel Select",
@@ -1260,6 +1272,18 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-17at10.45.51.png?v=1786978009",
      "url": "https://www.thereveries.co/shop",
      "firstSeen": "2026-09-04T17:05:42.815Z"
+    },
+    "the-reveries-stride-for-stride-8-year": {
+     "handle": "the-reveries-stride-for-stride-8-year",
+     "title": "THE REVERIES 8YR \"Stride for Stride\" #27742 Bluegrass Barrel Pickers Selection",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 79.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/BluegrassW2W_34605777-e85b-45a0-8455-ac88bc4c4bea.png?v=1791549101",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-10-09T12:35:20.095Z"
     },
     "the-reveries-single-barrel-arrivals-barrel-strength-bourbon": {
      "handle": "the-reveries-single-barrel-arrivals-barrel-strength-bourbon",
@@ -1293,7 +1317,7 @@
     "type": "collection",
     "id": "327871824027"
    },
-   "countBaseline": 3,
+   "countBaseline": 5,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -1302,9 +1326,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-09T03:00:17.464Z",
+   "lastSuccessAt": "2026-10-10T03:02:18.068Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-09-28T19:55:14.862Z"
+   "lastAlertAt": "2026-10-09T18:27:42.493Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1469,7 +1493,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-10-09T03:17:36.070Z",
+   "lastChecked": "2026-10-10T03:27:34.027Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1642,8 +1666,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"e822655e\"",
-    "lastModified": "Thu, 08 Oct 2026 21:25:23 GMT"
+    "etag": "\"6ce39783\"",
+    "lastModified": "Fri, 09 Oct 2026 20:27:05 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1656,7 +1680,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-09T03:17:36.070Z",
+   "lastSuccessAt": "2026-10-10T03:27:34.027Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1726,9 +1750,33 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-10-09T01:52:21.356Z",
-   "productCount": 27,
+   "lastChecked": "2026-10-10T01:46:53.977Z",
+   "productCount": 29,
    "products": {
+    "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select": {
+     "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select",
+     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Lucky 7\" #T7 Tier 7 Single Barrel Select",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 79.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6EFE0454-9D30-4E8E-BCBA-1CC6B19C02A5.png?v=1787953275",
+     "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select",
+     "firstSeen": "2026-10-09T18:32:54.200Z"
+    },
+    "the-reveries-stride-for-stride-8-year": {
+     "handle": "the-reveries-stride-for-stride-8-year",
+     "title": "THE REVERIES 8YR \"Stride for Stride\" #27742 Bluegrass Barrel Pickers Selection",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 79.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/BluegrassW2W_34605777-e85b-45a0-8455-ac88bc4c4bea.png?v=1791549101",
+     "url": "https://sharedpour.com/products/the-reveries-stride-for-stride-8-year",
+     "firstSeen": "2026-10-09T12:40:33.883Z"
+    },
     "old-carter-very-small-batch-bourbon-8-130-prf-bourbon-concierge": {
      "handle": "old-carter-very-small-batch-bourbon-8-130-prf-bourbon-concierge",
      "title": "Old Carter 10 Year Very Small Batch Straight Bourbon 130 Proof T8KE x The Bourbon Concierge 'PLDC-8' Exclusive",
@@ -1736,7 +1784,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 229.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/B0001249Large.jpg?v=1791031764",
      "url": "https://sharedpour.com/products/old-carter-very-small-batch-bourbon-8-130-prf-bourbon-concierge",
      "firstSeen": "2026-10-05T17:13:02.565Z"
@@ -2056,16 +2104,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:c3fe2684f193752e13f2be73e6e5731b\"",
+    "etag": "\"page_cache:45343637659:ProductListController:d54462210153875bc5991d2b75af459c\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-09T01:52:21.356Z",
+   "lastFullFetchAt": "2026-10-10T01:46:53.977Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-09T01:52:21.356Z",
-   "countBaseline": 107,
+   "lastRestProbeAt": "2026-10-10T01:46:53.977Z",
+   "countBaseline": 106,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2074,9 +2122,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-09T01:52:21.356Z",
+   "lastSuccessAt": "2026-10-10T01:46:53.977Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-10-05T17:13:02.565Z"
+   "lastAlertAt": "2026-10-09T18:32:54.200Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
