@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-10-10T03:39:45.566Z",
+ "at": "2026-10-11T03:40:24.048Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1075,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-10-10T01:57:45.348Z",
+   "lastChecked": "2026-10-11T01:46:03.628Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1092,15 +1092,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:0427e9581147ed24f635086f9956b45c\"",
+    "etag": "\"page_cache:66506555478:ProductListController:354e7a47682cb195461597c863fe47ac\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-10T01:42:47.655Z",
+   "lastFullFetchAt": "2026-10-11T01:31:40.882Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-10T01:42:47.655Z",
+   "lastRestProbeAt": "2026-10-11T01:31:40.882Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1110,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-10T01:57:45.348Z",
+   "lastSuccessAt": "2026-10-11T01:46:03.628Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-10-10T01:44:48.365Z",
+   "lastChecked": "2026-10-11T01:48:20.409Z",
    "productCount": 7,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1205,15 +1205,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:ef68e1e7442a281f9dc8b2f4fc160f3a\"",
+    "etag": "\"page_cache:57076547742:ProductListController:3e946a8fc23ac48cb8b1216ea7067ec7\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-10T01:44:48.365Z",
+   "lastFullFetchAt": "2026-10-11T01:48:20.409Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-10T01:44:48.365Z",
+   "lastRestProbeAt": "2026-10-11T01:48:20.409Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1223,12 +1223,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-10T01:44:48.365Z",
+   "lastSuccessAt": "2026-10-11T01:48:20.410Z",
    "lastSelfHealedPingAt": "2026-10-06T13:00:45.826Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-10-10T03:28:37.995Z",
+   "lastChecked": "2026-10-11T03:11:28.929Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1243,10 +1243,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-10T03:28:37.995Z"
+   "lastSuccessAt": "2026-10-11T03:11:28.929Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-10-10T03:02:18.068Z",
+   "lastChecked": "2026-10-11T03:16:37.432Z",
    "productCount": 5,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select": {
@@ -1326,7 +1326,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-10T03:02:18.068Z",
+   "lastSuccessAt": "2026-10-11T03:16:37.432Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-10-09T18:27:42.493Z"
   },
@@ -1493,7 +1493,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-10-10T03:27:34.027Z",
+   "lastChecked": "2026-10-11T03:29:34.842Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1666,8 +1666,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"6ce39783\"",
-    "lastModified": "Fri, 09 Oct 2026 20:27:05 GMT"
+    "etag": "\"24a6a973\"",
+    "lastModified": "Sat, 10 Oct 2026 18:28:59 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1680,7 +1680,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-10T03:27:34.027Z",
+   "lastSuccessAt": "2026-10-11T03:29:34.842Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1750,7 +1750,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-10-10T01:46:53.977Z",
+   "lastChecked": "2026-10-11T01:49:24.285Z",
    "productCount": 29,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select": {
@@ -1868,7 +1868,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 99.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/8975a464-c0aa-1239-9cbe-18a77647e77b.png?v=1783251054",
      "url": "https://sharedpour.com/products/provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel",
      "firstSeen": "2026-07-10T16:44:13.354Z"
@@ -2104,15 +2104,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:d54462210153875bc5991d2b75af459c\"",
+    "etag": "\"page_cache:45343637659:ProductListController:6c4700a9acb64a895e2d7d7121c548db\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-10T01:46:53.977Z",
+   "lastFullFetchAt": "2026-10-11T01:34:54.623Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-10T01:46:53.977Z",
+   "lastRestProbeAt": "2026-10-11T01:34:54.623Z",
    "countBaseline": 106,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2122,9 +2122,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-10T01:46:53.977Z",
+   "lastSuccessAt": "2026-10-11T01:49:24.285Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-10-09T18:32:54.200Z"
+   "lastAlertAt": "2026-10-10T14:29:23.206Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
