@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-10-11T03:40:24.048Z",
+ "at": "2026-10-12T03:40:33.244Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1075,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-10-11T01:46:03.628Z",
+   "lastChecked": "2026-10-12T01:49:39.372Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1092,15 +1092,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:354e7a47682cb195461597c863fe47ac\"",
+    "etag": "\"page_cache:66506555478:ProductListController:ae7e07520ec7fc1f14062dd4ae30e48d\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-11T01:31:40.882Z",
+   "lastFullFetchAt": "2026-10-12T01:49:39.372Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-11T01:31:40.882Z",
+   "lastRestProbeAt": "2026-10-12T01:49:39.372Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1110,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-11T01:46:03.628Z",
+   "lastSuccessAt": "2026-10-12T01:49:39.372Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-10-11T01:48:20.409Z",
+   "lastChecked": "2026-10-12T01:50:42.431Z",
    "productCount": 7,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1205,15 +1205,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:3e946a8fc23ac48cb8b1216ea7067ec7\"",
+    "etag": "\"page_cache:57076547742:ProductListController:f21ccbf88a167ba72c5d281520875676\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-11T01:48:20.409Z",
+   "lastFullFetchAt": "2026-10-12T01:50:42.431Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-11T01:48:20.409Z",
+   "lastRestProbeAt": "2026-10-12T01:50:42.431Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1223,12 +1223,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-11T01:48:20.410Z",
+   "lastSuccessAt": "2026-10-12T01:50:42.431Z",
    "lastSelfHealedPingAt": "2026-10-06T13:00:45.826Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-10-11T03:11:28.929Z",
+   "lastChecked": "2026-10-12T03:30:36.381Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1243,10 +1243,10 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-11T03:11:28.929Z"
+   "lastSuccessAt": "2026-10-12T03:30:36.381Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-10-11T03:16:37.432Z",
+   "lastChecked": "2026-10-12T03:08:21.117Z",
    "productCount": 5,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select": {
@@ -1326,7 +1326,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-11T03:16:37.432Z",
+   "lastSuccessAt": "2026-10-12T03:08:21.117Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-10-09T18:27:42.493Z"
   },
@@ -1493,7 +1493,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-10-11T03:29:34.842Z",
+   "lastChecked": "2026-10-12T03:23:20.448Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1666,8 +1666,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"24a6a973\"",
-    "lastModified": "Sat, 10 Oct 2026 18:28:59 GMT"
+    "etag": "\"f50f4ae4\"",
+    "lastModified": "Sun, 11 Oct 2026 16:29:45 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1680,7 +1680,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-11T03:29:34.842Z",
+   "lastSuccessAt": "2026-10-12T03:23:20.448Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1750,7 +1750,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-10-11T01:49:24.285Z",
+   "lastChecked": "2026-10-12T01:54:50.504Z",
    "productCount": 29,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select": {
@@ -2104,15 +2104,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:6c4700a9acb64a895e2d7d7121c548db\"",
+    "etag": "\"page_cache:45343637659:ProductListController:6af0d1eaf54b6e22255271c0014c526f\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-11T01:34:54.623Z",
+   "lastFullFetchAt": "2026-10-12T01:54:50.504Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-11T01:34:54.623Z",
+   "lastRestProbeAt": "2026-10-12T01:54:50.504Z",
    "countBaseline": 106,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -2122,7 +2122,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-11T01:49:24.285Z",
+   "lastSuccessAt": "2026-10-12T01:54:50.504Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-10-10T14:29:23.206Z"
   },
