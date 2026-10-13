@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-10-12T03:40:33.244Z",
+ "at": "2026-10-13T03:40:59.496Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1075,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-10-12T01:49:39.372Z",
+   "lastChecked": "2026-10-13T01:48:30.014Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1092,15 +1092,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:ae7e07520ec7fc1f14062dd4ae30e48d\"",
+    "etag": "\"page_cache:66506555478:ProductListController:bf6da58876622d24ffadf103d5e3f8da\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-12T01:49:39.372Z",
+   "lastFullFetchAt": "2026-10-13T01:48:30.014Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-12T01:49:39.372Z",
+   "lastRestProbeAt": "2026-10-13T01:48:30.014Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1110,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-12T01:49:39.372Z",
+   "lastSuccessAt": "2026-10-13T01:48:30.014Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-10-12T01:50:42.431Z",
+   "lastChecked": "2026-10-13T01:48:34.108Z",
    "productCount": 7,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1205,15 +1205,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:f21ccbf88a167ba72c5d281520875676\"",
+    "etag": "\"page_cache:57076547742:ProductListController:76d4b807dbb56a363cb731fd5cc3d6f0\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-12T01:50:42.431Z",
+   "lastFullFetchAt": "2026-10-13T01:48:34.108Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-12T01:50:42.431Z",
+   "lastRestProbeAt": "2026-10-13T01:48:34.108Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1223,12 +1223,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-12T01:50:42.431Z",
+   "lastSuccessAt": "2026-10-13T01:48:34.108Z",
    "lastSelfHealedPingAt": "2026-10-06T13:00:45.826Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-10-12T03:30:36.381Z",
+   "lastChecked": "2026-10-13T02:37:56.175Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1243,11 +1243,11 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-12T03:30:36.381Z"
+   "lastSuccessAt": "2026-10-13T02:37:56.175Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-10-12T03:08:21.117Z",
-   "productCount": 5,
+   "lastChecked": "2026-10-13T03:15:44.273Z",
+   "productCount": 4,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select": {
      "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select",
@@ -1260,18 +1260,6 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6EFE0454-9D30-4E8E-BCBA-1CC6B19C02A5.png?v=1787953275",
      "url": "https://www.thereveries.co/shop",
      "firstSeen": "2026-10-09T18:27:42.493Z"
-    },
-    "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
-     "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
-     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Island In The Sun\" #27706 Stuff & Whiskey Single Barrel Select",
-     "vendor": "The Reveries",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 89.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-17at10.45.51.png?v=1786978009",
-     "url": "https://www.thereveries.co/shop",
-     "firstSeen": "2026-09-04T17:05:42.815Z"
     },
     "the-reveries-stride-for-stride-8-year": {
      "handle": "the-reveries-stride-for-stride-8-year",
@@ -1317,7 +1305,7 @@
     "type": "collection",
     "id": "327871824027"
    },
-   "countBaseline": 5,
+   "countBaseline": 4,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -1326,7 +1314,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-12T03:08:21.117Z",
+   "lastSuccessAt": "2026-10-13T03:15:44.274Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-10-09T18:27:42.493Z"
   },
@@ -1493,7 +1481,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-10-12T03:23:20.448Z",
+   "lastChecked": "2026-10-13T03:38:06.660Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1666,8 +1654,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"f50f4ae4\"",
-    "lastModified": "Sun, 11 Oct 2026 16:29:45 GMT"
+    "etag": "\"17def0f7\"",
+    "lastModified": "Tue, 13 Oct 2026 01:32:12 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1680,7 +1668,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-12T03:23:20.448Z",
+   "lastSuccessAt": "2026-10-13T03:38:06.661Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1750,8 +1738,8 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-10-12T01:54:50.504Z",
-   "productCount": 29,
+   "lastChecked": "2026-10-13T01:48:39.919Z",
+   "productCount": 27,
    "products": {
     "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select": {
      "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select",
@@ -1813,18 +1801,6 @@
      "url": "https://sharedpour.com/products/cinco-sentidos-chino-con-alto",
      "firstSeen": "2026-09-11T12:34:34.587Z"
     },
-    "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select": {
-     "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
-     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Island In The Sun\" #27706 Stuff & Whiskey Single Barrel Select",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 89.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2026-08-17at10.45.51.png?v=1786978009",
-     "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-barrel-proof-selection-island-in-the-sun-stuff-whiskey-single-barrel-select",
-     "firstSeen": "2026-08-25T18:47:00.603Z"
-    },
     "t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey": {
      "handle": "t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey",
      "title": "T8KE x Bull Run Distillery 9 Year Exclusive Single Barrel Barrel Proof American Whiskey",
@@ -1860,18 +1836,6 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Week30Bundle.png?v=1784463345",
      "url": "https://sharedpour.com/products/barrell-craft-spirits-x-t8ke-synthesis-iii-ice-wine-collection",
      "firstSeen": "2026-08-02T21:32:12.856Z"
-    },
-    "provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel": {
-     "handle": "provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel",
-     "title": "Provenance Bourbon x Piedmont Environmental Council Barrel Strength Single Barrel",
-     "vendor": "1787 Provenance",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 99.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/8975a464-c0aa-1239-9cbe-18a77647e77b.png?v=1783251054",
-     "url": "https://sharedpour.com/products/provenance-bourbon-x-piedmont-environmental-council-barrel-strength-single-barrel",
-     "firstSeen": "2026-07-10T16:44:13.354Z"
     },
     "provenance-small-batch-kentucky-straight-bourbon": {
      "handle": "provenance-small-batch-kentucky-straight-bourbon",
@@ -2104,16 +2068,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:6af0d1eaf54b6e22255271c0014c526f\"",
+    "etag": "\"page_cache:45343637659:ProductListController:696cf706d57551a674c187f7227127b0\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-12T01:54:50.504Z",
+   "lastFullFetchAt": "2026-10-13T01:48:39.919Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-12T01:54:50.504Z",
-   "countBaseline": 106,
+   "lastRestProbeAt": "2026-10-13T01:48:39.919Z",
+   "countBaseline": 102,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2122,7 +2086,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-12T01:54:50.504Z",
+   "lastSuccessAt": "2026-10-13T01:48:39.920Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
    "lastAlertAt": "2026-10-10T14:29:23.206Z"
   },
