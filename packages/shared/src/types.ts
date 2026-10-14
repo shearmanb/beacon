@@ -19,6 +19,12 @@ export interface NormalizedProduct {
    * language-agnostic catch for buyable states a fixed word-list won't recognize.
    */
   cta?: string | null;
+  /**
+   * Cleaned product description / tasting notes (plain text, capped at
+   * DETAILS_MAX_CHARS). Rides on alerts (Discord + history) only — the pipeline
+   * strips it before persisting site state so stored rosters don't balloon.
+   */
+  details?: string | null;
 }
 
 export type ProductMap = Record<string, NormalizedProduct>;
@@ -51,6 +57,8 @@ export interface AlertProduct {
   minPrice?: number | null;
   available?: boolean;
   image?: string | null;
+  tags?: string[];
+  details?: string | null;
   note?: string;
 }
 

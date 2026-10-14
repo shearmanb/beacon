@@ -10,7 +10,7 @@
 // grid availability. Title filtering is intentionally NOT done here — the shared
 // pipeline applies site.filters after extraction.
 
-import type { NormalizedProduct } from "@beacon/shared";
+import { decodeEntities, type NormalizedProduct } from "@beacon/shared";
 import type { CustomExtractor, ExtractorContext, ExtractorOutput } from "./types.js";
 
 // Buyable iff a purchase phrase is present and no info/unavailable phrase is.
@@ -21,16 +21,6 @@ const PURCHASE_SIGNALS =
   /\b(?:add to (?:cart|bag|basket)|buy(?: now| online| it(?: now)?)?|purchase|shop now|order now|pre-?order|get yours)\b/i;
 const INFO_SIGNALS =
   /\b(?:see details|discover more|where to (?:buy|find)|learn more|notify me|coming soon|sold out|out of stock|read more|wait\s?list|join the list|raffle|enter to win|store locator|find a store|back (?:soon|in stock)|register)\b/i;
-
-function decodeEntities(s: string): string {
-  return s
-    .replace(/&#0*38;|&amp;/gi, "&")
-    .replace(/&#0*39;|&apos;|&rsquo;|&#8217;/gi, "'")
-    .replace(/&quot;|&#0*34;/gi, '"')
-    .replace(/&nbsp;|&#0*160;/gi, " ")
-    .replace(/&#8211;|&ndash;/gi, "–")
-    .replace(/&#8212;|&mdash;/gi, "—");
-}
 
 // Strip inner tags, decode entities, normalize curly apostrophes to straight (so
 // titleContains:["Master's"] matches whether the page used ' or ’), collapse ws.

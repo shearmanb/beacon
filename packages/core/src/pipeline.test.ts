@@ -36,6 +36,18 @@ describe("runSiteCheck", () => {
     expect(result.state.productCount).toBe(2);
   });
 
+  it("alerts carry details + tags but persisted state drops them", async () => {
+    const withNotes = { ...prod("b", false), tags: ["Bourbon"], details: "Nose: caramel" };
+    const result = await runSiteCheck(
+      site(),
+      { lastChecked: "2026-06-22T00:00:00Z", products: { a: prod("a", true) } },
+      stub({ kind: "products", products: [prod("a", true), withNotes], pageCount: 1 }),
+    );
+    expect(result.alerts[0]!.product.details).toBe("Nose: caramel");
+    expect(result.alerts[0]!.product.tags).toEqual(["Bourbon"]);
+    expect(result.state.products!["b"]).toEqual(prod("b", false));
+  });
+
   it("applies site filters before diffing", async () => {
     const result = await runSiteCheck(
       site({ filters: { titleContains: ["keep"] } }),

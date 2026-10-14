@@ -70,6 +70,11 @@ interface Embed {
   thumbnail?: { url: string };
 }
 
+// Discord rejects a field value over 1024 chars (the whole embed, not just the field).
+function capField(v: string): string {
+  return v.length <= 1024 ? v : `${v.slice(0, 1023)}…`;
+}
+
 /** Pure: build the Discord webhook JSON payload for an alert. */
 export function buildDiscordPayload(siteName: string, alert: Alert): string {
   const { type, product } = alert;
@@ -94,7 +99,8 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
     embed = {
       title: `${label}: ${product.title}`,
       color,
-      description: `**${siteName}**`,
+      // Cleaned product description / tasting notes, when the source has them.
+      description: product.details ? `**${siteName}**\n\n${product.details}` : `**${siteName}**`,
       fields: [
         { name: "Price", value: priceStr, inline: true },
         { name: "Status", value: product.available ? "✅ Available" : "❌ Sold Out", inline: true },
@@ -103,6 +109,8 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
       timestamp: new Date().toISOString(),
     };
     if (product.vendor) embed.fields.push({ name: "Vendor", value: product.vendor, inline: true });
+    if (product.productType) embed.fields.push({ name: "Type", value: product.productType, inline: true });
+    if (product.tags?.length) embed.fields.push({ name: "Tags", value: capField(product.tags.join(", ")), inline: false });
     if (product.image) embed.thumbnail = { url: product.image };
   }
 

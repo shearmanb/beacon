@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { jitter, randomFrom, sleep } from "./utils.js";
+import { htmlToText, jitter, randomFrom, sleep } from "./utils.js";
 
 describe("jitter", () => {
   it("stays within [base-spread, base+spread]", () => {
@@ -31,5 +31,24 @@ describe("sleep", () => {
     const start = Date.now();
     await sleep(20);
     expect(Date.now() - start).toBeGreaterThanOrEqual(15);
+  });
+});
+
+describe("htmlToText", () => {
+  it("turns description HTML into readable lines", () => {
+    const html =
+      "<p><strong>Proof:</strong> 115.8&nbsp;</p><p>Tasting notes &amp; more:</p><ul><li>Nose: caramel</li><li>Palate: oak &#8212; spice</li></ul><script>x()</script>";
+    expect(htmlToText(html)).toBe("Proof: 115.8\nTasting notes & more:\n• Nose: caramel\n• Palate: oak — spice");
+  });
+
+  it("returns null for empty/whitespace-only input", () => {
+    expect(htmlToText(null)).toBeNull();
+    expect(htmlToText("<p> &nbsp; </p>")).toBeNull();
+  });
+
+  it("caps long text on a word boundary", () => {
+    const out = htmlToText("word ".repeat(100), 50)!;
+    expect(out.length).toBeLessThanOrEqual(51);
+    expect(out.endsWith("word…")).toBe(true);
   });
 });

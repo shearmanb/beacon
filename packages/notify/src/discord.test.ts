@@ -33,6 +33,25 @@ describe("buildDiscordPayload", () => {
     expect(embed.color).toBe(0xf39c12);
   });
 
+  it("puts product details under the site name and adds type/tags fields", () => {
+    const embed = JSON.parse(
+      buildDiscordPayload("Reveries", {
+        type: "new_product",
+        product: {
+          title: "THE REVERIES 10YR #5160",
+          url: "https://x",
+          available: false,
+          productType: "Whiskey",
+          tags: ["Bourbon", "Single Barrel"],
+          details: "Nose: caramel\nPalate: oak",
+        },
+      }),
+    ).embeds[0];
+    expect(embed.description).toBe("**Reveries**\n\nNose: caramel\nPalate: oak");
+    expect(embed.fields).toContainEqual({ name: "Type", value: "Whiskey", inline: true });
+    expect(embed.fields).toContainEqual({ name: "Tags", value: "Bourbon, Single Barrel", inline: false });
+  });
+
   it("handles a missing price gracefully", () => {
     const embed = JSON.parse(
       buildDiscordPayload("S", { type: "new_product", product: { title: "X", url: "https://x", available: false } }),

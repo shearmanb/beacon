@@ -5,7 +5,7 @@
 // (not per-site config).
 
 import { httpGet, httpPost, conditionalHeaders, extractValidators } from "@beacon/fetch";
-import { sleep, type NormalizedProduct } from "@beacon/shared";
+import { htmlToText, sleep, DETAILS_MAX_CHARS, type NormalizedProduct } from "@beacon/shared";
 import type { SourceOf } from "../schema.js";
 import type { AdapterDeps, FetchResult, PrevState, SourceAdapter } from "./types.js";
 
@@ -21,6 +21,7 @@ export interface ShopifyProduct {
   tags?: string[] | string | null;
   variants?: ShopifyVariant[];
   images?: Array<{ src?: string | null }>;
+  body_html?: string | null;
 }
 
 export const PAGE_LIMIT = 250; // exported so diagnose probes with the worker's real page size
@@ -94,6 +95,7 @@ export function normalizeShopifyProduct(p: ShopifyProduct, origin: string): Norm
     available: isAvailable(p.variants),
     image: p.images?.[0]?.src ?? null,
     url: `${origin}/products/${p.handle}`,
+    details: htmlToText(p.body_html),
   };
 }
 
@@ -318,14 +320,18 @@ interface StorefrontNode {
   availableForSale: boolean;
   priceRange?: { minVariantPrice?: { amount?: string } };
   featuredImage?: { url?: string };
+  description?: string | null;
 }
 interface StorefrontPage {
   pageInfo?: { hasNextPage?: boolean; endCursor?: string | null };
   nodes?: StorefrontNode[];
 }
 
+// Plain-text description, truncated server-side: the fallback may page 2,000
+// products, so full descriptionHtml would multiply the response for nothing.
 const NODE_FIELDS = `title handle vendor productType tags availableForSale
-  priceRange { minVariantPrice { amount } } featuredImage { url }`;
+  priceRange { minVariantPrice { amount } } featuredImage { url }
+  description(truncateAt: ${DETAILS_MAX_CHARS})`;
 
 function normalizeStorefront(n: StorefrontNode, origin: string): NormalizedProduct {
   const amount = n.priceRange?.minVariantPrice?.amount;
@@ -339,6 +345,7 @@ function normalizeStorefront(n: StorefrontNode, origin: string): NormalizedProdu
     available: !!n.availableForSale,
     image: n.featuredImage?.url ?? null,
     url: `${origin}/products/${n.handle}`,
+    details: n.description?.trim() || null,
   };
 }
 

@@ -9,7 +9,7 @@
 // — instead of querying a dead id forever and nagging with site_reset.
 
 import { httpGet, httpPost } from "@beacon/fetch";
-import type { NormalizedProduct } from "@beacon/shared";
+import { htmlToText, type NormalizedProduct } from "@beacon/shared";
 import type { SourceOf } from "../schema.js";
 import type { AdapterDeps, FetchResult, PrevState, SourceAdapter } from "./types.js";
 
@@ -19,12 +19,15 @@ interface StorefrontNode {
   availableForSale: boolean;
   priceRange?: { minVariantPrice?: { amount?: string } };
   featuredImage?: { url?: string };
+  descriptionHtml?: string | null;
 }
 
 type Embed = { type: "collection" | "product"; id: string };
 
+// descriptionHtml (not the flat `description`) keeps the line breaks between
+// tasting-note sections; these watches are ≤50 products so the size is fine.
 const NODE_FIELDS =
-  "title handle availableForSale priceRange { minVariantPrice { amount } } featuredImage { url }";
+  "title handle availableForSale priceRange { minVariantPrice { amount } } featuredImage { url } descriptionHtml";
 
 const EMPTY_NOTE =
   "Storefront API returned 0 products. The shop embed may have switched to a new " +
@@ -46,6 +49,7 @@ function normalize(node: StorefrontNode, src: SourceOf<"shopify_graphql">): Norm
     available: !!node.availableForSale,
     image: node.featuredImage?.url ?? null,
     url: src.productUrl ?? `https://${src.domain}`,
+    details: htmlToText(node.descriptionHtml),
   };
 }
 

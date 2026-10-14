@@ -7,7 +7,7 @@ import { diff, type Alert, type NormalizedProduct, type ProductMap, type SiteSig
 import type { HttpValidators } from "@beacon/fetch";
 import { sourceUrl, type SiteDefinition } from "./schema.js";
 import type { AdapterDeps, PrevState, SourceAdapter } from "./sources/types.js";
-import { applyFilters, toProductMap } from "./filter.js";
+import { applyFilters, forStorage, toProductMap } from "./filter.js";
 import { emptyFetchGuard } from "./empty_guard.js";
 import { assessYield } from "./drift_guard.js";
 
@@ -95,7 +95,7 @@ export async function runSiteCheck(
     state: {
       lastChecked: now,
       productCount: Object.keys(productMap).length,
-      products: productMap,
+      products: forStorage(productMap),
       pageCount: result.pageCount,
       httpValidators: result.validators ?? null,
       // Which channel produced the roster ("storefront_fallback" when the

@@ -33,10 +33,21 @@ export function applyFilters(products: NormalizedProduct[], f: Filters): Normali
 
 export function toProductMap(products: NormalizedProduct[]): Record<string, NormalizedProduct> {
   const map: Record<string, NormalizedProduct> = {};
-  // `tags` is dropped here on purpose: filters run BEFORE this (on the raw
-  // fetched products), and nothing downstream — diff, the Discord embed, the
-  // dashboard Products table — reads tags off stored state. It was ~30% of the
-  // persisted state blob, re-serialized on every check, for nothing.
-  for (const p of products) map[p.handle] = { ...p, tags: [] };
+  for (const p of products) map[p.handle] = p;
   return map;
+}
+
+/**
+ * The persisted roster: `tags` emptied and `details` dropped. Both ride on
+ * alerts (Discord + history) but nothing reads them off stored state — diff,
+ * the dashboard Products table — and they'd dominate the state blob that is
+ * re-serialized on every check (tags alone were ~30% of it).
+ */
+export function forStorage(map: Record<string, NormalizedProduct>): Record<string, NormalizedProduct> {
+  const out: Record<string, NormalizedProduct> = {};
+  for (const [h, p] of Object.entries(map)) {
+    const { details: _details, ...rest } = p;
+    out[h] = { ...rest, tags: [] };
+  }
+  return out;
 }

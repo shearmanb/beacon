@@ -16,7 +16,7 @@
 // Discovery (which branch + listingPath) is a dashboard edit, not a deploy.
 
 import { z } from "zod";
-import { normalizeLotTitle } from "@beacon/shared";
+import { decodeEntities, normalizeLotTitle } from "@beacon/shared";
 
 // Meta-table keys — the module's entire storage footprint.
 export const UNICORN_CONFIG_META_KEY = "unicorn_config";
@@ -269,16 +269,6 @@ export interface UnicornListingPage {
    *  that yields zero previously-unseen lot ids, so a wrong true can't loop. */
   hasMore: boolean;
   total?: number | null;
-}
-
-function decodeEntities(s: string): string {
-  return s
-    .replace(/&#0*38;|&amp;/gi, "&")
-    .replace(/&#0*39;|&apos;|&rsquo;|&#8217;/gi, "'")
-    .replace(/&quot;|&#0*34;/gi, '"')
-    .replace(/&nbsp;|&#0*160;/gi, " ")
-    .replace(/&#8211;|&ndash;/gi, "–")
-    .replace(/&#8212;|&mdash;/gi, "—");
 }
 
 function cleanText(s: string): string {

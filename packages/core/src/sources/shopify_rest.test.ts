@@ -43,7 +43,14 @@ describe("shopifyRestAdapter", () => {
   it("returns normalized products from a single page", async () => {
     handler = (_req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ products: [shopifyProduct("a", true, "59.99"), shopifyProduct("b", false, "120.00")] }));
+      res.end(
+        JSON.stringify({
+          products: [
+            { ...shopifyProduct("a", true, "59.99"), body_html: "<p>Barrel #5160</p><p>Nose: caramel</p>" },
+            shopifyProduct("b", false, "120.00"),
+          ],
+        }),
+      );
     };
     const result = await shopifyRestAdapter.fetch(makeSite(), {});
     expect(result.kind).toBe("products");
@@ -56,8 +63,10 @@ describe("shopifyRestAdapter", () => {
     expect(a.url).toBe(`${base}/products/a`);
     expect(a.image).toBe("https://img/a.jpg");
     expect(a.tags).toEqual(["a", "b"]);
+    expect(a.details).toBe("Barrel #5160\nNose: caramel");
     const b = result.products.find((p) => p.handle === "b")!;
     expect(b.available).toBe(false);
+    expect(b.details).toBeNull();
   });
 
   it("paginates until a short page", async () => {
