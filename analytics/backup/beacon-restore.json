@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-10-14T03:41:14.018Z",
+ "at": "2026-10-15T03:42:03.860Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1075,7 +1075,7 @@
    "lastAlertAt": "2026-08-26T01:03:40.388Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-10-14T01:49:58.850Z",
+   "lastChecked": "2026-10-15T01:53:42.189Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1092,15 +1092,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:f7a4cae0bd2980e10f4fef8d62447ad4\"",
+    "etag": "\"page_cache:66506555478:ProductListController:036cb489fed304bdaeb8bf45a2356a17\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-14T01:49:58.850Z",
+   "lastFullFetchAt": "2026-10-15T01:53:42.189Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-14T01:49:58.850Z",
+   "lastRestProbeAt": "2026-10-15T01:53:42.189Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1110,12 +1110,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-14T01:49:58.850Z",
+   "lastSuccessAt": "2026-10-15T01:53:42.189Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-10-14T01:51:00.837Z",
+   "lastChecked": "2026-10-15T01:52:37.868Z",
    "productCount": 7,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1205,15 +1205,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:58042d32907f070da83a03c9d52f6e90\"",
+    "etag": "\"page_cache:57076547742:ProductListController:6b0e0fa916f3b52b3b8dcaf77d5404d8\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-14T01:51:00.837Z",
+   "lastFullFetchAt": "2026-10-15T01:52:37.868Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-14T01:51:00.837Z",
+   "lastRestProbeAt": "2026-10-15T01:52:37.868Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1223,12 +1223,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-14T01:51:00.837Z",
+   "lastSuccessAt": "2026-10-15T01:52:37.868Z",
    "lastSelfHealedPingAt": "2026-10-06T13:00:45.826Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-10-14T02:31:50.444Z",
+   "lastChecked": "2026-10-15T03:16:45.315Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1243,23 +1243,59 @@
    "lastAlertAt": "2026-09-05T18:08:22.520Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-14T02:31:50.444Z"
+   "lastSuccessAt": "2026-10-15T03:16:45.315Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-10-14T03:07:05.697Z",
-   "productCount": 4,
+   "lastChecked": "2026-10-15T03:30:44.156Z",
+   "productCount": 7,
    "products": {
-    "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select": {
-     "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select",
-     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Lucky 7\" #T7 Tier 7 Single Barrel Select",
+    "the-reveries-9yr-27982-witness-mark-127-20-proof": {
+     "handle": "the-reveries-9yr-27982-witness-mark-127-20-proof",
+     "title": "THE REVERIES 9YR #27982 Witness Mark T8KE Reserve Cask 127.20 Proof",
      "vendor": "The Reveries",
      "productType": "Whiskey",
      "tags": [],
-     "minPrice": 79.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6EFE0454-9D30-4E8E-BCBA-1CC6B19C02A5.png?v=1787953275",
+     "minPrice": 99.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/BoneworkClockatNineO_Clock.png?v=1792003819",
      "url": "https://www.thereveries.co/shop",
-     "firstSeen": "2026-10-09T18:27:42.493Z"
+     "firstSeen": "2026-10-14T18:55:14.892Z"
+    },
+    "the-reveries-10yr-5160-the-emptiness-115-80-proof": {
+     "handle": "the-reveries-10yr-5160-the-emptiness-115-80-proof",
+     "title": "THE REVERIES 10YR #5160 The Emptiness T8KE Reserve Cask 115.80 Proof",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 149.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/HoodedReaperwithBoneScythe.png?v=1792003244",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-10-14T18:44:28.574Z"
+    },
+    "the-reveries-10-year-single-barrel-25033-meters-fathoms-124pf": {
+     "handle": "the-reveries-10-year-single-barrel-25033-meters-fathoms-124pf",
+     "title": "THE REVERIES 10 Year Single Barrel Bourbon #25033 \"Meters & Fathoms\" 124pf",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 129.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/SkeletalBoneAnchorEmblem.png?v=1791842675",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-10-14T13:36:22.738Z"
+    },
+    "the-reveries-27764-shudder-122-30-pf": {
+     "handle": "the-reveries-27764-shudder-122-30-pf",
+     "title": "THE REVERIES 8 Year Kentucky Single Barrel #27764 \"SHUDDER\" 122.30° pf",
+     "vendor": "The Reveries",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 89.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/SkeletalLightningBoltonBlack.png?v=1791842609",
+     "url": "https://www.thereveries.co/shop",
+     "firstSeen": "2026-10-14T13:36:22.738Z"
     },
     "the-reveries-stride-for-stride-8-year": {
      "handle": "the-reveries-stride-for-stride-8-year",
@@ -1305,7 +1341,7 @@
     "type": "collection",
     "id": "327871824027"
    },
-   "countBaseline": 4,
+   "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -1314,9 +1350,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-14T03:07:05.697Z",
+   "lastSuccessAt": "2026-10-15T03:30:44.157Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-10-09T18:27:42.493Z"
+   "lastAlertAt": "2026-10-14T18:55:14.892Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1481,7 +1517,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-10-14T03:35:11.610Z",
+   "lastChecked": "2026-10-15T03:30:48.075Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1654,8 +1690,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"64dbae6f\"",
-    "lastModified": "Wed, 14 Oct 2026 00:22:29 GMT"
+    "etag": "\"1cefbb1a\"",
+    "lastModified": "Wed, 14 Oct 2026 21:22:35 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1668,7 +1704,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-14T03:35:11.610Z",
+   "lastSuccessAt": "2026-10-15T03:30:48.075Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1738,21 +1774,9 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-10-14T01:56:59.975Z",
-   "productCount": 26,
+   "lastChecked": "2026-10-15T01:56:41.397Z",
+   "productCount": 25,
    "products": {
-    "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select": {
-     "handle": "the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select",
-     "title": "THE REVERIES: 8 Year Single Barrel Barrel Proof Selection \"Lucky 7\" #T7 Tier 7 Single Barrel Select",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 79.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/6EFE0454-9D30-4E8E-BCBA-1CC6B19C02A5.png?v=1787953275",
-     "url": "https://sharedpour.com/products/the-reveries-8-year-single-barrel-barrel-proof-selection-lucky-7-t7-tier-7-single-barrel-select",
-     "firstSeen": "2026-10-09T18:32:54.200Z"
-    },
     "the-reveries-stride-for-stride-8-year": {
      "handle": "the-reveries-stride-for-stride-8-year",
      "title": "THE REVERIES 8YR \"Stride for Stride\" #27742 Bluegrass Barrel Pickers Selection",
@@ -1904,7 +1928,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 179.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00937.jpg?v=1780229848",
      "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-ky172-8-year-hazmat-kentucky-bourbon",
      "firstSeen": "2026-07-10T18:25:11.230Z"
@@ -1939,11 +1963,13 @@
      "vendor": "Scotch Malt Whisky Society",
      "productType": "Scotch",
      "tags": [],
-     "minPrice": 249.99,
+     "minPrice": 229.99,
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00724.jpg?v=1775827384",
      "url": "https://sharedpour.com/products/scotch-malt-whisky-society-44-196-properly-nutty-t8ke-x-smws-exclusive-single-cask-18-year-speyside",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T18:25:11.230Z",
+     "prevPrice": 249.99,
+     "priceChangedAt": "2026-10-14T19:32:50.203Z"
     },
     "neta-pulquero-cenizo-mezcal-celso-garcia-cruz-aficionados": {
      "handle": "neta-pulquero-cenizo-mezcal-celso-garcia-cruz-aficionados",
@@ -2056,16 +2082,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:823b0e228ef0313a502a815b2fefd886\"",
+    "etag": "\"page_cache:45343637659:ProductListController:54f88332da867fbaf07d7834b79113c3\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-14T01:56:59.975Z",
+   "lastFullFetchAt": "2026-10-15T01:56:41.397Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-14T01:56:59.975Z",
-   "countBaseline": 101,
+   "lastRestProbeAt": "2026-10-15T01:56:41.397Z",
+   "countBaseline": 106,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2074,9 +2100,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-14T01:56:59.976Z",
+   "lastSuccessAt": "2026-10-15T01:56:41.397Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-10-13T10:02:59.625Z"
+   "lastAlertAt": "2026-10-14T21:21:52.595Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
