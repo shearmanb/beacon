@@ -36,7 +36,7 @@ describe("runSiteCheck", () => {
     expect(result.state.productCount).toBe(2);
   });
 
-  it("alerts carry details + tags but persisted state drops them", async () => {
+  it("alerts carry details + tags; persisted state keeps details, drops tags", async () => {
     const withNotes = { ...prod("b", false), tags: ["Bourbon"], details: "Nose: caramel" };
     const result = await runSiteCheck(
       site(),
@@ -45,7 +45,7 @@ describe("runSiteCheck", () => {
     );
     expect(result.alerts[0]!.product.details).toBe("Nose: caramel");
     expect(result.alerts[0]!.product.tags).toEqual(["Bourbon"]);
-    expect(result.state.products!["b"]).toEqual(prod("b", false));
+    expect(result.state.products!["b"]).toEqual({ ...prod("b", false), details: "Nose: caramel" });
   });
 
   it("applies site filters before diffing", async () => {

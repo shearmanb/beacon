@@ -40,6 +40,8 @@ export default async function ProductsPage() {
         minPrice: typeof p["minPrice"] === "number" ? (p["minPrice"] as number) : null,
         vendor: (p["vendor"] as string | null) ?? null,
         url,
+        pageUrl: typeof p["pageUrl"] === "string" ? (p["pageUrl"] as string) : null,
+        details: typeof p["details"] === "string" ? (p["details"] as string) : null,
         reveries: isReveries(row.id, title),
         // When Beacon first observed this product (stamped by the worker's
         // annotateProducts). Absent for pre-annotation / freshly-baselined rows.

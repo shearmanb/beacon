@@ -19,12 +19,13 @@ export interface NormalizedProduct {
    * language-agnostic catch for buyable states a fixed word-list won't recognize.
    */
   cta?: string | null;
-  /**
-   * Cleaned product description / tasting notes (plain text, capped at
-   * DETAILS_MAX_CHARS). Rides on alerts (Discord + history) only — the pipeline
-   * strips it before persisting site state so stored rosters don't balloon.
-   */
+  /** Cleaned product description / tasting notes (plain text, capped at
+   *  DETAILS_MAX_CHARS). Shown in Discord alerts and the dashboard. */
   details?: string | null;
+  /** The product's own page when `url` is a shared shop page (a Buy Button
+   *  embed: every product's `url` is the same /shop page). Kept separate so
+   *  `url` still drives the password-wall gate (behindWall) by host. */
+  pageUrl?: string | null;
 }
 
 export type ProductMap = Record<string, NormalizedProduct>;
@@ -59,6 +60,7 @@ export interface AlertProduct {
   image?: string | null;
   tags?: string[];
   details?: string | null;
+  pageUrl?: string | null;
   note?: string;
 }
 

@@ -23,6 +23,10 @@ export interface ProductRow {
   minPrice: number | null;
   vendor: string | null;
   url: string;
+  /** The product's own page when `url` is a shared shop page. */
+  pageUrl?: string | null;
+  /** Cleaned description / tasting notes. */
+  details?: string | null;
   reveries: boolean;
   firstSeen: string | null;
 }
@@ -140,6 +144,20 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
                     {it.title}
                   </a>
                   {it.vendor && <span className="faint"> · {it.vendor}</span>}
+                  {it.pageUrl && (
+                    <>
+                      {" "}
+                      <a className="faint" href={it.pageUrl} target="_blank" rel="noreferrer" title="The product's own page">
+                        ↗ product page
+                      </a>
+                    </>
+                  )}
+                  {it.details && (
+                    <details className="pnotes">
+                      <summary>📝 notes</summary>
+                      <div>{it.details}</div>
+                    </details>
+                  )}
                 </td>
                 <td className="muted" data-label="Site">
                   {it.site}

@@ -38,16 +38,13 @@ export function toProductMap(products: NormalizedProduct[]): Record<string, Norm
 }
 
 /**
- * The persisted roster: `tags` emptied and `details` dropped. Both ride on
- * alerts (Discord + history) but nothing reads them off stored state — diff,
- * the dashboard Products table — and they'd dominate the state blob that is
- * re-serialized on every check (tags alone were ~30% of it).
+ * The persisted roster: `tags` emptied. They ride on alerts (Discord + history)
+ * but nothing reads them off stored state, and they were ~30% of the state
+ * blob re-serialized on every check. `details` IS kept — the dashboard shows
+ * it — and costs little: only filtered products persist, capped at 1 KB each.
  */
 export function forStorage(map: Record<string, NormalizedProduct>): Record<string, NormalizedProduct> {
   const out: Record<string, NormalizedProduct> = {};
-  for (const [h, p] of Object.entries(map)) {
-    const { details: _details, ...rest } = p;
-    out[h] = { ...rest, tags: [] };
-  }
+  for (const [h, p] of Object.entries(map)) out[h] = { ...p, tags: [] };
   return out;
 }

@@ -81,6 +81,17 @@ export async function buildBackupBundle(store: BeaconStore): Promise<BackupBundl
     if (!state) continue;
     const trimmed: Record<string, unknown> = { ...state };
     for (const f of VOLATILE_STATE_FIELDS) delete trimmed[f];
+    // Product descriptions are display-only and refreshed every check — keep
+    // them out of the daily repo commit.
+    const products = trimmed["products"] as Record<string, Record<string, unknown>> | undefined;
+    if (products) {
+      trimmed["products"] = Object.fromEntries(
+        Object.entries(products).map(([h, p]) => {
+          const { details: _details, ...rest } = p;
+          return [h, rest];
+        }),
+      );
+    }
     states[row.id] = trimmed;
   }
   const meta: Record<string, string> = {};

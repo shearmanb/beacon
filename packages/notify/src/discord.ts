@@ -126,6 +126,10 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
               type: 1,
               components: [
                 { type: 2, style: 5, label: siteLevel ? "View Site" : "View Product", url: product.url },
+                // The product's own page when `url` is a shared shop page.
+                ...(!siteLevel && product.pageUrl
+                  ? [{ type: 2, style: 5, label: "Product Page", url: product.pageUrl }]
+                  : []),
               ],
             },
           ],

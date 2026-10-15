@@ -1049,6 +1049,20 @@ select.in.sched {
   margin-right: 5px;
   font-size: 11px;
 }
+/* 📝 product description / tasting notes, collapsed under the title */
+.pnotes {
+  margin-top: 4px;
+  font-size: 12px;
+}
+.pnotes summary {
+  cursor: pointer;
+  color: var(--faint);
+}
+.pnotes div {
+  white-space: pre-line;
+  margin-top: 4px;
+  max-width: 70ch;
+}
 
 /* ===== schedules manager ===== */
 .sched-card {

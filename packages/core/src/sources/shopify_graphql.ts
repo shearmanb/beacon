@@ -20,14 +20,17 @@ interface StorefrontNode {
   priceRange?: { minVariantPrice?: { amount?: string } };
   featuredImage?: { url?: string };
   descriptionHtml?: string | null;
+  onlineStoreUrl?: string | null;
 }
 
 type Embed = { type: "collection" | "product"; id: string };
 
 // descriptionHtml (not the flat `description`) keeps the line breaks between
 // tasting-note sections; these watches are ≤50 products so the size is fine.
+// onlineStoreUrl is the product's own page on the store's primary domain (null
+// when the product isn't published to the Online Store channel).
 const NODE_FIELDS =
-  "title handle availableForSale priceRange { minVariantPrice { amount } } featuredImage { url } descriptionHtml";
+  "title handle availableForSale priceRange { minVariantPrice { amount } } featuredImage { url } descriptionHtml onlineStoreUrl";
 
 const EMPTY_NOTE =
   "Storefront API returned 0 products. The shop embed may have switched to a new " +
@@ -39,6 +42,7 @@ function endpointFor(src: SourceOf<"shopify_graphql">): string {
 
 function normalize(node: StorefrontNode, src: SourceOf<"shopify_graphql">): NormalizedProduct {
   const amount = node.priceRange?.minVariantPrice?.amount;
+  const url = src.productUrl ?? `https://${src.domain}`;
   return {
     handle: node.handle,
     title: node.title,
@@ -48,8 +52,9 @@ function normalize(node: StorefrontNode, src: SourceOf<"shopify_graphql">): Norm
     minPrice: amount ? parseFloat(amount) : null,
     available: !!node.availableForSale,
     image: node.featuredImage?.url ?? null,
-    url: src.productUrl ?? `https://${src.domain}`,
+    url,
     details: htmlToText(node.descriptionHtml),
+    pageUrl: node.onlineStoreUrl && node.onlineStoreUrl !== url ? node.onlineStoreUrl : null,
   };
 }
 

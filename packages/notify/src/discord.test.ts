@@ -33,8 +33,8 @@ describe("buildDiscordPayload", () => {
     expect(embed.color).toBe(0xf39c12);
   });
 
-  it("puts product details under the site name and adds type/tags fields", () => {
-    const embed = JSON.parse(
+  it("puts product details under the site name and adds type/tags fields + a product-page button", () => {
+    const payload = JSON.parse(
       buildDiscordPayload("Reveries", {
         type: "new_product",
         product: {
@@ -44,9 +44,12 @@ describe("buildDiscordPayload", () => {
           productType: "Whiskey",
           tags: ["Bourbon", "Single Barrel"],
           details: "Nose: caramel\nPalate: oak",
+          pageUrl: "https://sharedpour.com/products/x",
         },
       }),
-    ).embeds[0];
+    );
+    const embed = payload.embeds[0];
+    expect(payload.components[0].components[1]).toMatchObject({ label: "Product Page", url: "https://sharedpour.com/products/x" });
     expect(embed.description).toBe("**Reveries**\n\nNose: caramel\nPalate: oak");
     expect(embed.fields).toContainEqual({ name: "Type", value: "Whiskey", inline: true });
     expect(embed.fields).toContainEqual({ name: "Tags", value: "Bourbon, Single Barrel", inline: false });

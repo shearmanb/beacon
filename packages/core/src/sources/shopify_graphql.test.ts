@@ -128,6 +128,8 @@ describe("shopifyGraphqlAdapter", () => {
             availableForSale: true,
             priceRange: { minVariantPrice: { amount: "129.99" } },
             featuredImage: { url: "https://img/r1.jpg" },
+            descriptionHtml: "<p>Barrel #5160</p><p>Nose: caramel</p>",
+            onlineStoreUrl: "https://sharedpour.com/products/reveries-batch-1",
           },
           { title: "Reveries Batch 0", handle: "reveries-batch-0", availableForSale: false },
         ]),
@@ -144,7 +146,12 @@ describe("shopifyGraphqlAdapter", () => {
     expect(r1.minPrice).toBe(129.99);
     expect(r1.vendor).toBe("The Reveries");
     expect(r1.url).toBe("https://www.thereveries.co/shop");
-    expect(result.products.find((p) => p.handle === "reveries-batch-0")!.available).toBe(false);
+    expect(r1.pageUrl).toBe("https://sharedpour.com/products/reveries-batch-1");
+    expect(r1.details).toBe("Barrel #5160\nNose: caramel");
+    const r0 = result.products.find((p) => p.handle === "reveries-batch-0")!;
+    expect(r0.available).toBe(false);
+    expect(r0.pageUrl).toBeNull();
+    expect(r0.details).toBeNull();
   });
 
   it("uses empty-guard threshold 1 for a static collection that returns nothing", async () => {
