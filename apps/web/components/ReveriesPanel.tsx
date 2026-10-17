@@ -157,7 +157,10 @@ export function ReveriesPanel({
               </span>
             </>
           )}{" "}
-          · {products.length} tracked
+          · {products.length} tracked ·{" "}
+          <a href="/products?reveries=1" title="Sort and filter every Reveries bottle (age, proof, price, notes)">
+            sort &amp; filter →
+          </a>
         </span>
         {lastDrop && (
           <span className="rev-last">
