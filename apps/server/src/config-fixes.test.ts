@@ -121,6 +121,17 @@ describe("config fixes (boot-time config corrections)", () => {
     await store.sites.setEnabled("sharedpour_reveries", true);
     await applyConfigFixes(store, log);
     expect((await store.sites.get("sharedpour_reveries"))!.enabled).toBe(true);
+
+    // The two legacy checkers are tagged deprecated (Deprecated tab) — monitoring
+    // untouched — and a later "Restore" on the dashboard survives redeploys.
+    for (const id of ["sharedpour_t8ke", "sharedpour_reveries"]) {
+      expect((await store.sites.get(id))!.definition.deprecated).toBe(true);
+    }
+    expect((await store.sites.get("sharedpour_t8ke_all"))!.definition.deprecated).toBe(false);
+    const rev = (await store.sites.get("sharedpour_reveries"))!;
+    await store.sites.upsert({ ...rev.definition, deprecated: false });
+    await applyConfigFixes(store, log);
+    expect((await store.sites.get("sharedpour_reveries"))!.definition.deprecated).toBe(false);
   });
 
   it("never recreates a site the operator deleted (the old resurrect-on-deploy bug)", async () => {

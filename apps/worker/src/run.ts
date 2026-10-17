@@ -163,7 +163,7 @@ async function autoOffImminent(ctx: RunContext, rows: SiteRow[]): Promise<void> 
       await store.history.append(def.id, [event]);
       if (channel) {
         try {
-          await channel.send(def.name, event);
+          await channel.send(alertName(def), event);
         } catch (err) {
           log(`  Discord imminent_timeout error: ${(err as Error).message}`);
         }
@@ -309,7 +309,7 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
           },
         };
         try {
-          await channel.send(def.name, event);
+          await channel.send(alertName(def), event);
         } catch (e) {
           log(`  Discord config-warning error: ${(e as Error).message}`);
         }
@@ -464,7 +464,7 @@ async function checkBlindTime(ctx: RunContext, rows: SiteRow[], schedules: Sched
     log(`[${def.name}] BLIND for ${hours}h — ${why}`);
     if (channel) {
       try {
-        await channel.send(def.name, event);
+        await channel.send(alertName(def), event);
       } catch (err) {
         log(`  Discord blind-time error: ${(err as Error).message}`);
       }
@@ -520,7 +520,7 @@ async function maybeQuarantine(ctx: RunContext, def: SiteDefinition, outcome: Si
   log(`[${def.name}] QUARANTINED after ${failures} failures over ${days}d — site disabled.`);
   if (channel) {
     try {
-      await channel.send(def.name, event);
+      await channel.send(alertName(def), event);
     } catch (err) {
       log(`  Discord quarantine error: ${(err as Error).message}`);
     }
@@ -659,7 +659,7 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
     if (channel && productEvents.length > SITE_DIGEST_THRESHOLD) {
       log(`  → ${productEvents.length} product alerts from ${def.name} — sending one digest`);
       try {
-        await channel.send(def.name, buildSiteDigest(def, productEvents));
+        await channel.send(alertName(def), buildSiteDigest(def, productEvents));
         for (const ev of productEvents) {
           if (recordDedupe(dedupeKeys, def, ev)) dedupeDirty = true;
         }
@@ -722,7 +722,7 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
       }
 
       try {
-        await channel.send(def.name, note === ev.product.note ? ev : { ...ev, product: { ...ev.product, note } });
+        await channel.send(alertName(def), note === ev.product.note ? ev : { ...ev, product: { ...ev.product, note } });
         // Stamped only after a successful send: if Discord failed here, a
         // sibling checker's copy of the same alert must still get through.
         if (recordDedupe(dedupeKeys, def, ev)) dedupeDirty = true;
@@ -832,4 +832,10 @@ function buildSiteDigest(def: SiteDefinition, events: Alert[]): Alert {
         `Batched into one alert (more than ${SITE_DIGEST_THRESHOLD} at once) — full detail on the dashboard.`,
     },
   };
+}
+
+/** Discord's site label — a deprecated checker says so, so its alerts are
+ *  never mistaken for the checker that replaced it. */
+function alertName(def: SiteDefinition): string {
+  return def.deprecated ? `${def.name} (deprecated)` : def.name;
 }

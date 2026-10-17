@@ -52,7 +52,8 @@ function imminentLeft(def: SiteDefinition): number | null {
   return leftMs > 0 ? Math.ceil(leftMs / 60_000) : 0;
 }
 
-export default async function SitesPage() {
+export default async function SitesPage({ searchParams }: { searchParams: { tab?: string } }) {
+  const showDeprecated = searchParams.tab === "deprecated";
   const store = await getStore();
   const [rows, schedules, recentAlerts, heartbeat] = await Promise.all([
     store.sites.list(),
@@ -77,6 +78,10 @@ export default async function SitesPage() {
   // Density-mode requirement: "off" (disabled) sites sink to the bottom of the
   // grid regardless of DB order. Stable sort keeps the enabled sites' order.
   cards.sort((a, b) => Number(b.row.enabled) - Number(a.row.enabled));
+  // Deprecated checkers live on their own tab so they're never mistaken for
+  // the checker that replaced them. Header stats above still count every site.
+  const deprecatedCount = cards.filter((c) => c.row.definition.deprecated).length;
+  const shownCards = cards.filter((c) => !!c.row.definition.deprecated === showDeprecated);
 
   // Only rosters still being checked count as tracked inventory — a disabled or
   // long-silent site freezes its last product map forever (see lib/live.ts).
@@ -301,8 +306,19 @@ export default async function SitesPage() {
         />
       )}
 
+      {(deprecatedCount > 0 || showDeprecated) && (
+        <nav className="site-tabs">
+          <a href="/" className={showDeprecated ? "" : "active"}>
+            Active
+          </a>
+          <a href="/?tab=deprecated" className={showDeprecated ? "active" : ""}>
+            🗄 Deprecated ({deprecatedCount})
+          </a>
+        </nav>
+      )}
+
       <SitesView>
-        {cards.map(({ row, state, health }) => {
+        {shownCards.map(({ row, state, health }) => {
           const def = row.definition;
           const url = siteUrl(def);
           // Density-mode readouts: effective cadence in minutes (micro) + the
@@ -495,6 +511,7 @@ export default async function SitesPage() {
                   siteId={row.id}
                   siteName={row.name}
                   enabled={row.enabled}
+                  deprecated={!!def.deprecated}
                   imminent={def.imminent}
                   schedule={String(def.schedule ?? def.intervalMinutes ?? "")}
                   scheduleOptions={scheduleOptions}
@@ -519,6 +536,7 @@ export default async function SitesPage() {
             </div>
           );
         })}
+        {showDeprecated && deprecatedCount === 0 && <p className="muted">No deprecated sites.</p>}
         {rows.length === 0 && (
           <p className="muted">No sites configured yet. Run the migration importer to seed the database.</p>
         )}

@@ -31,7 +31,7 @@ export default async function ProductsPage() {
       const url = String(p["url"] ?? "#");
       const walled = live && behindWall(url, walls);
       items.push({
-        site: row.name,
+        site: row.definition.deprecated ? `${row.name} (deprecated)` : row.name,
         handle: String(p["handle"]),
         title,
         available: live && !walled && p["available"] === true,

@@ -115,6 +115,21 @@ export const CORRECTIONS: ConfigFix[] = [
 // ── One-shots: latched on a meta flag, never re-run ──────────────────────────
 export const ONE_SHOTS: ConfigFix[] = [
   {
+    id: "deprecate_sharedpour_legacy_20261017",
+    description: "Move the pre-consolidation SharedPour checkers to the Deprecated tab",
+    // Retired in the Aug 26 4→1 consolidation, re-enabled by the operator on
+    // purpose; tagged so their alerts/tiles aren't confused with "SharedPour
+    // Watchlist". Only sets the flag — never creates or enables a site.
+    async run(store, log) {
+      for (const id of ["sharedpour_t8ke", "sharedpour_reveries"]) {
+        const row = await store.sites.get(id);
+        if (!row || row.definition.deprecated) continue;
+        await store.sites.upsert({ ...row.definition, deprecated: true });
+        log(`Marked ${id} deprecated.`);
+      }
+    },
+  },
+  {
     id: "amendment_cadence_20260716",
     description: "Data-tuned schedules (drop_windows / bar_evening) + site assignment",
     legacyFlag: "amendment_cadence_20260716", // the key serve.ts used before this refactor

@@ -74,6 +74,16 @@ export async function setMonitoring(siteId: string, enabled: boolean): Promise<v
   revalidatePath("/");
 }
 
+/** Move a site to / from the Sites page's "Deprecated" tab (display + Discord
+ *  label only — monitoring stays whatever it is). */
+export async function setDeprecated(siteId: string, deprecated: boolean): Promise<void> {
+  const store = await getStore();
+  const row = await store.sites.get(siteId);
+  if (!row) return;
+  await store.sites.upsert({ ...row.definition, deprecated });
+  revalidatePath("/");
+}
+
 export async function setImminent(siteId: string, imminent: boolean): Promise<void> {
   const store = await getStore();
   await store.commands.enqueue("set_imminent", siteId, { imminent });

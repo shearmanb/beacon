@@ -197,6 +197,10 @@ export const siteDefinitionSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   enabled: z.boolean().default(true),
+  // Retired/superseded checker kept around (maybe still running): listed under
+  // the dashboard's "Deprecated" tab and labelled in its Discord alerts.
+  // Display-only — whether it checks is still `enabled`.
+  deprecated: z.boolean().default(false),
   // Fixed minutes ("5"/15/...) or a named schedule key resolved from schedules.
   schedule: z.union([z.string(), z.number()]).optional(),
   intervalMinutes: z.number().optional(),

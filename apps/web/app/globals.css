@@ -1049,6 +1049,24 @@ select.in.sched {
   margin-right: 5px;
   font-size: 11px;
 }
+/* Sites page: Active / Deprecated tabs */
+.site-tabs {
+  display: flex;
+  gap: 16px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+.site-tabs a {
+  color: var(--faint);
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 2px solid transparent;
+}
+.site-tabs a.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
 /* 📝 product description / tasting notes, collapsed under the title */
 .pnotes {
   margin-top: 4px;

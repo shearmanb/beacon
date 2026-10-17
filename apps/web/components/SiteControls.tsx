@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { runNow, saveSchedule, setImminent, setImminentTuning, setMonitoring, setSchedule, setSiteFilters, updateSiteSource } from "../app/actions";
+import { runNow, saveSchedule, setDeprecated, setImminent, setImminentTuning, setMonitoring, setSchedule, setSiteFilters, updateSiteSource } from "../app/actions";
 import { buildWindowRules, splitList, type WindowSpec } from "../lib/site-forms";
 
 export interface ScheduleOption {
@@ -19,6 +19,7 @@ export function SiteControls({
   siteId,
   siteName,
   enabled,
+  deprecated,
   imminent,
   schedule,
   scheduleOptions,
@@ -31,6 +32,7 @@ export function SiteControls({
   siteId: string;
   siteName: string;
   enabled: boolean;
+  deprecated: boolean;
   imminent: boolean;
   schedule: string;
   scheduleOptions: ScheduleOption[];
@@ -149,6 +151,14 @@ export function SiteControls({
         </select>
         <button className="btn" disabled={pending} onClick={() => start(() => runNow(siteId))}>
           ▶ Run
+        </button>
+        <button
+          className="btn"
+          disabled={pending}
+          title={deprecated ? "Move back to the main Sites tab" : "Move to the Deprecated tab (doesn't change monitoring)"}
+          onClick={() => start(() => setDeprecated(siteId, !deprecated))}
+        >
+          {deprecated ? "↩ Restore" : "🗄 Deprecate"}
         </button>
       </div>
       <div className="row tune">
