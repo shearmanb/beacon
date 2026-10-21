@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-10-20T03:43:53.905Z",
+ "at": "2026-10-21T03:43:54.122Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -710,7 +710,7 @@
  },
  "states": {
   "sharedpour_t8ke": {
-   "lastChecked": "2026-10-20T01:55:56.461Z",
+   "lastChecked": "2026-10-21T01:50:27.678Z",
    "productCount": 18,
    "products": {
     "penelope-project-x-sa-cask-finish": {
@@ -938,15 +938,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:6015e0169b110a206dbdf8c36dc121ec\"",
+    "etag": "\"page_cache:45343637659:ProductListController:a48edf6db228824ee947160fb8d8caef\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-20T01:55:56.461Z",
+   "lastFullFetchAt": "2026-10-21T01:50:27.678Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-20T01:55:56.461Z",
+   "lastRestProbeAt": "2026-10-21T01:50:27.678Z",
    "countBaseline": 20,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -956,12 +956,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-20T01:55:56.461Z",
+   "lastSuccessAt": "2026-10-21T01:50:27.678Z",
    "lastSelfHealedPingAt": "2026-07-26T21:23:44.392Z",
    "lastAlertAt": "2026-10-17T13:00:39.797Z"
   },
   "sharedpour_reveries": {
-   "lastChecked": "2026-10-20T01:49:50.663Z",
+   "lastChecked": "2026-10-21T03:37:47.503Z",
    "productCount": 1,
    "products": {
     "the-reveries-stride-for-stride-8-year": {
@@ -979,16 +979,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:f674649ec5c68addd050ddcc15577427\"",
+    "etag": "\"page_cache:45343637659:ProductListController:5fcea020bd8c7981d219b54a0014956f\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-20T01:35:40.536Z",
+   "lastFullFetchAt": "2026-10-21T03:37:47.503Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-20T01:35:40.536Z",
-   "countBaseline": 104,
+   "lastRestProbeAt": "2026-10-21T03:37:47.503Z",
+   "countBaseline": 106,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -997,12 +997,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-20T01:49:50.663Z",
+   "lastSuccessAt": "2026-10-21T03:37:47.503Z",
    "lastSelfHealedPingAt": "2026-07-26T21:03:16.745Z",
    "lastAlertAt": "2026-10-17T22:00:51.593Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-10-20T01:42:43.830Z",
+   "lastChecked": "2026-10-21T01:50:32.102Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1019,15 +1019,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:8298fb718b2972f44b57d2271eb3baf4\"",
+    "etag": "\"page_cache:66506555478:ProductListController:c9448420c54f71c528161d3b43506ad0\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-20T01:42:43.830Z",
+   "lastFullFetchAt": "2026-10-21T01:50:32.102Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-20T01:42:43.830Z",
+   "lastRestProbeAt": "2026-10-21T01:50:32.102Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1037,12 +1037,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-20T01:42:43.830Z",
+   "lastSuccessAt": "2026-10-21T01:50:32.102Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-10-20T03:39:55.350Z",
+   "lastChecked": "2026-10-21T03:39:49.267Z",
    "productCount": 7,
    "products": {
     "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
@@ -1132,15 +1132,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:b1dd0f2c6971dd4c50b7b62bd212ecbd\"",
+    "etag": "\"page_cache:57076547742:ProductListController:8d64f601c1f8a8ebacb3fd480759f55a\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-20T03:39:55.350Z",
+   "lastFullFetchAt": "2026-10-21T03:39:49.267Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-20T03:39:55.350Z",
+   "lastRestProbeAt": "2026-10-21T03:39:49.267Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1150,12 +1150,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-20T03:39:55.350Z",
+   "lastSuccessAt": "2026-10-21T03:39:49.267Z",
    "lastSelfHealedPingAt": "2026-10-06T13:00:45.826Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-10-20T03:36:48.581Z",
+   "lastChecked": "2026-10-21T03:28:31.896Z",
    "products": {},
    "httpValidators": {
     "etag": "W/\"9c55fcc935f6adad2a2ee0fef22302eb\"",
@@ -1173,10 +1173,10 @@
    "lastAlertAt": "2026-10-16T17:08:35.311Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-20T03:36:48.581Z"
+   "lastSuccessAt": "2026-10-21T03:28:31.896Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-10-20T03:09:07.870Z",
+   "lastChecked": "2026-10-21T03:25:24.582Z",
    "productCount": 2,
    "products": {
     "the-reveries-8-year-single-barrel-wake-of-the-ship-barrel-strength-bourbon-t8ke-reserve-cask": {
@@ -1222,7 +1222,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-20T03:09:07.870Z",
+   "lastSuccessAt": "2026-10-21T03:25:24.582Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-10-19T12:54:29.872Z"
   },
@@ -1389,7 +1389,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-10-20T03:27:45.878Z",
+   "lastChecked": "2026-10-21T03:36:37.985Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1562,8 +1562,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"cd25b498\"",
-    "lastModified": "Mon, 19 Oct 2026 21:18:57 GMT"
+    "etag": "\"e61efc91\"",
+    "lastModified": "Wed, 21 Oct 2026 02:28:51 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1576,7 +1576,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-20T03:27:45.878Z",
+   "lastSuccessAt": "2026-10-21T03:36:37.985Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
