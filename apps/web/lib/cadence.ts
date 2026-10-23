@@ -4,7 +4,7 @@
 // disagree with what the worker actually does.
 
 import type { SchedulableSite, Schedules } from "@beacon/shared";
-import { getEffectiveInterval } from "@beacon/shared";
+import { getEffectiveInterval, imminentInterval } from "@beacon/shared";
 
 /** Effective interval (minutes) for each ET hour 0–23 on the given ET day. */
 export function cadenceByHour(
@@ -65,6 +65,6 @@ export function formatRange([from, to]: [number, number]): string {
  * imminent branch (imminentIntervalMinutes wins while imminent mode is on).
  */
 export function nowInterval(site: SchedulableSite, schedules: Schedules): number {
-  if (site.imminent && site.imminentIntervalMinutes != null) return site.imminentIntervalMinutes;
+  if (site.imminent) return imminentInterval(site);
   return getEffectiveInterval(site, schedules);
 }

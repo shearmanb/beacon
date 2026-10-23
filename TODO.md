@@ -80,9 +80,12 @@ Still open from the review:
       neither `BEACON_AUTH_SECRET` nor `BEACON_DASH_PASSWORD` is set, and the
       cookie never expires. Verify the env var is set in prod; consider
       refusing to boot on the default. _XS._
-- [ ] **4b `HEALTHCHECK_URL` is still unset** — no external dead-man. 5 minutes
-      of setup, still the best value-per-effort item in the repo (see the
-      Infra section below for the exact steps). _User-side, no code._
+- [~] **4b `HEALTHCHECK_URL` is still unset** — floor shipped 2026-10-23: a
+      GitHub Actions probe of the public `/api/health` every 10 min
+      (`.github/workflows/deadman.yml`; email always, Discord once the repo
+      secret `DISCORD_WEBHOOK_URL` is added). The tighter healthchecks.io
+      layer is still one paste away: create the check, hand the ping URL to a
+      session, it sets `HEALTHCHECK_URL` on the Railway service. _User-side._
 - [x] **5r Blind-time invariant** ✅ (2026-09-25) — page when a site has gone too long without
       a *body-backed* success, whatever guard is responsible. The one rule no
       future guard can compose its way around. _S — recommended next._

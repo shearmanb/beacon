@@ -14,13 +14,13 @@
 
 import { buildAdapterDeps, diagnoseSite, getAdapter, hasAdapter, registerAdapter, siteDefinitionSchema, sourceUrl, type AdapterDeps, type SiteDefinition } from "@beacon/core";
 import { expireIdentity } from "@beacon/fetch";
-import { sleep, jitter, shouldCheck, getEffectiveInterval, getEtDay, getEtHour, type Alert, type Schedules } from "@beacon/shared";
+import { sleep, jitter, shouldCheck, getEffectiveInterval, getEtDay, getEtHour, DEFAULT_IMMINENT_DURATION_MIN, type Alert, type Schedules } from "@beacon/shared";
 import type { NotificationChannel } from "@beacon/notify";
 import type { BeaconStore, SiteRow } from "@beacon/db";
 import { applyCommands } from "./commands.js";
 import { isBlockLikeFailure, processSite, type SiteOutcome } from "./process-site.js";
 
-export const DEFAULT_IMMINENT_DURATION_MIN = 20;
+export { DEFAULT_IMMINENT_DURATION_MIN };
 // Wall-clock ceiling for a single site's check (fetch + parse). The fetch layer
 // has its own 30s per-request deadline; this bounds the whole multi-page/site
 // op so the loop stays responsive. 60s (was 45s): a failover check legitimately
@@ -384,11 +384,12 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     }
   }
 
-  await dispatch(ctx, results, baseDeps);
+  const shadows = shadowSiteIds(rows);
+  await dispatch(ctx, results, shadows, baseDeps);
 
   if (!dryRun) {
     try {
-      await checkBlindTime(ctx, rows, schedules);
+      await checkBlindTime(ctx, rows, schedules, shadows);
     } catch (err) {
       log(`Blind-time check error (continuing): ${(err as Error).message}`);
     }
@@ -407,12 +408,15 @@ export function blindThresholdMs(def: SiteDefinition, schedules: Schedules, last
   return Math.max(BLIND_MIN_MS, BLIND_INTERVAL_MULT * interval * 60_000);
 }
 
-async function checkBlindTime(ctx: RunContext, rows: SiteRow[], schedules: Schedules): Promise<void> {
+async function checkBlindTime(ctx: RunContext, rows: SiteRow[], schedules: Schedules, shadows: Set<string>): Promise<void> {
   const { store, channel, log = () => {} } = ctx;
   const now = Date.now();
   for (const row of rows) {
     const def = row.definition;
     if (!def.enabled) continue;
+    // A shadowed deprecated checker going blind is not a blind STORE — its live
+    // sibling's own blind-time check covers the host. Dashboard still shows it.
+    if (shadows.has(def.id)) continue;
     const state = await store.state.load(def.id);
     // Never succeeded: nothing to measure from — first-check failures page
     // through the normal error path.
@@ -583,12 +587,35 @@ function hostOf(def: SiteDefinition): string | null {
   }
 }
 
+// Deprecated checkers are "shadows" (2026-10-23): they keep checking and keep
+// recording history + tile state, but they do NOT page Discord as long as an
+// enabled, non-deprecated checker covers the same host — otherwise deprecating
+// a tile just relabels its pings "(deprecated)" and the operator reads two
+// alerts for one bottle, which is exactly what happened with the SharedPour
+// Watchlist. The coverage test is the never-go-silent fallback: deprecate the
+// LAST live checker on a store and its alerts still page, labelled.
+function shadowSiteIds(rows: SiteRow[]): Set<string> {
+  const liveHosts = new Set<string>();
+  for (const { definition: def } of rows) {
+    if (!def.enabled || def.deprecated) continue;
+    const host = hostOf(def);
+    if (host) liveHosts.add(host);
+  }
+  const shadows = new Set<string>();
+  for (const { definition: def } of rows) {
+    if (!def.deprecated) continue;
+    const host = hostOf(def);
+    if (host && liveHosts.has(host)) shadows.add(def.id);
+  }
+  return shadows;
+}
+
 // Send alerts after the full pass, so systemic failure can be detected and
 // collapsed into a single page. State/history are already persisted above —
 // dispatch only touches Discord. site_error pages are enriched before sending:
 // an auto-run 🩺 diagnosis verdict (3b) and a host-level rollup note when
 // multiple checkers on the same host are failing together (3c).
-async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterDeps): Promise<void> {
+async function dispatch(ctx: RunContext, results: CheckedSite[], shadows: Set<string>, deps?: AdapterDeps): Promise<void> {
   const { store, channel, dryRun, log = () => {} } = ctx;
   if (dryRun) {
     // In dry-run, still surface what WOULD have been sent (parity with the old
@@ -655,8 +682,9 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
   for (const { def, outcome } of results) {
     // Digest gate (3c): one site producing a pile of product alerts in a single
     // pass (a whole collection going live, a re-baseline) becomes ONE embed.
+    const shadow = shadows.has(def.id);
     const productEvents = outcome.events.filter((ev) => PRODUCT_ALERT_TYPES.has(ev.type) && ev.quiet !== true);
-    if (channel && productEvents.length > SITE_DIGEST_THRESHOLD) {
+    if (channel && !shadow && productEvents.length > SITE_DIGEST_THRESHOLD) {
       log(`  → ${productEvents.length} product alerts from ${def.name} — sending one digest`);
       try {
         await channel.send(alertName(def), buildSiteDigest(def, productEvents));
@@ -668,7 +696,7 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
         log(`  Discord digest error: ${(err as Error).message}`);
       }
     }
-    const digested = productEvents.length > SITE_DIGEST_THRESHOLD ? new Set(productEvents) : new Set<Alert>();
+    const digested = !shadow && productEvents.length > SITE_DIGEST_THRESHOLD ? new Set(productEvents) : new Set<Alert>();
 
     for (const ev of outcome.events) {
       if (digested.has(ev)) continue; // already covered by this site's digest
@@ -678,8 +706,11 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], deps?: AdapterD
       // A real outage still pages as site_error when BOTH channels fail, and
       // product drops still alert normally (they flow via whichever channel works).
       // baseline is likewise history-only; an explicitly-quiet event is damped too.
-      const historyOnly = ev.type === "baseline" || ev.type === "self_healed" || ev.quiet === true;
-      log(`  → ${ev.type}: ${ev.product.title}${historyOnly ? " (history only)" : ""}`);
+      // A deprecated checker shadowed by a live sibling (see shadowSiteIds) is
+      // history-only wholesale — and `continue`s BEFORE the dedupe stamp below,
+      // so its sighting never swallows the live checker's page.
+      const historyOnly = ev.type === "baseline" || ev.type === "self_healed" || ev.quiet === true || shadow;
+      log(`  → ${ev.type}: ${ev.product.title}${historyOnly ? (shadow ? " (deprecated shadow — history only)" : " (history only)") : ""}`);
       if (historyOnly || !channel) continue;
 
       // Same product, same host, more than one checker watching it: page once
@@ -835,7 +866,8 @@ function buildSiteDigest(def: SiteDefinition, events: Alert[]): Alert {
 }
 
 /** Discord's site label — a deprecated checker says so, so its alerts are
- *  never mistaken for the checker that replaced it. */
+ *  never mistaken for the checker that replaced it. (Only reached when the
+ *  deprecated checker is the last live one on its host — see shadowSiteIds.) */
 function alertName(def: SiteDefinition): string {
   return def.deprecated ? `${def.name} (deprecated)` : def.name;
 }

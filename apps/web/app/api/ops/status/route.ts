@@ -25,6 +25,8 @@ export async function GET(): Promise<NextResponse> {
       id: row.id,
       name: row.name,
       enabled: row.enabled,
+      deprecated: row.definition.deprecated === true,
+      imminent: row.definition.imminent === true,
       sourceKind: row.sourceKind,
       lastChecked: (state?.lastChecked as string | undefined) ?? null,
       productCount: (state?.productCount as number | undefined) ?? null,

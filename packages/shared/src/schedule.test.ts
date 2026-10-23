@@ -118,6 +118,16 @@ describe("shouldCheck", () => {
     expect(shouldCheck(site, state, schedules, now)).toBe(true);
   });
 
+  it("an un-tuned imminent site runs at the shared default, not its normal schedule", () => {
+    // Regression: imminentIntervalMinutes unset used to fall through to the
+    // normal interval (30m here) — imminent mode silently did nothing.
+    const now = Date.parse("2026-06-22T10:03:00Z");
+    const site = { id: "a", imminent: true, intervalMinutes: 30 };
+    const state = { lastChecked: "2026-06-22T10:00:00Z" }; // 3 min elapsed ≥ 2m default
+    expect(shouldCheck(site, state, schedules, now)).toBe(true);
+    expect(shouldCheck(site, { lastChecked: "2026-06-22T10:02:00Z" }, schedules, now)).toBe(false);
+  });
+
   it("does not check before the imminent interval elapses", () => {
     const now = Date.parse("2026-06-22T10:01:00Z");
     const site = { id: "a", imminent: true, imminentIntervalMinutes: 2, intervalMinutes: 30 };

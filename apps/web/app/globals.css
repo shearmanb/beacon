@@ -653,6 +653,71 @@ body {
   background: var(--accent-dim);
 }
 
+/* ===== imminent mode — make it unmissable (2026-10-23) ===== */
+/* The accent edge stays lit in the warn color, the border warms, and the
+   header carries a pulsing badge; all of it survives every density mode. */
+.site-card.imminent {
+  border-color: color-mix(in srgb, var(--warn) 55%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--warn) 25%, transparent), 0 0 18px rgba(232, 177, 63, 0.18);
+}
+.site-card.imminent::before {
+  background: var(--warn);
+  opacity: 1;
+}
+.imm-row {
+  margin: 6px 0 2px;
+}
+.imm-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 14%, var(--panel2));
+  border: 1px solid color-mix(in srgb, var(--warn) 50%, transparent);
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+  animation: imm-pulse 2.4s ease-in-out infinite;
+}
+@keyframes imm-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 177, 63, 0.35); }
+  50% { box-shadow: 0 0 0 5px rgba(232, 177, 63, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .imm-badge { animation: none; }
+}
+
+/* today's cadence windows on the tile */
+.site-stat.st-windows {
+  flex-basis: 100%;
+}
+.win-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.win-chip {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+.win-chip b {
+  color: var(--text);
+  font-weight: 600;
+}
+.win-chip.now {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--accent-dim);
+}
+
 /* ===== site tile density modes (full / compact / micro) ===== */
 /* Schedule NAME stays hidden in full — it's redundant with the schedule
    dropdown sitting right below it. Cadence (the resolved effective interval
@@ -697,6 +762,7 @@ body {
 .mode-micro .st-channel,
 .mode-micro .st-activity,
 .mode-micro .st-schedule,
+.mode-micro .st-windows,
 .mode-micro .site-err,
 .mode-micro .site-controls-wrap,
 .mode-micro .diag-wrap,

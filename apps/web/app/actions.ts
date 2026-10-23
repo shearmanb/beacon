@@ -84,9 +84,28 @@ export async function setDeprecated(siteId: string, deprecated: boolean): Promis
   revalidatePath("/");
 }
 
+/**
+ * Toggle imminent mode. Written straight to the site definition (the same way
+ * setSchedule / setImminentTuning already do) instead of through the worker's
+ * command queue: the queue was drained only on the worker's next pass, so for
+ * up to a minute the tile kept showing "⚡ Off" after a click — which read as
+ * "the button doesn't work". The worker still accepts the old `set_imminent`
+ * command for anything already queued. Turning imminent ON also enqueues a
+ * run_now so the first fast check happens on the very next loop rather than
+ * after the current interval elapses.
+ */
 export async function setImminent(siteId: string, imminent: boolean): Promise<void> {
   const store = await getStore();
-  await store.commands.enqueue("set_imminent", siteId, { imminent });
+  const site = await store.sites.get(siteId);
+  if (!site) return;
+  const def = site.definition;
+  await store.sites.upsert({
+    ...def,
+    imminent,
+    imminentSince: imminent ? new Date().toISOString() : null,
+    scheduleBeforeImminent: imminent ? (def.scheduleBeforeImminent ?? def.schedule ?? null) : null,
+  });
+  if (imminent) await store.commands.enqueue("run_now", siteId, null);
   revalidatePath("/");
 }
 

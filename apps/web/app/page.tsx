@@ -11,8 +11,11 @@ import { countAllProducts, countLiveProducts, loadReveriesStock } from "../lib/s
 import { nowInterval } from "../lib/cadence";
 import { predictedNextCheckAt, formatEta } from "../lib/nextcheck";
 import { NextCheckIn } from "../components/NextCheckIn";
+import { ImminentBadge } from "../components/ImminentBadge";
+import { TodayCadence } from "../components/TodayCadence";
 import { parseWindowRules } from "../lib/site-forms";
 import type { SiteDefinition } from "@beacon/core";
+import { DEFAULT_IMMINENT_DURATION_MIN, imminentInterval } from "@beacon/shared";
 
 export const dynamic = "force-dynamic";
 
@@ -42,14 +45,14 @@ function siteUrl(def: SiteDefinition): string {
   return "";
 }
 
-// Minutes until imminent mode auto-reverts (worker default 20m; per-site override
-// via imminentDurationMinutes). null when not in imminent mode / not yet started.
-function imminentLeft(def: SiteDefinition): number | null {
+// ISO instant imminent mode auto-reverts (worker default via
+// DEFAULT_IMMINENT_DURATION_MIN; per-site override imminentDurationMinutes).
+// null when not in imminent mode / start not stamped.
+function imminentUntil(def: SiteDefinition): string | null {
   if (!def.imminent || !def.imminentSince) return null;
-  const durMs = (def.imminentDurationMinutes ?? 20) * 60_000;
-  const leftMs = Date.parse(def.imminentSince) + durMs - Date.now();
-  if (Number.isNaN(leftMs)) return null;
-  return leftMs > 0 ? Math.ceil(leftMs / 60_000) : 0;
+  const durMs = (def.imminentDurationMinutes ?? DEFAULT_IMMINENT_DURATION_MIN) * 60_000;
+  const until = Date.parse(def.imminentSince) + durMs;
+  return Number.isFinite(until) ? new Date(until).toISOString() : null;
 }
 
 export default async function SitesPage({ searchParams }: { searchParams: { tab?: string } }) {
@@ -291,10 +294,11 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
         </div>
       )}
       {!process.env["HEALTHCHECK_URL"] && (
-        <div className="faint" style={{ fontSize: 11, margin: "4px 0 10px", color: "var(--warn)" }}>
-          ⚠ Dead-man switch not configured: if the whole worker dies, nothing will tell you — Beacon can&apos;t
-          report its own death. Fix (free, ~5 min): create a check at healthchecks.io (period ~2 min, grace ~10 min)
-          and set its ping URL as <span className="mono">HEALTHCHECK_URL</span> in the Railway service variables.
+        <div className="faint" style={{ fontSize: 11, margin: "4px 0 10px" }}>
+          🛡 Dead-man: a GitHub Actions probe asks <span className="mono">/api/health</span> every ~10 min and fails
+          (email, plus Discord if the repo secret <span className="mono">DISCORD_WEBHOOK_URL</span> is set) when the
+          worker heartbeat goes stale. For a tighter check, set <span className="mono">HEALTHCHECK_URL</span> (healthchecks.io
+          ping URL) in the Railway service variables.
         </div>
       )}
 
@@ -343,7 +347,7 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
             scheduleOptions.find((o) => o.value === schedVal)?.label ?? (schedVal || "—");
           const productCount = Object.keys((state?.products as object | undefined) ?? {}).length;
           const errors = (state?.consecutiveErrors as number | undefined) ?? 0;
-          const immLeft = imminentLeft(def);
+          const immUntil = imminentUntil(def);
           // Failure diagnostics: cooldown countdown, HTTP status of the latest
           // failure, and a "blocked" read when the status is a bot-protection
           // tell (401/403/430) — so a dead checker explains itself on the tile.
@@ -377,7 +381,7 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
               ? Date.now() - Date.parse(lastAlertAt) > QUIET_MS
               : checkHist.length >= 50);
           return (
-            <div key={row.id} className={`site-card ${row.enabled ? "" : "disabled"}`}>
+            <div key={row.id} className={`site-card ${row.enabled ? "" : "disabled"} ${def.imminent && row.enabled ? "imminent" : ""}`}>
               <div className="site-hd">
                 <span className={`dot ${health}`} />
                 <span className="name">
@@ -391,6 +395,11 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
                 </span>
                 <span className="kind-chip">{row.sourceKind}</span>
               </div>
+              {def.imminent && row.enabled && (
+                <div className="imm-row">
+                  <ImminentBadge everyMin={imminentInterval(def)} untilIso={immUntil} initialNow={Date.now()} />
+                </div>
+              )}
               <div className="site-stats">
                 <div className="site-stat st-products">
                   <span className="k">Products</span>
@@ -416,18 +425,7 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
                   <span className="k">Next check</span>
                   <NextCheckIn predictedAt={nextCheckAtIso} initialLabel={nextCheckLabel} />
                 </div>
-                {def.imminent && (
-                  <div className="site-stat st-mode">
-                    <span className="k">Mode</span>
-                    <span
-                      className="val"
-                      style={{ color: "var(--warn)" }}
-                      title="Imminent mode auto-reverts to your normal schedule when the timer runs out."
-                    >
-                      ⚡ imminent{immLeft != null ? ` · auto-off in ${immLeft}m` : ""}
-                    </span>
-                  </div>
-                )}
+                <TodayCadence def={def} schedules={schedules} />
                 {errors > 0 && (
                   <div className="site-stat st-errors">
                     <span className="k">Errors</span>

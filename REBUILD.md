@@ -83,7 +83,7 @@ Env (production runs `@beacon/server`, see `DEPLOY.md`):
 |-----|---------|
 | `BEACON_DB_URL`, `BEACON_DB_AUTH_TOKEN` | libSQL URL (`file:/data/beacon.db` in prod) / Turso token |
 | `DISCORD_WEBHOOK_URL` | alert channel |
-| `HEALTHCHECK_URL` | external dead-man ping each pass (healthchecks.io) |
+| `HEALTHCHECK_URL` | optional external dead-man ping each pass (healthchecks.io). Without it the floor is the GitHub Actions probe of `/api/health` (`.github/workflows/deadman.yml`) |
 | `BEACON_DASH_PASSWORD` | dashboard login. **Required in production**: without it the dashboard refuses every login (no public default) |
 | `BEACON_AUTH_SECRET` | optional cookie-signing key (defaults to the password); rotate to log out every session |
 | `BEACON_OPS_TOKEN` | enables `Authorization: Bearer` access to `/api/ops/{status,errors,evidence}` for headless inspection |
@@ -96,6 +96,9 @@ Env (production runs `@beacon/server`, see `DEPLOY.md`):
 | `BEACON_DRY_RUN=1` | compute + log, send/persist nothing |
 
 ### Ops API (headless prod inspection)
+
+`GET /api/health` is **public** (the only unauthenticated route): `{ok, workerHeartbeatAgeSec}`,
+200 while the worker heartbeat is under 15 min old, 503 otherwise — the dead-man probe target.
 
 `GET /api/ops/status` (worker heartbeat + per-site health summary, failure
 timestamps), `GET /api/ops/errors` (per-site error-log tail), and

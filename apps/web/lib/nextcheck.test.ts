@@ -16,6 +16,11 @@ describe("predictedNextCheckAt", () => {
     expect(predictedNextCheckAt(true, { intervalMinutes: 5 }, undefined, null, {}, T0)).toBeNull();
   });
 
+  it("an imminent site with no tuned cadence predicts from the shared default (2m)", () => {
+    const def = { id: "site_u", intervalMinutes: 60, imminent: true };
+    expect(predictedNextCheckAt(true, def, iso(0), null, {}, T0)).toBe(iso(2 * MIN));
+  });
+
   it("matches the real jittered formula for a plain flat-interval site", () => {
     const def = { id: "site_a", intervalMinutes: 20 };
     const lastChecked = iso(0);

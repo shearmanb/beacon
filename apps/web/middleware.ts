@@ -21,6 +21,10 @@ function tokenMatches(presented: string | null, expected: string | undefined): b
 // (cookie still works). API callers get a 401, never a login redirect.
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
+  // /api/health is the one unauthenticated route: a yes/no liveness answer for
+  // the external dead-man probe (.github/workflows/deadman.yml). It carries no
+  // site or product data — see the route for exactly what it discloses.
+  if (path === "/api/health") return NextResponse.next();
   const isOpsApi = path.startsWith("/api/ops/");
   if (isOpsApi) {
     const header = req.headers.get("authorization");

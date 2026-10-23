@@ -351,6 +351,45 @@ describe("runOnce", () => {
     expect(rows.map((r) => r.siteId).sort()).toEqual(["s1", "s2"]);
   });
 
+  it("a deprecated checker shadowed by a live sibling records history but never pages Discord", async () => {
+    // The SharedPour shape on 2026-10-23: the retired "Watchlist" tile was
+    // deprecated but still pinging Discord alongside the checker that replaced it.
+    await store.sites.upsert({
+      id: "s2",
+      name: "Local Shop (old watchlist)",
+      deprecated: true,
+      intervalMinutes: 20,
+      source: { kind: "shopify_rest", baseUrl: base },
+    });
+    await runOnce(ctx()); // baseline both
+    products = [...products, shopifyProduct("newbottle", true)];
+    // Only the deprecated checker is due — a shadow must not page even when it
+    // is the one that sees the drop first.
+    await store.state.save("s2", { ...(await store.state.load("s2"))!, lastChecked: null });
+    await runOnce(ctx());
+    expect(sent.filter((s) => s.alert.type === "new_product")).toHaveLength(0);
+    const rows = (await store.history.recent(50)).filter((h) => h.type === "new_product");
+    expect(rows.map((r) => r.siteId)).toEqual(["s2"]); // dashboard/history still has it
+
+    // …and its sighting did not consume the dedupe key: the live sibling pages.
+    await store.state.save("s1", { ...(await store.state.load("s1"))!, lastChecked: null });
+    await runOnce(ctx());
+    const pages = sent.filter((s) => s.alert.type === "new_product");
+    expect(pages).toHaveLength(1);
+    expect(pages[0]?.site).toBe("Local Shop");
+  });
+
+  it("a deprecated checker that is the LAST live one on its store still pages, labelled", async () => {
+    await store.sites.upsert({ ...(await store.sites.get("s1"))!.definition, deprecated: true });
+    await runOnce(ctx()); // baseline
+    products = [...products, shopifyProduct("newbottle", true)];
+    await store.state.save("s1", { ...(await store.state.load("s1"))!, lastChecked: null });
+    await runOnce(ctx());
+    const pages = sent.filter((s) => s.alert.type === "new_product");
+    expect(pages).toHaveLength(1);
+    expect(pages[0]?.site).toBe("Local Shop (deprecated)");
+  });
+
   it("pages once when two front doors onto one Shopify store see the same product", async () => {
     // thereveries.co + sharedpour.com shape: different public hosts, one
     // backing *.myshopify.com store named in each source's config.

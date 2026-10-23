@@ -1,0 +1,66 @@
+# External dead-man for the Beacon worker.
+#
+# Beacon can't report its own death: the wedge watchdog restarts a hung loop
+# and Railway restarts a crashed process, but if the service is gone (crash
+# loop, paused, out of credit, volume failure) nothing inside it can tell you.
+# This probe runs OUTSIDE the box: every 10 minutes GitHub Actions asks
+# /api/health (public, data-free — see apps/web/app/api/health/route.ts) and
+# the job FAILS unless the worker heartbeat is fresh.
+#
+# How you get told:
+#   • always: GitHub emails the repo owner when a scheduled workflow fails.
+#   • better: add a repo secret DISCORD_WEBHOOK_URL (Settings → Secrets and
+#     variables → Actions) and the failure also pages the Beacon Discord channel.
+#
+# Caveats, so nobody over-trusts it: GitHub cron is best-effort (runs can lag
+# 5–30 min at busy hours), and GitHub disables schedules in repos with no
+# commits for 60 days (Beacon's daily analytics commits keep it alive). A
+# healthchecks.io check wired via HEALTHCHECK_URL is tighter; this one needs
+# no account and no secret, so it's the floor, not the ceiling.
+name: Dead-man probe
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: deadman
+  cancel-in-progress: true
+
+env:
+  HEALTH_URL: https://beacon-production-c982.up.railway.app/api/health
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe /api/health (3 tries, 30s apart)
+        id: probe
+        run: |
+          set +e
+          for i in 1 2 3; do
+            body=$(curl -sS -m 20 -w '\n%{http_code}' "$HEALTH_URL")
+            code=$(printf '%s' "$body" | tail -n1)
+            echo "try $i → HTTP $code: $(printf '%s' "$body" | head -n1)"
+            if [ "$code" = "200" ]; then exit 0; fi
+            [ "$i" -lt 3 ] && sleep 30
+          done
+          echo "last_code=$code" >> "$GITHUB_OUTPUT"
+          exit 1
+      - name: Page Discord (only if the secret is set)
+        if: failure()
+        env:
+          HOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          CODE: ${{ steps.probe.outputs.last_code }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "DISCORD_WEBHOOK_URL secret not set — relying on GitHub's failure email."
+            exit 0
+          fi
+          payload=$(printf '{"content":"🚨 **Beacon dead-man**: worker heartbeat is stale or the service is unreachable (HTTP %s on /api/health, 3 tries over 60s). Check Railway → beaconrailway/beacon. Probe run: %s"}' "${CODE:-000}" "$RUN_URL")
+          curl -sS -m 20 -H 'Content-Type: application/json' -d "$payload" "$HOOK" || true

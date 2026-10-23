@@ -11,6 +11,15 @@ import type {
 
 export type { EtContext } from "./types.js";
 
+// Imminent-mode defaults, shared by the worker (shouldCheck / auto-off) and the
+// dashboard (tile readouts, tuning selects) so the two can never disagree about
+// what an un-tuned site does. 2 min matches the designed "imminent = 2-min
+// cooldown bypass"; before this constant the worker silently fell back to the
+// site's normal schedule interval when imminentIntervalMinutes was unset — i.e.
+// imminent mode did nothing — while the tile claimed "every 5m".
+export const DEFAULT_IMMINENT_INTERVAL_MIN = 2;
+export const DEFAULT_IMMINENT_DURATION_MIN = 20;
+
 export function getEtHour(date: Date = new Date()): number {
   return parseInt(
     date.toLocaleString("en-US", {
@@ -98,12 +107,18 @@ export function shouldCheck(
 ): boolean {
   if (!siteState?.lastChecked) return true;
   const elapsed = (now - new Date(siteState.lastChecked).getTime()) / 1000 / 60;
-  // Imminent mode uses imminentIntervalMinutes; fall back to the effective
-  // interval if that field is absent so the site never silently stops checking.
-  // Imminent checks skip the jitter — drop windows want the floor, not variance.
-  if (site.imminent && site.imminentIntervalMinutes != null) {
-    return elapsed >= site.imminentIntervalMinutes;
+  // Imminent mode uses imminentIntervalMinutes (DEFAULT_IMMINENT_INTERVAL_MIN
+  // when un-tuned). Imminent checks skip the jitter — drop windows want the
+  // floor, not variance.
+  if (site.imminent) {
+    return elapsed >= imminentInterval(site);
   }
   const interval = getEffectiveInterval(site, schedules, ctx);
   return elapsed >= interval * cycleJitterFactor(site.id ?? site.name ?? "", siteState.lastChecked);
+}
+
+/** The cadence an imminent site runs at: its tuned value, else the shared default. */
+export function imminentInterval(site: Pick<SchedulableSite, "imminentIntervalMinutes">): number {
+  const v = site.imminentIntervalMinutes;
+  return v != null && v > 0 ? v : DEFAULT_IMMINENT_INTERVAL_MIN;
 }

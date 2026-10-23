@@ -38,7 +38,9 @@ export function predictedNextCheckAt(
   const lastMs = Date.parse(lastChecked);
   if (!Number.isFinite(lastMs)) return null;
 
-  const imminentActive = def.imminent === true && def.imminentIntervalMinutes != null;
+  // Imminent always resolves to an interval now (tuned value or the shared
+  // default) — mirrors shouldCheck's imminent branch exactly.
+  const imminentActive = def.imminent === true;
   // nowInterval is imminent-aware; when imminentActive is false it's
   // identical to getEffectiveInterval, so the cooldown-tight check below can
   // safely reuse this same value rather than resolving the interval twice.

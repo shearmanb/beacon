@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { runNow, saveSchedule, setDeprecated, setImminent, setImminentTuning, setMonitoring, setSchedule, setSiteFilters, updateSiteSource } from "../app/actions";
 import { buildWindowRules, splitList, type WindowSpec } from "../lib/site-forms";
+import { DEFAULT_IMMINENT_DURATION_MIN, DEFAULT_IMMINENT_INTERVAL_MIN } from "@beacon/shared";
 
 export interface ScheduleOption {
   value: string;
@@ -111,10 +112,11 @@ export function SiteControls({
     ? scheduleOptions
     : [{ value: schedule, label: schedule || "(default)" }, ...scheduleOptions];
 
-  // Current effective values for the tuning selects (defaults match the worker:
-  // 5-min cadence, 20-min window). Ensure the stored value is always selectable.
-  const curInterval = imminentInterval ?? 5;
-  const curDuration = imminentDuration ?? 20;
+  // Current effective values for the imminent selects. Defaults are the shared
+  // constants the worker itself falls back to, so what the select shows for an
+  // un-tuned site is what actually runs. Ensure the stored value is always selectable.
+  const curInterval = imminentInterval ?? DEFAULT_IMMINENT_INTERVAL_MIN;
+  const curDuration = imminentDuration ?? DEFAULT_IMMINENT_DURATION_MIN;
   const intervalOpts = INTERVAL_OPTS.includes(curInterval) ? INTERVAL_OPTS : [curInterval, ...INTERVAL_OPTS];
   const durationOpts = DURATION_OPTS.includes(curDuration) ? DURATION_OPTS : [curDuration, ...DURATION_OPTS];
 
@@ -131,10 +133,14 @@ export function SiteControls({
         <button
           className={`btn bolt ${imminent ? "on" : ""}`}
           disabled={pending}
-          title="Imminent = temporary fast checks that auto-revert to your normal schedule after the timer (default 20 min)."
+          title={
+            imminent
+              ? `Imminent is ON: checking every ${curInterval}m and ignoring rate-limit cooldowns, auto-off after ${curDuration}m. Click to stop now.`
+              : `Go imminent: check every ${curInterval}m for ${curDuration}m, ignoring rate-limit cooldowns, then revert to the schedule. First fast check runs on the worker's next loop (≤60s).`
+          }
           onClick={() => start(() => setImminent(siteId, !imminent))}
         >
-          {imminent ? "⚡ Imminent" : "⚡ Off"}
+          {imminent ? "⚡ Imminent ON" : "⚡ Go imminent"}
         </button>
         <select
           className="in sched"
@@ -155,22 +161,29 @@ export function SiteControls({
         <button
           className="btn"
           disabled={pending}
-          title={deprecated ? "Move back to the main Sites tab" : "Move to the Deprecated tab (doesn't change monitoring)"}
+          title={
+            deprecated
+              ? "Move back to the main Sites tab (its Discord alerts resume)"
+              : "Move to the Deprecated tab. It keeps checking and recording history, but stops paging Discord as long as another active checker covers the same store — if it's the last one on its store, it still pages (labelled deprecated)."
+          }
           onClick={() => start(() => setDeprecated(siteId, !deprecated))}
         >
           {deprecated ? "↩ Restore" : "🗄 Deprecate"}
         </button>
       </div>
       <div className="row tune">
-        <span className="tune-label" title="How often this site checks while imminent, and how long imminent stays on.">
-          ⚡ tuning
+        <span
+          className="tune-label"
+          title="What the ⚡ button does for this site: the check cadence while imminent, and how long it stays on before reverting to the schedule. Takes effect on the next loop, including mid-imminent."
+        >
+          ⚡ imminent
         </span>
         <select
           className="in"
           value={String(curInterval)}
           disabled={pending}
           onChange={(e) => start(() => setImminentTuning(siteId, Number(e.target.value), curDuration))}
-          title="Imminent check cadence"
+          title="Check cadence while imminent (1m is the floor — tighter trips anti-bot)"
         >
           {intervalOpts.map((m) => (
             <option key={m} value={m}>
@@ -183,7 +196,7 @@ export function SiteControls({
           value={String(curDuration)}
           disabled={pending}
           onChange={(e) => start(() => setImminentTuning(siteId, curInterval, Number(e.target.value)))}
-          title="How long imminent stays on before auto-revert"
+          title="How long imminent stays on before it auto-reverts to the schedule"
         >
           {durationOpts.map((m) => (
             <option key={m} value={m}>
@@ -191,6 +204,7 @@ export function SiteControls({
             </option>
           ))}
         </select>
+        <span className="faint" style={{ fontSize: 10 }}>then back to schedule</span>
       </div>
       <div className="row kw">
         <span
