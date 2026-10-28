@@ -13,6 +13,7 @@ import { predictedNextCheckAt, formatEta } from "../lib/nextcheck";
 import { NextCheckIn } from "../components/NextCheckIn";
 import { ImminentBadge } from "../components/ImminentBadge";
 import { TodayCadence } from "../components/TodayCadence";
+import { scheduleOptionsFor } from "../components/CadenceTable";
 import { parseWindowRules } from "../lib/site-forms";
 import type { SiteDefinition } from "@beacon/core";
 import { DEFAULT_IMMINENT_DURATION_MIN, imminentInterval } from "@beacon/shared";
@@ -192,14 +193,7 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
         ? `${warnCount} need attention`
         : "all systems nominal";
 
-  const scheduleOptions = [
-    { value: "5", label: "5 min" },
-    { value: "15", label: "15 min" },
-    { value: "20", label: "20 min" },
-    { value: "30", label: "30 min" },
-    { value: "60", label: "60 min" },
-    ...Object.entries(schedules).map(([k, d]) => ({ value: k, label: d.label ?? k })),
-  ];
+  const scheduleOptions = scheduleOptionsFor(schedules);
 
   return (
     <>

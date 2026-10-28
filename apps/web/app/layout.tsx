@@ -46,7 +46,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <a href="/history">History</a>
               <a href="/unicorn" title="Unicorn Auctions watcher — isolated from site tracking">Unicorn</a>
               <a href="/api/export/history" title="Download the full alert history as JSONL — feed it to Claude to mine drop-timing patterns">Export</a>
-              <a href="/schedules">Schedules</a>
+              <a href="/schedules" title="Cadence control panel — every site's check windows, cadence and controls, plus the named schedules">Cadence</a>
               <a href="/reminders">Reminders</a>
             </nav>
             <div className="spacer" />

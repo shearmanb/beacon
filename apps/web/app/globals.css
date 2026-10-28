@@ -1160,6 +1160,7 @@ select.in.sched {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap; /* long labels + edit/delete used to push the card past a phone viewport */
 }
 .sched-card .top .lbl {
   font-weight: 600;
@@ -1266,6 +1267,47 @@ select.in.sched {
 }
 .cad-off {
   opacity: 0.45;
+}
+.cad-off .cad-controls {
+  opacity: 1; /* a disabled site's controls stay readable — that's how you turn it back on */
+}
+.rule-chip.now {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: color-mix(in srgb, var(--accent) 18%, var(--panel));
+}
+/* last / next check readouts */
+.cad-kv {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.cad-kv .k {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  width: 32px;
+}
+/* inline per-row controls */
+.cad-controls {
+  min-width: 260px;
+}
+.cad-controls .row {
+  margin: 0;
+  gap: 4px;
+}
+.cad-controls .row.tune.compact {
+  margin-top: 4px;
+}
+.cad-controls select.in.sched {
+  max-width: 150px;
+}
+.cadence-table th:last-child,
+.cadence-table td:last-child {
+  width: 300px;
 }
 
 /* Target-bottle rows (/unicorn). Fixed grid tracks rather than a wrapping flex
@@ -1405,12 +1447,23 @@ select.in.sched {
 
   /* Cadence cell: the strip + ticks + chips need the full card width, so the
      label sits above the content instead of beside it. */
-  .cadence-table td[data-label="cadence"] {
+  .cadence-table td[data-label="windows"],
+  .cadence-table td[data-label="controls"] {
     display: block;
   }
-  .cadence-table td[data-label="cadence"]::before {
+  .cadence-table td[data-label="windows"]::before,
+  .cadence-table td[data-label="controls"]::before {
     display: block;
     margin-bottom: 4px;
+  }
+  .cadence-table td:last-child {
+    width: auto;
+  }
+  .cad-controls {
+    min-width: 0;
+  }
+  .cad-controls .row .btn {
+    width: auto;
   }
 
   /* Bottle rows stack: four narrow columns are unreadable on a phone. */

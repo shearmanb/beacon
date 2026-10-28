@@ -1,20 +1,16 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { runNow, saveSchedule, setDeprecated, setImminent, setImminentTuning, setMonitoring, setSchedule, setSiteFilters, updateSiteSource } from "../app/actions";
-import { buildWindowRules, splitList, type WindowSpec } from "../lib/site-forms";
+import { runNow, setDeprecated, setImminent, setMonitoring, setSchedule, setSiteFilters, updateSiteSource } from "../app/actions";
+import { splitList, type WindowSpec } from "../lib/site-forms";
 import { DEFAULT_IMMINENT_DURATION_MIN, DEFAULT_IMMINENT_INTERVAL_MIN } from "@beacon/shared";
+import { ImminentTuning } from "./ImminentTuning";
+import { WindowEditor } from "./WindowEditor";
 
 export interface ScheduleOption {
   value: string;
   label: string;
 }
-
-// Cadence options while imminent. 1 min is the tightest offered — tighter risks
-// tripping anti-bot on sites like the Campari/Incapsula ones.
-const INTERVAL_OPTS = [1, 2, 5, 10];
-// How long imminent stays on before auto-revert.
-const DURATION_OPTS = [20, 45, 60, 90, 120];
 
 export function SiteControls({
   siteId,
@@ -66,41 +62,6 @@ export function SiteControls({
     }
   }
 
-  // Quick window editor (4 fields, no plain async busy-state — NOT
-  // useTransition, same reasoning as saveSource above): a fast interval
-  // inside [from,to) ET, a slower one outside it, every day. Writes through
-  // the two existing actions a named schedule + the dropdown already use —
-  // this control doesn't invent a new mechanism, just a faster way into it.
-  const [winFrom, setWinFrom] = useState(String(currentWindow?.fromHour ?? 9));
-  const [winTo, setWinTo] = useState(String(currentWindow?.toHour ?? 21));
-  const [winFast, setWinFast] = useState(String(currentWindow?.fast ?? 5));
-  const [winSlow, setWinSlow] = useState(String(currentWindow?.slow ?? 60));
-  const [winBusy, setWinBusy] = useState(false);
-  const [winMsg, setWinMsg] = useState<{ ok: boolean; text: string } | null>(null);
-
-  async function saveWindow(): Promise<void> {
-    const fromHour = parseInt(winFrom, 10);
-    const toHour = parseInt(winTo, 10);
-    const fast = parseInt(winFast, 10);
-    const slow = parseInt(winSlow, 10);
-    if ([fromHour, toHour, fast, slow].some((n) => Number.isNaN(n))) {
-      setWinMsg({ ok: false, text: "all four fields must be numbers" });
-      return;
-    }
-    setWinBusy(true);
-    setWinMsg(null);
-    try {
-      const scheduleId = `${siteId}_window`;
-      await saveSchedule(scheduleId, `${siteName} window`, buildWindowRules({ fromHour, toHour, fast, slow }));
-      await setSchedule(siteId, scheduleId);
-      setWinMsg({ ok: true, text: "✓ saved and applied" });
-    } catch (err) {
-      setWinMsg({ ok: false, text: `save failed: ${err instanceof Error ? err.message : String(err)}` });
-    } finally {
-      setWinBusy(false);
-    }
-  }
-
   // Save the keyword filter only when it actually changed. Changing it
   // re-baselines the site server-side so existing matches don't flood as new.
   function commitKeywords(): void {
@@ -112,13 +73,10 @@ export function SiteControls({
     ? scheduleOptions
     : [{ value: schedule, label: schedule || "(default)" }, ...scheduleOptions];
 
-  // Current effective values for the imminent selects. Defaults are the shared
-  // constants the worker itself falls back to, so what the select shows for an
-  // un-tuned site is what actually runs. Ensure the stored value is always selectable.
+  // Effective imminent values for the ⚡ button's tooltip (the selects that
+  // edit them live in ImminentTuning, which applies the same defaults).
   const curInterval = imminentInterval ?? DEFAULT_IMMINENT_INTERVAL_MIN;
   const curDuration = imminentDuration ?? DEFAULT_IMMINENT_DURATION_MIN;
-  const intervalOpts = INTERVAL_OPTS.includes(curInterval) ? INTERVAL_OPTS : [curInterval, ...INTERVAL_OPTS];
-  const durationOpts = DURATION_OPTS.includes(curDuration) ? DURATION_OPTS : [curDuration, ...DURATION_OPTS];
 
   return (
     <>
@@ -171,41 +129,7 @@ export function SiteControls({
           {deprecated ? "↩ Restore" : "🗄 Deprecate"}
         </button>
       </div>
-      <div className="row tune">
-        <span
-          className="tune-label"
-          title="What the ⚡ button does for this site: the check cadence while imminent, and how long it stays on before reverting to the schedule. Takes effect on the next loop, including mid-imminent."
-        >
-          ⚡ imminent
-        </span>
-        <select
-          className="in"
-          value={String(curInterval)}
-          disabled={pending}
-          onChange={(e) => start(() => setImminentTuning(siteId, Number(e.target.value), curDuration))}
-          title="Check cadence while imminent (1m is the floor — tighter trips anti-bot)"
-        >
-          {intervalOpts.map((m) => (
-            <option key={m} value={m}>
-              every {m}m
-            </option>
-          ))}
-        </select>
-        <select
-          className="in"
-          value={String(curDuration)}
-          disabled={pending}
-          onChange={(e) => start(() => setImminentTuning(siteId, curInterval, Number(e.target.value)))}
-          title="How long imminent stays on before it auto-reverts to the schedule"
-        >
-          {durationOpts.map((m) => (
-            <option key={m} value={m}>
-              for {m}m
-            </option>
-          ))}
-        </select>
-        <span className="faint" style={{ fontSize: 10 }}>then back to schedule</span>
-      </div>
+      <ImminentTuning siteId={siteId} imminentInterval={imminentInterval} imminentDuration={imminentDuration} />
       <div className="row kw">
         <span
           className="tune-label"
@@ -233,77 +157,7 @@ export function SiteControls({
           title="Title keywords (comma-separated)"
         />
       </div>
-      <details style={{ marginTop: 4 }}>
-        <summary
-          className="tune-label"
-          style={{ cursor: "pointer", fontSize: 11 }}
-          title="Set a fast check interval for a time-of-day window (ET) and a slower one outside it, every day — instead of a flat interval running around the clock. Saves as this site's own schedule and applies it immediately."
-        >
-          🕒 window
-        </summary>
-        <div className="rule-row">
-          <span className="faint" style={{ fontSize: 11 }}>
-            fast
-          </span>
-          <input
-            className="in"
-            type="number"
-            min={0}
-            max={23}
-            value={winFrom}
-            disabled={winBusy}
-            onChange={(e) => setWinFrom(e.target.value)}
-            title="Fast-window start hour (ET, 0-23)"
-          />
-          <span className="faint">→</span>
-          <input
-            className="in"
-            type="number"
-            min={0}
-            max={23}
-            value={winTo}
-            disabled={winBusy}
-            onChange={(e) => setWinTo(e.target.value)}
-            title="Fast-window end hour (ET, 0-23; can be less than start for an overnight window, e.g. 22 → 6)"
-          />
-          <span className="faint">ET =</span>
-          <input
-            className="in"
-            type="number"
-            min={1}
-            value={winFast}
-            disabled={winBusy}
-            onChange={(e) => setWinFast(e.target.value)}
-            title="Check interval (minutes) inside the window"
-          />
-          <span className="faint">min</span>
-        </div>
-        <div className="rule-row">
-          <span className="faint" style={{ fontSize: 11 }}>
-            outside
-          </span>
-          <input
-            className="in"
-            type="number"
-            min={1}
-            value={winSlow}
-            disabled={winBusy}
-            onChange={(e) => setWinSlow(e.target.value)}
-            title="Check interval (minutes) outside the window"
-          />
-          <span className="faint">min</span>
-        </div>
-        <div className="row" style={{ marginTop: 4, alignItems: "center" }}>
-          <button className="btn" disabled={winBusy} onClick={() => void saveWindow()}>
-            {winBusy ? "saving…" : "Save window"}
-          </button>
-          {winMsg && (
-            <span className="mono" style={{ fontSize: 11, color: winMsg.ok ? "var(--ok)" : "var(--err)" }}>
-              {winMsg.text}
-            </span>
-          )}
-        </div>
-      </details>
+      <WindowEditor siteId={siteId} siteName={siteName} currentWindow={currentWindow} />
       <details style={{ marginTop: 4 }}>
         <summary
           className="tune-label"
