@@ -6,9 +6,8 @@
 //
 // Health overlays (computed server-side, passed in): `stalled` (last check older
 // than effectiveInterval × 2.5) turns the strip red and pulses; `degraded` (any
-// of the last few checks failed) tints it amber. A per-tile show/hide toggle is
-// persisted in localStorage under `beacon_pulse_open`, keyed by site id — same
-// behavior as the v1 dashboard.
+// of the last few checks failed) tints it amber. Always shown (the 2026-10-30
+// tile simplification dropped the per-tile show/hide toggle — one less button).
 
 import { useEffect, useState } from "react";
 
@@ -18,16 +17,13 @@ interface Check {
 }
 
 const WINDOW_MS = 60 * 60 * 1000;
-const STORE_KEY = "beacon_pulse_open";
 
 export function PulseStrip({
   history,
-  siteId,
   stalled = false,
   degraded = false,
 }: {
   history: Check[];
-  siteId: string;
   stalled?: boolean;
   degraded?: boolean;
 }) {
@@ -36,31 +32,7 @@ export function PulseStrip({
   // mount every render uses a fresh Date.now(), so a soft router.refresh()
   // repositions the dots correctly instead of freezing at first-mount time.
   const [mounted, setMounted] = useState(false);
-  const [open, setOpen] = useState(true);
-
-  useEffect(() => {
-    setMounted(true);
-    try {
-      const map = JSON.parse(localStorage.getItem(STORE_KEY) ?? "{}") as Record<string, boolean>;
-      if (siteId in map) setOpen(map[siteId] !== false);
-    } catch {
-      /* ignore malformed pref */
-    }
-  }, [siteId]);
-
-  const toggle = () => {
-    setOpen((v) => {
-      const next = !v;
-      try {
-        const map = JSON.parse(localStorage.getItem(STORE_KEY) ?? "{}") as Record<string, boolean>;
-        map[siteId] = next;
-        localStorage.setItem(STORE_KEY, JSON.stringify(map));
-      } catch {
-        /* ignore quota / serialization errors */
-      }
-      return next;
-    });
-  };
+  useEffect(() => setMounted(true), []);
 
   const now = Date.now();
   const recent = mounted
@@ -79,21 +51,17 @@ export function PulseStrip({
   return (
     <div className={`pulse ${recent.length === 0 ? "empty" : ""} ${cls}`}>
       <div className="cap">
-        <button type="button" className="pulse-toggle" onClick={toggle} aria-expanded={open}>
-          {open ? "▾" : "▸"} last 60 min
-        </button>
+        <span>last 60 min</span>
         <span>{summary}</span>
       </div>
-      {open && (
-        <div className="track">
-          <span className="rail" />
-          {recent.map((h, i) => {
-            const left = 100 - ((now - new Date(h.ts).getTime()) / WINDOW_MS) * 100;
-            return <span key={i} className={`pd ${h.ok ? "ok" : "fail"}`} style={{ left: `${left}%` }} />;
-          })}
-          <span className="now" />
-        </div>
-      )}
+      <div className="track">
+        <span className="rail" />
+        {recent.map((h, i) => {
+          const left = 100 - ((now - new Date(h.ts).getTime()) / WINDOW_MS) * 100;
+          return <span key={i} className={`pd ${h.ok ? "ok" : "fail"}`} style={{ left: `${left}%` }} />;
+        })}
+        <span className="now" />
+      </div>
     </div>
   );
 }

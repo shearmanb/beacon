@@ -2,7 +2,7 @@
 // instead of touching tables directly. Grouped onto one store object so callers
 // do `store.sites.list()`, `store.state.load(id)`, etc.
 
-import { asc, count, desc, eq, inArray, isNull, lte } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNull, lte } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import type { Alert, ProductMap, ScheduleDefinition } from "@beacon/shared";
 import { siteDefinitionSchema, type SiteDefinition, type SiteState } from "@beacon/core";
@@ -167,6 +167,18 @@ function historyRepo(db: DB) {
         .select()
         .from(t.alertHistory)
         .where(inArray(t.alertHistory.type, types))
+        .orderBy(desc(t.alertHistory.id))
+        .limit(limit);
+    },
+    /** Newest events for a set of sites AND types — the Sites tiles' per-site
+     *  "Recent" lists. Scoped by site so the unicorn firehose (its own page,
+     *  ~40% of rows) can't starve a quiet shop out of the newest-N window. */
+    async recentBySitesAndTypes(siteIds: string[], types: string[], limit = 600) {
+      if (siteIds.length === 0 || types.length === 0) return [];
+      return db
+        .select()
+        .from(t.alertHistory)
+        .where(and(inArray(t.alertHistory.siteId, siteIds), inArray(t.alertHistory.type, types)))
         .orderBy(desc(t.alertHistory.id))
         .limit(limit);
     },

@@ -146,3 +146,37 @@ describe("shouldCheck", () => {
     expect(shouldCheck(site, { lastChecked }, schedules, justAfter)).toBe(true);
   });
 });
+
+describe("shouldCheck — block back-off (read-side ×1.5 for 6 h after a block-like failure)", () => {
+  const site = { id: "bo", intervalMinutes: 10 };
+  const now = Date.parse("2026-10-30T12:00:00.000Z");
+  const lastChecked = new Date(now - 12 * 60_000).toISOString(); // 12 m ago
+  const jitter = cycleJitterFactor("bo", lastChecked); // in [0.9, 1.15)
+
+  it("a plain site is due after its jittered interval", () => {
+    expect(12 >= 10 * jitter).toBe(true); // sanity: the fixture is due
+    expect(shouldCheck(site, { lastChecked }, {}, now)).toBe(true);
+  });
+
+  it("a recent 429 stretches the interval ×1.5, so the same elapsed time is not yet due", () => {
+    const errorLog = [{ ts: new Date(now - 60 * 60_000).toISOString(), statusCode: 429, message: "" }];
+    expect(12 >= 15 * jitter).toBe(false);
+    expect(shouldCheck(site, { lastChecked, errorLog }, {}, now)).toBe(false);
+  });
+
+  it("a block older than 6 h no longer stretches", () => {
+    const errorLog = [{ ts: new Date(now - 7 * 3_600_000).toISOString(), statusCode: 429, message: "" }];
+    expect(shouldCheck(site, { lastChecked, errorLog }, {}, now)).toBe(true);
+  });
+
+  it("a non-block failure (HTTP 500) never stretches", () => {
+    const errorLog = [{ ts: new Date(now - 60_000).toISOString(), statusCode: 500, message: "boom" }];
+    expect(shouldCheck(site, { lastChecked, errorLog }, {}, now)).toBe(true);
+  });
+
+  it("imminent mode ignores the back-off", () => {
+    const errorLog = [{ ts: new Date(now - 60_000).toISOString(), statusCode: 429, message: "" }];
+    const imm = { ...site, imminent: true, imminentIntervalMinutes: 2 };
+    expect(shouldCheck(imm, { lastChecked, errorLog }, {}, now)).toBe(true);
+  });
+});

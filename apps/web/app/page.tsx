@@ -1,22 +1,13 @@
 import { getStore } from "../lib/store";
 import { ago, siteHealth, type Health } from "../lib/health";
-import { SiteControls } from "../components/SiteControls";
-import { PulseStrip } from "../components/PulseStrip";
-import { DiagnoseButton } from "../components/DiagnoseButton";
 import { ReveriesPanel } from "../components/ReveriesPanel";
 import { SitesView } from "../components/SitesView";
+import { SiteTile } from "../components/SiteTile";
 import { isReveries } from "../lib/reveries";
 import { rosterIsLive } from "../lib/live";
 import { countAllProducts, countLiveProducts, loadReveriesStock } from "../lib/stock";
-import { nowInterval } from "../lib/cadence";
-import { predictedNextCheckAt, formatEta } from "../lib/nextcheck";
-import { NextCheckIn } from "../components/NextCheckIn";
-import { ImminentBadge } from "../components/ImminentBadge";
-import { TodayCadence } from "../components/TodayCadence";
+import { RECENT_EVENT_TYPES, recentBySite } from "../lib/activity";
 import { scheduleOptionsFor } from "../components/CadenceTable";
-import { parseWindowRules } from "../lib/site-forms";
-import type { SiteDefinition } from "@beacon/core";
-import { DEFAULT_IMMINENT_DURATION_MIN, imminentInterval } from "@beacon/shared";
 
 export const dynamic = "force-dynamic";
 
@@ -24,36 +15,12 @@ export const dynamic = "force-dynamic";
 // loops ~60s, so 15 min of total silence means the worker itself is stalled
 // (the R3 dead-worker signal). Schedule-agnostic: a single global threshold.
 const WORKER_STALE_MS = 15 * 60_000;
-// Quiet-site canary (3d): a healthy site that hasn't produced any activity in
-// this long (or has never alerted despite many checks) is worth a glance — often
-// a too-narrow filter or a quietly-broken source.
-const QUIET_MS = 21 * 86_400_000;
 function minsAgo(ms: number): string {
   const m = Math.round(ms / 60_000);
   if (m < 1) return "just now";
   if (m < 60) return `${m}m ago`;
   const h = Math.round(m / 60);
   return `${h}h ago`;
-}
-
-// Public URL a site links to — mirrors the worker's siteUrl() across source kinds.
-function siteUrl(def: SiteDefinition): string {
-  const s = def.source as Record<string, unknown>;
-  if (typeof s["url"] === "string") return s["url"];
-  if (typeof s["baseUrl"] === "string") return s["baseUrl"];
-  if (typeof s["productUrl"] === "string") return s["productUrl"];
-  if (typeof s["domain"] === "string") return `https://${s["domain"]}`;
-  return "";
-}
-
-// ISO instant imminent mode auto-reverts (worker default via
-// DEFAULT_IMMINENT_DURATION_MIN; per-site override imminentDurationMinutes).
-// null when not in imminent mode / start not stamped.
-function imminentUntil(def: SiteDefinition): string | null {
-  if (!def.imminent || !def.imminentSince) return null;
-  const durMs = (def.imminentDurationMinutes ?? DEFAULT_IMMINENT_DURATION_MIN) * 60_000;
-  const until = Date.parse(def.imminentSince) + durMs;
-  return Number.isFinite(until) ? new Date(until).toISOString() : null;
 }
 
 export default async function SitesPage({ searchParams }: { searchParams: { tab?: string } }) {
@@ -67,6 +34,13 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
     // any site was due, so it's a tighter liveness signal than max(lastChecked).
     store.meta.get("worker_heartbeat"),
   ]);
+  const now = Date.now();
+  // Per-tile "Recent" rows: product/signal events for THESE sites only (so the
+  // unicorn firehose can't crowd out a quiet shop), grouped per site below.
+  const activityRows = await store.history.recentBySitesAndTypes(
+    rows.map((r) => r.id),
+    RECENT_EVENT_TYPES,
+  );
   const states = await Promise.all(rows.map((r) => store.state.load(r.id)));
 
   const cards = rows.map((row, i) => ({
@@ -194,6 +168,10 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
         : "all systems nominal";
 
   const scheduleOptions = scheduleOptionsFor(schedules);
+  const recentPerSite = recentBySite(
+    activityRows,
+    Object.fromEntries(rows.map((r) => [r.id, r.sourceKind])),
+  );
 
   return (
     <>
@@ -316,218 +294,18 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
       )}
 
       <SitesView>
-        {shownCards.map(({ row, state, health }) => {
-          const def = row.definition;
-          const url = siteUrl(def);
-          // Density-mode readouts: effective cadence in minutes (micro) + the
-          // human schedule label (compact). nowInterval (not the raw
-          // getEffectiveInterval) so this stays imminent-aware — it used to
-          // silently disagree with /schedules' CadenceTable during imminent
-          // mode, since only that page called the imminent-aware helper.
-          const cadenceMins = nowInterval(def, schedules);
-          // Predicted next-check instant, run through the exact same formula
-          // the worker uses (see lib/nextcheck.ts) — a read-only prediction,
-          // not a new scheduling decision.
-          const nextCheckAtIso = predictedNextCheckAt(
-            row.enabled,
-            def,
-            state?.lastChecked as string | null | undefined,
-            state?.cooldownUntil as string | null | undefined,
-            schedules,
-          );
-          const nextCheckLabel = formatEta(nextCheckAtIso);
-          const schedVal = String(def.schedule ?? def.intervalMinutes ?? "");
-          const schedLabel =
-            scheduleOptions.find((o) => o.value === schedVal)?.label ?? (schedVal || "—");
-          const productCount = Object.keys((state?.products as object | undefined) ?? {}).length;
-          const errors = (state?.consecutiveErrors as number | undefined) ?? 0;
-          const immUntil = imminentUntil(def);
-          // Failure diagnostics: cooldown countdown, HTTP status of the latest
-          // failure, and a "blocked" read when the status is a bot-protection
-          // tell (401/403/430) — so a dead checker explains itself on the tile.
-          const cooldownMsLeft = state?.cooldownUntil
-            ? new Date(state.cooldownUntil as string).getTime() - Date.now()
-            : 0;
-          const errLog = (state?.errorLog as { statusCode?: number | null }[] | undefined) ?? [];
-          const lastStatus = errors > 0 ? errLog[errLog.length - 1]?.statusCode ?? null : null;
-          const looksBlocked = lastStatus === 401 || lastStatus === 403 || lastStatus === 430;
-          // Status-less stall ("Aborted fetching…"): the host hangs the
-          // connection instead of answering — tar-pit bot mitigation.
-          const looksStalled =
-            errors > 0 &&
-            lastStatus == null &&
-            /aborted (fetch|post)ing|deadline exceeded|socket idle timeout/i.test(String(state?.lastError ?? ""));
-          const viaFallback = state?.fetchVia === "storefront_fallback";
-          // PulseStrip health overlays. `stalled` reuses siteHealth's staleness
-          // formula (interval × 2.5 + grace) so a red strip lines up with a
-          // non-ok dot; `degraded` flags a recent failure even if not yet stale.
-          const checkHist = (state?.checkHistory as { ts: string; ok: boolean }[] | undefined) ?? [];
-          const lastCheckedStr = state?.lastChecked as string | undefined;
-          const overdueMs = lastCheckedStr ? Date.now() - new Date(lastCheckedStr).getTime() : Infinity;
-          const stalled = row.enabled && overdueMs > (cadenceMins * 2.5 + 8) * 60_000;
-          const degraded = checkHist.slice(-4).some((h) => !h.ok);
-          // Quiet-site canary (3d): healthy + active for a while + never/long-ago alerted.
-          const lastAlertAt = state?.lastAlertAt as string | undefined;
-          const quiet =
-            row.enabled &&
-            health === "ok" &&
-            (lastAlertAt
-              ? Date.now() - Date.parse(lastAlertAt) > QUIET_MS
-              : checkHist.length >= 50);
-          return (
-            <div key={row.id} className={`site-card ${row.enabled ? "" : "disabled"} ${def.imminent && row.enabled ? "imminent" : ""}`}>
-              <div className="site-hd">
-                <span className={`dot ${health}`} />
-                <span className="name">
-                  {url ? (
-                    <a href={url} target="_blank" rel="noreferrer">
-                      {row.name}
-                    </a>
-                  ) : (
-                    row.name
-                  )}
-                </span>
-                <span className="kind-chip">{row.sourceKind}</span>
-              </div>
-              {def.imminent && row.enabled && (
-                <div className="imm-row">
-                  <ImminentBadge everyMin={imminentInterval(def)} untilIso={immUntil} initialNow={Date.now()} />
-                </div>
-              )}
-              <div className="site-stats">
-                <div className="site-stat st-products">
-                  <span className="k">Products</span>
-                  <span className="val">{productCount}</span>
-                </div>
-                <div className="site-stat st-lastcheck">
-                  <span className="k">Last check</span>
-                  <span className="val">{ago(state?.lastChecked)}</span>
-                </div>
-                <div className="site-stat st-schedule">
-                  <span className="k">Schedule</span>
-                  <span className="val" style={{ fontSize: 12 }}>
-                    {schedLabel}
-                  </span>
-                </div>
-                <div className="site-stat st-cadence">
-                  <span className="k">Cadence</span>
-                  <span className="val" title="Effective check interval right now (schedule-resolved).">
-                    {cadenceMins}m
-                  </span>
-                </div>
-                <div className="site-stat st-nextcheck">
-                  <span className="k">Next check</span>
-                  <NextCheckIn predictedAt={nextCheckAtIso} initialLabel={nextCheckLabel} />
-                </div>
-                <TodayCadence def={def} schedules={schedules} />
-                {errors > 0 && (
-                  <div className="site-stat st-errors">
-                    <span className="k">Errors</span>
-                    <span className="val" style={{ color: "var(--err)" }}>
-                      {errors}
-                      {lastStatus != null ? ` · HTTP ${lastStatus}` : ""}
-                    </span>
-                  </div>
-                )}
-                {cooldownMsLeft > 0 && (
-                  <div className="site-stat st-cooldown">
-                    <span className="k">Cooldown</span>
-                    <span
-                      className="val"
-                      style={{ color: "var(--warn)" }}
-                      title="Circuit breaker: after a 403/429/430 the site is rested 5→15→60 min before retrying, so checks pause on purpose."
-                    >
-                      ⏸ {Math.ceil(cooldownMsLeft / 60_000)}m left
-                    </span>
-                  </div>
-                )}
-                {viaFallback && (
-                  <div className="site-stat st-channel">
-                    <span className="k">Channel</span>
-                    <span
-                      className="val"
-                      style={{ color: "var(--warn)" }}
-                      title={`${(state?.fetchViaReason as string | undefined) ?? "products.json is blocked"} — this roster came from the Storefront GraphQL API fallback. ${
-                        state?.preferFallback === true
-                          ? "After repeated blocks the Storefront API is now the PREFERRED channel; REST is re-probed twice a day and this flips back automatically when it recovers."
-                          : "REST is retried first on every check and this clears when it recovers."
-                      }`}
-                    >
-                      ⛑ storefront {state?.preferFallback === true ? "(preferred)" : "fallback"}
-                    </span>
-                  </div>
-                )}
-                {state?.fallbackTruncated === true && (
-                  <div className="site-stat st-truncated">
-                    <span className="k">Coverage</span>
-                    <span
-                      className="val"
-                      style={{ color: "var(--warn)" }}
-                      title="The Storefront fallback stopped at its pagination cap with catalog left over — products past the cap are invisible on this channel. Scope this source to a collectionPath (⚙ source) so a check isn't a full-catalog scan."
-                    >
-                      ⚠ roster truncated
-                    </span>
-                  </div>
-                )}
-                {quiet && (
-                  <div className="site-stat st-activity">
-                    <span className="k">Activity</span>
-                    <span
-                      className="val faint"
-                      title="No alerts in a long time despite healthy checks — verify the filter/source isn't quietly broken."
-                    >
-                      💤 quiet
-                    </span>
-                  </div>
-                )}
-              </div>
-              {(state?.lastError as string | undefined) && errors > 0 && (
-                <div className="faint mono site-err" style={{ fontSize: 11, marginBottom: 6 }}>
-                  {String(state?.lastError)}
-                  {looksBlocked && (
-                    <span style={{ color: "var(--warn)" }}>
-                      {" "}
-                      — looks like bot protection blocking Beacon&apos;s server IP; the page can still load fine in your own browser.
-                    </span>
-                  )}
-                  {looksStalled && (
-                    <span style={{ color: "var(--warn)" }}>
-                      {" "}
-                      — the site is leaving Beacon&apos;s connections hanging with no answer (tar-pit bot mitigation aimed at server IPs); the page can still load fine in your own browser.
-                    </span>
-                  )}
-                </div>
-              )}
-              <div className="site-controls-wrap">
-                <SiteControls
-                  siteId={row.id}
-                  siteName={row.name}
-                  enabled={row.enabled}
-                  deprecated={!!def.deprecated}
-                  imminent={def.imminent}
-                  schedule={String(def.schedule ?? def.intervalMinutes ?? "")}
-                  scheduleOptions={scheduleOptions}
-                  imminentInterval={def.imminentIntervalMinutes ?? null}
-                  imminentDuration={def.imminentDurationMinutes ?? null}
-                  titleContains={def.filters?.titleContains ?? []}
-                  sourceJson={JSON.stringify(def.source, null, 2)}
-                  currentWindow={parseWindowRules(schedules[`${row.id}_window`]?.rules)}
-                />
-              </div>
-              {Array.isArray(state?.checkHistory) && (state!.checkHistory as unknown[]).length > 0 && (
-                <PulseStrip
-                  history={state!.checkHistory as { ts: string; ok: boolean }[]}
-                  siteId={row.id}
-                  stalled={stalled}
-                  degraded={degraded}
-                />
-              )}
-              <div className="diag-wrap">
-                <DiagnoseButton siteId={row.id} />
-              </div>
-            </div>
-          );
-        })}
+        {shownCards.map(({ row, state, health }) => (
+          <SiteTile
+            key={row.id}
+            row={row}
+            state={state}
+            health={health}
+            schedules={schedules}
+            scheduleOptions={scheduleOptions}
+            recent={recentPerSite.get(row.id) ?? []}
+            now={now}
+          />
+        ))}
         {showDeprecated && deprecatedCount === 0 && <p className="muted">No deprecated sites.</p>}
         {rows.length === 0 && (
           <p className="muted">No sites configured yet. Run the migration importer to seed the database.</p>

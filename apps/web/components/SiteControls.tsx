@@ -1,11 +1,20 @@
 "use client";
 
+// ⚙ settings panel on the Sites tile (collapsed by default). Everything that
+// EDITS a site lives here — on/off, schedule, run, deprecate, imminent cadence,
+// keywords, 🕒 window, ⚙ source JSON, 🩺 Diagnose — so the tile face stays a
+// read-only glance (2026-10-30 simplification). The collapsed summary shows the
+// keywords as read-only chips; the input inside commits only on an explicit
+// Save (it used to save on blur and clear the site's state, one stray click
+// from a re-baseline). The ⚡ go-imminent control lives in the tile header
+// (ImminentControl); the "every Xm" cadence select stays here.
+
 import { useState, useTransition } from "react";
-import { runNow, setDeprecated, setImminent, setMonitoring, setSchedule, setSiteFilters, updateSiteSource } from "../app/actions";
+import { runNow, setDeprecated, setMonitoring, setSchedule, setSiteFilters, updateSiteSource } from "../app/actions";
 import { splitList, type WindowSpec } from "../lib/site-forms";
-import { DEFAULT_IMMINENT_DURATION_MIN, DEFAULT_IMMINENT_INTERVAL_MIN } from "@beacon/shared";
 import { ImminentTuning } from "./ImminentTuning";
 import { WindowEditor } from "./WindowEditor";
+import { DiagnoseButton } from "./DiagnoseButton";
 
 export interface ScheduleOption {
   value: string;
@@ -17,7 +26,6 @@ export function SiteControls({
   siteName,
   enabled,
   deprecated,
-  imminent,
   schedule,
   scheduleOptions,
   imminentInterval,
@@ -30,7 +38,6 @@ export function SiteControls({
   siteName: string;
   enabled: boolean;
   deprecated: boolean;
-  imminent: boolean;
   schedule: string;
   scheduleOptions: ScheduleOption[];
   imminentInterval: number | null;
@@ -43,6 +50,7 @@ export function SiteControls({
 }) {
   const [pending, start] = useTransition();
   const [kw, setKw] = useState(titleContains.join(", "));
+  const kwChanged = JSON.stringify(splitList(kw)) !== JSON.stringify(titleContains);
   // Source JSON editor (4c): plain async busy-state (NOT useTransition — see
   // DiagnoseButton: React 18 async transitions swallow rejections silently).
   const [srcText, setSrcText] = useState(sourceJson);
@@ -62,50 +70,49 @@ export function SiteControls({
     }
   }
 
-  // Save the keyword filter only when it actually changed. Changing it
-  // re-baselines the site server-side so existing matches don't flood as new.
+  // Explicit Save only. Changing the keywords re-baselines the site server-side
+  // so existing matches don't flood as new — which is exactly why it must never
+  // happen by accident.
   function commitKeywords(): void {
-    const next = splitList(kw);
-    if (JSON.stringify(next) === JSON.stringify(titleContains)) return;
-    start(() => setSiteFilters(siteId, { titleContains: next }));
+    if (!kwChanged) return;
+    start(() => setSiteFilters(siteId, { titleContains: splitList(kw) }));
   }
   const opts = scheduleOptions.some((o) => o.value === schedule)
     ? scheduleOptions
     : [{ value: schedule, label: schedule || "(default)" }, ...scheduleOptions];
 
-  // Effective imminent values for the ⚡ button's tooltip (the selects that
-  // edit them live in ImminentTuning, which applies the same defaults).
-  const curInterval = imminentInterval ?? DEFAULT_IMMINENT_INTERVAL_MIN;
-  const curDuration = imminentDuration ?? DEFAULT_IMMINENT_DURATION_MIN;
-
   return (
-    <>
+    <details className="site-settings">
+      <summary title="Everything that edits this site: monitoring, schedule, keywords, window, source, diagnose.">
+        <span className="gear">⚙ settings</span>
+        <span className="kw-chips">
+          <span className="faint">keywords:</span>
+          {titleContains.length === 0 ? (
+            <span className="faint">any title</span>
+          ) : (
+            titleContains.map((k) => (
+              <span key={k} className="pill">
+                {k}
+              </span>
+            ))
+          )}
+        </span>
+      </summary>
       <div className="row">
         <button
           className={`btn ${enabled ? "on" : ""}`}
           disabled={pending}
+          title={enabled ? "Monitoring is on — click to stop checking this site" : "Monitoring is off — click to resume (resets its failure streak)"}
           onClick={() => start(() => setMonitoring(siteId, !enabled))}
         >
           {enabled ? "● Monitoring" : "○ Off"}
-        </button>
-        <button
-          className={`btn bolt ${imminent ? "on" : ""}`}
-          disabled={pending}
-          title={
-            imminent
-              ? `Imminent is ON: checking every ${curInterval}m and ignoring rate-limit cooldowns, auto-off after ${curDuration}m. Click to stop now.`
-              : `Go imminent: check every ${curInterval}m for ${curDuration}m, ignoring rate-limit cooldowns, then revert to the schedule. First fast check runs on the worker's next loop (≤60s).`
-          }
-          onClick={() => start(() => setImminent(siteId, !imminent))}
-        >
-          {imminent ? "⚡ Imminent ON" : "⚡ Go imminent"}
         </button>
         <select
           className="in sched"
           value={schedule}
           disabled={pending}
           onChange={(e) => start(() => setSchedule(siteId, e.target.value))}
-          title="Schedule"
+          title="Schedule — edit the named schedules and see every site's cadence on the Cadence page"
         >
           {opts.map((o) => (
             <option key={o.value} value={o.value}>
@@ -113,7 +120,7 @@ export function SiteControls({
             </option>
           ))}
         </select>
-        <button className="btn" disabled={pending} onClick={() => start(() => runNow(siteId))}>
+        <button className="btn" disabled={pending} title="Check this site on the worker's next loop (≤60s)" onClick={() => start(() => runNow(siteId))}>
           ▶ Run
         </button>
         <button
@@ -129,7 +136,7 @@ export function SiteControls({
           {deprecated ? "↩ Restore" : "🗄 Deprecate"}
         </button>
       </div>
-      <ImminentTuning siteId={siteId} imminentInterval={imminentInterval} imminentDuration={imminentDuration} />
+      <ImminentTuning siteId={siteId} imminentInterval={imminentInterval} imminentDuration={imminentDuration} intervalOnly />
       <div className="row kw">
         <span
           className="tune-label"
@@ -138,24 +145,26 @@ export function SiteControls({
             "IMPORTANT: this filters what the source already FETCHES — for a collection source (e.g. /collections/t8ke) " +
             "it only narrows that collection, it does NOT search the whole store. A keyword for a bottle that lives " +
             "outside the fetched collection will match nothing (fix the source scope via ⚙ source, or add a separate site). " +
-            "Leave blank to keep everything the source returns. Changing this re-baselines the site so existing matches don't flood as new."
+            "Leave blank to keep everything the source returns. Saving a change re-baselines the site so existing matches don't flood as new."
           }
         >
           🔎 keywords
         </span>
         <input
           className="in"
-          style={{ flex: 1 }}
+          style={{ flex: 1, minWidth: 120 }}
           value={kw}
           disabled={pending}
           placeholder="any title (e.g. Reveries, T8KE, Jay West)"
           onChange={(e) => setKw(e.target.value)}
-          onBlur={commitKeywords}
           onKeyDown={(e) => {
-            if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+            if (e.key === "Enter") commitKeywords();
           }}
-          title="Title keywords (comma-separated)"
+          title="Title keywords (comma-separated) — Save to apply"
         />
+        <button className="btn" disabled={pending || !kwChanged} title="Apply the keyword change (re-baselines the site)" onClick={commitKeywords}>
+          Save
+        </button>
       </div>
       <WindowEditor siteId={siteId} siteName={siteName} currentWindow={currentWindow} />
       <details style={{ marginTop: 4 }}>
@@ -189,6 +198,7 @@ export function SiteControls({
           )}
         </div>
       </details>
-    </>
+      <DiagnoseButton siteId={siteId} />
+    </details>
   );
 }

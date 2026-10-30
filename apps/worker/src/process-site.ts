@@ -7,7 +7,7 @@
 // a stub adapter.
 
 import { runSiteCheck, sourceUrl, type AdapterDeps, type SiteDefinition, type SiteState, type SourceAdapter } from "@beacon/core";
-import type { Alert } from "@beacon/shared";
+import { STALL_RE, type Alert } from "@beacon/shared";
 import { annotateProducts, type AnnotatedProduct } from "./annotate.js";
 
 export const ERROR_ALERT_THRESHOLD = 5;
@@ -293,15 +293,10 @@ export async function processSite({
 // A fetch that died with NO status at all — aborted/deadline/idle-timeout — is
 // a stall: the host accepted the connection and left it hanging (tar-pit bot
 // mitigation). Functionally a block, so it gets the same cooldown + wording.
-const STALL_RE = /aborted (fetch|post)ing|deadline exceeded|socket idle timeout/i;
-
-/** A failure that says "blocked / rate-limited", not "broken": these recover
- *  on their own, so they must never count toward quarantine. 503 is the
- *  challenge-mode WAF answer (Jul 22). */
-export function isBlockLikeFailure(statusCode: number | null | undefined, message: string): boolean {
-  if (statusCode == null) return STALL_RE.test(message);
-  return [401, 403, 429, 430, 503].includes(statusCode);
-}
+// isBlockLikeFailure / STALL_RE moved to @beacon/shared (backoff.ts) so the
+// scheduler's block back-off and the dashboard can share them; re-exported here
+// so existing importers (run.ts) are unchanged.
+export { isBlockLikeFailure } from "@beacon/shared";
 
 function buildErrorOutcome(
   site: SiteDefinition,

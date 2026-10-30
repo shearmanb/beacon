@@ -689,106 +689,183 @@ body {
   .imm-badge { animation: none; }
 }
 
-/* today's cadence windows on the tile */
-.site-stat.st-windows {
-  flex-basis: 100%;
+/* ===== site tile (2026-10-30 simplification) =====
+   Face = header (dot · name · kind · ⚡ control) · ONE status line · secondary
+   notes · last-60-min pulse · Recent (3 history rows) · collapsed ⚙ settings.
+   One layout — the full/compact/micro density modes are gone. */
+.site-hd {
+  flex-wrap: wrap;
 }
-.win-chips {
+/* The ⚡ control gets its own line under the name: beside it, three columns
+   crushed the site name to "F…". */
+.imm-ctl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 100%;
+  margin-top: 6px;
+}
+.imm-ctl .btn,
+.imm-ctl select.in {
+  height: 26px;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 3px 8px;
+}
+.imm-ctl select.in {
+  cursor: pointer;
+}
+.imm-ctl .btn.sm {
+  padding: 3px 7px;
+  font-size: 10px;
+}
+.btn.bolt:hover {
+  color: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 55%, transparent);
+}
+/* the one status line */
+.site-status {
+  font-family: var(--mono);
+  font-size: 12px;
+  margin: 8px 0 0;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.site-status .part:first-child {
+  font-weight: 600;
+}
+.site-status.ok .part:first-child {
+  color: var(--ok);
+}
+.site-status.warn .part:first-child {
+  color: var(--warn);
+}
+.site-status.err .part:first-child {
+  color: var(--err);
+}
+.site-status.off .part:first-child {
+  color: var(--faint);
+}
+.site-status .sep {
+  color: var(--faint);
+}
+.site-secondary {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 4px 10px;
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 10.5px;
 }
-.win-chip {
+.site-secondary .note.warn {
+  color: var(--warn);
+}
+.site-secondary .note.faint {
+  color: var(--faint);
+}
+.site-err {
+  font-size: 11px;
+  margin-top: 4px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Recent: ▲ title · $price · when */
+.recent {
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+.recent-hd {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 3px;
+}
+.recent-empty {
+  font-size: 11px;
+}
+.recent-row {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr) auto auto;
+  gap: 0 8px;
+  align-items: baseline;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.recent-row .glyph {
+  font-size: 10px;
+  text-align: center;
+}
+.recent-row.new_product .glyph,
+.recent-row.restock .glyph {
+  color: var(--ok);
+}
+.recent-row.sold_out .glyph {
+  color: var(--err);
+}
+.recent-row.site_reset .glyph {
+  color: var(--warn);
+}
+.recent-row .title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.recent-row .price,
+.recent-row .when {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.recent-row .when {
+  color: var(--faint);
+}
+/* collapsed ⚙ settings panel */
+.site-settings {
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+.site-settings > summary {
+  cursor: pointer;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
   font-family: var(--mono);
   font-size: 10.5px;
   color: var(--muted);
-  background: var(--bg2);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 1px 6px;
-  white-space: nowrap;
+  list-style: none;
 }
-.win-chip b {
+.site-settings > summary::-webkit-details-marker {
+  display: none;
+}
+.site-settings > summary .gear::before {
+  content: "▸ ";
+  color: var(--faint);
+}
+.site-settings[open] > summary .gear::before {
+  content: "▾ ";
+}
+.site-settings > summary:hover .gear {
   color: var(--text);
-  font-weight: 600;
 }
-.win-chip.now {
-  border-color: var(--accent);
-  color: var(--text);
-  background: var(--accent-dim);
+.site-settings .kw-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
 }
-
-/* ===== site tile density modes (full / compact / micro) ===== */
-/* Schedule NAME stays hidden in full — it's redundant with the schedule
-   dropdown sitting right below it. Cadence (the resolved effective interval
-   in minutes, right now) is NOT redundant with anything on the full tile and
-   was hidden here too, which meant the one editable view had no way to see
-   what a schedule choice actually resolves to (2026-09-02: a flat numeric
-   schedule like "5 min" runs that literally, 24/7 — Cadence is how you'd
-   notice that instead of assuming a named schedule's day/night variation). */
-.site-stat.st-schedule {
-  display: none;
+.site-settings .kw-chips .pill {
+  font-size: 9.5px;
 }
-
-/* COMPACT: products · last checked · schedule · heartbeat (PulseStrip). Drops
-   the controls, diagnostics, and the error/cooldown/channel detail stats. */
-.sites-grid.mode-compact {
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-}
-.mode-compact .st-mode,
-.mode-compact .st-errors,
-.mode-compact .st-cooldown,
-.mode-compact .st-channel,
-.mode-compact .st-activity,
-.mode-compact .site-err,
-.mode-compact .site-controls-wrap,
-.mode-compact .diag-wrap {
-  display: none;
-}
-.mode-compact .site-stat.st-schedule {
-  display: flex;
-}
-
-/* MICRO: stoplight · name · last checked · cadence — one short row. */
-.sites-grid.mode-micro {
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 8px;
-}
-.mode-micro .kind-chip,
-.mode-micro .st-products,
-.mode-micro .st-mode,
-.mode-micro .st-errors,
-.mode-micro .st-cooldown,
-.mode-micro .st-channel,
-.mode-micro .st-activity,
-.mode-micro .st-schedule,
-.mode-micro .st-windows,
-.mode-micro .site-err,
-.mode-micro .site-controls-wrap,
-.mode-micro .diag-wrap,
-.mode-micro .pulse {
-  display: none;
-}
-.mode-micro .site-stat.st-cadence {
-  display: flex;
-}
-/* Two stacked rows so the name isn't crushed onto one line with the stats:
-   row 1 = stoplight + name (full width), row 2 = last checked + cadence. */
-.mode-micro .site-card {
-  padding: 10px 14px 12px;
-}
-.mode-micro .site-hd .name {
-  font-size: 12px;
-}
-.mode-micro .site-stats {
-  margin: 7px 0 0;
-  gap: 4px 20px;
-}
-.mode-micro .site-stat .k {
-  font-size: 8px;
-}
-.mode-micro .site-stat .val {
-  font-size: 11.5px;
+.site-settings .row:first-of-type {
+  border-top: none;
+  margin-top: 6px;
 }
 
 /* compact imminent-tuning row under the main controls */
@@ -931,20 +1008,6 @@ select.in.sched {
 .pulse.empty .cap {
   color: var(--faint);
 }
-/* Toggle button sits in place of the old static "last 60 min" caption text. */
-.pulse .pulse-toggle {
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  color: var(--faint);
-  background: none;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
-.pulse .pulse-toggle:hover {
-  color: var(--muted);
-}
 /* Amber: a recent check failed (but the site isn't stale yet). */
 .pulse.degraded .cap {
   color: var(--warn);
@@ -956,8 +1019,7 @@ select.in.sched {
 .pulse.stalled {
   border-top-color: color-mix(in srgb, var(--err) 55%, var(--line));
 }
-.pulse.stalled .cap,
-.pulse.stalled .pulse-toggle {
+.pulse.stalled .cap {
   color: var(--err);
   font-weight: 600;
 }
@@ -1477,6 +1539,22 @@ select.in.sched {
   }
   .bottle-actions .btn {
     flex: 1;
+  }
+
+  /* Site tile: the ⚡ control takes its own row under the name; a Recent row
+     puts price + time under the title instead of squeezing it. */
+  .recent-row {
+    grid-template-columns: 14px minmax(0, 1fr) auto;
+    gap: 0 8px;
+  }
+  .recent-row .title {
+    grid-column: 2 / span 2;
+  }
+  .recent-row .price {
+    grid-column: 2;
+  }
+  .recent-row .when {
+    grid-column: 3;
   }
 
   /* History rows wrap rather than crushing the title between type and time. */

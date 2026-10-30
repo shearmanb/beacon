@@ -94,13 +94,23 @@ export async function setDeprecated(siteId: string, deprecated: boolean): Promis
  * run_now so the first fast check happens on the very next loop rather than
  * after the current interval elapses.
  */
-export async function setImminent(siteId: string, imminent: boolean): Promise<void> {
+export async function setImminent(
+  siteId: string,
+  imminent: boolean,
+  opts: { durationMinutes?: number } = {},
+): Promise<void> {
   const store = await getStore();
   const site = await store.sites.get(siteId);
   if (!site) return;
   const def = site.definition;
+  // The tile's split control picks a duration in the same click ("Go imminent
+  // for 45m"): persist it as the site's tuning in the same write, so the
+  // worker's auto-off and the badge countdown both read the chosen value.
+  const dur = opts.durationMinutes;
+  const tuned = imminent && dur != null && dur > 0 ? { imminentDurationMinutes: dur } : {};
   await store.sites.upsert({
     ...def,
+    ...tuned,
     imminent,
     imminentSince: imminent ? new Date().toISOString() : null,
     scheduleBeforeImminent: imminent ? (def.scheduleBeforeImminent ?? def.schedule ?? null) : null,

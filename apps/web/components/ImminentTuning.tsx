@@ -10,21 +10,25 @@ import { setImminentTuning } from "../app/actions";
 
 // Cadence options while imminent. 1 min is the tightest offered — tighter risks
 // tripping anti-bot on sites like the Campari/Incapsula ones.
-const INTERVAL_OPTS = [1, 2, 5, 10];
-// How long imminent stays on before auto-revert.
-const DURATION_OPTS = [20, 45, 60, 90, 120];
+export const INTERVAL_OPTS = [1, 2, 5, 10];
+// How long imminent stays on before auto-revert. Also the choices the tile's
+// ⚡ split control offers ("Go imminent for …").
+export const DURATION_OPTS = [20, 45, 60, 90, 120];
 
 export function ImminentTuning({
   siteId,
   imminentInterval,
   imminentDuration,
   compact = false,
+  intervalOnly = false,
 }: {
   siteId: string;
   imminentInterval: number | null;
   imminentDuration: number | null;
   /** Panel mode: no leading label / trailing hint, just the two selects. */
   compact?: boolean;
+  /** Tile ⚙ panel: the duration lives on the ⚡ control, so only the cadence select. */
+  intervalOnly?: boolean;
 }) {
   const [pending, start] = useTransition();
   // Current effective values. Defaults are the shared constants the worker
@@ -58,6 +62,7 @@ export function ImminentTuning({
           </option>
         ))}
       </select>
+      {!intervalOnly && (
       <select
         className="in"
         value={String(curDuration)}
@@ -71,7 +76,8 @@ export function ImminentTuning({
           </option>
         ))}
       </select>
-      {!compact && <span className="faint" style={{ fontSize: 10 }}>then back to schedule</span>}
+      )}
+      {!compact && !intervalOnly && <span className="faint" style={{ fontSize: 10 }}>then back to schedule</span>}
     </div>
   );
 }

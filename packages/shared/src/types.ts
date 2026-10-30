@@ -124,6 +124,8 @@ export interface SchedulableSite {
 
 export interface SchedulableState {
   lastChecked?: string | null;
+  /** Recent failures ({ts, message, statusCode}); the block back-off reads it. */
+  errorLog?: Array<{ ts: string; message?: string; statusCode?: number | null }> | null;
 }
 
 export interface DiffOptions {

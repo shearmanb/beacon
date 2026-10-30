@@ -9,7 +9,7 @@
 // worker calls, rather than re-deriving the interval/jitter itself.
 
 import type { Schedules, SchedulableSite } from "@beacon/shared";
-import { cycleJitterFactor } from "@beacon/shared";
+import { blockBackoffFactor, cycleJitterFactor, type ErrorLogEntry } from "@beacon/shared";
 import { nowInterval } from "./cadence";
 
 // Mirrors apps/worker/src/run.ts TIGHT_INTERVAL_MIN / TIGHT_COOLDOWN_CAP_MS —
@@ -33,6 +33,7 @@ export function predictedNextCheckAt(
   cooldownUntil: string | null | undefined,
   schedules: Schedules,
   now: number = Date.now(),
+  errorLog?: ErrorLogEntry[] | null,
 ): string | null {
   if (!enabled || !lastChecked) return null;
   const lastMs = Date.parse(lastChecked);
@@ -46,7 +47,10 @@ export function predictedNextCheckAt(
   // safely reuse this same value rather than resolving the interval twice.
   const interval = nowInterval(def, schedules);
   const jitter = imminentActive ? 1 : cycleJitterFactor(def.id ?? def.name ?? "", lastChecked);
-  const scheduledDue = lastMs + interval * jitter * 60_000;
+  // Block back-off: shouldCheck stretches the interval ×1.5 for 6 h after a
+  // block-like failure (not while imminent) — mirror it or the tile lies.
+  const stretch = imminentActive ? 1 : blockBackoffFactor(errorLog, now);
+  const scheduledDue = lastMs + interval * jitter * stretch * 60_000;
 
   if (imminentActive) return new Date(scheduledDue).toISOString(); // cooldown bypassed entirely
 

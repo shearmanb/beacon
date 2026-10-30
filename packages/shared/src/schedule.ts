@@ -10,6 +10,7 @@ import type {
 } from "./types.js";
 
 export type { EtContext } from "./types.js";
+import { blockBackoffFactor } from "./backoff.js";
 
 // Imminent-mode defaults, shared by the worker (shouldCheck / auto-off) and the
 // dashboard (tile readouts, tuning selects) so the two can never disagree about
@@ -114,7 +115,10 @@ export function shouldCheck(
     return elapsed >= imminentInterval(site);
   }
   const interval = getEffectiveInterval(site, schedules, ctx);
-  return elapsed >= interval * cycleJitterFactor(site.id ?? site.name ?? "", siteState.lastChecked);
+  // Block back-off (feedback loop): a recent 429/403/stall stretches the
+  // interval ×1.5 for 6 h, read-side only — see backoff.ts.
+  const stretch = blockBackoffFactor(siteState.errorLog, now);
+  return elapsed >= interval * stretch * cycleJitterFactor(site.id ?? site.name ?? "", siteState.lastChecked);
 }
 
 /** The cadence an imminent site runs at: its tuned value, else the shared default. */

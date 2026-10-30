@@ -5,9 +5,9 @@ import type { SiteDefinition, SiteState } from "@beacon/core";
 
 export type Health = "ok" | "warn" | "err" | "off";
 
-export function ago(iso?: string | null): string {
+export function ago(iso?: string | null, now: number = Date.now()): string {
   if (!iso) return "never";
-  const ms = Date.now() - new Date(iso).getTime();
+  const ms = now - new Date(iso).getTime();
   if (Number.isNaN(ms)) return "—";
   const m = Math.round(ms / 60000);
   if (m < 1) return "just now";

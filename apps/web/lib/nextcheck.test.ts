@@ -29,6 +29,21 @@ describe("predictedNextCheckAt", () => {
     expect(predictedNextCheckAt(true, def, lastChecked, null, {}, T0)).toBe(expected);
   });
 
+  it("stretches the prediction ×1.5 after a recent block-like failure, exactly like shouldCheck", () => {
+    const def = { id: "site_bo", intervalMinutes: 20 };
+    const lastChecked = iso(0);
+    const jitter = cycleJitterFactor("site_bo", lastChecked);
+    const errorLog = [{ ts: iso(-60 * MIN), statusCode: 429, message: "" }];
+    expect(predictedNextCheckAt(true, def, lastChecked, null, {}, T0, errorLog)).toBe(
+      new Date(T0 + 20 * jitter * 1.5 * MIN).toISOString(),
+    );
+    // A non-block failure (500) leaves the prediction alone.
+    const plain = [{ ts: iso(-60 * MIN), statusCode: 500, message: "boom" }];
+    expect(predictedNextCheckAt(true, def, lastChecked, null, {}, T0, plain)).toBe(
+      new Date(T0 + 20 * jitter * MIN).toISOString(),
+    );
+  });
+
   it("imminent mode skips jitter, uses imminentIntervalMinutes, and bypasses any cooldown", () => {
     const def = { id: "site_b", intervalMinutes: 60, imminent: true, imminentIntervalMinutes: 2 };
     const lastChecked = iso(0);
