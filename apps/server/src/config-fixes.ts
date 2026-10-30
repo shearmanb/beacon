@@ -259,6 +259,82 @@ export const ONE_SHOTS: ConfigFix[] = [
       }
     },
   },
+  {
+    id: "cadence_fast_hours_20261030",
+    description: "fast_hours schedule (5m peak / 8m shoulders / 60m overnight) + one checker per host",
+    // Operator decisions 2026-10-30 after re-mining alert_history (May 17 →
+    // Oct 19, 127 clustered drop events, auctions excluded): drops land
+    // 06:19–21:02 ET, heaviest 08–15 and 17–20, none ever 22–06. The official
+    // Reveries shop sat at 60m outside 10–16 and 4 of its last 8 drops landed
+    // in that zone — the biggest hole. Block risk is per-IP across Shopify
+    // stores, so TOTAL volume matters: the two pre-consolidation SharedPour
+    // checkers had been re-enabled while the merged Watchlist sat disabled
+    // (2× host load). One-shot, so later /schedules or tile edits are never
+    // overridden by a redeploy; nothing is created or deleted. Keep it LAST:
+    // on a fresh datastore the older cadence one-shot would otherwise run
+    // after it and re-assign drop_windows.
+    async run(store, log) {
+      type State = NonNullable<Awaited<ReturnType<BeaconStore["state"]["load"]>>>;
+      await store.schedules.upsert("fast_hours", {
+        label: "⚡ Fast Hours (5m peak · 8m shoulders)",
+        rules: [
+          { fromHour: 8, toHour: 15, interval: 5 },
+          { fromHour: 17, toHour: 20, interval: 5 },
+          { fromHour: 6, toHour: 8, interval: 8 },
+          { fromHour: 15, toHour: 17, interval: 8 },
+          { fromHour: 20, toHour: 22, interval: 8 },
+          { fromHour: 22, toHour: 6, interval: 60 },
+          { defaultInterval: 60 },
+        ],
+      });
+      for (const id of ["sharedpour_t8ke_all", "bourbon_concierge", "fountain_inn_dc", "reveries_official", "reveries_site_status"]) {
+        const row = await store.sites.get(id);
+        if (!row) continue; // absent in this datastore — skip quietly, never create
+        await store.sites.upsert({ ...row.definition, schedule: "fast_hours" });
+        log(`Amended ${id}: schedule → fast_hours.`);
+      }
+      // One checker per host: bring the SharedPour Watchlist back as the only
+      // live sharedpour.com checker. Its baseline is pre-merged with the
+      // retirees' rosters — the retirees' entries WIN collisions because they
+      // were checked more recently (fresh `available` flags → no spurious
+      // sold_out/restock rows on the first check), and a bottle landing
+      // mid-migration still alerts (unlike a state clear).
+      const survivor = await store.sites.get("sharedpour_t8ke_all");
+      if (!survivor) {
+        log("SharedPour re-merge skipped: sharedpour_t8ke_all not found.");
+        return;
+      }
+      const retirees = ["sharedpour_t8ke", "sharedpour_reveries"];
+      const state: State = (await store.state.load("sharedpour_t8ke_all")) ?? { lastChecked: null };
+      let products = { ...(state.products ?? {}) };
+      let recentlySeen = { ...((state["recentlySeen"] as Record<string, string> | undefined) ?? {}) };
+      for (const id of retirees) {
+        const s = await store.state.load(id);
+        products = { ...products, ...(s?.products ?? {}) };
+        recentlySeen = { ...recentlySeen, ...((s?.["recentlySeen"] as Record<string, string> | undefined) ?? {}) };
+      }
+      await store.state.save("sharedpour_t8ke_all", {
+        ...state,
+        products,
+        recentlySeen,
+        // Same fresh start setMonitoring(…, true) gives a re-enabled site.
+        consecutiveErrors: 0,
+        errorStreakSince: null,
+        errorAlertSent: false,
+        cooldownLevel: 0,
+        cooldownUntil: null,
+        enabledAt: new Date().toISOString(),
+      });
+      await store.sites.upsert({ ...survivor.definition, enabled: true, deprecated: false, schedule: "fast_hours" });
+      log(`Re-enabled sharedpour_t8ke_all (SharedPour Watchlist): baseline carries ${Object.keys(products).length} product(s).`);
+      for (const id of retirees) {
+        const row = await store.sites.get(id);
+        if (!row || !row.definition.enabled) continue;
+        await store.sites.upsert({ ...row.definition, enabled: false });
+        log(`Retired ${id} again — merged into sharedpour_t8ke_all (disabled, not deleted; deprecated flag kept).`);
+      }
+    },
+  },
 ];
 
 /** Apply corrections (every boot) then pending one-shots (once ever). */

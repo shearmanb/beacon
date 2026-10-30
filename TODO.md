@@ -24,11 +24,9 @@ Shipped:
       **2b docs** (1g).
 
 Operator actions:
-- [ ] **1c Widen `drop_windows` 15m shoulder 8–9 → 6–9 ET** (edit that rule on
-      /schedules; the 22–8 @120 rule then only bites 22–6). Evidence: 6–8 AM
-      detections at 6:19, 7:30, 7:38, 7:44 (Aug 16 → Sep 17), all on the 120m
-      cadence, so real listing times could be up to 2 h earlier. Cost: ~8 extra
-      requests/day per site. _No code._
+- [x] **1c Widen the pre-9am shoulder** ✅ superseded 2026-10-30 by the
+      `fast_hours` schedule (5m 08–15 & 17–20, 8m 06–08 / 15–17 / 20–22, 60m
+      overnight) via the `cadence_fast_hours_20261030` one-shot — see CHANGELOG.
 - [ ] **4a `HEALTHCHECK_URL`**: still unset. _No code._
 - [ ] Confirm `BEACON_DASH_PASSWORD` is set on Railway **before** this deploy:
       the dashboard now refuses logins without it (worker unaffected).
