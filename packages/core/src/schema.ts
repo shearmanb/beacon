@@ -81,6 +81,15 @@ export const shopifyGraphqlSource = z.object({
    *  swaps its collection/product instead of querying a dead id. Falls back to the
    *  last-known discovered embed (persisted in state), then productId/collectionId. */
   discoverEmbedFrom: z.string().url().optional(),
+  /** "embed" (default): one product/collection, as above. "channel": EVERY
+   *  product published to the token's sales channel (Buy Button), newest first —
+   *  so a drop embedded on any page (t8ke.com, thereveries.co, …) is seen even
+   *  when it never reaches the store's products.json (2026-10-31). Optional
+   *  (absent = "embed") so every existing definition stays valid as-is. */
+  scope: z.enum(["embed", "channel"]).optional(),
+  /** Channel scope only: how many of the newest products to read per check
+   *  (absent = 250, one request). */
+  maxProducts: z.number().int().positive().optional(),
   apiVersion: z.string().default("2025-01"),
   /** Public URL products link to (the shop page). Defaults to https://<domain>. */
   productUrl: z.string().url().optional(),

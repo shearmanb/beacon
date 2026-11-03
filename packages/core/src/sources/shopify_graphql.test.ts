@@ -224,3 +224,74 @@ describe("shopifyGraphqlAdapter", () => {
     await expect(shopifyGraphqlAdapter.fetch(makeSite(), {}, deps)).rejects.toThrow(/unexpected structure/);
   });
 });
+
+describe("shopifyGraphqlAdapter — channel scope (every product in the sales channel)", () => {
+  const node = (i: number, extra: Record<string, unknown> = {}) => ({
+    title: `T8KE x Bottle ${i}`,
+    handle: `bottle-${i}`,
+    vendor: i % 2 ? "Penelope" : "The Reveries",
+    productType: "Bourbon",
+    availableForSale: true,
+    priceRange: { minVariantPrice: { amount: "99.99" } },
+    ...extra,
+  });
+  const page = (nodes: unknown[], hasNextPage: boolean, endCursor: string | null = null) =>
+    JSON.stringify({ data: { products: { pageInfo: { hasNextPage, endCursor }, nodes } } });
+  const channelSite = (extra: Record<string, unknown> = {}) =>
+    makeSite({ scope: "channel", collectionId: undefined, defaults: undefined, productUrl: "https://t8ke.com/private-selections/purchase-t8ke-releases/", ...extra });
+
+  it("queries the root product list newest-first with the token, and keeps each product's own vendor", async () => {
+    handler = () => respond(page([node(1), node(2)], false));
+    const result = await shopifyGraphqlAdapter.fetch(channelSite(), {}, deps);
+    if (result.kind !== "products") throw new Error("expected products");
+    const sent = JSON.parse(lastRequest!.body) as { query: string; variables: { cursor: string | null } };
+    expect(sent.query).toContain("products(first: 250");
+    expect(sent.query).toContain("sortKey: CREATED_AT, reverse: true");
+    expect(sent.query).not.toContain("collection(id:");
+    expect(sent.variables.cursor).toBeNull();
+    expect(lastRequest?.headers["x-shopify-storefront-access-token"]).toBe("tok-123");
+    expect(result.products.map((p) => p.vendor)).toEqual(["Penelope", "The Reveries"]);
+    expect(result.products[0]!.url).toBe("https://t8ke.com/private-selections/purchase-t8ke-releases/");
+    expect(result.emptyGuardThreshold).toBe(3);
+  });
+
+  it("follows the cursor across pages and stops at maxProducts", async () => {
+    const cursors: (string | null)[] = [];
+    handler = () => {
+      const { variables } = JSON.parse(lastRequest!.body) as { variables: { cursor: string | null } };
+      cursors.push(variables.cursor);
+      if (variables.cursor == null) respond(page([node(1), node(2)], true, "c1"));
+      else respond(page([node(3)], true, "c2")); // more exists, but the cap stops us
+    };
+    const result = await shopifyGraphqlAdapter.fetch(channelSite({ maxProducts: 3 }), {}, deps);
+    if (result.kind !== "products") throw new Error("expected products");
+    expect(cursors).toEqual([null, "c1"]);
+    expect(result.products.map((p) => p.handle)).toEqual(["bottle-1", "bottle-2", "bottle-3"]);
+    // The second page only asked for what was left under the cap.
+    expect((JSON.parse(lastRequest!.body) as { query: string }).query).toContain("products(first: 1");
+  });
+
+  it("stops when the channel has no further page", async () => {
+    let calls = 0;
+    handler = () => {
+      calls += 1;
+      respond(page([node(1)], false, "c1"));
+    };
+    await shopifyGraphqlAdapter.fetch(channelSite(), {}, deps);
+    expect(calls).toBe(1);
+  });
+
+  it("throws on an unexpected channel response so the worker's error path handles it", async () => {
+    handler = () => respond(JSON.stringify({ errors: [{ message: "Access denied" }] }));
+    await expect(shopifyGraphqlAdapter.fetch(channelSite(), {}, deps)).rejects.toThrow(/unexpected structure/);
+  });
+
+  it("embed scope is the default and is unchanged (configured vendor still wins)", async () => {
+    expect((makeSite().source as { scope?: string }).scope).toBeUndefined();
+    handler = () => respond(collectionResponse([{ ...node(1), vendor: "Someone Else" }]));
+    const result = await shopifyGraphqlAdapter.fetch(makeSite(), {}, deps);
+    if (result.kind !== "products") throw new Error("expected products");
+    expect(lastRequest?.body).toContain("collection(id:");
+    expect(result.products[0]!.vendor).toBe("The Reveries");
+  });
+});

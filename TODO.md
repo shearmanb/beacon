@@ -7,6 +7,29 @@ Each item tags rough **impact** so we can decide with the lean-by-default rule i
 mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
 "On-demand" = don't build on spec; build when a real need forces it.
 
+## T8KE releases coverage (2026-11-03) — waiting on network access
+
+Plan: CHANGELOG 2026-11-03. Adapter shipped (`shopify_graphql` `scope: "channel"`).
+- [ ] **1a Read t8ke.com's purchase page** (allow `t8ke.com` in the cloud
+      environment's network settings, or paste View Source). Look for
+      `ShopifyBuyInit` / `createComponent` / `myshopify.com` /
+      `storefrontAccessToken` and the BUY NOW hrefs. A store other than
+      `shared-pour.myshopify.com` → its Buy Button token becomes a new secret
+      ref (never in the repo) and the plan changes.
+- [ ] **1b Preview the channel from Railway** (Add-site → Preview) with
+      `{ "kind": "shopify_graphql", "scope": "channel", "domain":
+      "shared-pour.myshopify.com", "accessTokenRef":
+      "reveries_official_storefront_token", "productUrl":
+      "https://t8ke.com/private-selections/purchase-t8ke-releases/" }`.
+      Pass = The Emptiness / Witness Mark-type titles appear. Hundreds of
+      non-whiskey SKUs → filter by productType, not title.
+- [ ] **1c Create `sharedpour_channel`** (unfiltered per operator, `fast_hours`)
+      via a latched ONE_SHOT once 1a/1b pass.
+- [ ] **1d Bourbon Concierge T8KE checker**: find the collection with the
+      Add-site probe (`/collections/t8ke`, then `/collections/t8ke-selections`);
+      never drop the existing checker's `/collections/reveries` scope (Jul 11
+      tar-pit). Same one-shot as 1c.
+
 ---
 
 ## Review 2026-09-25 — evidence from `analytics/alert_history.jsonl` (Aug 26 → Sep 23)
