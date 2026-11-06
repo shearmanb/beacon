@@ -1,6 +1,9 @@
-/* Beacon dashboard — single "flightdeck" theme lifted from docs/theme.css
-   (mission-control blue-black + cyan). One clean theme, per the simplicity
-   charter (the old multi-theme switcher is intentionally dropped). */
+/* Beacon dashboard. Colours are CSS variables only, swapped per
+   :root[data-theme="…"] below. The default is Russell's 13 navy/gold and the
+   bottle palettes are copied EXACTLY from drop-tracker (index.html), so the two
+   apps match — add or change a theme in both repos. Never put a literal colour
+   in a component rule: derive it from these tokens (color-mix) so every theme,
+   light ones included, follows. */
 :root {
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
   --sans: "IBM Plex Sans", system-ui, sans-serif;
@@ -9,17 +12,21 @@
   --err: #e8604f;
   --radius: 8px;
 
-  --bg: #090d13;
-  --bg2: #0d121b;
-  --panel: #101723;
-  --panel2: #141c2b;
-  --line: #1d2940;
-  --line2: #28385a;
-  --text: #dde6f2;
-  --muted: #76849c;
-  --faint: #4a5670;
-  --accent: #58c4dd;
-  --accent-dim: rgba(88, 196, 221, 0.12);
+  /* default = rr-hh (Russell's 13 + Heritage 22 — royal navy · gold) */
+  --bg: #071630;
+  --bg2: #0C2148;
+  --panel: #10305F;
+  --panel2: #163B74;
+  --line: #1E4680;
+  --line2: #2C5A9C;
+  --text: #F3EFE6;
+  --muted: #9DAECB;
+  --faint: #5A6C8E;
+  --accent: #C9A63C;
+  /* Derived, so a theme block only has to set --accent. Resolved on :root,
+     where the theme's --accent lives too. */
+  --accent-dim: color-mix(in srgb, var(--accent) 13%, transparent);
+  color-scheme: dark;
 }
 
 * {
@@ -91,12 +98,6 @@ a:hover {
 }
 .spacer {
   flex: 1;
-}
-.hdr .ver {
-  font-size: 10px;
-  color: var(--faint);
-  letter-spacing: 0.04em;
-  white-space: nowrap;
 }
 
 /* section heads */
@@ -572,7 +573,7 @@ p.hint {
 
 /* ===== polish pass ===== */
 body {
-  background-image: radial-gradient(1100px 500px at 50% -8%, rgba(88, 196, 221, 0.06), transparent 60%);
+  background-image: radial-gradient(1100px 500px at 50% -8%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 60%);
   background-attachment: fixed;
 }
 .hdr {
@@ -581,7 +582,7 @@ body {
 }
 .wordmark {
   font-size: 22px;
-  text-shadow: 0 0 18px rgba(88, 196, 221, 0.25);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 .wordmark .beak {
   filter: drop-shadow(0 0 8px var(--accent));
@@ -638,13 +639,13 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.02);
 }
 .dot.ok {
-  box-shadow: 0 0 9px rgba(62, 207, 142, 0.8);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--ok) 80%, transparent);
 }
 .dot.warn {
-  box-shadow: 0 0 9px rgba(232, 177, 63, 0.7);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--warn) 70%, transparent);
 }
 .dot.err {
-  box-shadow: 0 0 9px rgba(232, 96, 79, 0.8);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--err) 80%, transparent);
 }
 
 .kind-chip {
@@ -658,7 +659,7 @@ body {
    header carries a pulsing badge; all of it survives every density mode. */
 .site-card.imminent {
   border-color: color-mix(in srgb, var(--warn) 55%, var(--line));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--warn) 25%, transparent), 0 0 18px rgba(232, 177, 63, 0.18);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--warn) 25%, transparent), 0 0 18px color-mix(in srgb, var(--warn) 18%, transparent);
 }
 .site-card.imminent::before {
   background: var(--warn);
@@ -682,8 +683,8 @@ body {
   animation: imm-pulse 2.4s ease-in-out infinite;
 }
 @keyframes imm-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 177, 63, 0.35); }
-  50% { box-shadow: 0 0 0 5px rgba(232, 177, 63, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--warn) 35%, transparent); }
+  50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--warn) 0%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) {
   .imm-badge { animation: none; }
@@ -922,19 +923,25 @@ select.in.sched {
   background: var(--panel2);
 }
 
-/* ===== alternate palettes (variables only — no custom fonts, no per-component
-   overrides, so this stays cheap and stable). Lifted from the old theme.css. ===== */
+/* ===== palettes =====
+   Token map from drop-tracker: --bg=bg-0 · --bg2=bg-1 · --panel=bg-2 ·
+   --panel2=bg-3 · --line=border-0 · --line2=border-1 · --text=text-primary ·
+   --muted=text-secondary · --faint=text-muted · --accent=ember.
+   Bottle and light themes: values copied verbatim from drop-tracker's
+   index.html (2026-11-06). Classic: Beacon's own. */
+
+/* Classic */
+:root[data-theme="flightdeck"] {  /* mission-control blue-black · cyan (the old default) */
+  --bg: #090d13; --bg2: #0d121b; --panel: #101723; --panel2: #141c2b;
+  --line: #1d2940; --line2: #28385a;
+  --text: #dde6f2; --muted: #76849c; --faint: #4a5670;
+  --accent: #58c4dd; --accent-dim: rgba(88, 196, 221, 0.12);
+}
 :root[data-theme="flightpath"] {
   --bg: #0c0a14; --bg2: #110e1c; --panel: #151226; --panel2: #1b1730;
   --line: #272042; --line2: #392f60;
   --text: #e2def2; --muted: #847ba3; --faint: #534b73;
   --accent: #a78bfa; --accent-dim: rgba(167, 139, 250, 0.13);
-}
-:root[data-theme="reveries"] {
-  --bg: #070605; --bg2: #0b0a08; --panel: #11100b; --panel2: #171509;
-  --line: #322a12; --line2: #54461e;
-  --text: #f0e6cd; --muted: #a3936c; --faint: #645634;
-  --accent: #dcb45e; --accent-dim: rgba(220, 180, 94, 0.13);
 }
 :root[data-theme="wildturkey"] {
   --bg: #141416; --bg2: #19191c; --panel: #202023; --panel2: #28282c;
@@ -943,11 +950,150 @@ select.in.sched {
   --accent: #cf2733; --accent-dim: rgba(207, 39, 51, 0.14);
 }
 
-/* theme select in header */
-.hdr select.in {
+/* Bottles (drop-tracker) */
+:root[data-theme="rr-hh"] {  /* Russell's 13 + Heaven Hill Heritage 22 — royal navy · gold */
+  --bg: #071630; --bg2: #0C2148; --panel: #10305F; --panel2: #163B74;
+  --line: #1E4680; --line2: #2C5A9C;
+  --text: #F3EFE6; --muted: #9DAECB; --faint: #5A6C8E;
+  --accent: #C9A63C;
+}
+:root[data-theme="old-fitz"] {  /* Old Fitz spring decanter — forest green · gold · cream */
+  --bg: #0A1F14; --bg2: #0E2B1D; --panel: #133524; --panel2: #1A422E;
+  --line: #24513A; --line2: #33654B;
+  --text: #F5EFE0; --muted: #9CB2A2; --faint: #567162;
+  --accent: #C9A860;
+}
+:root[data-theme="reveries"] {  /* The Reveries — near-black · muted champagne gold */
+  --bg: #0D0C0B; --bg2: #151413; --panel: #1C1A18; --panel2: #262320;
+  --line: #2C2925; --line2: #3E3A33;
+  --text: #F2EDE4; --muted: #A19787; --faint: #5D564B;
+  --accent: #C2A878;
+}
+:root[data-theme="makers-mark"] {  /* Maker's Mark — black · red wax · cream label */
+  /* Accent is a lifted wax red (#E9564C, 5.1:1 on --panel) because the site
+     names are accent links and true Maker's red #C8102E is only ~3:1 there. */
+  --bg: #0B0908; --bg2: #15100E; --panel: #1C1513; --panel2: #261C19;
+  --line: #33231F; --line2: #4A302A;
+  --text: #F2EBDD; --muted: #A8978A; --faint: #6E5F55;
+  --accent: #E9564C;
+}
+:root[data-theme="stagg"] {  /* Stagg — black capsule · bourbon-brown glass · copper · cream */
+  --bg: #060504; --bg2: #1A0E08; --panel: #26140B; --panel2: #341C10;
+  --line: #4E2E1D; --line2: #8C5434;
+  --text: #F1E8D6; --muted: #B8A48B; --faint: #7A6450;
+  --accent: #C8794F;
+}
+:root[data-theme="willett-purple"] {  /* Willett purple-top — plum black · grape · silver */
+  --bg: #0E0A12; --bg2: #171020; --panel: #1E1529; --panel2: #291D38;
+  --line: #332546; --line2: #46345E;
+  --text: #ECE7F0; --muted: #A79FB2; --faint: #5E5568;
+  --accent: #8A5BB8;
+}
+:root[data-theme="old-grand-dad"] {  /* Old Grand-Dad — warm near-black · loud pumpkin orange */
+  --bg: #120D08; --bg2: #1A130C; --panel: #221910; --panel2: #2D2115;
+  --line: #3A2B1A; --line2: #4E3A24;
+  --text: #F0E3C8; --muted: #A89577; --faint: #605441;
+  --accent: #E8711C;
+}
+:root[data-theme="jd-14"] {  /* JD 14yr — soft black · saturated brass gold */
+  --bg: #0B0A09; --bg2: #151310; --panel: #1C1915; --panel2: #26221B;
+  --line: #2E2920; --line2: #41392B;
+  --text: #EDE9E2; --muted: #A39A88; --faint: #5E574A;
+  --accent: #C8A031;
+}
+:root[data-theme="jd-no7"] {  /* Old No. 7 — pure black label, white type, zero metallic */
+  --bg: #000000; --bg2: #0E0E0E; --panel: #161616; --panel2: #202020;
+  --line: #2A2A2A; --line2: #3D3D3D;
+  --text: #FFFFFF; --muted: #A3A3A3; --faint: #5E5E5E;
+  --accent: #D9D9D9;
+}
+
+/* Light (drop-tracker). Status colours darken to stay legible on a pale
+   background, and native controls / scrollbars follow color-scheme. */
+:root[data-theme="russells-13-light"] {  /* Russell's 13 — white label · royal navy · antique gold */
+  --bg: #F7F6F2; --bg2: #FDFCF8; --panel: #EFEBE0; --panel2: #E7E1D1;
+  --line: #D9D2C0; --line2: #BFB69E;
+  --text: #1A2338; --muted: #4A5470; --faint: #8B8578;
+  --accent: #1C3667;
+  --ok: #1E7A3C; --warn: #7A5000; --err: #B02E2E;
+  color-scheme: light;
+}
+:root[data-theme="willett-purple-light"] {  /* Willett purple-top — cream label · grape wax · silver */
+  --bg: #EFE6D3; --bg2: #F7F1E2; --panel: #E7DCC5; --panel2: #DED1B5;
+  --line: #C6C2BA; --line2: #A9ACB0;
+  --text: #1B1815; --muted: #4E463C; --faint: #8A8272;
+  --accent: #5B2D82;
+  --ok: #1E7A3C; --warn: #7A5000; --err: #B02E2E;
+  color-scheme: light;
+}
+
+/* ===== header "More" menu + footer (2026-11-06) ===== */
+.nav-more {
+  position: relative;
+}
+.nav-more > summary {
+  list-style: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.nav-more > summary::-webkit-details-marker {
+  display: none;
+}
+.nav-more > summary:hover,
+.nav-more[open] > summary {
+  color: var(--text);
+  background: var(--panel);
+}
+.nav-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  min-width: 170px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  background: var(--panel);
+  border: 1px solid var(--line2);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.nav-menu a {
+  display: block;
+}
+.ftr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 36px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+}
+.ftr-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.ftr .ver {
+  color: var(--faint);
+  letter-spacing: 0.04em;
+}
+.ftr select.in {
   font-family: var(--mono);
   font-size: 11px;
-  padding: 5px 8px;
+  padding: 4px 6px;
+}
+.deploy-stamp {
+  font-size: 10.5px;
 }
 
 /* ===== activity timeline (PulseStrip) — last 60 min of checks ===== */
@@ -1414,19 +1560,13 @@ select.in.sched {
     padding: 14px 12px 48px;
   }
 
-  /* Header: wordmark + version + theme on row 1, nav across the full width of
-     row 2 so links flow several per line instead of one. */
+  /* Header: wordmark on row 1, the four links + More across the full width
+     of row 2. The More menu opens full-width under it. */
   .hdr {
     flex-wrap: wrap;
     gap: 10px;
     padding-bottom: 10px;
     margin-bottom: 14px;
-  }
-  .hdr .spacer {
-    display: none;
-  }
-  .hdr .ver {
-    margin-left: auto;
   }
   .hdr .nav {
     order: 10; /* everything else keeps source order on row 1 */
@@ -1436,10 +1576,21 @@ select.in.sched {
   .wordmark {
     font-size: 17px;
   }
-  .nav a {
+  .nav a,
+  .nav-more > summary {
     padding: 5px 8px;
     font-size: 11px;
     letter-spacing: 0.04em;
+  }
+  .nav-more {
+    position: static;
+  }
+  .hdr {
+    position: relative;
+  }
+  .nav-menu {
+    left: 0;
+    right: 0;
   }
 
   .sect-hd {

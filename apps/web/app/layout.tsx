@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { ThemeSwitcher } from "../components/ThemeSwitcher";
 import { AutoRefresh } from "../components/AutoRefresh";
 import { DeployStamp } from "../components/DeployStamp";
+import { DEFAULT_THEME, THEME_IDS } from "../lib/themes";
 
 export const metadata = {
   title: "Beacon",
@@ -17,17 +18,37 @@ export const viewport = {
   initialScale: 1,
 };
 
-// Shown in the header so it's obvious which build is live. The live "updated"
-// time + Railway deploy ID render below via <DeployStamp /> (self-maintaining
+// Shown in the footer so it's obvious which build is live. The live "updated"
+// time + Railway deploy ID render beside it via <DeployStamp /> (self-maintaining
 // from Railway env), so no hardcoded date to go stale here anymore.
 const APP_VERSION = "v2";
 
-// Set the saved theme before paint to avoid a flash of the default theme.
-const themeInit = `try{var t=localStorage.getItem('beacon_theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}`;
+// Set the saved theme before paint to avoid a flash of the default theme. Only
+// ids in lib/themes.ts are honoured; anything else keeps the default.
+const themeInit = `try{var k=${JSON.stringify(THEME_IDS)},t=localStorage.getItem('beacon_theme');if(t&&k.indexOf(t)>=0)document.documentElement.dataset.theme=t;}catch(e){}`;
+
+// Header = the four pages used every day; the rest sit under "More". A <details>
+// needs no client JS, and a navigation replaces the page, which closes it.
+const MAIN_LINKS = [
+  { href: "/", label: "Sites" },
+  { href: "/products", label: "Products" },
+  { href: "/history", label: "History" },
+  { href: "/schedules", label: "Cadence", title: "Cadence control panel — every site's check windows, cadence and controls, plus the named schedules" },
+];
+const MORE_LINKS = [
+  { href: "/add", label: "Add site" },
+  { href: "/errors", label: "Errors" },
+  { href: "/unicorn", label: "Unicorn", title: "Unicorn Auctions watcher — isolated from site tracking" },
+  { href: "/api/export/history", label: "Export", title: "Download the full alert history as JSONL — feed it to Claude to mine drop-timing patterns" },
+  { href: "/reminders", label: "Reminders" },
+];
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" data-theme="flightdeck">
+    // suppressHydrationWarning: themeInit rewrites data-theme on <html> before
+    // React hydrates (that's the point: no flash), so the attribute differs from
+    // the server's default by design. It covers this element's attributes only.
+    <html lang="en" data-theme={DEFAULT_THEME} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
@@ -39,22 +60,31 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <span className="beak">◆</span> BEACON
             </div>
             <nav className="nav">
-              <a href="/">Sites</a>
-              <a href="/add">Add site</a>
-              <a href="/products">Products</a>
-              <a href="/errors">Errors</a>
-              <a href="/history">History</a>
-              <a href="/unicorn" title="Unicorn Auctions watcher — isolated from site tracking">Unicorn</a>
-              <a href="/api/export/history" title="Download the full alert history as JSONL — feed it to Claude to mine drop-timing patterns">Export</a>
-              <a href="/schedules" title="Cadence control panel — every site's check windows, cadence and controls, plus the named schedules">Cadence</a>
-              <a href="/reminders">Reminders</a>
+              {MAIN_LINKS.map((l) => (
+                <a key={l.href} href={l.href} title={l.title}>
+                  {l.label}
+                </a>
+              ))}
+              <details className="nav-more">
+                <summary>More ▾</summary>
+                <div className="nav-menu">
+                  {MORE_LINKS.map((l) => (
+                    <a key={l.href} href={l.href} title={l.title}>
+                      {l.label}
+                    </a>
+                  ))}
+                </div>
+              </details>
             </nav>
-            <div className="spacer" />
-            <span className="ver mono">{APP_VERSION}</span>
-            <ThemeSwitcher />
           </header>
-          <DeployStamp />
           {children}
+          <footer className="ftr">
+            <DeployStamp />
+            <span className="ftr-right">
+              <span className="ver mono">{APP_VERSION}</span>
+              <ThemeSwitcher />
+            </span>
+          </footer>
         </div>
       </body>
     </html>

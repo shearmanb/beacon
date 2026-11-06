@@ -1,4 +1,4 @@
-// Deploy provenance line under the header: "updated <time> ET · railway <id>".
+// Deploy provenance line in the footer: "updated <time> ET · railway <id>".
 // Server component, zero client JS — the Railway ID is a <details> disclosure
 // that expands a one-paragraph recap of the most recent change. Everything is
 // sourced from env Railway injects at build/deploy (RAILWAY_DEPLOYMENT_ID,
@@ -44,14 +44,14 @@ export function DeployStamp() {
     "No deploy metadata — running outside Railway (local/dev), so there's no deployment ID or change recap to show.";
 
   return (
-    <details className="faint mono" style={{ textAlign: "right", fontSize: 11, margin: "2px 0 8px" }}>
+    <details className="deploy-stamp faint mono">
       <summary
         style={{ cursor: "pointer", listStyle: "none" }}
         title="This build's start time and Railway deployment ID (matches the ID in Railway's deploy list). Click for a recap of the most recent change."
       >
         updated {fmtEt(STARTED_AT)} · railway <span style={{ textDecoration: "underline" }}>{deployId}</span>
       </summary>
-      <p style={{ margin: "6px 0 0 auto", maxWidth: 560, textAlign: "left", lineHeight: 1.5 }}>{recap}</p>
+      <p style={{ margin: "6px 0 0", maxWidth: 560, lineHeight: 1.5 }}>{recap}</p>
     </details>
   );
 }
