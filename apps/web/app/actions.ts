@@ -97,7 +97,7 @@ export async function setDeprecated(siteId: string, deprecated: boolean): Promis
 export async function setImminent(
   siteId: string,
   imminent: boolean,
-  opts: { durationMinutes?: number } = {},
+  opts: { durationMinutes?: number; intervalMinutes?: number } = {},
 ): Promise<void> {
   const store = await getStore();
   const site = await store.sites.get(siteId);
@@ -106,8 +106,13 @@ export async function setImminent(
   // The tile's split control picks a duration in the same click ("Go imminent
   // for 45m"): persist it as the site's tuning in the same write, so the
   // worker's auto-off and the badge countdown both read the chosen value.
+  // Same for the cadence ("every 2m"), picked in the same control.
   const dur = opts.durationMinutes;
-  const tuned = imminent && dur != null && dur > 0 ? { imminentDurationMinutes: dur } : {};
+  const every = opts.intervalMinutes;
+  const tuned = {
+    ...(imminent && dur != null && dur > 0 ? { imminentDurationMinutes: dur } : {}),
+    ...(imminent && every != null && every > 0 ? { imminentIntervalMinutes: every } : {}),
+  };
   await store.sites.upsert({
     ...def,
     ...tuned,

@@ -20,15 +20,12 @@ export function ImminentTuning({
   imminentInterval,
   imminentDuration,
   compact = false,
-  intervalOnly = false,
 }: {
   siteId: string;
   imminentInterval: number | null;
   imminentDuration: number | null;
   /** Panel mode: no leading label / trailing hint, just the two selects. */
   compact?: boolean;
-  /** Tile ⚙ panel: the duration lives on the ⚡ control, so only the cadence select. */
-  intervalOnly?: boolean;
 }) {
   const [pending, start] = useTransition();
   // Current effective values. Defaults are the shared constants the worker
@@ -62,7 +59,6 @@ export function ImminentTuning({
           </option>
         ))}
       </select>
-      {!intervalOnly && (
       <select
         className="in"
         value={String(curDuration)}
@@ -76,8 +72,7 @@ export function ImminentTuning({
           </option>
         ))}
       </select>
-      )}
-      {!compact && !intervalOnly && <span className="faint" style={{ fontSize: 10 }}>then back to schedule</span>}
+      {!compact && <span className="faint" style={{ fontSize: 10 }}>then back to schedule</span>}
     </div>
   );
 }

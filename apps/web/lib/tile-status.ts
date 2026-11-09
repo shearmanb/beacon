@@ -56,7 +56,7 @@ export function cadencePhrase(def: SchedulableSite, schedules: Schedules, now: n
       break;
     }
   }
-  return `every ${cur}m until ${fmtHour(end)} → ${hours[end]}m`;
+  return `every ${cur}m until ${fmtHour(end)}, then every ${hours[end]}m`;
 }
 
 export interface TileStatusInput {
@@ -97,8 +97,8 @@ export function tileStatus({ enabled, def, state, schedules, health, nextLabel, 
   const cooldownUntil = state?.["cooldownUntil"] as string | undefined;
   const cooldownLeft = cooldownUntil ? Date.parse(cooldownUntil) - now : 0;
   if (!def.imminent && cooldownLeft > 0) parts.push(`⏸ cooldown ${Math.ceil(cooldownLeft / 60_000)}m`);
-
-  parts.push(cadencePhrase(def, schedules, now));
+  // The cadence ("every 5m until 15:00, then every 8m") has its own 🕒 line on
+  // the tile, next to the schedule's name and a link to change it.
 
   // Secondary notes — only the ones that apply, each with the why in a tooltip.
   const block = def.imminent ? null : recentBlock(errLog, now);
@@ -133,10 +133,13 @@ export function tileStatus({ enabled, def, state, schedules, health, nextLabel, 
   const lastAlertAt = state?.["lastAlertAt"] as string | undefined;
   const quiet = health === "ok" && (lastAlertAt ? now - Date.parse(lastAlertAt) > QUIET_MS : checkHist.length >= 50);
   if (quiet) {
+    const days = lastAlertAt ? Math.floor((now - Date.parse(lastAlertAt)) / 86_400_000) : null;
     secondary.push({
-      text: "💤 quiet",
+      text: days != null ? `💤 no alerts in ${days}d` : "💤 no alerts yet",
       tone: "faint",
-      title: "No alerts in a long time despite healthy checks — verify the filter/source isn't quietly broken.",
+      title:
+        "Checks are healthy but this site hasn't produced a new / restock / sold-out alert in 3+ weeks. Often that's just a slow shop; " +
+        "if you expected drops here, check the keywords and source in ⚙ settings — a too-narrow filter looks exactly like this.",
     });
   }
 
@@ -151,4 +154,10 @@ export function tileStatus({ enabled, def, state, schedules, health, nextLabel, 
   }
 
   return { tone, parts, secondary, lastError, errorHint };
+}
+
+/** The tile's 🕒 line: which schedule, and what it means right now. */
+export function scheduleLine(def: SchedulableSite, schedules: Schedules, label: string, now: number = Date.now()): string {
+  if (def.imminent) return `⚡ imminent: ${cadencePhrase(def, schedules, now)} (then back to ${label})`;
+  return `${label}: ${cadencePhrase(def, schedules, now)}`;
 }

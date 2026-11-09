@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { recentBySite, toActivityRow, type HistoryRowLike } from "./activity";
+import { nowStatus, recentBySite, toActivityRow, type HistoryRowLike } from "./activity";
 
 const row = (id: number, siteId: string, type: string, extra: Partial<HistoryRowLike> = {}): HistoryRowLike => ({
   id,
@@ -53,5 +53,29 @@ describe("recentBySite", () => {
     expect(r.price).toBeNull();
     expect(r.url).toBeNull();
     expect(toActivityRow(row(10, "sp", "new_product", { payload: null })).price).toBeNull();
+  });
+});
+
+describe("nowStatus", () => {
+  const products = {
+    weasel: { available: false, url: "https://bourbonconcierge.com/products/weasel" },
+    lancero: { available: true, url: "https://bourbonconcierge.com/products/lancero" },
+    walled: { available: true, url: "https://www.thereveries.co/shop" },
+  };
+  const walls = new Set(["thereveries.co"]);
+
+  it("a 'new' event for a bottle that has since sold out reads sold out now (the Wanton Weasel case)", () => {
+    expect(nowStatus("weasel", products, true, walls)).toBe("out");
+    expect(nowStatus("lancero", products, true, walls)).toBe("in");
+  });
+
+  it("never claims stock behind a wall, on a frozen roster, or for a signal row", () => {
+    expect(nowStatus("walled", products, true, walls)).toBe("wall");
+    expect(nowStatus("lancero", products, false, walls)).toBeNull();
+    expect(nowStatus(null, products, true, walls)).toBeNull();
+  });
+
+  it("a handle no longer in the roster is delisted", () => {
+    expect(nowStatus("gone", products, true, walls)).toBe("delisted");
   });
 });

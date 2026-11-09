@@ -26,14 +26,14 @@ const schedules: Schedules = {
 describe("cadencePhrase", () => {
   it("names the current interval, when the run ends, and what comes next", () => {
     expect(getEtHour(new Date(NOW))).toBe(12); // fixture sanity
-    expect(cadencePhrase({ id: "a", schedule: "fast_hours" }, schedules, NOW)).toBe("every 5m until 15:00 → 8m");
+    expect(cadencePhrase({ id: "a", schedule: "fast_hours" }, schedules, NOW)).toBe("every 5m until 15:00, then every 8m");
   });
   it("collapses a uniform day", () => {
     expect(cadencePhrase({ id: "a", intervalMinutes: 20 }, {}, NOW)).toBe("every 20m all day");
   });
   it("wraps past midnight for an overnight run", () => {
     const lateNight = Date.parse("2026-10-31T03:30:00.000Z"); // 23:30 ET
-    expect(cadencePhrase({ id: "a", schedule: "fast_hours" }, schedules, lateNight)).toBe("every 60m until 06:00 → 8m");
+    expect(cadencePhrase({ id: "a", schedule: "fast_hours" }, schedules, lateNight)).toBe("every 60m until 06:00, then every 8m");
   });
   it("reports the imminent cadence while imminent", () => {
     expect(cadencePhrase({ id: "a", schedule: "fast_hours", imminent: true }, schedules, NOW)).toBe("every 2m while imminent");
@@ -47,7 +47,7 @@ describe("tileStatus", () => {
   it("healthy: green, with last check, next check and the cadence phrase", () => {
     const s = tileStatus({ ...base, health: "ok", state: { lastChecked: iso(-3 * MIN) } });
     expect(s.tone).toBe("ok");
-    expect(s.parts).toEqual(["✓ checking", "3m ago", "next ~2m", "every 5m until 15:00 → 8m"]);
+    expect(s.parts).toEqual(["✓ checking", "3m ago", "next ~2m"]);
     expect(s.secondary).toEqual([]);
     expect(s.lastError).toBeNull();
   });
@@ -91,7 +91,7 @@ describe("tileStatus", () => {
     const s = tileStatus({ ...base, def: { ...def, imminent: true }, health: "ok", state });
     expect(s.parts.some((p) => p.startsWith("⏸"))).toBe(false);
     expect(s.secondary).toEqual([]);
-    expect(s.parts.at(-1)).toBe("every 2m while imminent");
+    expect(s.parts.some((p) => p.startsWith("every"))).toBe(false); // cadence lives on the 🕒 line
   });
 
   it("fallback channel, truncated roster and quiet canary become secondary notes", () => {
@@ -103,7 +103,7 @@ describe("tileStatus", () => {
       checkHistory: new Array(60).fill({ ts: iso(0), ok: true }),
     };
     const s = tileStatus({ ...base, health: "ok", state });
-    expect(s.secondary.map((n) => n.text)).toEqual(["⛑ via storefront (preferred)", "⚠ roster truncated", "💤 quiet"]);
+    expect(s.secondary.map((n) => n.text)).toEqual(["⛑ via storefront (preferred)", "⚠ roster truncated", "💤 no alerts yet"]);
   });
 
   it("disabled: off tone, no error text", () => {

@@ -100,7 +100,7 @@ export function CadenceTable({
           const imminent = def.imminent === true;
           const nextAt = predictedNextCheckAt(s.enabled, def, s.lastChecked, s.cooldownUntil, schedules, now);
           return (
-            <tr key={s.id} className={s.enabled ? "" : "cad-off"}>
+            <tr key={s.id} id={`cad-${s.id}`} className={s.enabled ? "" : "cad-off"}>
               <td>
                 {s.name}{" "}
                 <span className="mono faint" style={{ fontSize: 11 }}>

@@ -1,3 +1,5 @@
+import { behindWall } from "./live";
+
 // Per-site "Recent" list for the Sites tile: the newest alert-history rows for
 // each site, so a tile answers "what came up here lately?" without a trip to
 // /history. Pure grouping over rows the page already fetches in one query
@@ -17,6 +19,7 @@ export interface HistoryRowLike {
   type: string;
   title: string | null;
   url: string | null;
+  handle?: string | null;
   payload?: unknown;
 }
 
@@ -30,6 +33,8 @@ export interface ActivityRow {
   title: string;
   url: string | null;
   price: number | null;
+  /** Product handle, so the tile can say what the bottle is doing NOW. */
+  handle: string | null;
 }
 
 const KIND: Record<string, { glyph: string; label: string }> = {
@@ -68,6 +73,7 @@ export function toActivityRow(r: HistoryRowLike): ActivityRow {
     title,
     url: r.url && r.url !== "#" ? r.url : null,
     price: priceOf(r.payload),
+    handle: signal ? null : (r.handle ?? null),
   };
 }
 
@@ -80,7 +86,7 @@ export function toActivityRow(r: HistoryRowLike): ActivityRow {
 export function recentBySite(
   rows: HistoryRowLike[],
   kinds: Record<string, string>,
-  perSite = 3,
+  perSite = 5,
 ): Map<string, ActivityRow[]> {
   const out = new Map<string, ActivityRow[]>();
   const sorted = [...rows].sort((a, b) => b.id - a.id);
@@ -96,3 +102,30 @@ export function recentBySite(
   }
   return out;
 }
+
+/** What a Recent row's bottle is doing NOW, as opposed to the event the row
+ *  records. The row's label says what happened then ("new" 39 days ago); this
+ *  says whether you can buy it today. Reads the site's own stored roster, so it
+ *  goes through the same liveness + wall gates as every other stock surface
+ *  (standing rule 1): a frozen roster or a walled storefront never reads "in stock". */
+export type NowStatus = "in" | "out" | "wall" | "delisted" | null;
+
+export function nowStatus(
+  handle: string | null,
+  products: Record<string, { available?: boolean; url?: string }> | undefined,
+  live: boolean,
+  walls: Set<string>,
+): NowStatus {
+  if (!handle || !live || !products) return null;
+  const p = products[handle];
+  if (!p) return "delisted";
+  if (p.url && behindWall(p.url, walls)) return "wall";
+  return p.available === true ? "in" : "out";
+}
+
+export const NOW_LABEL: Record<Exclude<NowStatus, null>, string> = {
+  in: "in stock",
+  out: "sold out",
+  wall: "🌊 walled",
+  delisted: "delisted",
+};

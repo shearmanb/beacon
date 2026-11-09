@@ -7,12 +7,11 @@
 // keywords as read-only chips; the input inside commits only on an explicit
 // Save (it used to save on blur and clear the site's state, one stray click
 // from a re-baseline). The ⚡ go-imminent control lives in the tile header
-// (ImminentControl); the "every Xm" cadence select stays here.
+// (ImminentControl), with both its cadence and duration pickers.
 
 import { useState, useTransition } from "react";
 import { runNow, setDeprecated, setMonitoring, setSchedule, setSiteFilters, updateSiteSource } from "../app/actions";
 import { splitList, type WindowSpec } from "../lib/site-forms";
-import { ImminentTuning } from "./ImminentTuning";
 import { WindowEditor } from "./WindowEditor";
 import { DiagnoseButton } from "./DiagnoseButton";
 
@@ -28,8 +27,6 @@ export function SiteControls({
   deprecated,
   schedule,
   scheduleOptions,
-  imminentInterval,
-  imminentDuration,
   titleContains,
   sourceJson,
   currentWindow,
@@ -40,8 +37,6 @@ export function SiteControls({
   deprecated: boolean;
   schedule: string;
   scheduleOptions: ScheduleOption[];
-  imminentInterval: number | null;
-  imminentDuration: number | null;
   titleContains: string[];
   sourceJson: string;
   /** This site's own quick-window schedule (`${siteId}_window`), parsed back
@@ -107,6 +102,9 @@ export function SiteControls({
         >
           {enabled ? "● Monitoring" : "○ Off"}
         </button>
+        <span className="tune-label" title="How often this site is checked through the day. The 🕒 line on the tile shows what it means right now.">
+          🕒 schedule
+        </span>
         <select
           className="in sched"
           value={schedule}
@@ -136,7 +134,6 @@ export function SiteControls({
           {deprecated ? "↩ Restore" : "🗄 Deprecate"}
         </button>
       </div>
-      <ImminentTuning siteId={siteId} imminentInterval={imminentInterval} imminentDuration={imminentDuration} intervalOnly />
       <div className="row kw">
         <span
           className="tune-label"

@@ -1,11 +1,12 @@
 "use client";
 
-// ⚡ split control in the tile header: "Go imminent" + a duration picker in
-// one motion. Off: button + select ("for 45m"); the click starts imminent for
-// the selected duration (one server write — setImminent persists the chosen
-// duration as the site's tuning, so the worker's auto-off and the badge agree).
-// On: the pulsing ImminentBadge (every Xm · Nm left) + "stop". The cadence
-// ("every Xm") is rarely changed and lives in the tile's ⚙ panel.
+// ⚡ split control in the tile header: "Go imminent · every 2m · for 45m" in
+// one motion. Off: button + two selects; the click starts imminent with the
+// selected cadence and duration (one server write — setImminent persists both
+// as the site's tuning, so the worker, its auto-off and the badge agree, and
+// the next "Go imminent" on this tile starts from the same picks).
+// On: the pulsing ImminentBadge (every Xm · Nm left) + "stop". To change the
+// cadence mid-imminent: stop, pick, go.
 //
 // Plain async busy-state, not useTransition — React 18 async transitions
 // swallow rejections silently (see DiagnoseButton).
@@ -13,7 +14,7 @@
 import { useState } from "react";
 import { setImminent } from "../app/actions";
 import { DEFAULT_IMMINENT_DURATION_MIN } from "@beacon/shared";
-import { DURATION_OPTS } from "./ImminentTuning";
+import { DURATION_OPTS, INTERVAL_OPTS } from "./ImminentTuning";
 import { ImminentBadge } from "./ImminentBadge";
 
 export function ImminentControl({
@@ -36,7 +37,9 @@ export function ImminentControl({
 }) {
   const cur = durationMin ?? DEFAULT_IMMINENT_DURATION_MIN;
   const opts = DURATION_OPTS.includes(cur) ? DURATION_OPTS : [cur, ...DURATION_OPTS];
+  const everyOpts = INTERVAL_OPTS.includes(everyMin) ? INTERVAL_OPTS : [everyMin, ...INTERVAL_OPTS];
   const [dur, setDur] = useState(cur);
+  const [every, setEvery] = useState(everyMin);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -44,7 +47,7 @@ export function ImminentControl({
     setBusy(true);
     setErr(null);
     try {
-      await setImminent(siteId, on, on ? { durationMinutes: dur } : {});
+      await setImminent(siteId, on, on ? { durationMinutes: dur, intervalMinutes: every } : {});
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
@@ -68,11 +71,18 @@ export function ImminentControl({
       <button
         className="btn bolt"
         disabled={busy}
-        title={`Check every ${everyMin}m for ${dur}m, ignoring rate-limit cooldowns, then revert to the schedule. First fast check runs on the worker's next loop (≤60s).`}
+        title={`Check every ${every}m for ${dur}m, ignoring rate-limit cooldowns, then revert to the schedule. First fast check runs on the worker's next loop (≤60s).`}
         onClick={() => void toggle(true)}
       >
         {busy ? "⚡ starting…" : "⚡ Go imminent"}
       </button>
+      <select className="in" value={String(every)} disabled={busy} title="How often to check while imminent (1m is the floor — tighter trips anti-bot)" onChange={(e) => setEvery(Number(e.target.value))}>
+        {everyOpts.map((m) => (
+          <option key={m} value={m}>
+            every {m}m
+          </option>
+        ))}
+      </select>
       <select className="in" value={String(dur)} disabled={busy} title="How long imminent stays on before it auto-reverts" onChange={(e) => setDur(Number(e.target.value))}>
         {opts.map((m) => (
           <option key={m} value={m}>

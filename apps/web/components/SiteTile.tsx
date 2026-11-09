@@ -2,8 +2,9 @@
 // 2026-10-30 simplification. The face answers three questions and nothing else:
 //   1. are checks OK?  → health dot + ONE status line (lib/tile-status.ts) +
 //      the last-60-min PulseStrip
-//   2. what came up here lately?  → RecentActivity (alert history, 3 rows)
-//   3. go imminent, for how long?  → ImminentControl in the header
+//   2. how often is it checked?  → the 🕒 schedule line (+ "change ›")
+//   3. what came up here lately, and is it buyable now?  → RecentActivity (5 rows)
+//   4. go imminent, how often, for how long?  → ImminentControl in the header
 // Everything that edits the site is inside the collapsed ⚙ panel (SiteControls).
 
 import type { SiteRow } from "@beacon/db";
@@ -12,10 +13,11 @@ import type { Schedules } from "@beacon/shared";
 import { DEFAULT_IMMINENT_DURATION_MIN, imminentInterval, type ErrorLogEntry } from "@beacon/shared";
 import { nowInterval } from "../lib/cadence";
 import { predictedNextCheckAt, formatEta } from "../lib/nextcheck";
-import { tileStatus } from "../lib/tile-status";
+import { scheduleLine, tileStatus } from "../lib/tile-status";
+import { rosterIsLive } from "../lib/live";
 import { parseWindowRules } from "../lib/site-forms";
 import type { Health } from "../lib/health";
-import type { ActivityRow } from "../lib/activity";
+import { nowStatus, type ActivityRow, type NowStatus } from "../lib/activity";
 import { NextCheckIn } from "./NextCheckIn";
 import { PulseStrip } from "./PulseStrip";
 import { ImminentControl } from "./ImminentControl";
@@ -49,6 +51,7 @@ export function SiteTile({
   schedules,
   scheduleOptions,
   recent,
+  walls,
   now,
 }: {
   row: SiteRow;
@@ -57,6 +60,8 @@ export function SiteTile({
   schedules: Schedules;
   scheduleOptions: ScheduleOption[];
   recent: ActivityRow[];
+  /** Storefronts currently behind a password wall (lib/live walledHosts). */
+  walls: Set<string>;
   now: number;
 }) {
   const def = row.definition;
@@ -88,6 +93,17 @@ export function SiteTile({
   const stalled = row.enabled && overdueMs > (cadenceMins * 2.5 + 8) * 60_000;
   const degraded = checkHist.slice(-4).some((h) => !h.ok);
   const imminentOn = !!def.imminent && row.enabled;
+
+  // 🕒 line: the schedule's name + what it resolves to now, with a jump to this
+  // site's row in the Cadence control panel (/schedules) where every window is
+  // laid out. The ⚙ panel's schedule dropdown changes it in place.
+  const schedVal = String(def.schedule ?? def.intervalMinutes ?? "");
+  const schedLabel = scheduleOptions.find((o) => o.value === schedVal)?.label ?? (schedVal ? `${schedVal} min` : "default");
+
+  // What each Recent row's bottle is doing NOW (gated like every stock surface).
+  const live = rosterIsLive(row.enabled, state?.lastChecked);
+  const products = state?.products as Record<string, { available?: boolean; url?: string }> | undefined;
+  const recentStatus = new Map<number, NowStatus>(recent.map((r) => [r.id, nowStatus(r.handle, products, live, walls)]));
 
   return (
     <div className={`site-card ${row.enabled ? "" : "disabled"} ${imminentOn ? "imminent" : ""}`}>
@@ -129,6 +145,14 @@ export function SiteTile({
           </span>
         ))}
       </div>
+      {row.enabled && (
+        <div className={`site-sched ${imminentOn ? "imm" : ""}`}>
+          <span className="txt">🕒 {scheduleLine(def, schedules, schedLabel, now)}</span>
+          <a href={`/schedules#cad-${row.id}`} title="See this site's check windows for the whole day and change its schedule (also in ⚙ settings below)">
+            change ›
+          </a>
+        </div>
+      )}
       {status.secondary.length > 0 && (
         <div className="site-secondary">
           {status.secondary.map((n) => (
@@ -147,7 +171,7 @@ export function SiteTile({
 
       {checkHist.length > 0 && <PulseStrip history={checkHist} stalled={stalled} degraded={degraded} />}
 
-      <RecentActivity rows={recent} now={now} />
+      <RecentActivity rows={recent} now={now} status={recentStatus} />
 
       <SiteControls
         siteId={row.id}
@@ -156,8 +180,6 @@ export function SiteTile({
         deprecated={!!def.deprecated}
         schedule={String(def.schedule ?? def.intervalMinutes ?? "")}
         scheduleOptions={scheduleOptions}
-        imminentInterval={def.imminentIntervalMinutes ?? null}
-        imminentDuration={def.imminentDurationMinutes ?? null}
         titleContains={def.filters?.titleContains ?? []}
         sourceJson={JSON.stringify(def.source, null, 2)}
         currentWindow={parseWindowRules(schedules[`${row.id}_window`]?.rules)}

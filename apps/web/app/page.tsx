@@ -4,7 +4,7 @@ import { ReveriesPanel } from "../components/ReveriesPanel";
 import { SitesView } from "../components/SitesView";
 import { SiteTile } from "../components/SiteTile";
 import { isReveries } from "../lib/reveries";
-import { rosterIsLive } from "../lib/live";
+import { rosterIsLive, walledHosts } from "../lib/live";
 import { countAllProducts, countLiveProducts, loadReveriesStock } from "../lib/stock";
 import { RECENT_EVENT_TYPES, recentBySite } from "../lib/activity";
 import { scheduleOptionsFor } from "../components/CadenceTable";
@@ -168,6 +168,7 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
         : "all systems nominal";
 
   const scheduleOptions = scheduleOptionsFor(schedules);
+  const walls = walledHosts(cards);
   const recentPerSite = recentBySite(
     activityRows,
     Object.fromEntries(rows.map((r) => [r.id, r.sourceKind])),
@@ -303,6 +304,7 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
             schedules={schedules}
             scheduleOptions={scheduleOptions}
             recent={recentPerSite.get(row.id) ?? []}
+            walls={walls}
             now={now}
           />
         ))}
