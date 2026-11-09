@@ -41,6 +41,7 @@ const MORE_LINKS = [
   { href: "/unicorn", label: "Unicorn", title: "Unicorn Auctions watcher — isolated from site tracking" },
   { href: "/api/export/history", label: "Export", title: "Download the full alert history as JSONL — feed it to Claude to mine drop-timing patterns" },
   { href: "/reminders", label: "Reminders" },
+  { href: "https://reveriesregistry.com/", label: "Reveries Registry ↗", title: "The Reveries Registry — fan-made archive of every Reveries release (opens in a new tab)", external: true },
 ];
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -69,7 +70,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <summary>More ▾</summary>
                 <div className="nav-menu">
                   {MORE_LINKS.map((l) => (
-                    <a key={l.href} href={l.href} title={l.title}>
+                    <a
+                      key={l.href}
+                      href={l.href}
+                      title={l.title}
+                      {...("external" in l && l.external ? { target: "_blank", rel: "noreferrer" } : {})}
+                    >
                       {l.label}
                     </a>
                   ))}

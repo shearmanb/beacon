@@ -10,6 +10,7 @@
 // the same pattern PulseStrip uses for its toggle. Defaults to full.
 
 import { useEffect, useState } from "react";
+import { RegistryLink, type RegistryRef } from "./RegistryLink";
 
 export interface RevProduct {
   key: string;
@@ -27,6 +28,7 @@ export interface RevProduct {
   minPrice: number | null;
   vendor: string | null;
   url: string;
+  registry?: RegistryRef;
 }
 
 type Level = "full" | "compact" | "micro";
@@ -63,6 +65,12 @@ function Tile({ p }: { p: RevProduct }) {
       <div className="faint mono rev-sub">
         {p.vendor ? `${p.vendor} · ` : ""}
         {p.site}
+        {p.registry && (
+          <>
+            {" · "}
+            <RegistryLink r={p.registry} />
+          </>
+        )}
       </div>
     </div>
   );

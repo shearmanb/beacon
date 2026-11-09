@@ -5,6 +5,7 @@
 
 import { NextResponse } from "next/server";
 import { getStore } from "../../../../lib/store";
+import { loadRegistry, registryStatus } from "../../../../lib/registry";
 
 export const dynamic = "force-dynamic";
 
@@ -44,8 +45,10 @@ export async function GET(): Promise<NextResponse> {
       },
     });
   }
+  await loadRegistry(); // refresh if due, so the status below is current
   return NextResponse.json({
     generatedAt: new Date().toISOString(),
+    reveriesRegistry: registryStatus(),
     workerHeartbeat: heartbeat ?? null,
     workerHeartbeatAgeSec: heartbeat ? Math.round((Date.now() - Date.parse(heartbeat)) / 1000) : null,
     sites,

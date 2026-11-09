@@ -7,6 +7,7 @@ import { isReveries } from "../lib/reveries";
 import { rosterIsLive, walledHosts } from "../lib/live";
 import { countAllProducts, countLiveProducts, loadReveriesStock } from "../lib/stock";
 import { RECENT_EVENT_TYPES, recentBySite } from "../lib/activity";
+import { loadRegistry, registryRef } from "../lib/registry";
 import { scheduleOptionsFor } from "../components/CadenceTable";
 
 export const dynamic = "force-dynamic";
@@ -100,7 +101,8 @@ export default async function SitesPage({ searchParams }: { searchParams: { tab?
 
   // Reveries products in stock across every site, for the ✨ Reveries section —
   // deduped by bottle and gated by roster liveness (see lib/stock.ts).
-  const reveriesProducts = loadReveriesStock(cards);
+  const registry = await loadRegistry();
+  const reveriesProducts = loadReveriesStock(cards).map((p) => ({ ...p, registry: registryRef(p.title, registry) }));
   // Reveries in stock across every site — the headline goal.
   const reveriesInStock = reveriesProducts.filter((p) => p.available).length;
   // Bottles loaded in the shop backend while the storefront is walled — the

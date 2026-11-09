@@ -31,6 +31,8 @@ export interface StockProduct {
   minPrice: number | null;
   vendor: string | null;
   url: string;
+  /** The Reveries Registry link (filled by the page, see lib/registry.ts). */
+  registry?: { url: string; exact: boolean };
 }
 
 function productsOf(state: SiteState | undefined): NormalizedProduct[] {

@@ -6,6 +6,7 @@
 // queries, no API routes. Restores the v1 dashboard's product filters.
 
 import { useEffect, useMemo, useState } from "react";
+import { RegistryLink, type RegistryRef } from "./RegistryLink";
 import { IgnoreButton } from "./IgnoreButton";
 import { parseAge, parseProof } from "../lib/bottle";
 
@@ -26,6 +27,8 @@ export interface ProductRow {
   url: string;
   /** The product's own page when `url` is a shared shop page. */
   pageUrl?: string | null;
+  /** The Reveries Registry link, Reveries rows only (lib/registry.ts). */
+  registry?: RegistryRef | null;
   /** Cleaned description / tasting notes. */
   details?: string | null;
   reveries: boolean;
@@ -279,6 +282,12 @@ export function ProductsTable({ items, ignored }: { items: ProductRow[]; ignored
                       <a className="faint" href={it.pageUrl} target="_blank" rel="noreferrer" title="The product's own page">
                         ↗ product page
                       </a>
+                    </>
+                  )}
+                  {it.registry && (
+                    <>
+                      {" "}
+                      <RegistryLink r={it.registry} />
                     </>
                   )}
                   {it.details && (

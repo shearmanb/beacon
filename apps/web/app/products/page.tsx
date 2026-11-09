@@ -2,15 +2,17 @@ import { getStore } from "../../lib/store";
 import { ProductsTable, type ProductRow } from "../../components/ProductsTable";
 import { isReveries } from "../../lib/reveries";
 import { behindWall, rosterIsLive, walledHosts } from "../../lib/live";
+import { loadRegistry, registryRef } from "../../lib/registry";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
   const store = await getStore();
   const rows = await store.sites.list();
-  const [states, ignored] = await Promise.all([
+  const [states, ignored, registry] = await Promise.all([
     Promise.all(rows.map((r) => store.state.load(r.id))),
     store.ignored.set(),
+    loadRegistry(),
   ]);
 
   // Storefronts currently behind a password / coming-soon wall, per a live
@@ -30,6 +32,7 @@ export default async function ProductsPage() {
       const title = String(p["title"] ?? p["handle"]);
       const url = String(p["url"] ?? "#");
       const walled = live && behindWall(url, walls);
+      const reveries = isReveries(row.id, title);
       items.push({
         site: row.definition.deprecated ? `${row.name} (deprecated)` : row.name,
         handle: String(p["handle"]),
@@ -42,7 +45,8 @@ export default async function ProductsPage() {
         url,
         pageUrl: typeof p["pageUrl"] === "string" ? (p["pageUrl"] as string) : null,
         details: typeof p["details"] === "string" ? (p["details"] as string) : null,
-        reveries: isReveries(row.id, title),
+        reveries,
+        registry: reveries ? registryRef(title, registry) : null,
         // When Beacon first observed this product (stamped by the worker's
         // annotateProducts). Absent for pre-annotation / freshly-baselined rows.
         firstSeen: typeof p["firstSeen"] === "string" ? (p["firstSeen"] as string) : null,

@@ -115,6 +115,17 @@ a:hover {
   text-transform: uppercase;
   margin: 0;
 }
+/* 📖 Reveries Registry link: bright when it is this bottle's own page,
+   faint when it only opens the registry homepage. */
+.reg-link {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--faint);
+  white-space: nowrap;
+}
+.reg-link.exact {
+  color: var(--accent);
+}
 /* A section whose header is the toggle (components/Collapsible.tsx). */
 .collapsible > summary.sect-hd {
   list-style: none;
