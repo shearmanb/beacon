@@ -10,7 +10,7 @@
 // keywords are linked to a target bottle, the row is also judged against that
 // bottle's max hammer, which is the actual buy/walk-away decision.
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { estimateAllInDollars, type AuctionFees } from "@beacon/shared";
 import { ignoreUnicornLot } from "../app/actions";
 
@@ -45,6 +45,21 @@ const allInDollars = estimateAllInDollars;
 
 const money = (n: number): string => `$${Math.round(n).toLocaleString("en-US")}`;
 
+// Sort choices for the lots table. A dropdown, not clickable column heads,
+// because the mobile card layout hides <thead> (same call as /products).
+const SORTS = {
+  newest: "Newest first",
+  oldest: "Oldest first",
+  "bid-asc": "Bid: low → high",
+  "bid-desc": "Bid: high → low",
+  headroom: "Most room under max",
+  bottle: "Target bottle (rank)",
+  title: "Lot name A–Z",
+} as const;
+type SortKey = keyof typeof SORTS;
+const SORT_KEY = "beacon.unicorn.lotSort";
+const rankCmp = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true, sensitivity: "base" });
+
 function seenLabel(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "—";
@@ -69,6 +84,25 @@ export function UnicornLots({
   const [minBid, setMinBid] = useState("");
   const [maxBid, setMaxBid] = useState("");
   const [underMaxOnly, setUnderMaxOnly] = useState(false);
+  const [sort, setSort] = useState<SortKey>("newest");
+  // Remember the sort per browser (guarded; restored after mount so SSR and the
+  // first client render agree).
+  useEffect(() => {
+    try {
+      const v = localStorage.getItem(SORT_KEY);
+      if (v && v in SORTS) setSort(v as SortKey);
+    } catch {
+      /* storage blocked */
+    }
+  }, []);
+  const chooseSort = (v: SortKey) => {
+    setSort(v);
+    try {
+      localStorage.setItem(SORT_KEY, v);
+    } catch {
+      /* storage blocked */
+    }
+  };
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -89,11 +123,26 @@ export function UnicornLots({
       : { state: "under", detail: `${money(best - lot.currentBidDollars)} to max` };
   };
 
+  // Room under the most permissive linked max hammer (bid-less or untargeted
+  // lots have none and sort after every lot that does).
+  const headroom = (lot: UnicornLotRow): number | null => {
+    if (lot.currentBidDollars == null) return null;
+    const maxes = lot.bottleIds.map((id) => bottleById.get(id)?.maxHammerDollars).filter((m): m is number => m != null);
+    return maxes.length ? Math.max(...maxes) - lot.currentBidDollars : null;
+  };
+  const bestRank = (lot: UnicornLotRow): string | null => {
+    const ranks = lot.bottleIds.map((id) => bottleById.get(id)?.rank).filter((r): r is string => !!r);
+    return ranks.length ? ranks.sort(rankCmp)[0]! : null;
+  };
+  // Missing values (no bid, no target) always go last, whichever direction.
+  const nullsLast = <T,>(a: T | null, b: T | null, cmp: (x: T, y: T) => number): number =>
+    a == null && b == null ? 0 : a == null ? 1 : b == null ? -1 : cmp(a, b);
+
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
     const lo = minBid.trim() === "" ? null : Number(minBid);
     const hi = maxBid.trim() === "" ? null : Number(maxBid);
-    return lots.filter((l) => {
+    const rows = lots.filter((l) => {
       if (needle && !l.title.toLowerCase().includes(needle)) return false;
       if (term && !l.matchedTerms.includes(term)) return false;
       if (bottleId && !l.bottleIds.includes(bottleId)) return false;
@@ -104,8 +153,20 @@ export function UnicornLots({
       if (underMaxOnly && verdict(l).state === "over") return false;
       return true;
     });
+    const byNum = (x: number, y: number) => x - y;
+    const cmp: Record<SortKey, (a: UnicornLotRow, b: UnicornLotRow) => number> = {
+      newest: (a, b) => b.firstSeenAt.localeCompare(a.firstSeenAt),
+      oldest: (a, b) => a.firstSeenAt.localeCompare(b.firstSeenAt),
+      "bid-asc": (a, b) => nullsLast(a.currentBidDollars, b.currentBidDollars, byNum),
+      "bid-desc": (a, b) => nullsLast(a.currentBidDollars, b.currentBidDollars, (x, y) => y - x),
+      headroom: (a, b) => nullsLast(headroom(a), headroom(b), (x, y) => y - x),
+      bottle: (a, b) => nullsLast(bestRank(a), bestRank(b), rankCmp),
+      title: (a, b) => a.title.localeCompare(b.title),
+    };
+    // Ties fall back to newest first so the order is stable and predictable.
+    return [...rows].sort((a, b) => cmp[sort](a, b) || cmp.newest(a, b));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lots, q, term, bottleId, minBid, maxBid, underMaxOnly, bottleById]);
+  }, [lots, q, term, bottleId, minBid, maxBid, underMaxOnly, bottleById, sort]);
 
   const act = (fn: () => Promise<{ ok: boolean; error?: string }>, fallback: string) =>
     start(async () => {
@@ -154,6 +215,13 @@ export function UnicornLots({
           <input type="checkbox" checked={underMaxOnly} onChange={(e) => setUnderMaxOnly(e.target.checked)} /> under max
           hammer
         </label>
+        <select className="in" value={sort} onChange={(e) => chooseSort(e.target.value as SortKey)} title="Sort the matched lots">
+          {(Object.keys(SORTS) as SortKey[]).map((k) => (
+            <option key={k} value={k}>
+              Sort: {SORTS[k]}
+            </option>
+          ))}
+        </select>
         <span className="muted mono" style={{ fontSize: 12 }}>
           {filtered.length}/{lots.length}
         </span>

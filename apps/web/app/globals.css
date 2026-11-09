@@ -115,6 +115,26 @@ a:hover {
   text-transform: uppercase;
   margin: 0;
 }
+/* A section whose header is the toggle (components/Collapsible.tsx). */
+.collapsible > summary.sect-hd {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+.collapsible > summary.sect-hd::-webkit-details-marker {
+  display: none;
+}
+.collapsible > summary .caret {
+  color: var(--muted);
+  font-size: 12px;
+  transition: transform 0.12s;
+}
+.collapsible[open] > summary .caret {
+  transform: rotate(90deg);
+}
+.collapsible > summary:hover h2 {
+  color: var(--accent);
+}
 .sect-hd .rule {
   flex: 1;
   height: 1px;

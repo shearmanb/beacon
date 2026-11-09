@@ -16,6 +16,7 @@ import { UnicornTerms } from "../../components/UnicornTerms";
 import { UnicornLots } from "../../components/UnicornLots";
 import { UnicornBottles } from "../../components/UnicornBottles";
 import { UnicornSandbox } from "../../components/UnicornSandbox";
+import { Collapsible } from "../../components/Collapsible";
 
 export const dynamic = "force-dynamic";
 
@@ -125,14 +126,9 @@ export default async function UnicornPage() {
             forceScanPending={state.forceScanRequested === true}
           />
 
-          <div className="sect-hd" style={{ marginTop: 18 }}>
-            <h2>Target bottles</h2>
-            <span className="rule" />
-            <span className="muted mono" style={{ fontSize: 12 }}>
-              {bottles.length}
-            </span>
-          </div>
-          <UnicornBottles bottles={bottles} fees={fees} termCountByBottle={termCountByBottle} />
+          <Collapsible id="unicorn-bottles" title="Target bottles" meta={bottles.length}>
+            <UnicornBottles bottles={bottles} fees={fees} termCountByBottle={termCountByBottle} />
+          </Collapsible>
 
           {config.notes.trim() && (
             <details className="card" style={{ marginTop: 10 }}>
@@ -148,23 +144,19 @@ export default async function UnicornPage() {
             </details>
           )}
 
-          {/* Collapsed once terms exist — day to day this page is for reading
-              matches, not editing the watchlist. Open by default while empty so
-              first-time setup is obvious. */}
-          <details className="card" style={{ marginTop: 18 }} open={config.terms.length === 0}>
-            <summary>
-              <h3 style={{ display: "inline" }}>
-                Watch terms{" "}
-                <span className="muted mono" style={{ fontSize: 12, fontWeight: "normal" }}>
-                  ({config.terms.length}
-                  {unlinkedTerms > 0 && bottles.length > 0 ? `, ${unlinkedTerms} unlinked` : ""})
-                </span>
-              </h3>
-            </summary>
-            <div style={{ marginTop: 8 }}>
+          {/* Collapsed by default once terms exist — day to day this page is for
+              reading matches, not editing the watchlist. Open while empty so
+              first-time setup is obvious. Your own open/closed choice sticks. */}
+          <Collapsible
+            id="unicorn-terms"
+            title="Watch terms"
+            meta={`${config.terms.length}${unlinkedTerms > 0 && bottles.length > 0 ? ` · ${unlinkedTerms} unlinked` : ""}`}
+            defaultOpen={config.terms.length === 0}
+          >
+            <div className="card">
               <UnicornTerms terms={config.terms} bottles={bottles} />
             </div>
-          </details>
+          </Collapsible>
 
           <div className="sect-hd" style={{ marginTop: 18 }}>
             <h2>Matched lots</h2>
