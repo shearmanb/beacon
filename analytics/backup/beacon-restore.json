@@ -1,11 +1,11 @@
 {
  "version": 1,
- "at": "2026-10-21T03:43:54.122Z",
+ "at": "2026-11-09T20:24:17.218Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
    "name": "SharedPour T8KE",
-   "enabled": true,
+   "enabled": false,
    "deprecated": true,
    "schedule": "drop_windows",
    "intervalMinutes": 20,
@@ -48,7 +48,7 @@
   {
    "id": "sharedpour_reveries",
    "name": "SharedPour The Reveries",
-   "enabled": true,
+   "enabled": false,
    "deprecated": true,
    "schedule": "drop_windows",
    "intervalMinutes": 20,
@@ -92,7 +92,8 @@
    "id": "fountain_inn_dc",
    "name": "Fountain Inn DC",
    "enabled": true,
-   "schedule": "bar_evening",
+   "deprecated": false,
+   "schedule": "fast_hours",
    "intervalMinutes": 30,
    "imminent": false,
    "imminentIntervalMinutes": 2,
@@ -100,7 +101,8 @@
     "onNew": true,
     "onRestock": true,
     "onSoldOut": true,
-    "onSiteReset": true
+    "onSiteReset": true,
+    "dedupeAcrossSites": true
    },
    "filters": {
     "titleContains": [
@@ -130,7 +132,8 @@
    "id": "bourbon_concierge",
    "name": "Bourbon Concierge",
    "enabled": true,
-   "schedule": "drop_windows",
+   "deprecated": false,
+   "schedule": "fast_hours",
    "intervalMinutes": 30,
    "imminent": false,
    "imminentIntervalMinutes": 2,
@@ -172,7 +175,8 @@
    "id": "reveries_site_status",
    "name": "The Reveries Site Status",
    "enabled": true,
-   "schedule": "15",
+   "deprecated": false,
+   "schedule": "fast_hours",
    "intervalMinutes": 30,
    "imminent": false,
    "imminentIntervalMinutes": 1,
@@ -221,10 +225,12 @@
    "id": "reveries_official",
    "name": "The Reveries Official Shop",
    "enabled": true,
-   "schedule": "reveries_official_window",
+   "deprecated": false,
+   "schedule": "fast_hours",
    "intervalMinutes": 30,
    "imminent": false,
    "imminentIntervalMinutes": 2,
+   "imminentDurationMinutes": 20,
    "imminentSince": null,
    "scheduleBeforeImminent": null,
    "alerts": {
@@ -297,6 +303,7 @@
    "id": "russells_reserve_limited",
    "name": "Russell's Reserve",
    "enabled": true,
+   "deprecated": true,
    "schedule": "20",
    "intervalMinutes": 30,
    "imminent": false,
@@ -368,11 +375,12 @@
   {
    "id": "sharedpour_t8ke_all",
    "name": "SharedPour Watchlist",
-   "enabled": false,
-   "schedule": "drop_windows",
+   "enabled": true,
+   "deprecated": false,
+   "schedule": "fast_hours",
    "imminent": false,
    "imminentIntervalMinutes": 2,
-   "imminentDurationMinutes": 45,
+   "imminentDurationMinutes": 60,
    "imminentSince": null,
    "scheduleBeforeImminent": null,
    "alerts": {
@@ -645,6 +653,44 @@
      "defaultInterval": 60
     }
    ]
+  },
+  "fast_hours": {
+   "label": "⚡ Fast Hours (5m peak · 8m shoulders)",
+   "rules": [
+    {
+     "fromHour": 8,
+     "toHour": 15,
+     "interval": 5
+    },
+    {
+     "fromHour": 17,
+     "toHour": 20,
+     "interval": 5
+    },
+    {
+     "fromHour": 6,
+     "toHour": 8,
+     "interval": 8
+    },
+    {
+     "fromHour": 15,
+     "toHour": 17,
+     "interval": 8
+    },
+    {
+     "fromHour": 20,
+     "toHour": 22,
+     "interval": 8
+    },
+    {
+     "fromHour": 22,
+     "toHour": 6,
+     "interval": 60
+    },
+    {
+     "defaultInterval": 60
+    }
+   ]
   }
  },
  "ignored": [
@@ -710,7 +756,7 @@
  },
  "states": {
   "sharedpour_t8ke": {
-   "lastChecked": "2026-10-21T01:50:27.678Z",
+   "lastChecked": "2026-10-30T20:42:21.618Z",
    "productCount": 18,
    "products": {
     "penelope-project-x-sa-cask-finish": {
@@ -725,18 +771,6 @@
      "url": "https://sharedpour.com/products/penelope-project-x-sa-cask-finish",
      "firstSeen": "2026-07-10T17:40:18.573Z"
     },
-    "bardstown-bourbon-co-single-barrel-t8ke": {
-     "handle": "bardstown-bourbon-co-single-barrel-t8ke",
-     "title": "Bardstown Bourbon Company Collaboration Series: T8KE Exclusive Release",
-     "vendor": "Bardstown Bourbon Company",
-     "productType": "",
-     "tags": [],
-     "minPrice": 109.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-16at07.12.45.png?v=1760613170",
-     "url": "https://sharedpour.com/products/bardstown-bourbon-co-single-barrel-t8ke",
-     "firstSeen": "2026-07-10T17:40:18.573Z"
-    },
     "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive": {
      "handle": "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive",
      "title": "Barrell Craft Spirits x Collaboration With T8KE Exclusive Batch Barrel Strength Ice Wine & French Oak Cask Release",
@@ -745,7 +779,7 @@
      "tags": [],
      "minPrice": 199.99,
      "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f7f2a6fa-844a-bd29-8fa6-93a9a0be0341.jpg?v=1768742030",
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ICE_WINE.jpg?v=1793197175",
      "url": "https://sharedpour.com/products/barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive",
      "firstSeen": "2026-07-10T17:40:18.573Z"
     },
@@ -769,7 +803,7 @@
      "tags": [],
      "minPrice": 79.99,
      "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/0bb57896-6d3c-b43b-d8aa-3a0acfef6975.png?v=1784463045",
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/SYNTHESIS_3.png?v=1793197212",
      "url": "https://sharedpour.com/products/barrell-craft-spirits-x-t8ke-synthesis-iii-cask-strength-ratafia-de-champagne-finished-bourbon-rye-blend",
      "firstSeen": "2026-07-20T17:11:24.005Z"
     },
@@ -783,9 +817,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f96d2467-738c-b849-927c-03416b9f11ff.jpg?v=1771159501",
      "url": "https://sharedpour.com/products/pm-spirits-project-t8ke-armagnac-bourbon-concierge-105-8-prf",
-     "firstSeen": "2026-07-10T17:40:18.573Z",
-     "prevPrice": 74.99,
-     "priceChangedAt": "2026-10-15T17:08:52.811Z"
+     "firstSeen": "2026-07-10T17:40:18.573Z"
     },
     "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch": {
      "handle": "t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch",
@@ -797,9 +829,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00904.jpg?v=1780229762",
      "url": "https://sharedpour.com/products/t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch",
-     "firstSeen": "2026-07-10T17:40:18.573Z",
-     "prevPrice": 69.99,
-     "priceChangedAt": "2026-10-15T17:08:52.811Z"
+     "firstSeen": "2026-07-10T17:40:18.573Z"
     },
     "alambique-serrano-cask-251-t8ke": {
      "handle": "alambique-serrano-cask-251-t8ke",
@@ -823,9 +853,43 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
      "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026",
-     "firstSeen": "2026-07-10T17:40:18.573Z",
-     "prevPrice": 89.99,
-     "priceChangedAt": "2026-10-15T17:08:52.811Z"
+     "firstSeen": "2026-07-10T17:40:18.573Z"
+    },
+    "blue-note-bourbon-23939-t8ke": {
+     "handle": "blue-note-bourbon-23939-t8ke",
+     "title": "Blue Note Kentucky Bourbon #23939 T8KE Single Barrel Select",
+     "vendor": "Blue Note",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 59.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ed2499f9-f254-2109-c777-29dcc00fda3f.jpg?v=1792330571",
+     "url": "https://sharedpour.com/products/blue-note-bourbon-23939-t8ke",
+     "firstSeen": "2026-10-22T15:48:14.175Z"
+    },
+    "blue-note-rye-18949-t8ke": {
+     "handle": "blue-note-rye-18949-t8ke",
+     "title": "Blue Note Kentucky Rye #18949 T8KE Single Barrel Select",
+     "vendor": "Blue Note",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 59.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/933ec4f5-0129-d379-652a-0ab4e7418984.jpg?v=1792330711",
+     "url": "https://sharedpour.com/products/blue-note-rye-18949-t8ke",
+     "firstSeen": "2026-10-22T15:48:14.175Z"
+    },
+    "t8ke-x-new-louisville-barrel-house-the-bones-ky172-8-year-hazmat-kentucky-bourbon": {
+     "handle": "t8ke-x-new-louisville-barrel-house-the-bones-ky172-8-year-hazmat-kentucky-bourbon",
+     "title": "T8KE x New Louisville Barrel House \"THE BONES\" KY172 8 Year Hazmat Kentucky Bourbon",
+     "vendor": "Nulu",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 179.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00937.jpg?v=1780229848",
+     "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-ky172-8-year-hazmat-kentucky-bourbon",
+     "firstSeen": "2026-10-22T14:59:48.071Z"
     },
     "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon": {
      "handle": "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon",
@@ -839,18 +903,6 @@
      "url": "https://sharedpour.com/products/new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon",
      "firstSeen": "2026-10-15T17:08:52.811Z"
     },
-    "westland-american-single-malt-cask-1757": {
-     "handle": "westland-american-single-malt-cask-1757",
-     "title": "Westland American Single Malt Cask #1757 r/Bourbon Single Barrel Selection by T8KE",
-     "vendor": "Westland",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 79.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e8d4cd80-4ab8-077f-345b-74dd98f1f862.jpg?v=1773577422",
-     "url": "https://sharedpour.com/products/westland-american-single-malt-cask-1757",
-     "firstSeen": "2026-07-10T17:40:18.573Z"
-    },
     "agave-spirits-neta-barril-by-nicolas-garcia-vasquez-and-miguel-garcia-ortiz": {
      "handle": "agave-spirits-neta-barril-by-nicolas-garcia-vasquez-and-miguel-garcia-ortiz",
      "title": "NETA Barril by Nicolas Garcia Vasquez and Miguel Garcia Ortiz Aficionados x T8KE Exclusive",
@@ -861,30 +913,6 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/950cd61e-e15d-ef92-aefd-822609967742.jpg?v=1761561000",
      "url": "https://sharedpour.com/products/agave-spirits-neta-barril-by-nicolas-garcia-vasquez-and-miguel-garcia-ortiz",
-     "firstSeen": "2026-07-10T17:40:18.573Z"
-    },
-    "t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey": {
-     "handle": "t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey",
-     "title": "T8KE x Bull Run Distillery 9 Year Exclusive Single Barrel Barrel Proof American Whiskey",
-     "vendor": "Bull Run",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 64.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC01276.jpg?v=1786881348",
-     "url": "https://sharedpour.com/products/t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey",
-     "firstSeen": "2026-08-23T12:00:03.599Z"
-    },
-    "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select": {
-     "handle": "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select",
-     "title": "Blackwood Bourbon Single Barrel Barrel Proof T8KE Select",
-     "vendor": "Blackwood",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 179.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/unnamed_2.jpg?v=1779640400",
-     "url": "https://sharedpour.com/products/blackwood-bourbon-single-barrel-barrel-proof-t8ke-select",
      "firstSeen": "2026-07-10T17:40:18.573Z"
     },
     "cinco-sentidos-chino-con-alto": {
@@ -898,6 +926,18 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/18052874-ffae-0189-4151-9f4357c715a1.jpg?v=1788090384",
      "url": "https://sharedpour.com/products/cinco-sentidos-chino-con-alto",
      "firstSeen": "2026-10-15T17:08:52.811Z"
+    },
+    "corbin-cash-rye-barrel-89-146prf": {
+     "handle": "corbin-cash-rye-barrel-89-146prf",
+     "title": "Corbin Cash 10 Year Rye Barrel #89 146prf T8KE Single Barrel Select",
+     "vendor": "Corbin Cash",
+     "productType": "Rye",
+     "tags": [],
+     "minPrice": 159.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d2bbd9b5-a31d-c789-758e-54bae0808fc4.jpg?v=1792847323",
+     "url": "https://sharedpour.com/products/corbin-cash-rye-barrel-89-146prf",
+     "firstSeen": "2026-10-30T12:01:00.013Z"
     },
     "aged-ore-4-bottle-caddy-t8ke-limited-release-branded-edition-v-2": {
      "handle": "aged-ore-4-bottle-caddy-t8ke-limited-release-branded-edition-v-2",
@@ -930,7 +970,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 249.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CollaborateBundle.png?v=1782832019",
      "url": "https://sharedpour.com/products/collaborate-save-t8ke-exclusives-bundle",
      "firstSeen": "2026-07-26T21:28:20.959Z"
@@ -938,15 +978,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:a48edf6db228824ee947160fb8d8caef\"",
+    "etag": "\"page_cache:45343637659:ProductListController:0930d1fb71bc1eaf79361b297aa88972\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-21T01:50:27.678Z",
+   "lastFullFetchAt": "2026-10-30T20:42:21.618Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-21T01:50:27.678Z",
+   "lastRestProbeAt": "2026-10-30T20:42:21.618Z",
    "countBaseline": 20,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -956,12 +996,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-21T01:50:27.678Z",
+   "lastSuccessAt": "2026-10-30T20:42:21.618Z",
    "lastSelfHealedPingAt": "2026-07-26T21:23:44.392Z",
-   "lastAlertAt": "2026-10-17T13:00:39.797Z"
+   "lastAlertAt": "2026-10-30T12:01:00.013Z"
   },
   "sharedpour_reveries": {
-   "lastChecked": "2026-10-21T03:37:47.503Z",
+   "lastChecked": "2026-10-30T20:27:21.993Z",
    "productCount": 1,
    "products": {
     "the-reveries-stride-for-stride-8-year": {
@@ -979,16 +1019,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:5fcea020bd8c7981d219b54a0014956f\"",
+    "etag": "\"page_cache:45343637659:ProductListController:7be53cf63be7efb515508569a0f24d45\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-21T03:37:47.503Z",
+   "lastFullFetchAt": "2026-10-30T20:27:21.993Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-21T03:37:47.503Z",
-   "countBaseline": 106,
+   "lastRestProbeAt": "2026-10-30T20:27:21.993Z",
+   "countBaseline": 111,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -997,12 +1037,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-21T03:37:47.503Z",
+   "lastSuccessAt": "2026-10-30T20:27:21.993Z",
    "lastSelfHealedPingAt": "2026-07-26T21:03:16.745Z",
-   "lastAlertAt": "2026-10-17T22:00:51.593Z"
+   "lastAlertAt": "2026-10-23T23:35:55.513Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-10-21T01:50:32.102Z",
+   "lastChecked": "2026-11-09T20:22:23.642Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1019,15 +1059,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:66506555478:ProductListController:c9448420c54f71c528161d3b43506ad0\"",
+    "etag": "\"sfr:computation:v2:6dfb6fc3aab7bcf09b73f9c2b74482fbdaa613f2a29f3606c39111f9ae902c86\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-21T01:50:32.102Z",
+   "lastFullFetchAt": "2026-11-09T20:13:50.148Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-21T01:50:32.102Z",
+   "lastRestProbeAt": "2026-11-09T20:13:50.148Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1037,24 +1077,60 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-21T01:50:32.102Z",
+   "lastSuccessAt": "2026-11-09T20:22:23.642Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-10-21T03:39:49.267Z",
+   "lastChecked": "2026-11-09T20:20:09.064Z",
    "productCount": 7,
    "products": {
-    "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
-     "handle": "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon",
-     "title": "THE REVERIES \"007\" 7 Year Single Barrel Barrel Strength Bourbon",
+    "the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof": {
+     "handle": "the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof",
+     "title": "THE REVERIES \"Lancero\" 9 Year Single Barrel Barrel Strength Bourbon (127.5 Proof)",
      "vendor": "The Reveries",
      "productType": "Bourbon",
      "tags": [],
-     "minPrice": 79.99,
+     "minPrice": 109.99,
      "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/8D6BDB22-41E4-40BB-8D9A-7F5EC041C8AB.jpg?v=1766173149",
-     "url": "https://thebourbonconcierge.com/products/the-reveries-007-7-year-single-barrel-barrel-strength-bourbon",
+     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/20261001_134558.jpg?v=1790877720",
+     "url": "https://thebourbonconcierge.com/products/the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof",
+     "firstSeen": "2026-10-01T19:09:11.204Z"
+    },
+    "the-reveries-wanton-weasel-10-year-single-barrel-barrel-strength-rye": {
+     "handle": "the-reveries-wanton-weasel-10-year-single-barrel-barrel-strength-rye",
+     "title": "THE REVERIES \"Wanton Weasel\" 10 Year Single Barrel Barrel Strength Rye (120.3 Proof)",
+     "vendor": "The Reveries",
+     "productType": "Rye Whiskey",
+     "tags": [],
+     "minPrice": 159.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/20261001_134524.jpg?v=1790877681",
+     "url": "https://thebourbonconcierge.com/products/the-reveries-wanton-weasel-10-year-single-barrel-barrel-strength-rye",
+     "firstSeen": "2026-10-01T19:09:11.204Z"
+    },
+    "the-reveries-murder-of-crows-rare-release-bespoke-blend": {
+     "handle": "the-reveries-murder-of-crows-rare-release-bespoke-blend",
+     "title": "THE REVERIES \"Murder of Crows\" Rare Release Bespoke Blend",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 159.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/IMG_1580.heic?v=1785786020",
+     "url": "https://thebourbonconcierge.com/products/the-reveries-murder-of-crows-rare-release-bespoke-blend",
+     "firstSeen": "2026-08-16T11:56:21.656Z"
+    },
+    "the-reveries-enclave-17-year-single-barrel-barrel-strength-bourbon": {
+     "handle": "the-reveries-enclave-17-year-single-barrel-barrel-strength-bourbon",
+     "title": "THE REVERIES \"Enclave\" 17 Year Single Barrel Barrel Strength Bourbon",
+     "vendor": "The Reveries",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 399.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/853302FD-D821-4A75-8EA0-ECA7539003DD.jpg?v=1766173124",
+     "url": "https://thebourbonconcierge.com/products/the-reveries-enclave-17-year-single-barrel-barrel-strength-bourbon",
      "firstSeen": "2026-07-11T20:16:48.295Z"
     },
     "the-reveries-the-bones-15-year-single-barrel-barrel-strength-bourbon": {
@@ -1081,66 +1157,30 @@
      "url": "https://thebourbonconcierge.com/products/the-reveries-time-rots-15-year-single-barrel-barrel-strength-bourbon",
      "firstSeen": "2026-07-11T20:16:48.295Z"
     },
-    "the-reveries-enclave-17-year-single-barrel-barrel-strength-bourbon": {
-     "handle": "the-reveries-enclave-17-year-single-barrel-barrel-strength-bourbon",
-     "title": "THE REVERIES \"Enclave\" 17 Year Single Barrel Barrel Strength Bourbon",
+    "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon": {
+     "handle": "the-reveries-007-7-year-single-barrel-barrel-strength-bourbon",
+     "title": "THE REVERIES \"007\" 7 Year Single Barrel Barrel Strength Bourbon",
      "vendor": "The Reveries",
      "productType": "Bourbon",
      "tags": [],
-     "minPrice": 399.99,
+     "minPrice": 79.99,
      "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/853302FD-D821-4A75-8EA0-ECA7539003DD.jpg?v=1766173124",
-     "url": "https://thebourbonconcierge.com/products/the-reveries-enclave-17-year-single-barrel-barrel-strength-bourbon",
+     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/8D6BDB22-41E4-40BB-8D9A-7F5EC041C8AB.jpg?v=1766173149",
+     "url": "https://thebourbonconcierge.com/products/the-reveries-007-7-year-single-barrel-barrel-strength-bourbon",
      "firstSeen": "2026-07-11T20:16:48.295Z"
-    },
-    "the-reveries-murder-of-crows-rare-release-bespoke-blend": {
-     "handle": "the-reveries-murder-of-crows-rare-release-bespoke-blend",
-     "title": "THE REVERIES \"Murder of Crows\" Rare Release Bespoke Blend",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 159.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/IMG_1580.heic?v=1785786020",
-     "url": "https://thebourbonconcierge.com/products/the-reveries-murder-of-crows-rare-release-bespoke-blend",
-     "firstSeen": "2026-08-16T11:56:21.656Z"
-    },
-    "the-reveries-wanton-weasel-10-year-single-barrel-barrel-strength-rye": {
-     "handle": "the-reveries-wanton-weasel-10-year-single-barrel-barrel-strength-rye",
-     "title": "THE REVERIES \"Wanton Weasel\" 10 Year Single Barrel Barrel Strength Rye (120.3 Proof)",
-     "vendor": "The Reveries",
-     "productType": "Rye Whiskey",
-     "tags": [],
-     "minPrice": 159.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/20261001_134524.jpg?v=1790877681",
-     "url": "https://thebourbonconcierge.com/products/the-reveries-wanton-weasel-10-year-single-barrel-barrel-strength-rye",
-     "firstSeen": "2026-10-01T19:09:11.204Z"
-    },
-    "the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof": {
-     "handle": "the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof",
-     "title": "THE REVERIES \"Lancero\" 9 Year Single Barrel Barrel Strength Bourbon (127.5 Proof)",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 109.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0570/7654/7742/files/20261001_134558.jpg?v=1790877720",
-     "url": "https://thebourbonconcierge.com/products/the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof",
-     "firstSeen": "2026-10-01T19:09:11.204Z"
     }
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:57076547742:ProductListController:8d64f601c1f8a8ebacb3fd480759f55a\"",
+    "etag": "\"sfr:computation:v2:674ab4727a76a46aa561b2565fa344aa9798db7622545abbae8e0ed2032da46f\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-21T03:39:49.267Z",
+   "lastFullFetchAt": "2026-11-09T20:20:09.064Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-21T03:39:49.267Z",
+   "lastRestProbeAt": "2026-11-09T20:20:09.064Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1150,81 +1190,68 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-21T03:39:49.267Z",
+   "lastSuccessAt": "2026-11-09T20:20:09.065Z",
    "lastSelfHealedPingAt": "2026-10-06T13:00:45.826Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-10-21T03:28:31.896Z",
+   "lastChecked": "2026-11-09T20:22:28.781Z",
    "products": {},
-   "httpValidators": {
-    "etag": "W/\"9c55fcc935f6adad2a2ee0fef22302eb\"",
-    "lastModified": null
-   },
-   "contentHash": "fd22a5559621dc098610d0f4663146a7ef42d794",
-   "contentLen": 74288,
-   "pageReset": false,
-   "resetAlertSent": false,
-   "resetReason": null,
+   "httpValidators": null,
+   "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+   "contentLen": 0,
+   "pageReset": true,
+   "resetAlertSent": true,
+   "resetReason": "Coming Soon / password wall detected at https://www.thereveries.co/shop (HTTP 401/403)\nNew wave likely 2–14 days away.",
    "consecutiveErrors": 0,
    "errorAlertSent": false,
    "cooldownLevel": 0,
    "cooldownUntil": null,
-   "lastAlertAt": "2026-10-16T17:08:35.311Z",
+   "lastAlertAt": "2026-11-02T12:39:32.191Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-21T03:28:31.896Z"
+   "lastSuccessAt": "2026-11-09T20:22:28.781Z",
+   "lastError": "HTTP 404 for https://www.thereveries.co/shop",
+   "lastErrorAt": "2026-10-31T21:55:19.328Z",
+   "errorAlertAt": "2026-10-31T15:20:30.218Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-10-21T03:25:24.582Z",
-   "productCount": 2,
+   "lastChecked": "2026-11-09T20:16:02.139Z",
+   "productCount": 1,
    "products": {
-    "the-reveries-8-year-single-barrel-wake-of-the-ship-barrel-strength-bourbon-t8ke-reserve-cask": {
-     "handle": "the-reveries-8-year-single-barrel-wake-of-the-ship-barrel-strength-bourbon-t8ke-reserve-cask",
-     "title": "The Reveries: 8 Year Single Barrel \"Wake of the Ship\" #27440 Barrel Strength Bourbon T8KE Reserve Cask",
+    "the-reveries-10yr-5154-corvids-choice-118-10-proof": {
+     "handle": "the-reveries-10yr-5154-corvids-choice-118-10-proof",
+     "title": "THE REVERIES 10YR Single Barrel: #5154 Corvid's Choice T8KE Reserve Cask 118.10 Proof",
      "vendor": "The Reveries",
      "productType": "Whiskey",
      "tags": [],
-     "minPrice": 84.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/RevPlaceholder.png?v=1773967832",
+     "minPrice": 149.99,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CopyofDread-Halloween.png?v=1793457883",
      "url": "https://www.thereveries.co/shop",
      "pageUrl": null,
-     "firstSeen": "2026-10-19T12:54:29.870Z"
-    },
-    "the-reveries-27764-shudder-122-30-pf": {
-     "handle": "the-reveries-27764-shudder-122-30-pf",
-     "title": "THE REVERIES 8 Year Kentucky Single Barrel #27764 \"SHUDDER\" 122.30° pf",
-     "vendor": "The Reveries",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 89.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/SkeletalLightningBoltonBlack.png?v=1791842609",
-     "url": "https://www.thereveries.co/shop",
-     "pageUrl": null,
-     "firstSeen": "2026-10-14T13:36:22.738Z"
+     "firstSeen": "2026-10-31T14:48:32.605Z"
     }
    },
-   "httpValidators": null,
+   "countBaseline": 1,
+   "emptyStreak": 506,
+   "emptyAlertSent": true,
+   "emptyAlertCount": 3,
+   "emptyAlertAt": "2026-11-09T15:25:34.346Z",
    "fetchVia": null,
    "fetchViaReason": null,
    "discoveredEmbed": {
     "type": "collection",
     "id": "363381555355"
    },
-   "countBaseline": 2,
-   "driftStreak": 0,
-   "driftAlertSent": false,
-   "driftAlertAt": null,
    "consecutiveErrors": 0,
    "errorAlertSent": false,
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-21T03:25:24.582Z",
+   "lastSuccessAt": "2026-11-09T20:16:02.140Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-10-19T12:54:29.872Z"
+   "lastAlertAt": "2026-11-09T15:25:34.347Z"
   },
   "wild_turkey_limited": {
    "lastChecked": "2026-06-29T17:10:00.584Z",
@@ -1389,7 +1416,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-10-21T03:36:37.985Z",
+   "lastChecked": "2026-11-09T20:20:15.055Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1562,8 +1589,8 @@
     }
    },
    "httpValidators": {
-    "etag": "\"e61efc91\"",
-    "lastModified": "Wed, 21 Oct 2026 02:28:51 GMT"
+    "etag": "\"ab358ed4\"",
+    "lastModified": "Thu, 05 Nov 2026 06:18:27 GMT"
    },
    "fetchVia": null,
    "fetchViaReason": null,
@@ -1576,7 +1603,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-21T03:36:37.985Z",
+   "lastSuccessAt": "2026-11-09T20:20:15.055Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1646,20 +1673,92 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": null,
-   "productCount": 25,
+   "lastChecked": "2026-11-09T20:20:19.085Z",
+   "productCount": 24,
    "products": {
-    "the-reveries-10-year-single-barrel-barrel-proof-selection-glaze-endalz-single-barrel-select": {
-     "handle": "the-reveries-10-year-single-barrel-barrel-proof-selection-glaze-endalz-single-barrel-select",
-     "title": "THE REVERIES: 10 Year Single Barrel Barrel Proof Selection \"Glaze\" ENDALZ Single Barrel *NO HOLDS*",
-     "vendor": "The Reveries",
+    "old-t8ke-n-bones-s1377": {
+     "handle": "old-t8ke-n-bones-s1377",
+     "title": "T8KE x Backbone Bourbon Company Old T8KE’N Bones 10 Year TN Rye S1377 -- 126.8 prf",
+     "vendor": "Backbone Bourbon Company",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 99.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/3d38af4d-a5e2-740a-077e-8103a59225f6.jpg?v=1793541422",
+     "url": "https://sharedpour.com/products/old-t8ke-n-bones-s1377",
+     "firstSeen": "2026-11-06T14:12:47.461Z"
+    },
+    "old-dragon-bones-s1131-s1133-s1134-blend": {
+     "handle": "old-dragon-bones-s1131-s1133-s1134-blend",
+     "title": "T8KE x Backbone Bourbon Company Old Dragon Bones 21 Year Exclusive Blend -- 135.6 prf",
+     "vendor": "Backbone Bourbon Company",
      "productType": "Bourbon",
      "tags": [],
-     "minPrice": 129.99,
+     "minPrice": 99.99,
      "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ENDALZGlaze.png?v=1784720759",
-     "url": "https://sharedpour.com/products/the-reveries-10-year-single-barrel-barrel-proof-selection-glaze-endalz-single-barrel-select",
-     "firstSeen": "2026-10-15T16:56:40.338Z"
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/a7218ee2-054d-4d0a-d8d9-343a79236f16.jpg?v=1793540312",
+     "url": "https://sharedpour.com/products/old-dragon-bones-s1131-s1133-s1134-blend",
+     "firstSeen": "2026-11-06T14:12:47.461Z"
+    },
+    "old-t8ke-n-bones-s1374": {
+     "handle": "old-t8ke-n-bones-s1374",
+     "title": "T8KE x Backbone Bourbon Company Old T8KE’N Bones 10 Year TN Rye S1374 -- 129 prf",
+     "vendor": "Backbone Bourbon Company",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 99.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/48f42cee-3eb4-cdbe-b3c3-bc57ed2b73f9.jpg?v=1793540162",
+     "url": "https://sharedpour.com/products/old-t8ke-n-bones-s1374",
+     "firstSeen": "2026-11-06T14:12:47.461Z"
+    },
+    "old-t8ke-n-bones-s1371": {
+     "handle": "old-t8ke-n-bones-s1371",
+     "title": "T8KE x Backbone Bourbon Company Old T8KE’N Bones 10 Year TN Rye S1371 -- 127.4 prf",
+     "vendor": "Backbone Bourbon Company",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 99.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/d79bb296-b56b-4869-eef4-c73ca759053c.jpg?v=1793540145",
+     "url": "https://sharedpour.com/products/old-t8ke-n-bones-s1371",
+     "firstSeen": "2026-11-06T14:12:47.461Z"
+    },
+    "blue-note-bourbon-23939-t8ke": {
+     "handle": "blue-note-bourbon-23939-t8ke",
+     "title": "Blue Note Kentucky Bourbon #23939 T8KE Single Barrel Select",
+     "vendor": "Blue Note",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 59.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ed2499f9-f254-2109-c777-29dcc00fda3f.jpg?v=1792330571",
+     "url": "https://sharedpour.com/products/blue-note-bourbon-23939-t8ke",
+     "firstSeen": "2026-10-22T15:48:14.175Z"
+    },
+    "t8ke-x-new-louisville-barrel-house-the-bones-ky172-8-year-hazmat-kentucky-bourbon": {
+     "handle": "t8ke-x-new-louisville-barrel-house-the-bones-ky172-8-year-hazmat-kentucky-bourbon",
+     "title": "T8KE x New Louisville Barrel House \"THE BONES\" KY172 8 Year Hazmat Kentucky Bourbon",
+     "vendor": "Nulu",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 179.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00937.jpg?v=1780229848",
+     "url": "https://sharedpour.com/products/t8ke-x-new-louisville-barrel-house-the-bones-ky172-8-year-hazmat-kentucky-bourbon",
+     "firstSeen": "2026-10-22T14:59:48.071Z"
+    },
+    "alambique-serrano-cask-251-t8ke": {
+     "handle": "alambique-serrano-cask-251-t8ke",
+     "title": "Alambique Serrano 4 Años Cask 251 T8KE Exclusive",
+     "vendor": "Cinco Sentidos",
+     "productType": "Rum",
+     "tags": [],
+     "minPrice": 89.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/137ca0e6-bb06-17f1-7826-d3a18036a48d.jpg?v=1788090569",
+     "url": "https://sharedpour.com/products/alambique-serrano-cask-251-t8ke",
+     "firstSeen": "2026-10-17T13:00:39.796Z"
     },
     "the-reveries-stride-for-stride-8-year": {
      "handle": "the-reveries-stride-for-stride-8-year",
@@ -1671,19 +1770,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/BluegrassW2W_34605777-e85b-45a0-8455-ac88bc4c4bea.png?v=1791549101",
      "url": "https://sharedpour.com/products/the-reveries-stride-for-stride-8-year",
-     "firstSeen": "2026-10-09T12:40:33.883Z"
-    },
-    "old-carter-very-small-batch-bourbon-8-130-prf-bourbon-concierge": {
-     "handle": "old-carter-very-small-batch-bourbon-8-130-prf-bourbon-concierge",
-     "title": "Old Carter 10 Year Very Small Batch Straight Bourbon 130 Proof T8KE x The Bourbon Concierge 'PLDC-8' Exclusive",
-     "vendor": "Old Carter",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 229.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/B0001249Large.jpg?v=1791031764",
-     "url": "https://sharedpour.com/products/old-carter-very-small-batch-bourbon-8-130-prf-bourbon-concierge",
-     "firstSeen": "2026-10-05T17:13:02.565Z"
+     "firstSeen": "2026-10-15T17:29:59.208Z"
     },
     "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon": {
      "handle": "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon",
@@ -1695,7 +1782,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/0021f962-f338-f333-55fe-499b711ef77c.jpg?v=1789309256",
      "url": "https://sharedpour.com/products/new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon",
-     "firstSeen": "2026-09-17T11:38:55.490Z"
+     "firstSeen": "2026-10-15T17:08:52.811Z"
     },
     "cinco-sentidos-chino-con-alto": {
      "handle": "cinco-sentidos-chino-con-alto",
@@ -1707,19 +1794,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/18052874-ffae-0189-4151-9f4357c715a1.jpg?v=1788090384",
      "url": "https://sharedpour.com/products/cinco-sentidos-chino-con-alto",
-     "firstSeen": "2026-09-11T12:34:34.587Z"
-    },
-    "t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey": {
-     "handle": "t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey",
-     "title": "T8KE x Bull Run Distillery 9 Year Exclusive Single Barrel Barrel Proof American Whiskey",
-     "vendor": "Bull Run",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 64.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC01276.jpg?v=1786881348",
-     "url": "https://sharedpour.com/products/t8ke-x-bull-run-distillery-9-year-exclusive-single-barrel-barrel-proof-american-whiskey",
-     "firstSeen": "2026-08-23T11:44:55.436Z"
+     "firstSeen": "2026-10-15T17:08:52.811Z"
     },
     "barrell-craft-spirits-x-t8ke-synthesis-iii-cask-strength-ratafia-de-champagne-finished-bourbon-rye-blend": {
      "handle": "barrell-craft-spirits-x-t8ke-synthesis-iii-cask-strength-ratafia-de-champagne-finished-bourbon-rye-blend",
@@ -1729,9 +1804,9 @@
      "tags": [],
      "minPrice": 79.99,
      "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/0bb57896-6d3c-b43b-d8aa-3a0acfef6975.png?v=1784463045",
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/SYNTHESIS_3.png?v=1793197212",
      "url": "https://sharedpour.com/products/barrell-craft-spirits-x-t8ke-synthesis-iii-cask-strength-ratafia-de-champagne-finished-bourbon-rye-blend",
-     "firstSeen": "2026-07-20T17:11:27.904Z"
+     "firstSeen": "2026-07-20T17:11:24.005Z"
     },
     "barrell-craft-spirits-x-t8ke-synthesis-iii-ice-wine-collection": {
      "handle": "barrell-craft-spirits-x-t8ke-synthesis-iii-ice-wine-collection",
@@ -1743,7 +1818,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Week30Bundle.png?v=1784463345",
      "url": "https://sharedpour.com/products/barrell-craft-spirits-x-t8ke-synthesis-iii-ice-wine-collection",
-     "firstSeen": "2026-08-02T21:32:12.856Z"
+     "firstSeen": "2026-07-26T21:28:20.959Z"
     },
     "provenance-small-batch-kentucky-straight-bourbon": {
      "handle": "provenance-small-batch-kentucky-straight-bourbon",
@@ -1756,30 +1831,6 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/76a443f3-4370-9b60-2506-1ae42040d8f2.png?v=1783250625",
      "url": "https://sharedpour.com/products/provenance-small-batch-kentucky-straight-bourbon",
      "firstSeen": "2026-07-10T16:44:13.354Z"
-    },
-    "collaborate-save-t8ke-exclusives-bundle": {
-     "handle": "collaborate-save-t8ke-exclusives-bundle",
-     "title": "Collaborate & Save T8KE Exclusives Bundle - 3 Bottle Bundle",
-     "vendor": "T8KE",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 249.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/CollaborateBundle.png?v=1782832019",
-     "url": "https://sharedpour.com/products/collaborate-save-t8ke-exclusives-bundle",
-     "firstSeen": "2026-08-02T21:32:12.856Z"
-    },
-    "green-river-ky-straight-bourbon-single-barrel-jay-west-123-6-proof": {
-     "handle": "green-river-ky-straight-bourbon-single-barrel-jay-west-123-6-proof",
-     "title": "T8KE x Green River Distilling Single Barrel Barrel Strength Bourbon (123.6 Proof, II.I)",
-     "vendor": "Green River",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 69.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/903948bf-3b0c-8209-6a3b-5a0451e1209b.jpg?v=1781417460",
-     "url": "https://sharedpour.com/products/green-river-ky-straight-bourbon-single-barrel-jay-west-123-6-proof",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
     },
     "cinco-sentidos-tepextate-tio-telle-t8ke": {
      "handle": "cinco-sentidos-tepextate-tio-telle-t8ke",
@@ -1799,23 +1850,13 @@
      "vendor": "Nulu",
      "productType": "Bourbon",
      "tags": [],
-     "minPrice": 49.99,
+     "minPrice": 59.99,
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00904.jpg?v=1780229762",
      "url": "https://sharedpour.com/products/t8ke-x-hazelbaker-8-year-double-oaked-bottled-in-bond-t8ke-x-hazelbaker-exclusive-batch",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
-    },
-    "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select": {
-     "handle": "blackwood-bourbon-single-barrel-barrel-proof-t8ke-select",
-     "title": "Blackwood Bourbon Single Barrel Barrel Proof T8KE Select",
-     "vendor": "Blackwood",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 179.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/unnamed_2.jpg?v=1779640400",
-     "url": "https://sharedpour.com/products/blackwood-bourbon-single-barrel-barrel-proof-t8ke-select",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T17:40:18.573Z",
+     "prevPrice": 49.99,
+     "priceChangedAt": "2026-11-07T13:48:27.873Z"
     },
     "bardstown-single-barrel-bourbon-t8ke-2026": {
      "handle": "bardstown-single-barrel-bourbon-t8ke-2026",
@@ -1827,7 +1868,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/852ae1b6-3b4b-1b1e-be0c-1a8e9d9f0bc0.jpg?v=1778418090",
      "url": "https://sharedpour.com/products/bardstown-single-barrel-bourbon-t8ke-2026",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T17:40:18.573Z"
     },
     "scotch-malt-whisky-society-44-196-properly-nutty-t8ke-x-smws-exclusive-single-cask-18-year-speyside": {
      "handle": "scotch-malt-whisky-society-44-196-properly-nutty-t8ke-x-smws-exclusive-single-cask-18-year-speyside",
@@ -1839,9 +1880,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00724.jpg?v=1775827384",
      "url": "https://sharedpour.com/products/scotch-malt-whisky-society-44-196-properly-nutty-t8ke-x-smws-exclusive-single-cask-18-year-speyside",
-     "firstSeen": "2026-07-10T18:25:11.230Z",
-     "prevPrice": 249.99,
-     "priceChangedAt": "2026-10-14T19:32:50.203Z"
+     "firstSeen": "2026-07-10T18:25:11.230Z"
     },
     "neta-pulquero-cenizo-mezcal-celso-garcia-cruz-aficionados": {
      "handle": "neta-pulquero-cenizo-mezcal-celso-garcia-cruz-aficionados",
@@ -1855,18 +1894,6 @@
      "url": "https://sharedpour.com/products/neta-pulquero-cenizo-mezcal-celso-garcia-cruz-aficionados",
      "firstSeen": "2026-07-10T18:25:11.230Z"
     },
-    "westland-american-single-malt-cask-1757": {
-     "handle": "westland-american-single-malt-cask-1757",
-     "title": "Westland American Single Malt Cask #1757 r/Bourbon Single Barrel Selection by T8KE",
-     "vendor": "Westland",
-     "productType": "Whiskey",
-     "tags": [],
-     "minPrice": 79.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e8d4cd80-4ab8-077f-345b-74dd98f1f862.jpg?v=1773577422",
-     "url": "https://sharedpour.com/products/westland-american-single-malt-cask-1757",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
-    },
     "pm-spirits-project-t8ke-armagnac-bourbon-concierge-105-8-prf": {
      "handle": "pm-spirits-project-t8ke-armagnac-bourbon-concierge-105-8-prf",
      "title": "T8KE x PM Spirits Project ARMAGNAC by L'Encantada (58.1% ABV)",
@@ -1877,7 +1904,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f96d2467-738c-b849-927c-03416b9f11ff.jpg?v=1771159501",
      "url": "https://sharedpour.com/products/pm-spirits-project-t8ke-armagnac-bourbon-concierge-105-8-prf",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T17:40:18.573Z"
     },
     "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive": {
      "handle": "barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive",
@@ -1887,9 +1914,9 @@
      "tags": [],
      "minPrice": 199.99,
      "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/f7f2a6fa-844a-bd29-8fa6-93a9a0be0341.jpg?v=1768742030",
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ICE_WINE.jpg?v=1793197175",
      "url": "https://sharedpour.com/products/barrell-craft-spirits-x-collaboration-with-t8ke-single-barrel-barrel-strength-11-year-ice-wine-french-oak-cask-r-bourbon-exclusive",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T17:40:18.573Z"
     },
     "aged-ore-4-bottle-caddy-t8ke-limited-release-branded-edition-v-2": {
      "handle": "aged-ore-4-bottle-caddy-t8ke-limited-release-branded-edition-v-2",
@@ -1901,7 +1928,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-12-05at07.43.56.png?v=1764938643",
      "url": "https://sharedpour.com/products/aged-ore-4-bottle-caddy-t8ke-limited-release-branded-edition-v-2",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T17:40:18.573Z"
     },
     "penelope-project-x-sa-cask-finish": {
      "handle": "penelope-project-x-sa-cask-finish",
@@ -1913,7 +1940,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/IMG_4437.jpg?v=1761756543",
      "url": "https://sharedpour.com/products/penelope-project-x-sa-cask-finish",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T17:40:18.573Z"
     },
     "agave-spirits-neta-barril-by-nicolas-garcia-vasquez-and-miguel-garcia-ortiz": {
      "handle": "agave-spirits-neta-barril-by-nicolas-garcia-vasquez-and-miguel-garcia-ortiz",
@@ -1925,19 +1952,7 @@
      "available": true,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/950cd61e-e15d-ef92-aefd-822609967742.jpg?v=1761561000",
      "url": "https://sharedpour.com/products/agave-spirits-neta-barril-by-nicolas-garcia-vasquez-and-miguel-garcia-ortiz",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
-    },
-    "bardstown-bourbon-co-single-barrel-t8ke": {
-     "handle": "bardstown-bourbon-co-single-barrel-t8ke",
-     "title": "Bardstown Bourbon Company Collaboration Series: T8KE Exclusive Release",
-     "vendor": "Bardstown Bourbon Company",
-     "productType": "",
-     "tags": [],
-     "minPrice": 109.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Screenshot2025-10-16at07.12.45.png?v=1760613170",
-     "url": "https://sharedpour.com/products/bardstown-bourbon-co-single-barrel-t8ke",
-     "firstSeen": "2026-07-10T18:25:11.230Z"
+     "firstSeen": "2026-07-10T17:40:18.573Z"
     },
     "provenance-7-year-single-barrel-kentucky-straight-bourbon": {
      "handle": "provenance-7-year-single-barrel-kentucky-straight-bourbon",
@@ -1954,16 +1969,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"page_cache:45343637659:ProductListController:9b8a211ffc8b519ab6b2bd8a1e158987\"",
+    "etag": "\"sfr:computation:v2:b1c33d52facb4f9c4493d66b813e319dc024896202248d481e5bc5917df416e2\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-10-15T16:56:40.338Z",
+   "lastFullFetchAt": "2026-11-09T20:20:19.085Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-10-15T16:56:40.338Z",
-   "countBaseline": 105,
+   "lastRestProbeAt": "2026-11-09T20:20:19.085Z",
+   "countBaseline": 104,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -1972,9 +1987,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-10-15T16:56:40.338Z",
+   "lastSuccessAt": "2026-11-09T20:20:19.085Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-10-15T16:56:40.339Z"
+   "lastAlertAt": "2026-11-09T15:37:25.748Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
