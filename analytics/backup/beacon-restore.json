@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-11-10T20:24:53.869Z",
+ "at": "2026-11-11T20:25:12.431Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1076,7 +1076,7 @@
    "lastAlertAt": "2026-10-23T23:35:55.513Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-11-10T20:22:46.869Z",
+   "lastChecked": "2026-11-11T20:21:38.869Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1093,15 +1093,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"sfr:computation:v2:487d1e3960f85690271ac84b486adbf115c7e035c5926830ea7125f64c783a53\"",
+    "etag": "\"sfr:computation:v2:873beccef7a0c50a50eb525af8ae4b6d9cf19489e7d36c99ac93981eab1a1512\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-11-10T20:14:03.457Z",
+   "lastFullFetchAt": "2026-11-11T20:13:10.046Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-11-10T20:14:03.457Z",
+   "lastRestProbeAt": "2026-11-11T20:13:10.046Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1111,12 +1111,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-10T20:22:46.870Z",
+   "lastSuccessAt": "2026-11-11T20:21:38.869Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-11-10T20:16:13.086Z",
+   "lastChecked": "2026-11-11T20:22:52.958Z",
    "productCount": 7,
    "products": {
     "the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof": {
@@ -1206,15 +1206,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"sfr:computation:v2:77abb5d3fa01ed05627ad8f5b56da4de3e953d85756ca86eae43a108e8f53d53\"",
+    "etag": "\"sfr:computation:v2:36d71a7b1f0c751d7d40a50a347331a8379eb70d196ea439a0ad5728da98e510\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-11-10T20:16:13.086Z",
+   "lastFullFetchAt": "2026-11-11T20:14:22.317Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-11-10T20:16:13.086Z",
+   "lastRestProbeAt": "2026-11-11T20:14:22.317Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1224,12 +1224,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-10T20:16:13.087Z",
+   "lastSuccessAt": "2026-11-11T20:22:52.958Z",
    "lastSelfHealedPingAt": "2026-10-06T13:00:45.826Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-11-10T20:20:19.730Z",
+   "lastChecked": "2026-11-11T20:22:58.666Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1244,13 +1244,13 @@
    "lastAlertAt": "2026-11-02T12:39:32.191Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-10T20:20:19.730Z",
+   "lastSuccessAt": "2026-11-11T20:22:58.666Z",
    "lastError": "HTTP 404 for https://www.thereveries.co/shop",
    "lastErrorAt": "2026-10-31T21:55:19.328Z",
    "errorAlertAt": "2026-10-31T15:20:30.218Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-11-10T20:16:17.883Z",
+   "lastChecked": "2026-11-11T20:24:07.380Z",
    "productCount": 1,
    "products": {
     "the-reveries-10yr-5154-corvids-choice-118-10-proof": {
@@ -1268,7 +1268,7 @@
     }
    },
    "countBaseline": 1,
-   "emptyStreak": 660,
+   "emptyStreak": 813,
    "emptyAlertSent": true,
    "emptyAlertCount": 3,
    "emptyAlertAt": "2026-11-09T15:25:34.346Z",
@@ -1283,7 +1283,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-10T20:16:17.883Z",
+   "lastSuccessAt": "2026-11-11T20:24:07.380Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-11-09T15:25:34.347Z"
   },
@@ -1450,7 +1450,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-11-10T20:21:30.772Z",
+   "lastChecked": "2026-11-11T20:08:04.490Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1637,7 +1637,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-10T20:21:30.773Z",
+   "lastSuccessAt": "2026-11-11T20:08:04.490Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1707,7 +1707,7 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-11-10T20:21:35.182Z",
+   "lastChecked": "2026-11-11T20:21:44.599Z",
    "productCount": 25,
    "products": {
     "old-carter-very-small-batch-bourbon-8-130-prf-bourbon-concierge": {
@@ -1777,7 +1777,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 59.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ed2499f9-f254-2109-c777-29dcc00fda3f.jpg?v=1792330571",
      "url": "https://sharedpour.com/products/blue-note-bourbon-23939-t8ke",
      "firstSeen": "2026-10-22T15:48:14.175Z"
@@ -2015,16 +2015,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"sfr:computation:v2:2b67dcb7bdd346481126f2da45fde207dbfdceeed623623d76efb6372a8c6a2c\"",
+    "etag": "\"sfr:computation:v2:86d53100d11ffe15ce78496dae948b36bd54c7c538686cb8e051aa178999b480\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-11-10T20:21:35.182Z",
+   "lastFullFetchAt": "2026-11-11T20:21:44.599Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-11-10T20:21:35.182Z",
-   "countBaseline": 105,
+   "lastRestProbeAt": "2026-11-11T20:21:44.599Z",
+   "countBaseline": 106,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2033,9 +2033,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-10T20:21:35.183Z",
+   "lastSuccessAt": "2026-11-11T20:21:44.600Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-11-10T10:01:49.921Z"
+   "lastAlertAt": "2026-11-11T05:54:07.711Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
@@ -2167,8 +2167,8 @@
    "errorAlertAt": "2026-08-18T14:38:57.871Z"
   },
   "sharedpour_channel": {
-   "lastChecked": "2026-11-10T20:21:40.833Z",
-   "productCount": 97,
+   "lastChecked": "2026-11-11T20:15:30.186Z",
+   "productCount": 98,
    "products": {
     "christmas-blend-finished-in-maple-barrels": {
      "handle": "christmas-blend-finished-in-maple-barrels",
@@ -2437,7 +2437,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 59.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/ed2499f9-f254-2109-c777-29dcc00fda3f.jpg?v=1792330571",
      "url": "https://sharedpour.com",
      "pageUrl": "https://sharedpour.com/products/blue-note-bourbon-23939-t8ke",
@@ -2455,6 +2455,19 @@
      "url": "https://sharedpour.com",
      "pageUrl": "https://sharedpour.com/products/crittendens-single-barrel-790-bourbon-in-2-char-barrel",
      "firstSeen": "2026-11-09T20:31:45.517Z"
+    },
+    "bourbonfinds-kentucky-straight-bourbon-whiskey-knf-204": {
+     "handle": "bourbonfinds-kentucky-straight-bourbon-whiskey-knf-204",
+     "title": "Rare Character BourbonFinds Kentucky Straight Bourbon Whiskey KNF-204",
+     "vendor": "Rare Character",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 124.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/IMG_4278.jpg?v=1794276615",
+     "url": "https://sharedpour.com",
+     "pageUrl": "https://sharedpour.com/products/bourbonfinds-kentucky-straight-bourbon-whiskey-knf-204",
+     "firstSeen": "2026-11-10T21:52:16.067Z"
     },
     "whistlepig-boss-hog-xiii-the-golden-pharaoh": {
      "handle": "whistlepig-boss-hog-xiii-the-golden-pharaoh",
@@ -2892,7 +2905,7 @@
      "productType": "Bourbon",
      "tags": [],
      "minPrice": 399.99,
-     "available": true,
+     "available": false,
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00913.jpg?v=1779366646",
      "url": "https://sharedpour.com",
      "pageUrl": "https://sharedpour.com/products/pride-of-anderson-county-9yr-bourbon-118-2pf",
@@ -3435,7 +3448,7 @@
    "httpValidators": null,
    "fetchVia": null,
    "fetchViaReason": null,
-   "countBaseline": 97,
+   "countBaseline": 98,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -3444,9 +3457,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-10T20:21:40.833Z",
+   "lastSuccessAt": "2026-11-11T20:15:30.186Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": null
+   "lastAlertAt": "2026-11-10T21:52:16.067Z"
   }
  }
 }
