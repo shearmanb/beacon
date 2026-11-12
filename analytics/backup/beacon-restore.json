@@ -1,6 +1,6 @@
 {
  "version": 1,
- "at": "2026-11-11T20:25:12.431Z",
+ "at": "2026-11-12T20:25:35.492Z",
  "sites": [
   {
    "id": "sharedpour_t8ke",
@@ -1076,7 +1076,7 @@
    "lastAlertAt": "2026-10-23T23:35:55.513Z"
   },
   "fountain_inn_dc": {
-   "lastChecked": "2026-11-11T20:21:38.869Z",
+   "lastChecked": "2026-11-12T20:17:59.717Z",
    "productCount": 1,
    "products": {
     "the-reveries-8-year-single-barrel-the-fountain-inn": {
@@ -1093,15 +1093,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"sfr:computation:v2:873beccef7a0c50a50eb525af8ae4b6d9cf19489e7d36c99ac93981eab1a1512\"",
+    "etag": "\"sfr:computation:v2:cc4fe7ce262ee465cb7acea12c1d37d4ff8732c62f697098e9daf117c3aff608\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-11-11T20:13:10.046Z",
+   "lastFullFetchAt": "2026-11-12T20:17:59.717Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-11-11T20:13:10.046Z",
+   "lastRestProbeAt": "2026-11-12T20:17:59.717Z",
    "countBaseline": 21,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1111,12 +1111,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-11T20:21:38.869Z",
+   "lastSuccessAt": "2026-11-12T20:17:59.717Z",
    "lastSelfHealedPingAt": "2026-08-02T22:17:44.935Z",
    "lastAlertAt": "2026-07-01T21:41:53.146Z"
   },
   "bourbon_concierge": {
-   "lastChecked": "2026-11-11T20:22:52.958Z",
+   "lastChecked": "2026-11-12T20:18:04.907Z",
    "productCount": 7,
    "products": {
     "the-reveries-lancero-9-year-single-barrel-barrel-strength-bourbon-127-5-proof": {
@@ -1206,15 +1206,15 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"sfr:computation:v2:36d71a7b1f0c751d7d40a50a347331a8379eb70d196ea439a0ad5728da98e510\"",
+    "etag": "\"sfr:computation:v2:20b1b14cc30125ecdb035eddb2ee283f27d9ee8ce120664ec7de41aa60a1ec60\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-11-11T20:14:22.317Z",
+   "lastFullFetchAt": "2026-11-12T20:09:29.633Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-11-11T20:14:22.317Z",
+   "lastRestProbeAt": "2026-11-12T20:09:29.633Z",
    "countBaseline": 7,
    "driftStreak": 0,
    "driftAlertSent": false,
@@ -1224,12 +1224,12 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-11T20:22:52.958Z",
+   "lastSuccessAt": "2026-11-12T20:18:04.907Z",
    "lastSelfHealedPingAt": "2026-10-06T13:00:45.826Z",
    "lastAlertAt": "2026-10-01T19:26:45.154Z"
   },
   "reveries_site_status": {
-   "lastChecked": "2026-11-11T20:22:58.666Z",
+   "lastChecked": "2026-11-12T20:16:56.222Z",
    "products": {},
    "httpValidators": null,
    "contentHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -1244,13 +1244,13 @@
    "lastAlertAt": "2026-11-02T12:39:32.191Z",
    "lastSelfHealedPingAt": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-11T20:22:58.666Z",
+   "lastSuccessAt": "2026-11-12T20:16:56.222Z",
    "lastError": "HTTP 404 for https://www.thereveries.co/shop",
    "lastErrorAt": "2026-10-31T21:55:19.328Z",
    "errorAlertAt": "2026-10-31T15:20:30.218Z"
   },
   "reveries_official": {
-   "lastChecked": "2026-11-11T20:24:07.380Z",
+   "lastChecked": "2026-11-12T20:24:33.046Z",
    "productCount": 1,
    "products": {
     "the-reveries-10yr-5154-corvids-choice-118-10-proof": {
@@ -1268,7 +1268,7 @@
     }
    },
    "countBaseline": 1,
-   "emptyStreak": 813,
+   "emptyStreak": 966,
    "emptyAlertSent": true,
    "emptyAlertCount": 3,
    "emptyAlertAt": "2026-11-09T15:25:34.346Z",
@@ -1283,7 +1283,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-11T20:24:07.380Z",
+   "lastSuccessAt": "2026-11-12T20:24:33.046Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-11-09T15:25:34.347Z"
   },
@@ -1450,7 +1450,7 @@
    "lastAlertAt": null
   },
   "russells_reserve_limited": {
-   "lastChecked": "2026-11-11T20:08:04.490Z",
+   "lastChecked": "2026-11-12T20:21:14.404Z",
    "productCount": 13,
    "products": {
     "10-year-old-bourbon": {
@@ -1623,7 +1623,7 @@
     }
    },
    "httpValidators": {
-    "etag": "\"ccf57105\"",
+    "etag": "\"d6382618\"",
     "lastModified": "Mon, 09 Nov 2026 23:25:27 GMT"
    },
    "fetchVia": null,
@@ -1637,7 +1637,7 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-11T20:08:04.490Z",
+   "lastSuccessAt": "2026-11-12T20:21:14.404Z",
    "lastSelfHealedPingAt": null,
    "lastAlertAt": "2026-09-29T15:40:02.588Z"
   },
@@ -1707,9 +1707,33 @@
    "lastAlertAt": "2026-08-08T21:04:03.193Z"
   },
   "sharedpour_t8ke_all": {
-   "lastChecked": "2026-11-11T20:21:44.599Z",
-   "productCount": 25,
+   "lastChecked": "2026-11-12T20:23:24.354Z",
+   "productCount": 26,
    "products": {
+    "westward-whiskey-single-barrel-t8ke-910-52-33": {
+     "handle": "westward-whiskey-single-barrel-t8ke-910-52-33",
+     "title": "Westward Whiskey Single Barrel T8KE #910 52.33% Cider Cask",
+     "vendor": "westward",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 109.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/3e88a5d4-e061-6a8c-9d10-51919636709b.jpg?v=1794146300",
+     "url": "https://sharedpour.com/products/westward-whiskey-single-barrel-t8ke-910-52-33",
+     "firstSeen": "2026-11-12T13:59:27.101Z"
+    },
+    "westward-whiskey-single-barrel-t8ke-17180-64-7": {
+     "handle": "westward-whiskey-single-barrel-t8ke-17180-64-7",
+     "title": "Westward Whiskey Single Barrel T8KE #17180 64.7%",
+     "vendor": "westward",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 109.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e3186b0d-aecf-611c-acd2-a2b73c3221e2.jpg?v=1794146359",
+     "url": "https://sharedpour.com/products/westward-whiskey-single-barrel-t8ke-17180-64-7",
+     "firstSeen": "2026-11-12T13:59:27.101Z"
+    },
     "old-carter-very-small-batch-bourbon-8-130-prf-bourbon-concierge": {
      "handle": "old-carter-very-small-batch-bourbon-8-130-prf-bourbon-concierge",
      "title": "Old Carter 10 Year Very Small Batch Straight Bourbon 130 Proof T8KE x The Bourbon Concierge 'PLDC-8' Exclusive",
@@ -1805,18 +1829,6 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/137ca0e6-bb06-17f1-7826-d3a18036a48d.jpg?v=1788090569",
      "url": "https://sharedpour.com/products/alambique-serrano-cask-251-t8ke",
      "firstSeen": "2026-10-17T13:00:39.796Z"
-    },
-    "the-reveries-stride-for-stride-8-year": {
-     "handle": "the-reveries-stride-for-stride-8-year",
-     "title": "THE REVERIES 8YR \"Stride for Stride\" #27742 Bluegrass Barrel Pickers Selection",
-     "vendor": "The Reveries",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 79.99,
-     "available": true,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/BluegrassW2W_34605777-e85b-45a0-8455-ac88bc4c4bea.png?v=1791549101",
-     "url": "https://sharedpour.com/products/the-reveries-stride-for-stride-8-year",
-     "firstSeen": "2026-10-15T17:29:59.208Z"
     },
     "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon": {
      "handle": "new-louisville-barrel-house-x-t8ke-8-year-honey-finished-bourbon",
@@ -2015,16 +2027,16 @@
    },
    "pageCount": 1,
    "httpValidators": {
-    "etag": "\"sfr:computation:v2:86d53100d11ffe15ce78496dae948b36bd54c7c538686cb8e051aa178999b480\"",
+    "etag": "\"sfr:computation:v2:c09848ad31d444cebd9e3a8c197281cb3865ff75d4786fac67e29748817012e0\"",
     "lastModified": null
    },
    "fetchVia": null,
    "fetchViaReason": null,
-   "lastFullFetchAt": "2026-11-11T20:21:44.599Z",
+   "lastFullFetchAt": "2026-11-12T20:23:24.354Z",
    "preferFallback": false,
    "fallbackStreak": 0,
-   "lastRestProbeAt": "2026-11-11T20:21:44.599Z",
-   "countBaseline": 106,
+   "lastRestProbeAt": "2026-11-12T20:23:24.354Z",
+   "countBaseline": 108,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -2033,9 +2045,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-11T20:21:44.600Z",
+   "lastSuccessAt": "2026-11-12T20:23:24.354Z",
    "lastSelfHealedPingAt": "2026-08-02T21:26:44.074Z",
-   "lastAlertAt": "2026-11-11T05:54:07.711Z"
+   "lastAlertAt": "2026-11-12T13:59:27.101Z"
   },
   "cgf": {
    "lastChecked": "2026-07-30T15:13:58.190Z",
@@ -2167,9 +2179,35 @@
    "errorAlertAt": "2026-08-18T14:38:57.871Z"
   },
   "sharedpour_channel": {
-   "lastChecked": "2026-11-11T20:15:30.186Z",
-   "productCount": 98,
+   "lastChecked": "2026-11-12T20:22:20.384Z",
+   "productCount": 101,
    "products": {
+    "bombergers-declaration-2026-bourbon": {
+     "handle": "bombergers-declaration-2026-bourbon",
+     "title": "Bomberger's Declaration 2026 Bourbon",
+     "vendor": "Michter's",
+     "productType": "Bourbon",
+     "tags": [],
+     "minPrice": 129,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Bomb_491x1378_300dpi-2026.jpg?v=1794513253",
+     "url": "https://sharedpour.com",
+     "pageUrl": "https://sharedpour.com/products/bombergers-declaration-2026-bourbon",
+     "firstSeen": "2026-11-12T19:49:12.080Z"
+    },
+    "shenks-homestead-2026-sour-mash-whiskey": {
+     "handle": "shenks-homestead-2026-sour-mash-whiskey",
+     "title": "Shenk's Homestead 2026 Sour Mash Whiskey",
+     "vendor": "Michter's",
+     "productType": "",
+     "tags": [],
+     "minPrice": 119,
+     "available": false,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/Shenk_s_Homestead_2026_Sour_Mash_Whiskey.png?v=1794512904",
+     "url": "https://sharedpour.com",
+     "pageUrl": "https://sharedpour.com/products/shenks-homestead-2026-sour-mash-whiskey",
+     "firstSeen": "2026-11-12T19:49:12.080Z"
+    },
     "christmas-blend-finished-in-maple-barrels": {
      "handle": "christmas-blend-finished-in-maple-barrels",
      "title": "American Ace Christmas Blend Bourbon Whiskey Finished in Maple Barrels",
@@ -2455,6 +2493,32 @@
      "url": "https://sharedpour.com",
      "pageUrl": "https://sharedpour.com/products/crittendens-single-barrel-790-bourbon-in-2-char-barrel",
      "firstSeen": "2026-11-09T20:31:45.517Z"
+    },
+    "westward-whiskey-single-barrel-t8ke-910-52-33": {
+     "handle": "westward-whiskey-single-barrel-t8ke-910-52-33",
+     "title": "Westward Whiskey Single Barrel T8KE #910 52.33% Cider Cask",
+     "vendor": "westward",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 109.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/3e88a5d4-e061-6a8c-9d10-51919636709b.jpg?v=1794146300",
+     "url": "https://sharedpour.com",
+     "pageUrl": "https://sharedpour.com/products/westward-whiskey-single-barrel-t8ke-910-52-33",
+     "firstSeen": "2026-11-12T13:57:03.042Z"
+    },
+    "westward-whiskey-single-barrel-t8ke-17180-64-7": {
+     "handle": "westward-whiskey-single-barrel-t8ke-17180-64-7",
+     "title": "Westward Whiskey Single Barrel T8KE #17180 64.7%",
+     "vendor": "westward",
+     "productType": "Whiskey",
+     "tags": [],
+     "minPrice": 109.99,
+     "available": true,
+     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/e3186b0d-aecf-611c-acd2-a2b73c3221e2.jpg?v=1794146359",
+     "url": "https://sharedpour.com",
+     "pageUrl": "https://sharedpour.com/products/westward-whiskey-single-barrel-t8ke-17180-64-7",
+     "firstSeen": "2026-11-12T13:57:03.042Z"
     },
     "bourbonfinds-kentucky-straight-bourbon-whiskey-knf-204": {
      "handle": "bourbonfinds-kentucky-straight-bourbon-whiskey-knf-204",
@@ -2896,19 +2960,6 @@
      "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/18_wheatedRye_SOV_adamDewar_May2025.jpg?v=1779370914",
      "url": "https://sharedpour.com",
      "pageUrl": "https://sharedpour.com/products/sons-of-vancouver-wheated-rye-whiskey",
-     "firstSeen": "2026-11-09T20:31:45.517Z"
-    },
-    "pride-of-anderson-county-9yr-bourbon-118-2pf": {
-     "handle": "pride-of-anderson-county-9yr-bourbon-118-2pf",
-     "title": "Pride of Anderson County 9yr Bourbon (2026 Release)",
-     "vendor": "Rare Character",
-     "productType": "Bourbon",
-     "tags": [],
-     "minPrice": 399.99,
-     "available": false,
-     "image": "https://cdn.shopify.com/s/files/1/0453/4363/7659/files/DSC00913.jpg?v=1779366646",
-     "url": "https://sharedpour.com",
-     "pageUrl": "https://sharedpour.com/products/pride-of-anderson-county-9yr-bourbon-118-2pf",
      "firstSeen": "2026-11-09T20:31:45.517Z"
     },
     "dancing-goat-distillery-i-would-rye-4-u-2026-release": {
@@ -3448,7 +3499,7 @@
    "httpValidators": null,
    "fetchVia": null,
    "fetchViaReason": null,
-   "countBaseline": 98,
+   "countBaseline": 101,
    "driftStreak": 0,
    "driftAlertSent": false,
    "driftAlertAt": null,
@@ -3457,9 +3508,9 @@
    "cooldownLevel": 0,
    "cooldownUntil": null,
    "errorStreakSince": null,
-   "lastSuccessAt": "2026-11-11T20:15:30.186Z",
+   "lastSuccessAt": "2026-11-12T20:22:20.384Z",
    "lastSelfHealedPingAt": null,
-   "lastAlertAt": "2026-11-10T21:52:16.067Z"
+   "lastAlertAt": "2026-11-12T19:49:12.080Z"
   }
  }
 }
