@@ -121,6 +121,20 @@ export function shouldCheck(
   return elapsed >= interval * stretch * cycleJitterFactor(site.id ?? site.name ?? "", siteState.lastChecked);
 }
 
+/** How long this imminent run lasts: an AUTO-triggered run carries its own
+ *  bounded duration (imminentAutoMinutes) so it never borrows the operator's
+ *  longer manual tuning; otherwise the tuned value, else the shared default.
+ *  The worker's auto-off and the dashboard countdown both read this. */
+export function imminentDurationMin(site: {
+  imminentAutoMinutes?: number | null | undefined;
+  imminentDurationMinutes?: number | null | undefined;
+}): number {
+  const auto = site.imminentAutoMinutes;
+  if (auto != null && auto > 0) return auto;
+  const v = site.imminentDurationMinutes;
+  return v != null && v > 0 ? v : DEFAULT_IMMINENT_DURATION_MIN;
+}
+
 /** The cadence an imminent site runs at: its tuned value, else the shared default. */
 export function imminentInterval(site: Pick<SchedulableSite, "imminentIntervalMinutes">): number {
   const v = site.imminentIntervalMinutes;

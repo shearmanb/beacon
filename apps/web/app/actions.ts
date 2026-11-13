@@ -118,6 +118,7 @@ export async function setImminent(
     ...tuned,
     imminent,
     imminentSince: imminent ? new Date().toISOString() : null,
+    imminentAutoMinutes: null, // a click is the operator's run, never an auto one
     scheduleBeforeImminent: imminent ? (def.scheduleBeforeImminent ?? def.schedule ?? null) : null,
   });
   if (imminent) await store.commands.enqueue("run_now", siteId, null);

@@ -14,10 +14,11 @@
 
 import { buildAdapterDeps, diagnoseSite, getAdapter, hasAdapter, registerAdapter, siteDefinitionSchema, sourceUrl, type AdapterDeps, type SiteDefinition } from "@beacon/core";
 import { expireIdentity } from "@beacon/fetch";
-import { sleep, jitter, shouldCheck, getEffectiveInterval, getEtDay, getEtHour, DEFAULT_IMMINENT_DURATION_MIN, type Alert, type Schedules } from "@beacon/shared";
+import { sleep, jitter, shouldCheck, getEffectiveInterval, getEtDay, getEtHour, imminentDurationMin, DEFAULT_IMMINENT_DURATION_MIN, type Alert, type Schedules } from "@beacon/shared";
 import type { NotificationChannel } from "@beacon/notify";
 import type { BeaconStore, SiteRow } from "@beacon/db";
 import { applyCommands } from "./commands.js";
+import { maybeAutoImminent } from "./auto-imminent.js";
 import { isBlockLikeFailure, processSite, type SiteOutcome } from "./process-site.js";
 
 export { DEFAULT_IMMINENT_DURATION_MIN };
@@ -139,7 +140,8 @@ async function autoOffImminent(ctx: RunContext, rows: SiteRow[]): Promise<void> 
   for (const row of rows) {
     const def = row.definition;
     if (!def.imminent || !def.imminentSince) continue;
-    const durationMin = def.imminentDurationMinutes ?? DEFAULT_IMMINENT_DURATION_MIN;
+    const durationMin = imminentDurationMin(def);
+    const auto = def.imminentAutoMinutes != null;
     if (Date.now() - Date.parse(def.imminentSince) < durationMin * 60_000) continue;
 
     const restored = def.scheduleBeforeImminent ?? def.schedule ?? undefined;
@@ -149,7 +151,7 @@ async function autoOffImminent(ctx: RunContext, rows: SiteRow[]): Promise<void> 
       product: {
         title: def.name,
         url: sourceUrl(def),
-        note: `Imminent mode auto-disabled after ${durationMin} min.`,
+        note: `${auto ? "Auto-imminent" : "Imminent mode"} auto-disabled after ${durationMin} min.`,
       },
     };
     if (!dryRun) {
@@ -157,11 +159,14 @@ async function autoOffImminent(ctx: RunContext, rows: SiteRow[]): Promise<void> 
         ...def,
         imminent: false,
         imminentSince: null,
+        imminentAutoMinutes: null,
         scheduleBeforeImminent: null,
         schedule: restored ?? undefined,
       });
       await store.history.append(def.id, [event]);
-      if (channel) {
+      // An auto run ends quietly: nobody clicked it on, and a group reverting
+      // would be one ping per member. History keeps the row.
+      if (channel && !auto) {
         try {
           await channel.send(alertName(def), event);
         } catch (err) {
@@ -177,7 +182,7 @@ export interface RunResult {
   checked: number;
 }
 
-interface CheckedSite {
+export interface CheckedSite {
   def: SiteDefinition;
   outcome: SiteOutcome;
 }
@@ -273,7 +278,10 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
       // block must not silence the launch window — check anyway. Cadence is
       // still bounded by imminentIntervalMinutes (shouldCheck below), and the
       // breaker reasserts automatically once imminent ends.
-      if (def.imminent) {
+      // An AUTO-imminent run is not operator-watched, so it never overrides the
+      // breaker: a host that just blocked us keeps its cooldown (clamped as in
+      // any tight window below) instead of being poked every 2 min.
+      if (def.imminent && def.imminentAutoMinutes == null) {
         log(`[${def.name}] In cooldown but imminent — checking anyway`);
       } else {
         const lastAttempt = prevState?.lastChecked ? Date.parse(prevState.lastChecked as string) : 0;
@@ -381,6 +389,17 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
       await propagateHostPins(ctx, rows, newlyPinnedHosts);
     } catch (err) {
       log(`Host pin propagation error (continuing): ${(err as Error).message}`);
+    }
+  }
+
+  // Auto-imminent (feedback loop): a drop signal on one member of a configured
+  // group speeds up the whole group for a bounded window. After state/history
+  // are saved; a failure here must not cost the pass its alerts.
+  if (!dryRun) {
+    try {
+      await maybeAutoImminent(ctx, results);
+    } catch (err) {
+      log(`Auto-imminent error (continuing): ${(err as Error).message}`);
     }
   }
 

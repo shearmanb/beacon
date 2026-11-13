@@ -270,9 +270,9 @@ export const ONE_SHOTS: ConfigFix[] = [
     // stores, so TOTAL volume matters: the two pre-consolidation SharedPour
     // checkers had been re-enabled while the merged Watchlist sat disabled
     // (2× host load). One-shot, so later /schedules or tile edits are never
-    // overridden by a redeploy; nothing is created or deleted. Keep it LAST:
-    // on a fresh datastore the older cadence one-shot would otherwise run
-    // after it and re-assign drop_windows.
+    // overridden by a redeploy; nothing is created or deleted. Keep it AFTER
+    // the older cadence one-shot: on a fresh datastore that one would otherwise
+    // run after it and re-assign drop_windows.
     async run(store, log) {
       type State = NonNullable<Awaited<ReturnType<BeaconStore["state"]["load"]>>>;
       await store.schedules.upsert("fast_hours", {
@@ -333,6 +333,70 @@ export const ONE_SHOTS: ConfigFix[] = [
         await store.sites.upsert({ ...row.definition, enabled: false });
         log(`Retired ${id} again — merged into sharedpour_t8ke_all (disabled, not deleted; deprecated flag kept).`);
       }
+    },
+  },
+  {
+    id: "storefront_fast_20261113",
+    description: "storefront_fast schedule (2m peak / 4m shoulders) on the SharedPour Channel checker",
+    // Operator ask 2026-11-13: check more often without getting tar-pitted.
+    // Blocks come from request count against a store's WAF-fronted storefront,
+    // so the extra checks go ONLY to the checker that never touches one:
+    // sharedpour_channel is a single token-authenticated Storefront-API call to
+    // shared-pour.myshopify.com (the channel that stayed up through the July
+    // sharedpour.com blocks). Deliberately NOT the official-shop checker: it
+    // re-reads thereveries.co/shop for its Buy Button embed on every check, so
+    // a faster cadence there would add page loads on a host the wall probe
+    // already polls — and the channel list is a superset of that embed anyway.
+    // REST checkers stay on fast_hours. Runs after fast_hours (order matters).
+    async run(store, log) {
+      await store.schedules.upsert("storefront_fast", {
+        label: "🚀 Storefront Fast (2m peak · 4m shoulders)",
+        rules: [
+          { fromHour: 8, toHour: 15, interval: 2 },
+          { fromHour: 17, toHour: 20, interval: 2 },
+          { fromHour: 6, toHour: 8, interval: 4 },
+          { fromHour: 15, toHour: 17, interval: 4 },
+          { fromHour: 20, toHour: 22, interval: 4 },
+          { fromHour: 22, toHour: 6, interval: 60 },
+          { defaultInterval: 60 },
+        ],
+      });
+      const row = await store.sites.get("sharedpour_channel");
+      if (!row) return; // absent in this datastore — never create
+      await store.sites.upsert({ ...row.definition, schedule: "storefront_fast" });
+      log("Amended sharedpour_channel: schedule → storefront_fast.");
+    },
+  },
+  {
+    id: "auto_imminent_reveries_20261113",
+    description: "auto-imminent group: official Reveries shop + SharedPour + Bourbon Concierge",
+    // Operator's pick 2026-11-13: these three sell the same releases, so a new
+    // bottle / restock on one (or the Reveries wall lifting) puts the others on
+    // imminent cadence for 20 min, at most 4 times a day. The wall probe is a
+    // trigger only — polling it faster tells us nothing once a drop is on.
+    // Seeded once: the blob is the config from here on (apps/worker/src/
+    // auto-imminent.ts), so a later edit or `"enabled": false` is never undone.
+    async run(store, log) {
+      if (await store.meta.get("auto_imminent")) return; // already configured — keep it
+      const shops = ["reveries_official", "sharedpour_channel", "sharedpour_t8ke_all", "bourbon_concierge"];
+      await store.meta.set(
+        "auto_imminent",
+        JSON.stringify({
+          enabled: true,
+          groups: [
+            {
+              id: "reveries",
+              label: "Reveries · SharedPour · Bourbon Concierge",
+              triggers: ["reveries_site_status", ...shops],
+              targets: shops,
+              on: ["new_product", "restock", "site_changed"],
+              minutes: 20,
+              maxPerDay: 4,
+            },
+          ],
+        }),
+      );
+      log("Seeded auto_imminent: group \"reveries\" (4 shops, 20 min, ≤4/day).");
     },
   },
 ];

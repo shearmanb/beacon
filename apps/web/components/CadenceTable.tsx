@@ -24,6 +24,7 @@ export interface CadenceSite {
   definition: SchedulableSite & {
     imminentSince?: string | null;
     imminentDurationMinutes?: number | null;
+    imminentAutoMinutes?: number | null;
   };
   lastChecked: string | null;
   cooldownUntil: string | null;
@@ -40,7 +41,7 @@ function tier(interval: number): string {
 // ISO instant imminent mode auto-reverts (mirrors the tile's imminentUntil).
 function imminentUntil(def: CadenceSite["definition"], fallbackDuration: number): string | null {
   if (!def.imminent || !def.imminentSince) return null;
-  const until = Date.parse(def.imminentSince) + (def.imminentDurationMinutes ?? fallbackDuration) * 60_000;
+  const until = Date.parse(def.imminentSince) + (def.imminentAutoMinutes ?? def.imminentDurationMinutes ?? fallbackDuration) * 60_000;
   return Number.isFinite(until) ? new Date(until).toISOString() : null;
 }
 

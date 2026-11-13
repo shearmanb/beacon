@@ -24,6 +24,7 @@ export function ImminentControl({
   durationMin,
   untilIso,
   initialNow,
+  auto = false,
 }: {
   siteId: string;
   imminent: boolean;
@@ -34,6 +35,8 @@ export function ImminentControl({
   /** Auto-revert instant while imminent (null if the start wasn't stamped). */
   untilIso: string | null;
   initialNow: number;
+  /** This run was started by the worker's auto-imminent rule, not a click. */
+  auto?: boolean;
 }) {
   const cur = durationMin ?? DEFAULT_IMMINENT_DURATION_MIN;
   const opts = DURATION_OPTS.includes(cur) ? DURATION_OPTS : [cur, ...DURATION_OPTS];
@@ -59,6 +62,11 @@ export function ImminentControl({
     return (
       <div className="imm-ctl on">
         <ImminentBadge everyMin={everyMin} untilIso={untilIso} initialNow={initialNow} />
+        {auto && (
+          <span className="mono" style={{ fontSize: 10 }} title="Started automatically: a related shop just showed a new bottle, a restock or a lifted wall. Reverts by itself.">
+            auto
+          </span>
+        )}
         <button className="btn sm" disabled={busy} title="Stop imminent mode now and go back to the schedule" onClick={() => void toggle(false)}>
           {busy ? "…" : "stop"}
         </button>

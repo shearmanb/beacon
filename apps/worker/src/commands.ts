@@ -29,6 +29,7 @@ export async function applyCommands(store: BeaconStore, commands: CommandRow[]):
         ...site.definition,
         imminent,
         imminentSince: imminent ? new Date().toISOString() : null,
+        imminentAutoMinutes: null,
         scheduleBeforeImminent: imminent
           ? (site.definition.scheduleBeforeImminent ?? site.definition.schedule ?? null)
           : null,

@@ -31,7 +31,7 @@ const BACKUP_PATH = "analytics/backup/beacon-restore.json";
 const META_KEY = "configBackup"; // JSON: { at: iso }
 const HTTP_TIMEOUT_MS = 20_000;
 // Meta keys worth carrying: hand-authored config, not operational bookkeeping.
-const BACKED_UP_META_KEYS = ["unicorn_config"];
+const BACKED_UP_META_KEYS = ["unicorn_config", "auto_imminent"];
 // Per-site state fields that are pure operational history — dropped so the
 // bundle stays small and well under the GitHub contents API's 1 MB read limit.
 const VOLATILE_STATE_FIELDS = ["checkHistory", "errorLog", "viaFlips", "recentlySeen", "seenTitles"];

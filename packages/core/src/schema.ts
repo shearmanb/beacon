@@ -219,6 +219,11 @@ export const siteDefinitionSchema = z.object({
   imminentIntervalMinutes: z.number().optional(),
   imminentDurationMinutes: z.number().optional(),
   imminentSince: z.string().nullable().optional(),
+  // Set only while imminent was switched on by the worker's auto-imminent rule
+  // (apps/worker/src/auto-imminent.ts): the run's own duration in minutes.
+  // Null/absent = the operator's click. Auto runs honor rate-limit cooldowns
+  // and revert without a Discord ping.
+  imminentAutoMinutes: z.number().nullable().optional(),
   scheduleBeforeImminent: z.union([z.string(), z.number()]).nullable().optional(),
   alerts: alertFlagsSchema,
   filters: filtersSchema,

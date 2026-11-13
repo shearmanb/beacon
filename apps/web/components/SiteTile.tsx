@@ -10,7 +10,7 @@
 import type { SiteRow } from "@beacon/db";
 import type { SiteDefinition, SiteState } from "@beacon/core";
 import type { Schedules } from "@beacon/shared";
-import { DEFAULT_IMMINENT_DURATION_MIN, imminentInterval, type ErrorLogEntry } from "@beacon/shared";
+import { imminentDurationMin, imminentInterval, type ErrorLogEntry } from "@beacon/shared";
 import { nowInterval } from "../lib/cadence";
 import { predictedNextCheckAt, formatEta } from "../lib/nextcheck";
 import { scheduleLine, tileStatus } from "../lib/tile-status";
@@ -39,7 +39,7 @@ function siteUrl(def: SiteDefinition): string {
 // null when not in imminent mode / start not stamped.
 function imminentUntil(def: SiteDefinition): string | null {
   if (!def.imminent || !def.imminentSince) return null;
-  const durMs = (def.imminentDurationMinutes ?? DEFAULT_IMMINENT_DURATION_MIN) * 60_000;
+  const durMs = imminentDurationMin(def) * 60_000;
   const until = Date.parse(def.imminentSince) + durMs;
   return Number.isFinite(until) ? new Date(until).toISOString() : null;
 }
@@ -126,6 +126,7 @@ export function SiteTile({
             everyMin={imminentInterval(def)}
             durationMin={def.imminentDurationMinutes ?? null}
             untilIso={imminentUntil(def)}
+            auto={def.imminentAutoMinutes != null}
             initialNow={now}
           />
         )}
