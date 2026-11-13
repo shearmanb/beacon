@@ -14,6 +14,22 @@ title, one sentence saying what changed and why, then short bullets. One fact
 per bullet; name the file or setting it lives in. Entries below the
 "Older entries" line keep their original single-paragraph form.
 
+## 2026-11-13 (4) — Tiles show the cadence in effect now and when it changes
+
+Operator ask: at 6:50 a.m. the tile's schedule label ("Fast Hours (5m peak ·
+8m shoulders)") read as "every 5 minutes"; the tile should say how often it
+checks right now, and separately when that changes.
+
+- The single 🕒 line is now two lines: **"🕒 every 8 min now"** (bold) and
+  **"→ every 5 min from 8 AM ET · ⚡ Fast Hours  change ›"**
+  (`cadenceLines` in `apps/web/lib/tile-status.ts`, replacing `cadencePhrase` / `scheduleLine`).
+- "Now" is the real spacing: the schedule interval × `cadenceAdjust` (back-off
+  ⏳/🐢 or 🚀 speed-up), with "(schedule says N, eased off / sped up)" when it differs.
+  Imminent shows "every 2 min now (imminent)" and "→ back to every N min at 7:19 AM ET".
+- The next change walks the real ET clock hour by hour, past midnight
+  and day-scoped rules ("from Sat 6 AM ET"). The parenthetical summary is dropped from the
+  schedule name on the tile, since the numbers are spelled out.
+
 ## 2026-11-13 (3) — History file restored, alert-lateness measured, dead weight removed
 
 Operator review of a suggestions list: fix the wiped history file, measure how

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Schedules } from "@beacon/shared";
 import { getEtHour } from "@beacon/shared";
-import { cadencePhrase, tileStatus } from "./tile-status";
+import { cadenceLines, tileStatus } from "./tile-status";
 
 // 2026-10-30T16:00Z = 12:00 ET (EDT). Pin `now` so the phrase is deterministic.
 const NOW = Date.parse("2026-10-30T16:00:00.000Z");
@@ -23,20 +23,38 @@ const schedules: Schedules = {
   },
 };
 
-describe("cadencePhrase", () => {
-  it("names the current interval, when the run ends, and what comes next", () => {
+describe("cadenceLines", () => {
+  const fh = { id: "a", schedule: "fast_hours" };
+  it("names the cadence now and when it next changes", () => {
     expect(getEtHour(new Date(NOW))).toBe(12); // fixture sanity
-    expect(cadencePhrase({ id: "a", schedule: "fast_hours" }, schedules, NOW)).toBe("every 5m until 15:00, then every 8m");
+    const c = cadenceLines(fh, schedules, undefined, "⚡ Fast Hours (5m peak · 8m shoulders)", NOW);
+    expect(c).toEqual({ now: "every 5 min now", next: "→ every 8 min from 3 PM ET", label: "⚡ Fast Hours" });
   });
-  it("collapses a uniform day", () => {
-    expect(cadencePhrase({ id: "a", intervalMinutes: 20 }, {}, NOW)).toBe("every 20m all day");
+  it("early morning shoulder: 8 now, 5 from 8 AM", () => {
+    const early = Date.parse("2026-10-30T10:50:00.000Z"); // 06:50 ET
+    const c = cadenceLines(fh, schedules, undefined, "fast", early);
+    expect([c.now, c.next]).toEqual(["every 8 min now", "→ every 5 min from 8 AM ET"]);
   });
-  it("wraps past midnight for an overnight run", () => {
-    const lateNight = Date.parse("2026-10-31T03:30:00.000Z"); // 23:30 ET
-    expect(cadencePhrase({ id: "a", schedule: "fast_hours" }, schedules, lateNight)).toBe("every 60m until 06:00, then every 8m");
+  it("names the day when the change lands after midnight", () => {
+    const lateNight = Date.parse("2026-10-31T01:30:00.000Z"); // Fri 21:30 ET
+    expect(cadenceLines(fh, schedules, undefined, "fast", lateNight).next).toBe("→ every 60 min from 10 PM ET");
+    const overnight = Date.parse("2026-10-31T03:30:00.000Z"); // Fri 23:30 ET
+    expect(cadenceLines(fh, schedules, undefined, "fast", overnight).next).toBe("→ every 8 min from Sat 6 AM ET");
   });
-  it("reports the imminent cadence while imminent", () => {
-    expect(cadencePhrase({ id: "a", schedule: "fast_hours", imminent: true }, schedules, NOW)).toBe("every 2m while imminent");
+  it("a flat interval never changes", () => {
+    const c = cadenceLines({ id: "a", intervalMinutes: 20 }, {}, undefined, "fixed 20 min", NOW);
+    expect([c.now, c.next]).toEqual(["every 20 min now", "→ no change: same cadence all day"]);
+  });
+  it("shows the eased-off interval after a block", () => {
+    const state = { errorLog: [{ ts: new Date(NOW - MIN).toISOString(), statusCode: 429 }] };
+    const c = cadenceLines(fh, schedules, state, "fast", NOW);
+    expect(c.now).toBe("every 7.5 min now (schedule says 5, eased off)");
+    expect(c.next).toBe("→ every 12 min from 3 PM ET");
+  });
+  it("imminent: the imminent cadence, then when it hands back", () => {
+    const until = new Date(NOW + 20 * MIN).toISOString(); // 12:20 ET
+    const c = cadenceLines({ ...fh, imminent: true }, schedules, undefined, "fast", NOW, until);
+    expect([c.now, c.next]).toEqual(["every 2 min now (imminent)", "→ back to every 5 min at 12:20 PM ET"]);
   });
 });
 

@@ -2,7 +2,8 @@
 // 2026-10-30 simplification. The face answers three questions and nothing else:
 //   1. are checks OK?  → health dot + ONE status line (lib/tile-status.ts) +
 //      the last-60-min PulseStrip
-//   2. how often is it checked?  → the 🕒 schedule line (+ "change ›")
+//   2. how often is it checked?  → "every N min now" + when that next changes
+//      (+ the schedule name and "change ›")
 //   3. what came up here lately, and is it buyable now?  → RecentActivity (5 rows)
 //   4. go imminent, how often, for how long?  → ImminentControl in the header
 // Everything that edits the site is inside the collapsed ⚙ panel (SiteControls).
@@ -13,7 +14,7 @@ import type { Schedules } from "@beacon/shared";
 import { imminentDurationMin, imminentInterval, type CadenceSignals } from "@beacon/shared";
 import { nowInterval } from "../lib/cadence";
 import { predictedNextCheckAt, formatEta } from "../lib/nextcheck";
-import { scheduleLine, tileStatus } from "../lib/tile-status";
+import { cadenceLines, tileStatus } from "../lib/tile-status";
 import { rosterIsLive } from "../lib/live";
 import { parseWindowRules } from "../lib/site-forms";
 import type { Health } from "../lib/health";
@@ -93,11 +94,12 @@ export function SiteTile({
   const degraded = checkHist.slice(-4).some((h) => !h.ok);
   const imminentOn = !!def.imminent && row.enabled;
 
-  // 🕒 line: the schedule's name + what it resolves to now, with a jump to this
-  // site's row in the Cadence control panel (/schedules) where every window is
-  // laid out. The ⚙ panel's schedule dropdown changes it in place.
+  // Cadence: how often it checks right now, then when that changes next and
+  // which schedule says so, with a jump to this site's row in the Cadence
+  // control panel (/schedules). The ⚙ panel's schedule dropdown changes it too.
   const schedVal = String(def.schedule ?? def.intervalMinutes ?? "");
-  const schedLabel = scheduleOptions.find((o) => o.value === schedVal)?.label ?? (schedVal ? `${schedVal} min` : "default");
+  const schedLabel = scheduleOptions.find((o) => o.value === schedVal)?.label ?? (schedVal ? `fixed ${schedVal} min` : "default");
+  const cadence = cadenceLines(def, schedules, state as CadenceSignals | undefined, schedLabel, now, imminentUntil(def));
 
   // What each Recent row's bottle is doing NOW (gated like every stock surface).
   const live = rosterIsLive(row.enabled, state?.lastChecked);
@@ -131,7 +133,7 @@ export function SiteTile({
         )}
       </div>
 
-      <div className={`site-status ${status.tone}`} title="Health · last check · next check (predicted) · cadence in effect now, per the schedule">
+      <div className={`site-status ${status.tone}`} title="Health · last check · next check (predicted)">
         {status.parts.map((p, i) => (
           <span key={i} className="part">
             {i > 0 && <span className="sep"> · </span>}
@@ -147,10 +149,17 @@ export function SiteTile({
       </div>
       {row.enabled && (
         <div className={`site-sched ${imminentOn ? "imm" : ""}`}>
-          <span className="txt">🕒 {scheduleLine(def, schedules, schedLabel, now)}</span>
-          <a href={`/schedules#cad-${row.id}`} title="See this site's check windows for the whole day and change its schedule (also in ⚙ settings below)">
-            change ›
-          </a>
+          <div className="now" title="How often this site is being checked right now (real spacing varies ±10–15%). Times are Eastern.">
+            🕒 {cadence.now}
+          </div>
+          <div className="next">
+            <span className="txt">
+              {cadence.next} <span className="lbl">· {cadence.label}</span>
+            </span>
+            <a href={`/schedules#cad-${row.id}`} title="See this site's check windows for the whole day and change its schedule (also in ⚙ settings below)">
+              change ›
+            </a>
+          </div>
         </div>
       )}
       {status.secondary.length > 0 && (

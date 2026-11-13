@@ -1,5 +1,5 @@
-// The Sites tile's ONE status line — "✓ checking · 3m ago · next ~2m · every 5m
-// until 20:00 → 8m" — plus the small secondary notes (fallback channel,
+// The Sites tile's ONE status line — "✓ checking · 3m ago · next ~2m" (cadence: cadenceLines below)
+// — plus the small secondary notes (fallback channel,
 // truncated roster, back-off, quiet). Pure: takes the site definition, stored
 // state and schedules and returns text + a tone; the tile just renders it.
 // Replaced an 11-stat grid (Products / Last check / Schedule / Cadence / Next
@@ -9,7 +9,6 @@
 
 import type { SchedulableSite, Schedules } from "@beacon/shared";
 import { cadenceAdjust, getEtDay, getEtHour, getEffectiveInterval, imminentInterval, recentBlock, type CadenceSignals } from "@beacon/shared";
-import { cadenceByHour } from "./cadence";
 import { ago, type Health } from "./health";
 
 export type Tone = "ok" | "warn" | "err" | "off";
@@ -34,29 +33,79 @@ export interface TileStatus {
 // filter or a quietly-broken source.
 const QUIET_MS = 21 * 86_400_000;
 
-const fmtHour = (h: number) => `${String(h % 24).padStart(2, "0")}:00`;
+const ET = "America/New_York";
+const DAY_MS = 86_400_000;
+const HOUR_MS = 3_600_000;
+
+/** "8 AM" / "12 PM" for a whole ET hour. */
+function fmtHour12(h: number): string {
+  const hh = h % 24;
+  return `${hh % 12 === 0 ? 12 : hh % 12} ${hh < 12 ? "AM" : "PM"}`;
+}
+
+/** 12 → "12", 4.8 → "4.8" (back-off / speed-up factors can make fractions). */
+const fmtMin = (m: number) => (Number.isInteger(m) ? String(m) : m.toFixed(1).replace(/\.0$/, ""));
+
+/** Schedule labels carry a summary in parentheses ("(5m peak · 8m shoulders)").
+ *  The tile spells out the real numbers, so drop it there to avoid a misread. */
+const shortLabel = (label: string) => label.replace(/\s*\([^)]*\)\s*$/, "") || label;
+
+export interface CadenceLines {
+  /** "every 8 min now" — what the worker is actually spacing checks at. */
+  now: string;
+  /** "→ every 5 min from 8 AM ET" — when that next changes, and to what. */
+  next: string;
+  /** The schedule's short name, shown beside the next-change line. */
+  label: string;
+}
 
 /**
- * "every 5m until 20:00 → 8m" | "every 5m all day" | "every 2m while imminent".
- * Walks today's per-hour cadence from the current ET hour to the end of the
- * current run (wrapping past midnight into the same array — close enough for a
- * glance; day-scoped rules differ rarely).
+ * The tile's two cadence lines. Resolves through the worker's own helpers
+ * (getEffectiveInterval + cadenceAdjust + imminentInterval), so the numbers
+ * are the ones shouldCheck() spaces checks by, before the ±10–15% per-cycle
+ * jitter. Walks forward hour by hour on the real ET clock (midnight and
+ * day-scoped rules included) to the next hour whose interval differs.
  */
-export function cadencePhrase(def: SchedulableSite, schedules: Schedules, now: number = Date.now()): string {
-  if (def.imminent) return `every ${imminentInterval(def)}m while imminent`;
-  const date = new Date(now);
-  const hours = cadenceByHour(def, schedules, getEtDay(date));
-  const h = getEtHour(date);
-  const cur = hours[h]!;
-  if (hours.every((x) => x === cur)) return `every ${cur}m all day`;
-  let end = h;
-  for (let i = 1; i < 24; i++) {
-    if (hours[(h + i) % 24] !== cur) {
-      end = (h + i) % 24;
-      break;
+export function cadenceLines(
+  def: SchedulableSite,
+  schedules: Schedules,
+  state: CadenceSignals | undefined,
+  label: string,
+  now: number = Date.now(),
+  imminentUntilIso: string | null = null,
+): CadenceLines {
+  const short = shortLabel(label);
+  const at = (t: number) => {
+    const d = new Date(t);
+    const sched = getEffectiveInterval(def, schedules, { hour: getEtHour(d), day: getEtDay(d) });
+    const adj = cadenceAdjust(sched, def, state, now);
+    return { sched, real: sched * adj.factor, adj };
+  };
+  const dayOf = (t: number) => getEtDay(new Date(t));
+  const when = (t: number, text: string) =>
+    dayOf(t) === dayOf(now) ? text : `${dayOf(t).replace(/^./, (c) => c.toUpperCase())} ${text}`;
+
+  if (def.imminent) {
+    const nowLine = `every ${fmtMin(imminentInterval(def))} min now (imminent)`;
+    const until = imminentUntilIso ? Date.parse(imminentUntilIso) : NaN;
+    if (!Number.isFinite(until)) return { now: nowLine, next: "→ back to the schedule when imminent ends", label: short };
+    const time = new Date(until).toLocaleTimeString("en-US", { timeZone: ET, hour: "numeric", minute: "2-digit" });
+    return { now: nowLine, next: `→ back to every ${fmtMin(at(until).real)} min at ${when(until, time)} ET`, label: short };
+  }
+
+  const cur = at(now);
+  let nowLine = `every ${fmtMin(cur.real)} min now`;
+  if (cur.adj.reason === "block" || cur.adj.reason === "slow") nowLine += ` (schedule says ${fmtMin(cur.sched)}, eased off)`;
+  else if (cur.adj.reason === "faster") nowLine += ` (schedule says ${fmtMin(cur.sched)}, 🚀 sped up)`;
+
+  // Next change: step through each upcoming hour start, up to a week out.
+  for (let t = now - (now % HOUR_MS) + HOUR_MS; t <= now + 7 * DAY_MS; t += HOUR_MS) {
+    const nxt = at(t).real;
+    if (nxt !== cur.real) {
+      return { now: nowLine, next: `→ every ${fmtMin(nxt)} min from ${when(t, fmtHour12(getEtHour(new Date(t))))} ET`, label: short };
     }
   }
-  return `every ${cur}m until ${fmtHour(end)}, then every ${hours[end]}m`;
+  return { now: nowLine, next: "→ no change: same cadence all day", label: short };
 }
 
 export interface TileStatusInput {
@@ -97,8 +146,8 @@ export function tileStatus({ enabled, def, state, schedules, health, nextLabel, 
   const cooldownUntil = state?.["cooldownUntil"] as string | undefined;
   const cooldownLeft = cooldownUntil ? Date.parse(cooldownUntil) - now : 0;
   if (!def.imminent && cooldownLeft > 0) parts.push(`⏸ cooldown ${Math.ceil(cooldownLeft / 60_000)}m`);
-  // The cadence ("every 5m until 15:00, then every 8m") has its own 🕒 line on
-  // the tile, next to the schedule's name and a link to change it.
+  // The cadence ("every 8 min now" / "→ every 5 min from 8 AM ET") has its own
+  // two lines on the tile (cadenceLines), with the schedule name + change link.
 
   // Secondary notes — only the ones that apply, each with the why in a tooltip.
   const adjust = def.imminent
@@ -168,10 +217,4 @@ export function tileStatus({ enabled, def, state, schedules, health, nextLabel, 
   }
 
   return { tone, parts, secondary, lastError, errorHint };
-}
-
-/** The tile's 🕒 line: which schedule, and what it means right now. */
-export function scheduleLine(def: SchedulableSite, schedules: Schedules, label: string, now: number = Date.now()): string {
-  if (def.imminent) return `⚡ imminent: ${cadencePhrase(def, schedules, now)} (then back to ${label})`;
-  return `${label}: ${cadencePhrase(def, schedules, now)}`;
 }
