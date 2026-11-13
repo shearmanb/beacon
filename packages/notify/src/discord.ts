@@ -72,7 +72,16 @@ interface Embed {
 
 // Discord rejects a field value over 1024 chars (the whole embed, not just the field).
 function capField(v: string): string {
-  return v.length <= 1024 ? v : `${v.slice(0, 1023)}…`;
+  return clip(v, 1024);
+}
+
+// Discord's hard embed limits. Going over is a 400 and the alert is simply
+// gone — and the alerts most likely to go over (a digest of a big drop, a very
+// long product title) are the ones that matter most. Clip, never lose.
+const TITLE_MAX = 256;
+const DESCRIPTION_MAX = 4096;
+function clip(v: string, max: number): string {
+  return v.length <= max ? v : `${v.slice(0, max - 1)}…`;
 }
 
 /** Pure: build the Discord webhook JSON payload for an alert. */
@@ -114,6 +123,9 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
     if (product.image) embed.thumbnail = { url: product.image };
   }
 
+  embed.title = clip(embed.title, TITLE_MAX);
+  embed.description = clip(embed.description, DESCRIPTION_MAX);
+
   return JSON.stringify({
     username: "Beacon",
     embeds: [embed],
@@ -139,17 +151,41 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
 }
 
 const MAX_RETRIES = 4;
+// A webhook 5xx or a dropped connection is usually over in a second or two;
+// without a retry that blip cost the alert outright (the diff never re-fires).
+// A request that hit its 30 s deadline is NOT retried here — three of those
+// per alert would hold the whole pass; run.ts' outbox retries it next pass.
+const TRANSIENT_RETRIES = 2;
+const NO_INLINE_RETRY_RE = /deadline exceeded/i;
 
 export class DiscordChannel implements NotificationChannel {
   readonly name = "discord";
-  constructor(private readonly webhookUrl: string) {}
+  constructor(
+    private readonly webhookUrl: string,
+    /** Base wait before a transient retry (×1, ×3). Tests pass 0. */
+    private readonly retryDelayMs = 1_000,
+  ) {}
 
   async send(siteName: string, alert: Alert): Promise<void> {
     await this.post(buildDiscordPayload(siteName, alert), 0);
   }
 
   private async post(payload: string, attempt: number): Promise<void> {
-    const res = await httpPost(this.webhookUrl, payload, { throwOnHttpError: false });
+    const transientLeft = attempt < TRANSIENT_RETRIES;
+    const backoff = this.retryDelayMs * (attempt === 0 ? 1 : 3);
+    let res;
+    try {
+      res = await httpPost(this.webhookUrl, payload, { throwOnHttpError: false });
+    } catch (err) {
+      if (!transientLeft || NO_INLINE_RETRY_RE.test((err as Error).message)) throw err;
+      await sleep(backoff);
+      return this.post(payload, attempt + 1);
+    }
+
+    if (res.status >= 500 && transientLeft) {
+      await sleep(backoff);
+      return this.post(payload, attempt + 1);
+    }
 
     if (res.status === 429 && attempt < MAX_RETRIES) {
       let retryAfter = 1;

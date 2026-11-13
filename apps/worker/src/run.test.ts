@@ -260,9 +260,10 @@ describe("runOnce", () => {
   it("collapses an all-sites-failing pass into one system_degraded page (2d)", async () => {
     // Disable the working site; add two sites pointing at a dead port so both fail.
     await store.sites.setEnabled("s1", false);
-    const dead = "http://127.0.0.1:9"; // connection refused → fast failure
-    await store.sites.upsert({ id: "d1", name: "Dead One", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: dead } });
-    await store.sites.upsert({ id: "d2", name: "Dead Two", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: dead } });
+    // Connection refused → fast failure. Two DIFFERENT stores: that is what
+    // makes it "the network", not one blocked host.
+    await store.sites.upsert({ id: "d1", name: "Dead One", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: "http://127.0.0.1:9" } });
+    await store.sites.upsert({ id: "d2", name: "Dead Two", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: "http://localhost:9" } });
 
     const res = await runOnce(ctx());
     expect(res.checked).toBe(2);
@@ -273,6 +274,79 @@ describe("runOnce", () => {
     expect(types.filter((t) => t === "system_degraded")).toHaveLength(1);
     // And it's recorded in history under a null siteId.
     expect((await store.history.recent()).some((h) => h.type === "system_degraded")).toBe(true);
+  });
+
+  it("does not call two failing checkers on ONE store a systemic failure", async () => {
+    await store.sites.setEnabled("s1", false);
+    const dead = "http://127.0.0.1:9";
+    for (const id of ["d1", "d2"]) {
+      await store.sites.upsert({ id, name: id, intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: dead } });
+      await store.state.save(id, { lastChecked: null, lastSuccessAt: new Date().toISOString(), products: {}, consecutiveErrors: 4 });
+    }
+    await runOnce(ctx());
+    const types = sent.map((s) => s.alert.type);
+    expect(types).not.toContain("system_degraded");
+    // Each checker pages for itself, carrying the host-level note.
+    expect(types.filter((t) => t === "site_error")).toHaveLength(2);
+    expect(sent[0]!.alert.product.note).toContain("Host-level");
+  });
+
+  // ── Alert delivery (2026-11-13) ───────────────────────────────────────────
+  const newDrop = async (n = 1) => {
+    await runOnce(ctx()); // baseline
+    products = [...products, ...Array.from({ length: n }, (_, i) => shopifyProduct(`drop${i}`, true))];
+    await store.state.save("s1", { ...(await store.state.load("s1"))!, lastChecked: null });
+  };
+  const flaky = (failures: number): NotificationChannel => {
+    let left = failures;
+    return {
+      name: "flaky",
+      send: async (site, alert) => {
+        if (left-- > 0) throw new Error("Discord webhook returned 502");
+        sent.push({ site, alert });
+      },
+    };
+  };
+
+  it("parks an alert whose Discord send failed and delivers it on the next pass", async () => {
+    await newDrop();
+    const channel = flaky(1);
+    await runOnce(ctx({ channel }));
+    expect(sent).toHaveLength(0);
+
+    await runOnce(ctx({ channel })); // nothing due — the outbox alone delivers
+    expect(sent).toHaveLength(1);
+    expect(sent[0]!.alert.type).toBe("new_product");
+    expect(sent[0]!.alert.product.title).toBe("drop0");
+    expect(sent[0]!.site).toContain("delayed");
+
+    await runOnce(ctx({ channel })); // delivered once, not again
+    expect(sent).toHaveLength(1);
+  });
+
+  it("keeps a failed digest for retry instead of losing the whole drop", async () => {
+    await newDrop(9);
+    const channel = flaky(1);
+    await runOnce(ctx({ channel }));
+    expect(sent).toHaveLength(0);
+    await runOnce(ctx({ channel }));
+    expect(sent).toHaveLength(1);
+    expect(sent[0]!.alert.product.title).toContain("9 changes");
+  });
+
+  it("one site's storage error neither starves the sites after it nor loses alerts already saved", async () => {
+    await newDrop();
+    await store.sites.upsert({ id: "s0", name: "Broken Row", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: base } });
+    await store.sites.upsert({ id: "s2", name: "After", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: base } });
+    const realSave = store.state.save.bind(store.state);
+    store.state.save = async (id, state) => {
+      if (id === "s0") throw new Error("SQLITE_BUSY");
+      return realSave(id, state);
+    };
+    await expect(runOnce(ctx())).rejects.toThrow("SQLITE_BUSY"); // still counted by the loop
+    // s1's drop was dispatched, and s2 (after the broken row) was still checked.
+    expect(sent.map((s) => s.alert.product.title)).toContain("drop0");
+    expect(await store.state.load("s2")).toBeTruthy();
   });
 
   // ── Blind-time invariant (2026-09) ────────────────────────────────────────

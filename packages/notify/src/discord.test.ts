@@ -55,6 +55,17 @@ describe("buildDiscordPayload", () => {
     expect(embed.fields).toContainEqual({ name: "Tags", value: "Bourbon, Single Barrel", inline: false });
   });
 
+  it("clips an over-long title and description to Discord's limits (a 400 would lose the alert)", () => {
+    const product = JSON.parse(
+      buildDiscordPayload("S", { type: "new_product", product: { title: "T".repeat(400), url: "https://x", available: true } }),
+    ).embeds[0];
+    expect(product.title.length).toBe(256);
+    const site = JSON.parse(
+      buildDiscordPayload("S", { type: "site_changed", product: { title: "S", url: "https://x", note: "n".repeat(6000) } }),
+    ).embeds[0];
+    expect(site.description.length).toBe(4096);
+  });
+
   it("handles a missing price gracefully", () => {
     const embed = JSON.parse(
       buildDiscordPayload("S", { type: "new_product", product: { title: "X", url: "https://x", available: false } }),
@@ -108,6 +119,40 @@ describe("DiscordChannel.send", () => {
     };
     await new DiscordChannel(`${base}/webhook`).send("Site", alert);
     expect(calls).toBe(2);
+  });
+
+  it("retries a 5xx blip instead of losing the alert", async () => {
+    let calls = 0;
+    handler = (_req, res) => {
+      calls += 1;
+      res.writeHead(calls < 3 ? 502 : 204);
+      res.end();
+    };
+    await new DiscordChannel(`${base}/webhook`, 0).send("Site", alert);
+    expect(calls).toBe(3);
+  });
+
+  it("retries a dropped connection, and gives up after the transient budget", async () => {
+    let calls = 0;
+    handler = (req, res) => {
+      calls += 1;
+      if (calls === 1) req.socket.destroy();
+      else {
+        res.writeHead(204);
+        res.end();
+      }
+    };
+    await new DiscordChannel(`${base}/webhook`, 0).send("Site", alert);
+    expect(calls).toBe(2);
+
+    calls = 0;
+    handler = (_req, res) => {
+      calls += 1;
+      res.writeHead(503);
+      res.end("down");
+    };
+    await expect(new DiscordChannel(`${base}/webhook`, 0).send("Site", alert)).rejects.toThrow(/returned 503/);
+    expect(calls).toBe(3);
   });
 
   it("throws on a non-2xx, non-429 response", async () => {

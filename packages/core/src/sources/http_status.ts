@@ -36,6 +36,8 @@ export function pageFingerprint(html: string): { hash: string; len: number } {
   return { hash: createHash("sha1").update(residue).digest("hex"), len: residue.length };
 }
 
+const FULL_REVALIDATE_MS = 15 * 60_000;
+
 export const httpStatusAdapter: SourceAdapter = {
   kind: "http_status",
   async fetch(site, prev: PrevState, deps?: AdapterDeps): Promise<FetchResult> {
@@ -43,12 +45,18 @@ export const httpStatusAdapter: SourceAdapter = {
     let html = "";
     let validators: HttpValidators | null = prev.httpValidators ?? null;
     let blockedByStatus = false;
+    // A 304 is the origin's CLAIM that nothing changed. Unbounded, a CDN that
+    // serves stale 304s freezes the wall-lift detector while every check reads
+    // green (same rule as shopify_rest's FULL_REVALIDATE_MS): only trust the
+    // validator while a recent full body backs it.
+    const lastFull = typeof prev["lastFullFetchAt"] === "string" ? Date.parse(prev["lastFullFetchAt"]) : 0;
+    const validatorFresh = Date.now() - lastFull < FULL_REVALIDATE_MS;
 
     try {
       const res = await httpGet(src.url, {
         withResponse: true,
         signal: deps?.signal,
-        headers: conditionalHeaders(validators),
+        headers: validatorFresh ? conditionalHeaders(validators) : {},
       });
       if (res.status === 304) {
         // Byte-identical to last time — previous status stands.

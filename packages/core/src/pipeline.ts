@@ -154,6 +154,9 @@ function runSignal(
     lastChecked: now,
     products: {},
     httpValidators: validators,
+    // A signal always comes from a real response (never a 304), so it is what
+    // bounds how long the adapter may trust its validator.
+    lastFullFetchAt: now,
     contentHash: contentHash ?? prevHash ?? null,
     contentLen: contentLen ?? prevLen ?? null,
   };

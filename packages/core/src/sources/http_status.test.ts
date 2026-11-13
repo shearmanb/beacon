@@ -75,9 +75,16 @@ describe("httpStatusAdapter", () => {
         res.end("ok");
       }
     };
-    const prev: PrevState = { httpValidators: { etag: '"v1"', lastModified: null } };
+    const prev: PrevState = { httpValidators: { etag: '"v1"', lastModified: null }, lastFullFetchAt: new Date().toISOString() };
     const result = await httpStatusAdapter.fetch(makeSite(), prev);
     expect(result.kind).toBe("not_modified");
+
+    // …but only while a recent full body backs the validator: an unbounded 304
+    // streak would freeze the wall-lift detector while every check reads green.
+    const stale: PrevState = { ...prev, lastFullFetchAt: new Date(Date.now() - 16 * 60_000).toISOString() };
+    expect((await httpStatusAdapter.fetch(makeSite(), stale)).kind).toBe("signal");
+    const never: PrevState = { httpValidators: prev.httpValidators };
+    expect((await httpStatusAdapter.fetch(makeSite(), never)).kind).toBe("signal");
   });
 
   it("re-throws non-wall errors (e.g. 500) for the worker's error path", async () => {

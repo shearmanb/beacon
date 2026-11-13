@@ -50,6 +50,15 @@ const VIA_FLIPS_CAP = 20;
 // a remembered handle becomes a quiet history note instead of a page. A real
 // relist after ≥24 h away still alerts.
 const RESEEN_WINDOW_MS = 24 * 3_600_000;
+// …but that 24 h memory is only an explanation when the roster's VIEW is
+// unsteady (a fallback channel on either side of this check, or a truncated
+// roster). On a steady primary channel a fetch is all-or-nothing, so a handle
+// that left the roster and came back was really unpublished and republished —
+// a staged listing pulled and then launched, or a same-day second release —
+// and swallowing that for a day is a missed drop. There the guard only damps
+// a quick publish/unpublish toggle. (All 26 suppressions on record, Jul–Aug
+// 2026, were channel-flap era; none was a steady-channel one.)
+const STEADY_RESEEN_WINDOW_MS = 60 * 60_000;
 const RECENTLY_SEEN_CAP = 800;
 // Alert types that count as "site activity" for the quiet-site surface (3d).
 const ACTIVITY_TYPES = new Set(["new_product", "restock", "sold_out", "site_changed", "site_reset"]);
@@ -226,11 +235,13 @@ export async function processSite({
     const prevSeen = (prevState?.recentlySeen as Record<string, string> | undefined) ?? {};
     const viewChanged =
       newVia !== prevVia || prevState?.fallbackTruncated === true || newState.fallbackTruncated === true;
+    const steadyView = !viewChanged && newVia == null && prevVia == null;
+    const reseenCutoff = steadyView ? Date.now() - STEADY_RESEEN_WINDOW_MS : seenCutoff;
     const reappeared: string[] = [];
     alerts = alerts.filter((a) => {
       if (a.type !== "new_product" || !a.product.handle) return true;
       const seenAt = prevSeen[a.product.handle];
-      if (seenAt && (Date.parse(seenAt) >= seenCutoff || viewChanged)) {
+      if (seenAt && (Date.parse(seenAt) >= reseenCutoff || viewChanged)) {
         reappeared.push(a.product.title);
         return false;
       }
@@ -243,7 +254,7 @@ export async function processSite({
           title: site.name,
           url: sourceUrl(site),
           note:
-            `${reappeared.length} product(s) reappeared (seen within 24 h, or back into view after a channel switch / partial fetch) — ` +
+            `${reappeared.length} product(s) reappeared (seen within the last hour, or back into view after a channel switch / partial fetch) — ` +
             `duplicate "new product" alert(s) suppressed: ${reappeared.slice(0, 3).join(", ")}` +
             (reappeared.length > 3 ? ", …" : ""),
         },

@@ -7,6 +7,23 @@ Each item tags rough **impact** so we can decide with the lean-by-default rule i
 mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
 "On-demand" = don't build on spec; build when a real need forces it.
 
+## Missed-alert audit — left open (2026-11-13)
+
+Shipped the six fixes in CHANGELOG 2026-11-13 (third batch). Not built, each needs a call:
+- [ ] **2a Empty-guard keeps last-known availability** (S, no deps, some noise risk): a bottle still
+  buyable when a shop empties between waves stays `available: true` in the preserved roster, so
+  its return next wave fires nothing (new bottles and the wall-lift still alert). Fix: once the
+  empty spell is confirmed and old (e.g. ≥6 h), mark preserved products unavailable so a return
+  reads as a restock. Trade-off: a long transient blank then ends in "Back in stock" alerts.
+- [ ] **2b Dispatch product alerts per site, not per pass** (M, no deps, touches dedupe/digest):
+  a drop found on the first site waits for every later site in the pass before Discord is called
+  (seconds normally, a minute or more when a sibling tar-pits), and a deploy that kills the
+  process mid-pass loses that pass's alerts (state saved, nothing sent — the outbox only covers
+  failed sends). Error events must stay end-of-pass for systemic detection.
+- [ ] **2c `http_status` reads a WAF 403 as a password wall** (S): an IP block on a wall probe
+  pages "Wave Reset", then "Wall lifted" when the block clears. Needs a second signal (body
+  match) before trusting a bare 403, per site.
+
 ## Check more without getting flagged (2026-11-13)
 
 Shipped (CHANGELOG 2026-11-13, both entries): `storefront_fast`, auto-imminent,

@@ -261,125 +261,144 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
   // name of the site that pinned), for host-level propagation below.
   const newlyPinnedHosts = new Map<string, string>();
 
+  // One site throwing outside processSite (a state read/write hiccup, a bad
+  // definition) used to abort the whole pass: every site after it went
+  // unchecked, and — worse — sites already checked had their state saved but
+  // their alerts never dispatched, which loses them for good (the diff never
+  // re-fires). Contain it per site, finish the pass, dispatch, THEN rethrow so
+  // the loop's datastore-failure streak still counts it.
+  let passError: unknown;
   for (const row of rows) {
     const def = row.definition;
     if (!def.enabled) continue;
-
-    const prevState = await store.state.load(def.id);
-
-    // Inside a tight (drop-window) cadence, blocking failures page earlier and
-    // long cooldowns are clamped — see TIGHT_INTERVAL_MIN above.
-    const tightWindow = getEffectiveInterval(def, schedules) <= TIGHT_INTERVAL_MIN;
-
-    const cooldownUntil = prevState?.cooldownUntil ? Date.parse(prevState.cooldownUntil as string) : 0;
-    if (cooldownUntil > Date.now()) {
-      // The circuit breaker would black out a site after a 403/429. In imminent
-      // mode the operator is actively watching a drop, so a single transient
-      // block must not silence the launch window — check anyway. Cadence is
-      // still bounded by imminentIntervalMinutes (shouldCheck below), and the
-      // breaker reasserts automatically once imminent ends.
-      // An AUTO-imminent run is not operator-watched, so it never overrides the
-      // breaker: a host that just blocked us keeps its cooldown (clamped as in
-      // any tight window below) instead of being poked every 2 min.
-      if (def.imminent && def.imminentAutoMinutes == null) {
-        log(`[${def.name}] In cooldown but imminent — checking anyway`);
-      } else {
-        const lastAttempt = prevState?.lastChecked ? Date.parse(prevState.lastChecked as string) : 0;
-        const honoredUntil = tightWindow
-          ? Math.min(cooldownUntil, lastAttempt + TIGHT_COOLDOWN_CAP_MS)
-          : cooldownUntil;
-        if (honoredUntil > Date.now()) {
-          log(`[${def.name}] Skipping — rate-limit cooldown`);
-          continue;
-        }
-        log(`[${def.name}] Long cooldown clamped to ${TIGHT_INTERVAL_MIN}m — tight drop-window cadence, checking anyway`);
-      }
-    }
-    if (!shouldCheck(def, prevState, schedules)) continue;
-
-    let adapter;
+    // A result whose state is already saved but that is not in `results` yet.
+    let pending: CheckedSite | null = null;
     try {
-      adapter = getAdapter(def.source.kind);
-    } catch (err) {
-      log(`[${def.name}] ${(err as Error).message}`);
-      // Config-level problem (e.g. an unknown/unimplemented source kind in the
-      // DB — Zod gates the normal write path, but a bad definition or a deferred
-      // kind like `html` lands here). Don't go silent: alert the operator ONCE
-      // per start instead of quietly skipping the site every loop.
-      if (channel && !dryRun && !warnedConfigSiteIds.has(def.id)) {
-        warnedConfigSiteIds.add(def.id);
-        const event: Alert = {
-          type: "site_error",
-          product: {
-            title: def.name,
-            url: sourceUrl(def),
-            note: `Config error — ${(err as Error).message}. Site skipped until fixed.`,
-          },
-        };
-        try {
-          await channel.send(alertName(def), event);
-        } catch (e) {
-          log(`  Discord config-warning error: ${(e as Error).message}`);
+      const prevState = await store.state.load(def.id);
+
+      // Inside a tight (drop-window) cadence, blocking failures page earlier and
+      // long cooldowns are clamped — see TIGHT_INTERVAL_MIN above.
+      const tightWindow = getEffectiveInterval(def, schedules) <= TIGHT_INTERVAL_MIN;
+
+      const cooldownUntil = prevState?.cooldownUntil ? Date.parse(prevState.cooldownUntil as string) : 0;
+      if (cooldownUntil > Date.now()) {
+        // The circuit breaker would black out a site after a 403/429. In imminent
+        // mode the operator is actively watching a drop, so a single transient
+        // block must not silence the launch window — check anyway. Cadence is
+        // still bounded by imminentIntervalMinutes (shouldCheck below), and the
+        // breaker reasserts automatically once imminent ends.
+        // An AUTO-imminent run is not operator-watched, so it never overrides the
+        // breaker: a host that just blocked us keeps its cooldown (clamped as in
+        // any tight window below) instead of being poked every 2 min.
+        if (def.imminent && def.imminentAutoMinutes == null) {
+          log(`[${def.name}] In cooldown but imminent — checking anyway`);
+        } else {
+          const lastAttempt = prevState?.lastChecked ? Date.parse(prevState.lastChecked as string) : 0;
+          const honoredUntil = tightWindow
+            ? Math.min(cooldownUntil, lastAttempt + TIGHT_COOLDOWN_CAP_MS)
+            : cooldownUntil;
+          if (honoredUntil > Date.now()) {
+            log(`[${def.name}] Skipping — rate-limit cooldown`);
+            continue;
+          }
+          log(`[${def.name}] Long cooldown clamped to ${TIGHT_INTERVAL_MIN}m — tight drop-window cadence, checking anyway`);
         }
       }
-      continue;
-    }
+      if (!shouldCheck(def, prevState, schedules)) continue;
 
-    await wait(jitter(3500, 1500)); // pre-site politeness jitter
-    log(`[${def.name}] Checking...`);
-    checked += 1;
-
-    // Per-site wall-clock budget (2c): abort the fetch if it overruns so the
-    // loop isn't held hostage by one slow/blocked host. Kind-aware: browser
-    // checks get more headroom (remote session + page load are legitimate cost).
-    const controller = new AbortController();
-    const budgetMs = def.source.kind === "browser" ? BROWSER_SITE_BUDGET_MS : PER_SITE_BUDGET_MS;
-    const budget = setTimeout(() => controller.abort(), budgetMs);
-    let outcome: SiteOutcome;
-    try {
-      outcome = await processSite({
-        site: def,
-        prevState,
-        adapter,
-        deps: { ...baseDeps, signal: controller.signal },
-        ignored,
-        tightWindow,
-      });
-    } finally {
-      clearTimeout(budget);
-    }
-
-    // Self-healing nudge: a second consecutive block (cooldown escalated past
-    // level 1) suggests the current browser identity may be flagged — re-roll it
-    // so the next attempt presents a fresh profile. Stamped into state (before
-    // the save below) so the tile/errorLog era of "we already tried a new
-    // browser" is visible, not just a log line.
-    if (!outcome.ok && ((outcome.newState.cooldownLevel as number | undefined) ?? 0) >= 2) {
+      let adapter;
       try {
-        const host = new URL(sourceUrl(def)).hostname;
-        expireIdentity(host);
-        outcome.newState.identityRerolledAt = new Date().toISOString();
-        log(`[${def.name}] Re-rolled browser identity for ${host} after repeated blocks.`);
-      } catch {
-        /* sourceUrl may be empty for some kinds */
+        adapter = getAdapter(def.source.kind);
+      } catch (err) {
+        log(`[${def.name}] ${(err as Error).message}`);
+        // Config-level problem (e.g. an unknown/unimplemented source kind in the
+        // DB — Zod gates the normal write path, but a bad definition or a deferred
+        // kind like `html` lands here). Don't go silent: alert the operator ONCE
+        // per start instead of quietly skipping the site every loop.
+        if (channel && !dryRun && !warnedConfigSiteIds.has(def.id)) {
+          warnedConfigSiteIds.add(def.id);
+          const event: Alert = {
+            type: "site_error",
+            product: {
+              title: def.name,
+              url: sourceUrl(def),
+              note: `Config error — ${(err as Error).message}. Site skipped until fixed.`,
+            },
+          };
+          try {
+            await channel.send(alertName(def), event);
+          } catch (e) {
+            log(`  Discord config-warning error: ${(e as Error).message}`);
+          }
+        }
+        continue;
       }
-    }
 
-    if (!dryRun) {
-      await store.state.save(def.id, outcome.newState);
-      if (outcome.events.length) await store.history.append(def.id, outcome.events);
-      if (await maybeQuarantine(ctx, def, outcome)) continue; // disabled + paged; skip the rest
-    }
-    results.push({ def, outcome });
+      await wait(jitter(3500, 1500)); // pre-site politeness jitter
+      log(`[${def.name}] Checking...`);
+      checked += 1;
 
-    // Collect newly-pinned hosts (flap-pin or fallback-streak preference) for
-    // host-level propagation after the pass.
-    if (outcome.newState.preferFallback === true && prevState?.preferFallback !== true) {
-      const host = hostOf(def);
-      if (host) newlyPinnedHosts.set(host, def.name);
-    }
+      // Per-site wall-clock budget (2c): abort the fetch if it overruns so the
+      // loop isn't held hostage by one slow/blocked host. Kind-aware: browser
+      // checks get more headroom (remote session + page load are legitimate cost).
+      const controller = new AbortController();
+      const budgetMs = def.source.kind === "browser" ? BROWSER_SITE_BUDGET_MS : PER_SITE_BUDGET_MS;
+      const budget = setTimeout(() => controller.abort(), budgetMs);
+      let outcome: SiteOutcome;
+      try {
+        outcome = await processSite({
+          site: def,
+          prevState,
+          adapter,
+          deps: { ...baseDeps, signal: controller.signal },
+          ignored,
+          tightWindow,
+        });
+      } finally {
+        clearTimeout(budget);
+      }
 
-    await wait(jitter(1000, 500)); // inter-site gap
+      // Self-healing nudge: a second consecutive block (cooldown escalated past
+      // level 1) suggests the current browser identity may be flagged — re-roll it
+      // so the next attempt presents a fresh profile. Stamped into state (before
+      // the save below) so the tile/errorLog era of "we already tried a new
+      // browser" is visible, not just a log line.
+      if (!outcome.ok && ((outcome.newState.cooldownLevel as number | undefined) ?? 0) >= 2) {
+        try {
+          const host = new URL(sourceUrl(def)).hostname;
+          expireIdentity(host);
+          outcome.newState.identityRerolledAt = new Date().toISOString();
+          log(`[${def.name}] Re-rolled browser identity for ${host} after repeated blocks.`);
+        } catch {
+          /* sourceUrl may be empty for some kinds */
+        }
+      }
+
+      if (!dryRun) {
+        await store.state.save(def.id, outcome.newState);
+        pending = { def, outcome };
+        if (outcome.events.length) await store.history.append(def.id, outcome.events);
+        if (await maybeQuarantine(ctx, def, outcome)) {
+          pending = null;
+          continue; // disabled + paged; skip the rest
+        }
+      }
+      pending = null;
+      results.push({ def, outcome });
+
+      // Collect newly-pinned hosts (flap-pin or fallback-streak preference) for
+      // host-level propagation after the pass.
+      if (outcome.newState.preferFallback === true && prevState?.preferFallback !== true) {
+        const host = hostOf(def);
+        if (host) newlyPinnedHosts.set(host, def.name);
+      }
+
+      await wait(jitter(1000, 500)); // inter-site gap
+    } catch (err) {
+      passError ??= err;
+      log(`[${def.name}] Pass error (continuing with the other sites): ${(err as Error).message}`);
+      if (pending) results.push(pending);
+    }
   }
 
   if (!dryRun && newlyPinnedHosts.size > 0) {
@@ -414,6 +433,7 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     }
   }
 
+  if (passError) throw passError;
   return { anyImminentActive, checked };
 }
 
@@ -635,6 +655,85 @@ function shadowSiteIds(rows: SiteRow[]): Set<string> {
 // an auto-run 🩺 diagnosis verdict (3b) and a host-level rollup note when
 // multiple checkers on the same host are failing together (3c).
 async function dispatch(ctx: RunContext, results: CheckedSite[], shadows: Set<string>, deps?: AdapterDeps): Promise<void> {
+  if (ctx.dryRun || !ctx.channel) return dispatchPass(ctx, results, shadows, deps, []);
+  // Outbox first, so a delayed alert lands before anything newer.
+  const { entries, changed } = await retryOutbox(ctx);
+  const failed: OutboxEntry[] = [];
+  try {
+    await dispatchPass(ctx, results, shadows, deps, failed);
+  } finally {
+    if (changed || failed.length > 0) await saveOutbox(ctx.store, [...entries, ...failed]);
+  }
+}
+
+// ── Alert outbox (2026-11-13) ────────────────────────────────────────────────
+// State and history are saved BEFORE Discord is called, and the diff only fires
+// on a transition — so an alert whose send failed (Discord 5xx / unreachable
+// past the channel's own quick retries) was logged and lost for good. Failed
+// sends are parked in a meta blob and retried at the top of every pass until
+// they deliver or age out. A delayed alert says so in its site label.
+const OUTBOX_META_KEY = "alert_outbox";
+const OUTBOX_CAP = 50;
+const OUTBOX_MAX_AGE_MS = 24 * 3_600_000;
+interface OutboxEntry {
+  at: string;
+  site: string;
+  alert: Alert;
+}
+
+async function retryOutbox(ctx: RunContext): Promise<{ entries: OutboxEntry[]; changed: boolean }> {
+  const { store, channel, log = () => {} } = ctx;
+  let stored: OutboxEntry[] = [];
+  try {
+    const parsed = JSON.parse((await store.meta.get(OUTBOX_META_KEY)) ?? "[]") as unknown;
+    if (Array.isArray(parsed)) {
+      stored = parsed.filter(
+        (e): e is OutboxEntry => !!e && typeof e.at === "string" && typeof e.site === "string" && !!e.alert?.product,
+      );
+    }
+  } catch {
+    /* unreadable blob: nothing to retry */
+  }
+  if (stored.length === 0 || !channel) return { entries: [], changed: false };
+  const now = Date.now();
+  const live = stored.filter((e) => now - Date.parse(e.at) < OUTBOX_MAX_AGE_MS);
+  let changed = live.length !== stored.length;
+  const remaining: OutboxEntry[] = [];
+  let down = false;
+  for (const entry of live) {
+    if (down) {
+      remaining.push(entry); // Discord is still unreachable — don't burn the pass on the rest
+      continue;
+    }
+    const mins = Math.max(1, Math.round((now - Date.parse(entry.at)) / 60_000));
+    try {
+      await channel.send(`${entry.site} (delayed ${mins} min — Discord was unreachable)`, entry.alert);
+      changed = true;
+      log(`  → outbox: delivered ${entry.alert.type} "${entry.alert.product.title}" ${mins} min late`);
+    } catch (err) {
+      down = true;
+      remaining.push(entry);
+      log(`  outbox retry failed (kept for the next pass): ${(err as Error).message}`);
+    }
+  }
+  return { entries: remaining, changed };
+}
+
+async function saveOutbox(store: BeaconStore, entries: OutboxEntry[]): Promise<void> {
+  try {
+    await store.meta.set(OUTBOX_META_KEY, JSON.stringify(entries.slice(-OUTBOX_CAP)));
+  } catch {
+    /* best-effort: the alert is still in history and on the dashboard */
+  }
+}
+
+async function dispatchPass(
+  ctx: RunContext,
+  results: CheckedSite[],
+  shadows: Set<string>,
+  deps: AdapterDeps | undefined,
+  failed: OutboxEntry[],
+): Promise<void> {
   const { store, channel, dryRun, log = () => {} } = ctx;
   if (dryRun) {
     // In dry-run, still surface what WOULD have been sent (parity with the old
@@ -646,7 +745,13 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], shadows: Set<st
   }
 
   const errored = results.filter((r) => !r.outcome.ok);
-  const systemic = results.length >= SYSTEMIC_MIN_SITES && errored.length === results.length;
+  // "Everything failed" only means "the network / our IP" when the failures
+  // span more than one store. Two checkers on one blocked store is a host
+  // block: it gets the ordinary site_error pages (with the host-level note and
+  // the 🩺 verdict), not a misleading "all sites failing".
+  const failedStores = new Set(errored.map((r) => storeOf(r.def) ?? r.def.id));
+  const systemic =
+    results.length >= SYSTEMIC_MIN_SITES && errored.length === results.length && failedStores.size >= SYSTEMIC_MIN_SITES;
 
   if (systemic) {
     log(`[systemic] All ${results.length} checked sites failed this pass.`);
@@ -703,19 +808,23 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], shadows: Set<st
     // pass (a whole collection going live, a re-baseline) becomes ONE embed.
     const shadow = shadows.has(def.id);
     const productEvents = outcome.events.filter((ev) => PRODUCT_ALERT_TYPES.has(ev.type) && ev.quiet !== true);
+    let digested = new Set<Alert>();
     if (channel && !shadow && productEvents.length > SITE_DIGEST_THRESHOLD) {
       log(`  → ${productEvents.length} product alerts from ${def.name} — sending one digest`);
+      const digest = buildSiteDigest(def, productEvents);
       try {
-        await channel.send(alertName(def), buildSiteDigest(def, productEvents));
+        await channel.send(alertName(def), digest);
         for (const ev of productEvents) {
           if (recordDedupe(dedupeKeys, def, ev)) dedupeDirty = true;
         }
       } catch (err) {
-        // Not stamped: a sibling checker's copy may still deliver it.
-        log(`  Discord digest error: ${(err as Error).message}`);
+        // Not stamped: a sibling checker's copy may still deliver it. Parked in
+        // the outbox — a failed digest used to take the whole drop with it.
+        log(`  Discord digest error (queued for retry): ${(err as Error).message}`);
+        failed.push({ at: new Date().toISOString(), site: alertName(def), alert: digest });
       }
+      digested = new Set(productEvents);
     }
-    const digested = !shadow && productEvents.length > SITE_DIGEST_THRESHOLD ? new Set(productEvents) : new Set<Alert>();
 
     for (const ev of outcome.events) {
       if (digested.has(ev)) continue; // already covered by this site's digest
@@ -771,13 +880,15 @@ async function dispatch(ctx: RunContext, results: CheckedSite[], shadows: Set<st
         }
       }
 
+      const outgoing = note === ev.product.note ? ev : { ...ev, product: { ...ev.product, note } };
       try {
-        await channel.send(alertName(def), note === ev.product.note ? ev : { ...ev, product: { ...ev.product, note } });
+        await channel.send(alertName(def), outgoing);
         // Stamped only after a successful send: if Discord failed here, a
         // sibling checker's copy of the same alert must still get through.
         if (recordDedupe(dedupeKeys, def, ev)) dedupeDirty = true;
       } catch (err) {
-        log(`  Discord error: ${(err as Error).message}`);
+        log(`  Discord error (queued for retry): ${(err as Error).message}`);
+        failed.push({ at: new Date().toISOString(), site: alertName(def), alert: outgoing });
       }
     }
   }

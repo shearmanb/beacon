@@ -282,6 +282,28 @@ describe("channel-flap damping + reappearance guard", () => {
     );
   });
 
+  it("alerts a same-day relist on a steady primary channel (pulled, then launched hours later)", async () => {
+    const prev: SiteState = {
+      lastChecked: "t",
+      products: { a: prod("a", true) },
+      recentlySeen: { a: new Date().toISOString(), x: new Date(Date.now() - 3 * 3_600_000).toISOString() },
+    };
+    const out = await processSite({ site: site(), prevState: prev, adapter: ok([prod("a", true), prod("x", true)]), deps, ignored: noneIgnored });
+    expect(out.events.map((e) => e.type)).toContain("new_product");
+
+    // The same gap while the roster comes from the fallback channel is still a
+    // reappearance — that view is partial, absence proves nothing.
+    const pinned: SiteState = { ...prev, fetchVia: "storefront_fallback" };
+    const viaFallback = await processSite({
+      site: site(),
+      prevState: pinned,
+      adapter: okVia([prod("a", true), prod("x", true)], "storefront_fallback", "pinned"),
+      deps,
+      ignored: noneIgnored,
+    });
+    expect(viaFallback.events.map((e) => e.type)).not.toContain("new_product");
+  });
+
   it("still alerts new_product when the handle was last seen over 24 h ago (a real relist)", async () => {
     const prev: SiteState = {
       lastChecked: "t",
