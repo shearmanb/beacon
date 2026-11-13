@@ -27,9 +27,6 @@ packages/
   db/       Drizzle (libSQL) schema + repositories + openStore() + VACUUM INTO
             snapshots
   notify/   NotificationChannel interface + DiscordChannel
-  browser/  the `browser` source adapter: real Chromium via Browserbase over CDP
-            (playwright-core), wall classification, failure evidence capture.
-            Lazy-loaded: imported only when an enabled browser site exists
 apps/
   server/   the Railway entrypoint: seed/restore guard, config fixes
             (config-fixes.ts), in-process worker loop + supervised web child
@@ -50,7 +47,6 @@ apps/
 | `shopify_graphql` | `shopify_storefront`         | Storefront API; token via secrets ref |
 | `http_status`     | `site_status_monitor`        | page-state probe -> SiteSignal (once-only site_reset) |
 | `custom`          | `purchasable_state_monitor`  | escape hatch; ships `campari_v1` |
-| `browser`         | —                            | real Chromium via Browserbase (`@beacon/browser`); needs `BROWSERBASE_API_KEY` |
 | `html`            | —                            | declarative selector adapter (deferred; not yet needed) |
 
 ## Develop
@@ -86,10 +82,8 @@ Env (production runs `@beacon/server`, see `DEPLOY.md`):
 | `HEALTHCHECK_URL` | optional external dead-man ping each pass (healthchecks.io). Without it the floor is the GitHub Actions probe of `/api/health` (`.github/workflows/deadman.yml`) |
 | `BEACON_DASH_PASSWORD` | dashboard login. **Required in production**: without it the dashboard refuses every login (no public default) |
 | `BEACON_AUTH_SECRET` | optional cookie-signing key (defaults to the password); rotate to log out every session |
-| `BEACON_OPS_TOKEN` | enables `Authorization: Bearer` access to `/api/ops/{status,errors,evidence}` for headless inspection |
+| `BEACON_OPS_TOKEN` | enables `Authorization: Bearer` access to `/api/ops/{status,errors}` for headless inspection |
 | `GH_TOKEN`, `GH_REPO` | arm the daily history mirror + off-box backup to `analytics/` |
-| `BROWSERBASE_API_KEY`, `BROWSERBASE_PROJECT_ID` | `browser` source kind |
-| `BEACON_EVIDENCE_DIR` | browser failure screenshots/HTML (default `/data/evidence`) |
 | `BEACON_BACKUP_INTERVAL_H` | on-volume snapshot cadence (default 6, 0 disables) |
 | `BEACON_FORCE_SEED=1`, `BEACON_SEED_ONLY=1`, `BEACON_DATA_DIR` | seed-guard override / seed then exit / legacy JSON location |
 | `BEACON_NO_WEB=1`, `BEACON_NO_WORKER=1` | run one half of the process only |
@@ -101,8 +95,7 @@ Env (production runs `@beacon/server`, see `DEPLOY.md`):
 200 while the worker heartbeat is under 15 min old, 503 otherwise — the dead-man probe target.
 
 `GET /api/ops/status` (worker heartbeat + per-site health summary, failure
-timestamps), `GET /api/ops/errors` (per-site error-log tail), and
-`GET /api/ops/evidence[?site=&file=]` (browser-check screenshots/HTML). Auth is
+timestamps) and `GET /api/ops/errors` (per-site error-log tail). Auth is
 the dashboard cookie or the `BEACON_OPS_TOKEN` bearer. The product map never
 leaves the box through these routes. `GET /api/export/history` (cookie only)
 downloads the full alert history as JSONL.
@@ -128,6 +121,6 @@ in the 1b "off-box backup" follow-up.
 
 - Dashboard visual polish / parity pass (this is the functional foundation).
 - Schedules manager, Sandbox (add-site preview), System-health panel.
-- Total Wine / Costco (phase 2): the headless tier exists (`browser` kind) but
-  its Browserbase quota is unfunded, so its twin checker is disabled.
+- Total Wine / Costco (phase 2): would need a real-browser tier; the Browserbase
+  experiment (`@beacon/browser`) was removed 2026-11-13 — it is in git history.
 - Bottle tracking handoff to the Cellar app.

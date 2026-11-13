@@ -52,24 +52,6 @@ describe("config fixes (boot-time config corrections)", () => {
     expect((await store.schedules.all())["drop_windows"]!.label).toBe("hand-edited");
   });
 
-  it("disables — never deletes or recreates — the exhausted browser twin", async () => {
-    await store.sites.upsert({
-      id: "sharedpour_browser",
-      name: "SharedPour (browser twin)",
-      intervalMinutes: 60,
-      source: { kind: "browser", baseUrl: "https://sharedpour.com" },
-    });
-    await applyConfigFixes(store, log);
-    const row = await store.sites.get("sharedpour_browser");
-    expect(row).toBeDefined(); // config + state kept, so re-enabling is one click
-    expect(row!.enabled).toBe(false);
-
-    // And once the operator re-enables it, a later boot leaves it alone.
-    await store.sites.setEnabled("sharedpour_browser", true);
-    await applyConfigFixes(store, log);
-    expect((await store.sites.get("sharedpour_browser"))!.enabled).toBe(true);
-  });
-
   it("consolidates the sharedpour checkers into one watchlist without losing baselines", async () => {
     const mkSite = (id: string, name: string, titleContains: string[], extra: Record<string, unknown> = {}) =>
       store.sites.upsert({
@@ -80,6 +62,9 @@ describe("config fixes (boot-time config corrections)", () => {
         filters: { titleContains },
       });
     await mkSite("sharedpour_t8ke_all", "SharedPour T8KE (all)", ["T8ke"]);
+    // These tests cover the older one-shots; the later cleanup that deletes the
+    // retirees is latched off here and tested on its own below.
+    await store.meta.set("fix:remove_dead_checkers_20261113", "test");
     await mkSite("sharedpour_t8ke", "SharedPour T8KE", ["T8ke"], { collectionPath: "/collections/t8ke" });
     await mkSite("sharedpour_reveries", "SharedPour The Reveries", ["Reveries"]);
     await mkSite("sharedpour_provenance", "SharedPour Provenance", ["Provenance"]);
@@ -160,6 +145,9 @@ describe("config fixes (boot-time config corrections)", () => {
         ...extra,
       } as never);
     await sp("sharedpour_t8ke_all", "SharedPour Watchlist", false, { filters: { titleContains: ["T8ke", "Reveries", "Provenance"] } });
+    // These tests cover the older one-shots; the later cleanup that deletes the
+    // retirees is latched off here and tested on its own below.
+    await store.meta.set("fix:remove_dead_checkers_20261113", "test");
     await sp("sharedpour_t8ke", "SharedPour T8KE", true, { deprecated: true });
     await sp("sharedpour_reveries", "SharedPour Reveries", true, { deprecated: true });
     await sp("bourbon_concierge", "Bourbon Concierge", true);
@@ -213,7 +201,8 @@ describe("config fixes (boot-time config corrections)", () => {
       readFileSync(fileURLToPath(new URL("../../../analytics/backup/beacon-restore.json", import.meta.url)), "utf8"),
     ) as { sites: Array<Record<string, unknown>> };
     await store.secrets.set("reveries_official_storefront_token", "tok");
-    for (const def of bundle.sites) await store.sites.upsert(def as never);
+    // (A definition that no longer validates — the removed browser kind — is skipped.)
+    for (const def of bundle.sites) await store.sites.upsert(def as never).catch(() => {});
 
     await applyConfigFixes(store, log);
     const def = async (id: string) => (await store.sites.get(id))?.definition;
@@ -230,6 +219,14 @@ describe("config fixes (boot-time config corrections)", () => {
     expect(group.triggers).toContain("reveries_site_status");
     expect(group.targets).not.toContain("reveries_site_status");
     for (const key of ["triggers", "targets"]) expect(group[key].filter((x: string) => x === "t8ke_releases")).toHaveLength(1);
+
+    // Dead checkers are gone; the live ones are untouched.
+    for (const id of ["cgf", "wild_turkey_limited", "sharedpour_provenance", "sharedpour_t8ke", "sharedpour_reveries"]) {
+      expect(await store.sites.get(id)).toBeUndefined();
+    }
+    expect((await store.sites.list()).filter((r) => r.enabled).map((r) => r.id).sort()).toEqual(
+      ["bourbon_concierge", "fountain_inn_dc", "reveries_official", "reveries_site_status", "russells_reserve_limited", "sharedpour_channel", "sharedpour_t8ke_all", "t8ke_releases"],
+    );
 
     // Operator edits survive every later boot.
     await store.sites.setEnabled("t8ke_releases", false);

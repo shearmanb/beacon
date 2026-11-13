@@ -4,7 +4,7 @@
 // socket timeout) instead of a hand-rolled https client.
 
 import { httpPost } from "@beacon/fetch";
-import { sleep, type Alert, type AlertType } from "@beacon/shared";
+import { formatLag, sleep, type Alert, type AlertType } from "@beacon/shared";
 import type { NotificationChannel } from "./types.js";
 
 // site_changed (purple) fires when a tracked product stays not-buyable but its
@@ -117,6 +117,15 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
       url: product.url,
       timestamp: new Date().toISOString(),
     };
+    // Detection lag: how long after the store's own clock Beacon noticed.
+    const lag = type === "new_product" || type === "restock" ? formatLag(product.lagSec) : null;
+    if (lag) {
+      embed.fields.push({
+        name: "Caught",
+        value: product.lagBasis === "listed" ? `${lag} after it went live` : `≤ ${lag} after the store changed it`,
+        inline: true,
+      });
+    }
     if (product.vendor) embed.fields.push({ name: "Vendor", value: product.vendor, inline: true });
     if (product.productType) embed.fields.push({ name: "Type", value: product.productType, inline: true });
     if (product.tags?.length) embed.fields.push({ name: "Tags", value: capField(product.tags.join(", ")), inline: false });

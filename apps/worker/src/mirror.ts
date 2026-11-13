@@ -26,10 +26,11 @@ const META_KEY = "historyMirror"; // JSON: { at: iso, lastId: number }
 // a stalled call sit for minutes. "Failures log and retry next interval — the
 // check loop must never notice" has to be enforced, not assumed.
 const MIRROR_HTTP_TIMEOUT_MS = 20_000;
-// Hard bound on the mirror file so it can't grow forever. 20k lines ≈ 4× the
-// DB's own 5,000-row cap — older rows scroll off the file but stay in git
-// history (mining can always walk versions, exactly like the v1 analysis).
-const MAX_MIRROR_LINES = 20_000;
+// Hard bound on the mirror file so it can't grow forever. Rows average ~770
+// bytes, so 6,000 lines ≈ 4.5 MB — comfortably inside one 20 s PUT. Older rows
+// scroll off the file but stay in git history (mining can always walk
+// versions, exactly like the v1 analysis).
+const MAX_MIRROR_LINES = 6_000;
 
 export interface MirrorCtx {
   store: BeaconStore;
@@ -109,9 +110,23 @@ export async function maybeMirrorHistory(ctx: MirrorCtx, over: MirrorOverrides =
   let existing = "";
   let sha: string | undefined;
   if (getRes.status === 200) {
-    const file = (await getRes.json()) as { content?: string; sha?: string };
+    const file = (await getRes.json()) as { content?: string; sha?: string; size?: number };
     sha = file.sha;
     if (file.content) existing = Buffer.from(file.content.replace(/\s/g, ""), "base64").toString("utf8");
+    // Over 1 MB the contents API answers 200 with an EMPTY `content` — which
+    // read as "the file is empty" and made the next push overwrite the whole
+    // history with one day's rows (2026-11-10: 1,394 rows → 3). Read big files
+    // through the raw media type (good to 100 MB), and never write over a file
+    // that has bytes we could not read.
+    if (!existing && (file.size ?? 0) > 0) {
+      const rawRes = await fetchImpl(`${api}?ref=${branch}`, {
+        headers: { ...headers, Accept: "application/vnd.github.raw+json" },
+        signal: AbortSignal.timeout(MIRROR_HTTP_TIMEOUT_MS),
+      });
+      if (!rawRes.ok) throw new Error(`mirror GET (raw) ${MIRROR_PATH}: HTTP ${rawRes.status}`);
+      existing = await rawRes.text();
+      if (!existing.trim()) throw new Error(`mirror: ${MIRROR_PATH} is ${file.size} bytes but read back empty — not overwriting`);
+    }
   } else if (getRes.status !== 404) {
     throw new Error(`mirror GET ${MIRROR_PATH}: HTTP ${getRes.status}`);
   }

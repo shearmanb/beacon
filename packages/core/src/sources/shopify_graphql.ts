@@ -28,6 +28,9 @@ interface StorefrontNode {
   featuredImage?: { url?: string };
   descriptionHtml?: string | null;
   onlineStoreUrl?: string | null;
+  publishedAt?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
 }
 
 type Embed = { type: "collection" | "product"; id: string };
@@ -37,7 +40,7 @@ type Embed = { type: "collection" | "product"; id: string };
 // onlineStoreUrl is the product's own page on the store's primary domain (null
 // when the product isn't published to the Online Store channel).
 const NODE_FIELDS =
-  "title handle vendor productType availableForSale priceRange { minVariantPrice { amount } } featuredImage { url } descriptionHtml onlineStoreUrl";
+  "title handle vendor productType availableForSale priceRange { minVariantPrice { amount } } featuredImage { url } descriptionHtml onlineStoreUrl publishedAt createdAt updatedAt";
 
 // Channel scope pages through the root product list 250 at a time (the
 // Storefront API's max page size), newest first, so a fresh drop is always on
@@ -75,6 +78,8 @@ function normalize(node: StorefrontNode, src: SourceOf<"shopify_graphql">): Norm
     url,
     details: htmlToText(node.descriptionHtml),
     pageUrl: node.onlineStoreUrl && node.onlineStoreUrl !== url ? node.onlineStoreUrl : null,
+    listedAt: node.publishedAt ?? node.createdAt ?? null,
+    updatedAt: node.updatedAt ?? null,
   };
 }
 

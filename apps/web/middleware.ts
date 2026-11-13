@@ -17,7 +17,7 @@ function tokenMatches(presented: string | null, expected: string | undefined): b
 //
 // /api/ops/* additionally accepts `Authorization: Bearer <BEACON_OPS_TOKEN>` —
 // the headless surface Claude Code sessions use to inspect prod (status,
-// errors, evidence) without a browser cookie. Unset token = header path off
+// errors) without a browser cookie. Unset token = header path off
 // (cookie still works). API callers get a 401, never a login redirect.
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;

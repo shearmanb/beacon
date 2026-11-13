@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { diff } from "./diff.js";
+import { diff, formatLag } from "./diff.js";
 import type { NormalizedProduct, ProductMap } from "./types.js";
 
 function p(handle: string, available: boolean, cta?: string): NormalizedProduct {
@@ -72,5 +72,34 @@ describe("diff", () => {
     const prev: ProductMap = { a: p("a", false, "See details") };
     const cur: ProductMap = { a: p("a", false, "See details") };
     expect(diff(prev, cur, ALL)).toEqual([]);
+  });
+});
+
+describe("detection lag", () => {
+  const NOW = Date.parse("2026-11-13T15:00:00Z");
+  const prod = (over: Record<string, unknown>) => ({ handle: "h", title: "T", url: "u", tags: [], available: true, ...over });
+  const flags = { onNew: true, onRestock: true, onSoldOut: true };
+
+  it("stamps a new product with the time since the store listed it", () => {
+    const [a] = diff({}, { h: prod({ listedAt: "2026-11-13T14:56:48Z" }) }, flags, NOW);
+    expect(a!.product).toMatchObject({ lagSec: 192, lagBasis: "listed" });
+    expect(formatLag(a!.product.lagSec)).toBe("3m 12s");
+  });
+
+  it("stamps a restock from the store's last update, and nothing when the source has no timestamps", () => {
+    const [a] = diff({ h: prod({ available: false }) }, { h: prod({ updatedAt: "2026-11-13T14:59:15Z" }) }, flags, NOW);
+    expect(a!.product).toMatchObject({ lagSec: 45, lagBasis: "updated" });
+    const [b] = diff({}, { h: prod({}) }, flags, NOW);
+    expect(b!.product.lagSec).toBeUndefined();
+    // A future timestamp (scheduled publish, clock skew) is not a measurement.
+    const [c] = diff({}, { h: prod({ listedAt: "2026-11-13T16:00:00Z" }) }, flags, NOW);
+    expect(c!.product.lagSec).toBeUndefined();
+  });
+
+  it("formats, and refuses to call a days-old listing a lag", () => {
+    expect(formatLag(45)).toBe("45s");
+    expect(formatLag(7500)).toBe("2h 05m");
+    expect(formatLag(3 * 86400)).toBeNull();
+    expect(formatLag(null)).toBeNull();
   });
 });

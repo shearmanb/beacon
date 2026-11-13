@@ -24,6 +24,26 @@ Shipped the six fixes in CHANGELOG 2026-11-13 (third batch). Not built, each nee
   pages "Wave Reset", then "Wall lifted" when the block clears. Needs a second signal (body
   match) before trusting a bare 403, per site.
 
+## Review 2026-11-13 — open items
+
+Shipped: mirror fix + restore, detection lag, browser tier and dead checkers
+removed (CHANGELOG 2026-11-13 (3)).
+- [ ] **1a Token re-harvest after a volume loss**: `harvest.ts` skips any site
+      that already has `storefrontFallback` configured, so after a restore
+      (config back, secrets table empty) nothing re-fetches the token four
+      checkers depend on. Harvest when the SECRET is missing. ~20 lines.
+- [ ] **1b Failed Discord sends are dropped**: a timeout/5xx is logged, the
+      product is already recorded as seen, so it never alerts again. Unknown
+      whether it has ever happened — first step is to record the failure as a
+      history row so it can be counted.
+- [ ] **1c `HEALTHCHECK_URL`** (operator: create a healthchecks.io check, paste
+      its URL into Railway variables).
+- [ ] **1d Tests don't gate deploys** (Railway builds on push; tests run only
+      in GitHub CI, in parallel).
+- [ ] **1e Mine detection lag** after two weeks of rows: is 2m vs 5m visible?
+
+---
+
 ## Check more without getting flagged (2026-11-13)
 
 Shipped (CHANGELOG 2026-11-13, both entries): `storefront_fast`, auto-imminent,

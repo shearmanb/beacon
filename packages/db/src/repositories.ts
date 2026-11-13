@@ -75,6 +75,13 @@ function sitesRepo(db: DB) {
       if (!site) return;
       await this.upsert({ ...site.definition, enabled });
     },
+    /** Delete a site and its stored state for good. Alert history is kept (it
+     *  is the analytics record). Works on a row whose definition no longer
+     *  validates — which is exactly when a retired checker needs removing. */
+    async remove(id: string): Promise<void> {
+      await db.delete(t.siteState).where(eq(t.siteState.siteId, id));
+      await db.delete(t.sites).where(eq(t.sites.id, id));
+    },
   };
 }
 

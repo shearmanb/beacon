@@ -26,6 +26,11 @@ export interface NormalizedProduct {
    *  embed: every product's `url` is the same /shop page). Kept separate so
    *  `url` still drives the password-wall gate (behindWall) by host. */
   pageUrl?: string | null;
+  /** When the store says the product went live (Shopify published_at, else
+   *  created_at) and was last changed (updated_at). Raw material for the
+   *  detection-lag measurement in diff() — never used to decide an alert. */
+  listedAt?: string | null;
+  updatedAt?: string | null;
 }
 
 export type ProductMap = Record<string, NormalizedProduct>;
@@ -62,6 +67,14 @@ export interface AlertProduct {
   details?: string | null;
   pageUrl?: string | null;
   note?: string;
+  listedAt?: string | null;
+  updatedAt?: string | null;
+  /** Detection lag (2026-11-13): seconds between the store's own timestamp and
+   *  Beacon noticing. "listed" = since the product went live (new_product);
+   *  "updated" = since the store last changed it (restock — approximate: any
+   *  edit moves that clock, so read it as an upper bound on how late we were). */
+  lagSec?: number | null;
+  lagBasis?: "listed" | "updated";
 }
 
 export interface Alert {

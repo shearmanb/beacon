@@ -22,6 +22,9 @@ export interface ShopifyProduct {
   variants?: ShopifyVariant[];
   images?: Array<{ src?: string | null }>;
   body_html?: string | null;
+  published_at?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 }
 
 export const PAGE_LIMIT = 250; // exported so diagnose probes with the worker's real page size
@@ -96,6 +99,8 @@ export function normalizeShopifyProduct(p: ShopifyProduct, origin: string): Norm
     image: p.images?.[0]?.src ?? null,
     url: `${origin}/products/${p.handle}`,
     details: htmlToText(p.body_html),
+    listedAt: p.published_at ?? p.created_at ?? null,
+    updatedAt: p.updated_at ?? null,
   };
 }
 
@@ -321,6 +326,9 @@ interface StorefrontNode {
   priceRange?: { minVariantPrice?: { amount?: string } };
   featuredImage?: { url?: string };
   description?: string | null;
+  publishedAt?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
 }
 interface StorefrontPage {
   pageInfo?: { hasNextPage?: boolean; endCursor?: string | null };
@@ -329,7 +337,7 @@ interface StorefrontPage {
 
 // Plain-text description, truncated server-side: the fallback may page 2,000
 // products, so full descriptionHtml would multiply the response for nothing.
-const NODE_FIELDS = `title handle vendor productType tags availableForSale
+const NODE_FIELDS = `title handle vendor productType tags availableForSale publishedAt createdAt updatedAt
   priceRange { minVariantPrice { amount } } featuredImage { url }
   description(truncateAt: ${DETAILS_MAX_CHARS})`;
 
@@ -346,6 +354,8 @@ function normalizeStorefront(n: StorefrontNode, origin: string): NormalizedProdu
     image: n.featuredImage?.url ?? null,
     url: `${origin}/products/${n.handle}`,
     details: n.description?.trim() || null,
+    listedAt: n.publishedAt ?? n.createdAt ?? null,
+    updatedAt: n.updatedAt ?? null,
   };
 }
 

@@ -11,7 +11,6 @@
     { "path": "../../packages/fetch" },
     { "path": "../../packages/core" },
     { "path": "../../packages/db" },
-    { "path": "../../packages/notify" },
-    { "path": "../../packages/browser" }
+    { "path": "../../packages/notify" }
   ]
 }

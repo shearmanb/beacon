@@ -36,7 +36,6 @@ export async function GET(): Promise<NextResponse> {
       cooldownUntil: (state?.cooldownUntil as string | undefined) ?? null,
       fetchVia: (state?.fetchVia as string | undefined) ?? null,
       preferFallback: state?.preferFallback === true,
-      lastBrowserCheckAt: (state?.lastBrowserCheckAt as string | undefined) ?? null,
       checks: {
         recorded: history.length,
         failed: failedAt.length,

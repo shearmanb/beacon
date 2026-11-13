@@ -242,24 +242,6 @@ export const ONE_SHOTS: ConfigFix[] = [
     },
   },
   {
-    id: "retire_browser_twin_20260814",
-    description: "Disable the Browserbase twin — 362 consecutive HTTP 402s",
-    // The real-browser experiment (2026-07-24) ran out of Browserbase quota and
-    // has been answering 402 ever since: 300+ consecutive failures, a site_error
-    // page every day, and — because it sits on sharedpour.com — a permanent
-    // second "failing checker" polluting the host-block rollup for the checkers
-    // that actually matter. Disable, don't delete: the state and the config stay
-    // put, so re-enabling after topping up Browserbase is one dashboard click.
-    async run(store, log) {
-      const row = await store.sites.get("sharedpour_browser");
-      if (!row) return;
-      if (row.definition.enabled) {
-        await store.sites.upsert({ ...row.definition, enabled: false });
-        log("Disabled sharedpour_browser (Browserbase quota exhausted — re-enable on the dashboard when funded).");
-      }
-    },
-  },
-  {
     id: "cadence_fast_hours_20261030",
     description: "fast_hours schedule (5m peak / 8m shoulders / 60m overnight) + one checker per host",
     // Operator decisions 2026-10-30 after re-mining alert_history (May 17 →
@@ -449,6 +431,31 @@ export const ONE_SHOTS: ConfigFix[] = [
         if (!row || row.definition.adaptiveFloorMinutes != null) continue;
         await store.sites.upsert({ ...row.definition, adaptiveFloorMinutes: 4 });
         log(`Amended ${id}: adaptiveFloorMinutes → 4.`);
+      }
+    },
+  },
+  {
+    id: "remove_dead_checkers_20261113",
+    description: "delete six long-disabled checkers (config + frozen state; history kept)",
+    // Operator's call 2026-11-13 ("make all of them"). Each has been off for
+    // months and its stored roster is exactly the frozen state standing rule 1
+    // warns about: cgf (dead 404 page, quarantined Aug), wild_turkey_limited,
+    // sharedpour_browser (the Browserbase twin — its adapter package is removed
+    // in the same change, so its definition no longer validates), and the three
+    // SharedPour checkers merged into the Watchlist (baselines carried over on
+    // 2026-08-26 / 10-30). Skips anything the operator has switched back on.
+    // Recovery, if ever wanted: definitions are in the backup bundle's git
+    // history before this date.
+    async run(store, log) {
+      for (const id of ["cgf", "wild_turkey_limited", "sharedpour_browser", "sharedpour_provenance", "sharedpour_t8ke", "sharedpour_reveries"]) {
+        const row = await store.sites.get(id);
+        if (!row) continue;
+        if (row.enabled) {
+          log(`Kept ${id}: it is enabled.`);
+          continue;
+        }
+        await store.sites.remove(id);
+        log(`Deleted retired checker ${id}.`);
       }
     },
   },
