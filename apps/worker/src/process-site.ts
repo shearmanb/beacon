@@ -57,6 +57,8 @@ const ACTIVITY_TYPES = new Set(["new_product", "restock", "sold_out", "site_chan
 interface CheckRecord {
   ts: string;
   ok: boolean;
+  /** Wall-clock ms of a successful check — the slowdown early-warning reads it. */
+  ms?: number;
 }
 
 export interface SiteOutcome {
@@ -86,7 +88,9 @@ export async function processSite({
 }: ProcessSiteArgs): Promise<SiteOutcome> {
   const nowIso = () => new Date().toISOString();
   try {
+    const startedAt = Date.now();
     const result = await runSiteCheck(site, prevState, adapter, deps);
+    const ms = Date.now() - startedAt;
     annotateProducts(
       prevState?.products as Record<string, AnnotatedProduct> | undefined,
       result.state.products as Record<string, AnnotatedProduct> | undefined,
@@ -96,7 +100,7 @@ export async function processSite({
     const wasInErrorAlert = prevState?.errorAlertSent === true;
     const checkHistory = [
       ...((prevState?.checkHistory as CheckRecord[] | undefined) ?? []),
-      { ts: nowIso(), ok: true },
+      { ts: nowIso(), ok: true, ms },
     ].slice(-CHECK_HISTORY_CAP);
 
     const newState: SiteState = {

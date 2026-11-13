@@ -8,7 +8,7 @@
 // @beacon/shared helpers the worker uses, so it can never disagree with it.
 
 import type { SchedulableSite, Schedules } from "@beacon/shared";
-import { getEtDay, getEtHour, imminentInterval, recentBlock, BLOCK_BACKOFF_FACTOR } from "@beacon/shared";
+import { cadenceAdjust, getEtDay, getEtHour, getEffectiveInterval, imminentInterval, recentBlock, type CadenceSignals } from "@beacon/shared";
 import { cadenceByHour } from "./cadence";
 import { ago, type Health } from "./health";
 
@@ -101,13 +101,27 @@ export function tileStatus({ enabled, def, state, schedules, health, nextLabel, 
   // the tile, next to the schedule's name and a link to change it.
 
   // Secondary notes — only the ones that apply, each with the why in a tooltip.
-  const block = def.imminent ? null : recentBlock(errLog, now);
-  if (block) {
-    const what = block.statusCode != null ? `HTTP ${block.statusCode}` : "stall";
+  const adjust = def.imminent
+    ? null
+    : cadenceAdjust(getEffectiveInterval(def, schedules), def, state as CadenceSignals | undefined, now);
+  const block = adjust?.reason === "block" ? recentBlock(errLog, now) : null;
+  if (adjust && block) {
     secondary.push({
-      text: `⏳ backing off ×${BLOCK_BACKOFF_FACTOR} (${what} ${ago(block.ts, now)})`,
+      text: `⏳ backing off ×${adjust.factor} (${adjust.detail} ${ago(block.ts, now)})`,
       tone: "warn",
       title: "A block-like failure in the last 6 h stretches this site's interval ×1.5 so a hostile host is poked less often. Reverts by itself; imminent mode ignores it.",
+    });
+  } else if (adjust?.reason === "slow") {
+    secondary.push({
+      text: `🐢 easing off ×${adjust.factor} (${adjust.detail})`,
+      tone: "warn",
+      title: "This host's last few answers were far slower than its own normal — the usual first sign of a tar-pit. The interval is stretched ×1.5 until one check comes back quick. Imminent mode ignores it.",
+    });
+  } else if (adjust?.reason === "faster") {
+    secondary.push({
+      text: `🚀 checking ×${(1 / adjust.factor).toFixed(2).replace(/\.?0+$/, "")} faster (${adjust.detail})`,
+      tone: "faint",
+      title: "No block from this host for days, so checks run faster than the schedule (never below this site's floor). Any block or slowdown puts it straight back.",
     });
   }
   if (state?.["fetchVia"] === "storefront_fallback") {

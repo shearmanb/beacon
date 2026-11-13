@@ -10,7 +10,7 @@
 import type { SiteRow } from "@beacon/db";
 import type { SiteDefinition, SiteState } from "@beacon/core";
 import type { Schedules } from "@beacon/shared";
-import { imminentDurationMin, imminentInterval, type ErrorLogEntry } from "@beacon/shared";
+import { imminentDurationMin, imminentInterval, type CadenceSignals } from "@beacon/shared";
 import { nowInterval } from "../lib/cadence";
 import { predictedNextCheckAt, formatEta } from "../lib/nextcheck";
 import { scheduleLine, tileStatus } from "../lib/tile-status";
@@ -66,7 +66,6 @@ export function SiteTile({
 }) {
   const def = row.definition;
   const url = siteUrl(def);
-  const errorLog = state?.["errorLog"] as ErrorLogEntry[] | undefined;
   // Predicted next-check instant, through the exact formula the worker uses
   // (lib/nextcheck.ts) — a read-only prediction, not a scheduling decision.
   const nextCheckAtIso = predictedNextCheckAt(
@@ -76,7 +75,7 @@ export function SiteTile({
     state?.["cooldownUntil"] as string | null | undefined,
     schedules,
     now,
-    errorLog,
+    state as CadenceSignals | undefined,
   );
   const nextLabel = formatEta(nextCheckAtIso, now);
   const status = tileStatus({ enabled: row.enabled, def, state: state as Record<string, unknown> | undefined, schedules, health, nextLabel, now });

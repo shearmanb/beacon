@@ -81,6 +81,10 @@ export const shopifyGraphqlSource = z.object({
    *  swaps its collection/product instead of querying a dead id. Falls back to the
    *  last-known discovered embed (persisted in state), then productId/collectionId. */
   discoverEmbedFrom: z.string().url().optional(),
+  /** How often the discovery page is re-read (absent = 10 min; every check
+   *  while the site is imminent). Between reads the last discovered embed is
+   *  queried, so check cadence no longer multiplies page loads on the shop. */
+  discoverEveryMinutes: z.number().positive().optional(),
   /** "embed" (default): one product/collection, as above. "channel": EVERY
    *  product published to the token's sales channel (Buy Button), newest first —
    *  so a drop embedded on any page (t8ke.com, thereveries.co, …) is seen even
@@ -224,6 +228,10 @@ export const siteDefinitionSchema = z.object({
   // Null/absent = the operator's click. Auto runs honor rate-limit cooldowns
   // and revert without a Discord ping.
   imminentAutoMinutes: z.number().nullable().optional(),
+  // Two-way cadence loop (@beacon/shared backoff.ts): when set, a tight
+  // interval is shortened toward this floor after clean days without a block.
+  // Absent = never faster than the schedule says.
+  adaptiveFloorMinutes: z.number().positive().optional(),
   scheduleBeforeImminent: z.union([z.string(), z.number()]).nullable().optional(),
   alerts: alertFlagsSchema,
   filters: filtersSchema,

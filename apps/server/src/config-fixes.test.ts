@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { openStore, type BeaconStore } from "@beacon/db";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { applyConfigFixes, CORRECTIONS, ONE_SHOTS } from "./config-fixes.js";
 
 let store: BeaconStore;
@@ -205,5 +207,35 @@ describe("config fixes (boot-time config corrections)", () => {
     await applyConfigFixes(store, log);
     expect((await store.schedules.all())["fast_hours"]!.label).toBe("hand-edited");
     expect((await store.sites.get("sharedpour_t8ke"))!.definition.enabled).toBe(true);
+  });
+  it("2026-11-13 one-shots against the real backup bundle: fast channel, auto group, T8KE checker, floors", async () => {
+    const bundle = JSON.parse(
+      readFileSync(fileURLToPath(new URL("../../../analytics/backup/beacon-restore.json", import.meta.url)), "utf8"),
+    ) as { sites: Array<Record<string, unknown>> };
+    await store.secrets.set("reveries_official_storefront_token", "tok");
+    for (const def of bundle.sites) await store.sites.upsert(def as never);
+
+    await applyConfigFixes(store, log);
+    const def = async (id: string) => (await store.sites.get(id))?.definition;
+    expect((await def("sharedpour_channel"))!.schedule).toBe("storefront_fast");
+    expect((await def("reveries_official"))!.schedule).toBe("fast_hours");
+    expect(await def("t8ke_releases")).toMatchObject({
+      enabled: true,
+      schedule: "fast_hours",
+      source: { kind: "shopify_graphql", collectionId: "291731079323", discoverEveryMinutes: 60 },
+    });
+    expect((await def("sharedpour_t8ke_all"))!.adaptiveFloorMinutes).toBe(4);
+    expect((await def("bourbon_concierge"))!.adaptiveFloorMinutes).toBe(4);
+    const group = JSON.parse((await store.meta.get("auto_imminent"))!).groups[0];
+    expect(group.triggers).toContain("reveries_site_status");
+    expect(group.targets).not.toContain("reveries_site_status");
+    for (const key of ["triggers", "targets"]) expect(group[key].filter((x: string) => x === "t8ke_releases")).toHaveLength(1);
+
+    // Operator edits survive every later boot.
+    await store.sites.setEnabled("t8ke_releases", false);
+    await store.meta.set("auto_imminent", JSON.stringify({ enabled: false, groups: [] }));
+    await applyConfigFixes(store, log);
+    expect((await def("t8ke_releases"))!.enabled).toBe(false);
+    expect(JSON.parse((await store.meta.get("auto_imminent"))!).enabled).toBe(false);
   });
 });

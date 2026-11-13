@@ -6,9 +6,12 @@
 // (never inline in config — the legacy config.json committed it in plaintext).
 //
 // Self-heal (R2): with `discoverEmbedFrom` set, the adapter reads the live Buy
-// Button embed (type + id) off the shop page's `ShopifyBuyInit` block on every
-// check, so it follows the shop when it swaps collection<->product or changes id
-// — instead of querying a dead id forever and nagging with site_reset.
+// Button embed (type + id) off the shop page's `ShopifyBuyInit` block, so it
+// follows the shop when it swaps collection<->product or changes id — instead
+// of querying a dead id forever and nagging with site_reset. The page is
+// re-read at most every `discoverEveryMinutes` (every check while imminent):
+// the Storefront call is the cheap, WAF-free part of a check, the page load is
+// not, so the two are decoupled (2026-11-13).
 
 import { httpGet, httpPost } from "@beacon/fetch";
 import { htmlToText, type NormalizedProduct } from "@beacon/shared";
@@ -41,6 +44,11 @@ const NODE_FIELDS =
 // page 1 and the per-check cost stays one request for a normal-sized channel.
 const CHANNEL_PAGE_SIZE = 250;
 const DEFAULT_CHANNEL_MAX = 250;
+// A collection embed is read newest-first in one request, so a big collection
+// (t8ke.com's purchase page lists years of barrels) always has a fresh drop on
+// the page; anything past the cap falls off harmlessly (diff alerts on presence).
+const COLLECTION_PAGE_SIZE = 250;
+const DEFAULT_DISCOVER_EVERY_MIN = 10;
 
 const EMPTY_NOTE =
   "Storefront API returned 0 products. The shop embed may have switched to a new " +
@@ -157,12 +165,20 @@ export const shopifyGraphqlAdapter: SourceAdapter = {
     // never loses the target or fails the check.
     const prevEmbed = prev["discoveredEmbed"] as Embed | undefined;
     let embed = configEmbed(src);
-    if (src.discoverEmbedFrom) {
+    const lastDiscovery = typeof prev["embedDiscoveredAt"] === "string" ? Date.parse(prev["embedDiscoveredAt"]) : NaN;
+    const discoveryFresh =
+      !!prevEmbed && !site.imminent && Date.now() - lastDiscovery < (src.discoverEveryMinutes ?? DEFAULT_DISCOVER_EVERY_MIN) * 60_000;
+    let embedDiscoveredAt = discoveryFresh ? (prev["embedDiscoveredAt"] as string) : new Date().toISOString();
+    if (discoveryFresh) {
+      embed = prevEmbed;
+    } else if (src.discoverEmbedFrom) {
       try {
         const page = await httpGet(src.discoverEmbedFrom, { withResponse: true, signal: deps?.signal });
         embed = parseShopifyBuyEmbed(page.body) ?? prevEmbed ?? embed;
       } catch {
         embed = prevEmbed ?? embed;
+        // A failed page read is not a discovery: retry on the next check.
+        embedDiscoveredAt = (prev["embedDiscoveredAt"] as string | undefined) ?? "";
       }
     }
     if (!embed) {
@@ -172,7 +188,7 @@ export const shopifyGraphqlAdapter: SourceAdapter = {
     const query =
       embed.type === "product"
         ? `{ product(id: "gid://shopify/Product/${embed.id}") { ${NODE_FIELDS} } }`
-        : `{ collection(id: "gid://shopify/Collection/${embed.id}") { products(first: 50) { nodes { ${NODE_FIELDS} } } } }`;
+        : `{ collection(id: "gid://shopify/Collection/${embed.id}") { products(first: ${COLLECTION_PAGE_SIZE}, sortKey: CREATED, reverse: true) { nodes { ${NODE_FIELDS} } } } }`;
 
     const res = await httpPost(endpointFor(src), JSON.stringify({ query }), {
       headers: { "X-Shopify-Storefront-Access-Token": token },
@@ -207,13 +223,13 @@ export const shopifyGraphqlAdapter: SourceAdapter = {
       kind: "products",
       products: nodes.map((n) => normalize(n, src)),
       // Persist the resolved embed so a later page hiccup can fall back to it.
-      ...(usingDiscovery ? { stateExtras: { discoveredEmbed: embed } } : {}),
+      ...(usingDiscovery ? { stateExtras: { discoveredEmbed: embed, embedDiscoveredAt: embedDiscoveredAt || null } } : {}),
       // With discovery (or a single-product watch) an empty is transient and
       // self-heals, so don't nag after one blank; a static collection keeps the
       // legacy fire-after-first behaviour (a swapped id is rarely transient).
       emptyGuardThreshold: usingDiscovery || embed.type === "product" ? 3 : 1,
       emptyGuardNote: usingDiscovery
-        ? `Storefront API returned 0 products for the watched ${embed.type} ${embed.id}. Beacon re-reads the live Buy Button embed from ${src.discoverEmbedFrom} each check, so a swapped embed self-heals; a lasting 0 means the shop currently lists nothing.`
+        ? `Storefront API returned 0 products for the watched ${embed.type} ${embed.id}. Beacon re-reads the live Buy Button embed from ${src.discoverEmbedFrom} every ${src.discoverEveryMinutes ?? DEFAULT_DISCOVER_EVERY_MIN} min, so a swapped embed self-heals; a lasting 0 means the shop currently lists nothing.`
         : EMPTY_NOTE,
     };
   },

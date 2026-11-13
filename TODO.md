@@ -7,34 +7,32 @@ Each item tags rough **impact** so we can decide with the lean-by-default rule i
 mind: size `XS/S/M/L` (code volume) · whether it adds **deps** · **risk**.
 "On-demand" = don't build on spec; build when a real need forces it.
 
-## Check more without getting flagged (2026-11-13) — next candidates
+## Check more without getting flagged (2026-11-13)
 
-Shipped: `storefront_fast` on `sharedpour_channel`, auto-imminent (CHANGELOG 2026-11-13).
-- [ ] **1a Share the thereveries.co page fetch**: the wall probe and
-      `reveries_official`'s embed discovery each GET `/shop` every check. One
-      fetch serving both (or discovery at most every 5 min) halves that host's
-      load and would let the official checker join `storefront_fast`. S, no deps.
+Shipped (CHANGELOG 2026-11-13, both entries): `storefront_fast`, auto-imminent,
+`t8ke_releases`, discovery throttle, slowdown early-warning, clean-days speed-up.
+- [ ] **1a Watch the first day**: T8KE Releases tile green with a roster (if it
+      errors, the stored token cannot read collection 291731079323 — harvest
+      the page's own token into a new secret ref); SharedPour Channel free of
+      HTTP 429/430 at 2m.
 - [ ] **1b Bourbon Concierge Storefront-first**: a `shopify_graphql` checker on
       `the-bourbon-concierge.myshopify.com` at `storefront_fast`, REST kept as
-      the slower truth. Needs Preview from Railway (token ref armed?). Overlaps
-      T8KE 1d below. Mostly config.
-- [ ] **1c Latency early-warning**: record each check's response time; a host
-      answering several times slower than its own median is the start of a
-      tar-pit — stretch the interval before the 429, not after. S, no deps.
-- [ ] **1d Two-way back-off**: after N clean days step a REST checker's interval
-      down toward a per-site floor; any block steps it back up. S, no deps.
-- [ ] **1e Announcement feeds as triggers**: t8ke.com is WordPress (an RSS feed
-      is built to be polled); a release post could fire the auto-imminent
-      group. Blocked on reading t8ke.com (same as T8KE 1a).
-- [ ] **1f `auto_imminent` editor** on `/schedules` — only if the blob needs
+      the slower truth. Needs Add-site → Preview from Railway first. Overlaps
+      T8KE 1d below.
+- [ ] **1c Lower `adaptiveFloorMinutes`** 4 → 3 on the two REST checkers after
+      a few clean weeks at 4m.
+- [ ] **1d `auto_imminent` editor** on `/schedules` — only if the blob needs
       changing more than once.
+- [x] ~~Announcement-feed trigger~~: t8ke.com's feed is news/reviews, not
+      release posts. Dropped.
 
 ---
 
 ## T8KE releases coverage (2026-11-03) — waiting on network access
 
 Plan: CHANGELOG 2026-11-03. Adapter shipped (`shopify_graphql` `scope: "channel"`).
-- [ ] **1a Read t8ke.com's purchase page** (allow `t8ke.com` in the cloud
+- [x] **1a Read t8ke.com's purchase page** ✅ 2026-11-13: collection
+      291731079323 on shared-pour.myshopify.com → `t8ke_releases`. (was: allow `t8ke.com` in the cloud
       environment's network settings, or paste View Source). Look for
       `ShopifyBuyInit` / `createComponent` / `myshopify.com` /
       `storefrontAccessToken` and the BUY NOW hrefs. A store other than

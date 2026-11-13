@@ -120,12 +120,17 @@ export interface SchedulableSite {
   intervalMinutes?: number | null;
   imminent?: boolean;
   imminentIntervalMinutes?: number | null;
+  /** Opt-in floor for the clean-days speed-up (backoff.ts cadenceAdjust). */
+  adaptiveFloorMinutes?: number | null | undefined;
 }
 
 export interface SchedulableState {
   lastChecked?: string | null;
   /** Recent failures ({ts, message, statusCode}); the block back-off reads it. */
   errorLog?: Array<{ ts: string; message?: string; statusCode?: number | null }> | null;
+  /** Recent checks ({ts, ok, ms}); the slowdown early-warning reads it. */
+  checkHistory?: Array<{ ts: string; ok: boolean; ms?: number }> | null;
+  enabledAt?: string | null;
 }
 
 export interface DiffOptions {

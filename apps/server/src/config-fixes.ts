@@ -399,6 +399,59 @@ export const ONE_SHOTS: ConfigFix[] = [
       log("Seeded auto_imminent: group \"reveries\" (4 shops, 20 min, ≤4/day).");
     },
   },
+  {
+    id: "t8ke_releases_20261113",
+    description: "T8KE Releases checker (t8ke.com purchase page) + clean-days speed-up floors",
+    // Operator ask 2026-11-13: watch https://t8ke.com/private-selections/purchase-t8ke-releases/.
+    // Read from the page that day: it is a Shopify Buy Button embed of
+    // COLLECTION 291731079323 on shared-pour.myshopify.com — the same store as
+    // SharedPour and the official Reveries shop (whose embed is a different
+    // collection), so it is one more Storefront-API call, no new host to scrape.
+    // The page itself is re-read hourly only to follow an embed swap. Creating
+    // a site is one-shot work (rule 4): deleting it on the dashboard sticks.
+    async run(store, log) {
+      const tokenRef = SHAREDPOUR_FALLBACK.accessTokenRef;
+      if (!(await store.secrets.all())[tokenRef]) throw new Error(`secret "${tokenRef}" not found yet`);
+      if (!(await store.sites.get("t8ke_releases"))) {
+        await store.sites.upsert({
+          id: "t8ke_releases",
+          name: "T8KE Releases",
+          schedule: "fast_hours",
+          source: {
+            kind: "shopify_graphql",
+            domain: SHAREDPOUR_FALLBACK.domain,
+            accessTokenRef: tokenRef,
+            collectionId: "291731079323",
+            discoverEmbedFrom: "https://t8ke.com/private-selections/purchase-t8ke-releases/",
+            discoverEveryMinutes: 60,
+            productUrl: "https://t8ke.com/private-selections/purchase-t8ke-releases/",
+          },
+        });
+        log("Created t8ke_releases (first check baselines quietly).");
+      }
+      // Join the Reveries auto-imminent group, if that group is still there.
+      const raw = await store.meta.get("auto_imminent");
+      if (raw) {
+        const cfg = JSON.parse(raw) as { groups?: Array<{ id?: string; triggers?: string[]; targets?: string[] }> };
+        const group = cfg.groups?.find((g) => g.id === "reveries");
+        if (group) {
+          for (const key of ["triggers", "targets"] as const) {
+            if (Array.isArray(group[key]) && !group[key].includes("t8ke_releases")) group[key].push("t8ke_releases");
+          }
+          await store.meta.set("auto_imminent", JSON.stringify(cfg));
+        }
+      }
+      // Two-way cadence loop: the two REST checkers of the group may run up to
+      // 4m (from 5m) after clean days without a block. Deliberately a cautious
+      // floor — lower it per site once a few weeks at 4m have stayed clean.
+      for (const id of ["sharedpour_t8ke_all", "bourbon_concierge"]) {
+        const row = await store.sites.get(id);
+        if (!row || row.definition.adaptiveFloorMinutes != null) continue;
+        await store.sites.upsert({ ...row.definition, adaptiveFloorMinutes: 4 });
+        log(`Amended ${id}: adaptiveFloorMinutes → 4.`);
+      }
+    },
+  },
 ];
 
 /** Apply corrections (every boot) then pending one-shots (once ever). */

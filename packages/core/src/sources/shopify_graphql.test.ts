@@ -197,7 +197,34 @@ describe("shopifyGraphqlAdapter", () => {
     // discovery found a PRODUCT embed even though config still has a collectionId
     expect(lastRequest?.body).toContain('product(id: \\"gid://shopify/Product/9001382805659\\"');
     expect(result.products).toHaveLength(1);
-    expect(result.stateExtras).toEqual({ discoveredEmbed: { type: "product", id: "9001382805659" } });
+    expect(result.stateExtras).toMatchObject({ discoveredEmbed: { type: "product", id: "9001382805659" } });
+    expect(typeof result.stateExtras?.["embedDiscoveredAt"]).toBe("string");
+  });
+
+  it("re-reads the shop page at most every discoverEveryMinutes — except while imminent", async () => {
+    pageHtml = buyInitHtml("product", "777");
+    handler = () => respond(productResponse(NODE));
+    const prevAt = (minAgo: number) => ({
+      discoveredEmbed: { type: "product", id: "555" },
+      embedDiscoveredAt: new Date(Date.now() - minAgo * 60_000).toISOString(),
+    });
+    const queried = async (site: SiteDefinition, prev: Record<string, unknown>) => {
+      const r = await shopifyGraphqlAdapter.fetch(site, prev, deps);
+      if (r.kind !== "products") throw new Error("expected products");
+      return { body: lastRequest?.body ?? "", extras: r.stateExtras };
+    };
+    const site = makeSite({ discoverEmbedFrom: pageUrl });
+    // Fresh discovery: the page is not consulted, the stamp is carried forward.
+    const fresh = prevAt(1);
+    const a = await queried(site, fresh);
+    expect(a.body).toContain("Product/555");
+    expect(a.extras?.["embedDiscoveredAt"]).toBe(fresh.embedDiscoveredAt);
+    // Older than the default 10 min: re-read, follows the page.
+    expect((await queried(site, prevAt(11))).body).toContain("Product/777");
+    // A per-site interval stretches it.
+    expect((await queried(makeSite({ discoverEmbedFrom: pageUrl, discoverEveryMinutes: 60 }), prevAt(11))).body).toContain("Product/555");
+    // Imminent: every check, like before.
+    expect((await queried({ ...site, imminent: true }, prevAt(1))).body).toContain("Product/777");
   });
 
   it("falls back to the last-known discovered embed when the page has no embed", async () => {
