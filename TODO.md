@@ -32,10 +32,8 @@ removed (CHANGELOG 2026-11-13 (3)).
       that already has `storefrontFallback` configured, so after a restore
       (config back, secrets table empty) nothing re-fetches the token four
       checkers depend on. Harvest when the SECRET is missing. ~20 lines.
-- [ ] **1b Failed Discord sends are dropped**: a timeout/5xx is logged, the
-      product is already recorded as seen, so it never alerts again. Unknown
-      whether it has ever happened — first step is to record the failure as a
-      history row so it can be counted.
+- [x] **1b Failed Discord sends are dropped** ✅ fixed the same day by the
+      missed-alert audit (inline retries + `alert_outbox`, commit 566d64e).
 - [ ] **1c `HEALTHCHECK_URL`** (operator: create a healthchecks.io check, paste
       its URL into Railway variables).
 - [ ] **1d Tests don't gate deploys** (Railway builds on push; tests run only
