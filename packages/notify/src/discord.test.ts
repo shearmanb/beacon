@@ -49,7 +49,10 @@ describe("buildDiscordPayload", () => {
       }),
     );
     const embed = payload.embeds[0];
-    expect(payload.components[0].components[1]).toMatchObject({ label: "Product Page", url: "https://sharedpour.com/products/x" });
+    // The title and main button go straight to the bottle's page; the shop page is secondary.
+    expect(embed.url).toBe("https://sharedpour.com/products/x");
+    expect(payload.components[0].components[0]).toMatchObject({ label: "View Product", url: "https://sharedpour.com/products/x" });
+    expect(payload.components[0].components[1].label).toBe("View Shop");
     expect(embed.description).toBe("**Reveries**\n\nNose: caramel\nPalate: oak");
     expect(embed.fields).toContainEqual({ name: "Type", value: "Whiskey", inline: true });
     expect(embed.fields).toContainEqual({ name: "Tags", value: "Bourbon, Single Barrel", inline: false });

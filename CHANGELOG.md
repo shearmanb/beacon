@@ -14,6 +14,20 @@ title, one sentence saying what changed and why, then short bullets. One fact
 per bullet; name the file or setting it lives in. Entries below the
 "Older entries" line keep their original single-paragraph form.
 
+## 2026-11-18 — Discord product alerts link straight to the bottle
+
+Operator ask: a SharedPour Channel alert ("Penelope Cooper Series: Madagascar")
+linked its title to the sharedpour.com homepage and the bottle couldn't be found;
+product alerts now open the bottle's own page.
+
+- Cause: the channel checker's `url` is the shop homepage on purpose (`behindWall()`
+  gates by its host); the real page was only on a second "Product Page" button.
+- When an alert carries a `pageUrl`, the embed title and the main **View Product**
+  button use it, and the shop link becomes a secondary **View Shop** button
+  (`buildDiscordPayload` in `packages/notify/src/discord.ts`).
+- Stored `url` is unchanged, so the wall gate is unaffected. No `pageUrl` (product
+  not on the Online Store channel) → the shop link only, as before.
+
 ## 2026-11-13 (4) — Tiles show the cadence in effect now and when it changes
 
 Operator ask: at 6:50 a.m. the tile's schedule label ("Fast Hours (5m peak ·

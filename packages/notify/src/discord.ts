@@ -92,6 +92,11 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
   const siteLevel = SITE_LEVEL.has(type);
 
   const hasUrl = typeof product.url === "string" && product.url.length > 0;
+  // Product alerts link straight to the bottle's own page when the source has
+  // one (`url` can be a shared shop page, e.g. the SharedPour Channel's
+  // homepage); `url` itself stays as stored — behindWall() gates by its host.
+  const pageUrl = !siteLevel && product.pageUrl && product.pageUrl !== product.url ? product.pageUrl : null;
+  const primaryUrl = pageUrl ?? product.url;
 
   let embed: Embed;
   if (siteLevel) {
@@ -114,7 +119,7 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
         { name: "Price", value: priceStr, inline: true },
         { name: "Status", value: product.available ? "✅ Available" : "❌ Sold Out", inline: true },
       ],
-      url: product.url,
+      url: primaryUrl,
       timestamp: new Date().toISOString(),
     };
     // Detection lag: how long after the store's own clock Beacon noticed.
@@ -146,11 +151,9 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
             {
               type: 1,
               components: [
-                { type: 2, style: 5, label: siteLevel ? "View Site" : "View Product", url: product.url },
-                // The product's own page when `url` is a shared shop page.
-                ...(!siteLevel && product.pageUrl
-                  ? [{ type: 2, style: 5, label: "Product Page", url: product.pageUrl }]
-                  : []),
+                { type: 2, style: 5, label: siteLevel ? "View Site" : "View Product", url: primaryUrl },
+                // The shared shop page, when the main link went to the product's own page.
+                ...(pageUrl ? [{ type: 2, style: 5, label: "View Shop", url: product.url }] : []),
               ],
             },
           ],
