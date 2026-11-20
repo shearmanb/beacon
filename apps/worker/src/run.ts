@@ -14,12 +14,13 @@
 
 import { buildAdapterDeps, diagnoseSite, getAdapter, siteDefinitionSchema, sourceUrl, type AdapterDeps, type SiteDefinition } from "@beacon/core";
 import { expireIdentity } from "@beacon/fetch";
-import { sleep, jitter, shouldCheck, getEffectiveInterval, getEtDay, getEtHour, imminentDurationMin, DEFAULT_IMMINENT_DURATION_MIN, type Alert, type Schedules } from "@beacon/shared";
+import { failureKind, sleep, jitter, shouldCheck, getEffectiveInterval, getEtDay, getEtHour, imminentDurationMin, DEFAULT_IMMINENT_DURATION_MIN, type Alert, type Schedules } from "@beacon/shared";
 import type { NotificationChannel } from "@beacon/notify";
 import type { BeaconStore, SiteRow } from "@beacon/db";
 import { applyCommands } from "./commands.js";
 import { maybeAutoImminent } from "./auto-imminent.js";
 import { isBlockLikeFailure, processSite, type SiteOutcome } from "./process-site.js";
+import { controlUrl, defaultSelfHeal, loadSystemic, redeployDue, saveSystemic, REDEPLOY_AFTER_MS, type SelfHealDeps } from "./self-heal.js";
 
 export { DEFAULT_IMMINENT_DURATION_MIN };
 // Wall-clock ceiling for a single site's check (fetch + parse). The fetch layer
@@ -110,6 +111,8 @@ export interface RunContext {
   log?: (msg: string) => void;
   /** Override the inter-fetch politeness sleep (tests pass a no-op). */
   sleep?: (ms: number) => Promise<void>;
+  /** Override the control probe + Railway redeploy (tests stub both). */
+  selfHeal?: SelfHealDeps;
 }
 
 // Re-validate each stored definition through Zod on load so schema defaults
@@ -334,6 +337,7 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
           deps: { ...baseDeps, signal: controller.signal },
           ignored,
           tightWindow,
+          retryWait: wait,
         });
       } finally {
         clearTimeout(budget);
@@ -708,6 +712,48 @@ async function saveOutbox(store: BeaconStore, entries: OutboxEntry[]): Promise<v
   }
 }
 
+async function maybeAutoRedeploy(
+  ctx: RunContext,
+  heal: SelfHealDeps,
+  page: (event: Alert) => Promise<void>,
+): Promise<void> {
+  const { store, log = () => {} } = ctx;
+  const state = await loadSystemic(store);
+  if (!heal.redeploy || !state.open || !redeployDue(state)) return;
+  // Only when a redeploy can help: our network works, the route to the stores doesn't.
+  if (!(await heal.probe().catch(() => false))) {
+    log("[systemic] Control host unreachable too — not redeploying into a dead network.");
+    return;
+  }
+  const at = new Date().toISOString();
+  // Latch FIRST: the restart this causes must find the redeploy already spent.
+  await saveSystemic(store, { open: { ...state.open, redeployedAt: at }, lastRedeployAt: at });
+  const mins = Math.round((Date.now() - Date.parse(state.open.since)) / 60_000);
+  log(`[systemic] Unreachable for ${mins} min — asking Railway to redeploy.`);
+  await page({
+    type: "system_degraded",
+    product: {
+      title: "Auto-redeploy",
+      url: "",
+      note:
+        `No store has been reachable for ${mins} min while the control host answers, so Beacon is asking Railway to ` +
+        `redeploy it now (once per day at most). Expect a restart within a few minutes, then an all-clear if it worked.`,
+    },
+  });
+  try {
+    await heal.redeploy();
+  } catch (err) {
+    await page({
+      type: "system_degraded",
+      product: {
+        title: "Auto-redeploy failed",
+        url: "",
+        note: `Railway refused the redeploy: ${(err as Error).message}. Redeploy by hand — Beacon will not try again for 24 h.`,
+      },
+    });
+  }
+}
+
 async function dispatchPass(
   ctx: RunContext,
   results: CheckedSite[],
@@ -734,35 +780,86 @@ async function dispatchPass(
   const systemic =
     results.length >= SYSTEMIC_MIN_SITES && errored.length === results.length && failedStores.size >= SYSTEMIC_MIN_SITES;
 
+  // Self-heal plumbing (self-heal.ts). A page that Discord refuses goes to the
+  // outbox like any other alert — an outage is exactly when Discord may be
+  // unreachable too.
+  const heal = ctx.selfHeal ?? defaultSelfHeal();
+  const page = async (event: Alert): Promise<void> => {
+    await store.history.append(null, [event]);
+    if (!channel) return;
+    try {
+      await channel.send("Beacon worker", event);
+    } catch (err) {
+      failed.push({ at: new Date().toISOString(), site: "Beacon worker", alert: event });
+      log(`  Discord ${event.type} error (queued for retry): ${(err as Error).message}`);
+    }
+  };
+  const kinds = errored.map((r) => {
+    const last = (r.outcome.newState.errorLog as Array<{ message?: string; statusCode?: number | null }> | undefined)?.at(-1);
+    return failureKind(last?.statusCode, last?.message ?? "");
+  });
+  const allFailed = results.length > 0 && errored.length === results.length;
+  const allConnect = allFailed && kinds.every((k) => k === "connect");
+
+  // Sustained outage → one self-redeploy. Runs on ANY all-failed pass while an
+  // episode is open (most passes check a single site), never on the first.
+  if (allConnect) {
+    try {
+      await maybeAutoRedeploy(ctx, heal, page);
+    } catch (err) {
+      log(`Auto-redeploy error (continuing): ${(err as Error).message}`);
+    }
+  }
+
   if (systemic) {
     log(`[systemic] All ${results.length} checked sites failed this pass.`);
     if (!systemicAlerted) {
       systemicAlerted = true;
+      let state = await loadSystemic(store);
+      if (!state.open) {
+        state = { ...state, open: { since: new Date().toISOString() } };
+        await saveSystemic(store, state);
+      }
       const sample = errored
         .slice(0, 4)
-        .map((r) => `• ${r.def.name}: ${(r.outcome.newState.lastError as string | undefined) ?? "failed"}`)
+        .map((r) => `• ${r.def.name}: ${(r.outcome.newState.lastError as string | undefined) || "failed"}`)
         .join("\n");
-      const event: Alert = {
+      // Word the page by cause. For connect failures the control probe says
+      // whether it is our whole network or just the route to these stores.
+      const n = results.length;
+      let cause: string;
+      if (allConnect) {
+        const reachable = await heal.probe().catch(() => false);
+        cause = reachable
+          ? `None of the ${n} checked sites could be reached — every connection failed before the store answered (each ` +
+            `was retried once). A control host (${new URL(controlUrl()).hostname}) DID answer, so Railway's network is up ` +
+            `and it is the route to these stores that is down. This is not a block.`
+          : `None of the ${n} checked sites could be reached, and neither could a control host ` +
+            `(${new URL(controlUrl()).hostname}) — Railway's outbound network is down. This is not a block.`;
+      } else if (kinds.every((k) => k === "block" || k === "stall")) {
+        cause = `All ${n} checked sites refused or stalled the request this pass — the egress IP looks blocked.`;
+      } else {
+        cause =
+          `Every one of the ${n} checked sites failed this pass, in different ways — likely a network ` +
+          `outage or the egress IP being blocked, not a per-site problem.`;
+      }
+      const mins = Math.round(REDEPLOY_AFTER_MS / 60_000);
+      const next = !allConnect
+        ? `What to check: hit 🩺 Diagnose on any tile; if it stays blocked, a Railway redeploy can rotate the egress IP.`
+        : state.open?.redeployedAt
+          ? `Beacon already redeployed itself (${state.open.redeployedAt}) and the stores are still unreachable — ` +
+            `this one needs you: check Railway's status page and deploy logs.`
+          : heal.redeploy
+            ? `Nothing to do yet: if this lasts ${mins} min Beacon redeploys itself once (max 1/day) to get a fresh route.`
+            : `If this lasts, redeploy on Railway. (Auto-redeploy after ${mins} min is not armed — set RAILWAY_API_TOKEN.)`;
+      await page({
         type: "system_degraded",
         product: {
           title: "All sites failing",
           url: "",
-          note:
-            `Every one of the ${results.length} checked sites failed this pass — likely a network ` +
-            `outage or the egress IP being blocked, not a per-site problem.\n${sample}\n\n` +
-            `What to check: 1) is the Railway service up (deploy logs)? 2) hit 🩺 Diagnose on any tile — ` +
-            `if every step fails, the egress IP is blocked or the network is down; 3) a Railway redeploy ` +
-            `can rotate the egress IP if this persists.`,
+          note: `${cause}\n${sample}\n\n${next} You'll get an all-clear when checks succeed again.`,
         },
-      };
-      await store.history.append(null, [event]);
-      if (channel) {
-        try {
-          await channel.send("Beacon worker", event);
-        } catch (err) {
-          log(`  Discord system_degraded error: ${(err as Error).message}`);
-        }
-      }
+      });
     }
     // Suppress the individual site_error pings this pass — the aggregate covers it.
     return;
@@ -770,7 +867,30 @@ async function dispatchPass(
 
   // Reset only on evidence of recovery: most passes check 0-1 sites, and a
   // pass that proves nothing must not re-arm the page for the same episode.
-  if (results.some((r) => r.outcome.ok)) systemicAlerted = false;
+  if (results.some((r) => r.outcome.ok)) {
+    systemicAlerted = false;
+    // All-clear: close the episode with how long it lasted.
+    try {
+      const state = await loadSystemic(store);
+      if (state.open) {
+        const mins = Math.max(1, Math.round((Date.now() - Date.parse(state.open.since)) / 60_000));
+        const lasted = mins >= 90 ? `${(mins / 60).toFixed(1)} h` : `${mins} min`;
+        await saveSystemic(store, { ...state, open: null });
+        await page({
+          type: "site_recovered",
+          product: {
+            title: "All clear — sites reachable again",
+            url: "",
+            note:
+              `Checks are succeeding again. The systemic failure lasted about ${lasted}` +
+              `${state.open.redeployedAt ? ", and Beacon redeployed itself during it" : ""}.`,
+          },
+        });
+      }
+    } catch (err) {
+      log(`All-clear error (continuing): ${(err as Error).message}`);
+    }
+  }
 
   // Host-level view (3c): which hosts have 2+ failing checkers this pass.
   const failingByHost = new Map<string, string[]>();

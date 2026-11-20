@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BLOCK_BACKOFF_FACTOR, BLOCK_BACKOFF_WINDOW_MS, blockBackoffFactor, cadenceAdjust, isBlockLikeFailure, recentBlock } from "./backoff.js";
+import { BLOCK_BACKOFF_FACTOR, BLOCK_BACKOFF_WINDOW_MS, blockBackoffFactor, cadenceAdjust, describeError, failureKind, isBlockLikeFailure, recentBlock } from "./backoff.js";
 
 const T0 = Date.parse("2026-10-30T12:00:00.000Z");
 const at = (msAgo: number) => new Date(T0 - msAgo).toISOString();
@@ -85,5 +85,23 @@ describe("cadenceAdjust", () => {
     expect(cadenceAdjust(5, { adaptiveFloorMinutes: 3 }, sig, NOW).factor).toBe(0.8);
     const recent = { errorLog: [{ ts: ago(2 * DAY), statusCode: 403 }], enabledAt: ago(60 * DAY) };
     expect(cadenceAdjust(5, { adaptiveFloorMinutes: 3 }, recent, NOW).factor).toBe(1);
+  });
+});
+
+describe("failureKind / describeError", () => {
+  it("names a blank multi-address connect failure by its code and inner errors", () => {
+    const err = Object.assign(new AggregateError([new Error("connect ETIMEDOUT 1.1.1.1:443"), new Error("connect ENETUNREACH ::1:443")], ""), { code: "ETIMEDOUT" });
+    expect(describeError(err)).toBe("ETIMEDOUT: connect ETIMEDOUT 1.1.1.1:443; connect ENETUNREACH ::1:443");
+    expect(describeError(new Error("HTTP 429"))).toBe("HTTP 429");
+  });
+
+  it("separates never-reached from blocked and stalled", () => {
+    expect(failureKind(null, "connect ECONNREFUSED 127.0.0.1:9")).toBe("connect");
+    expect(failureKind(null, "getaddrinfo ENOTFOUND shop.example")).toBe("connect");
+    expect(failureKind(null, "socket hang up")).toBe("connect");
+    expect(failureKind(429, "HTTP 429")).toBe("block");
+    expect(failureKind(null, "Deadline exceeded fetching https://x")).toBe("stall");
+    expect(failureKind(404, "HTTP 404")).toBe("other");
+    expect(failureKind(null, "Storefront API returned unexpected structure")).toBe("other");
   });
 });

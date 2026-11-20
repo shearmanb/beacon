@@ -36,7 +36,7 @@ const sent: Array<{ site: string; alert: Alert }> = [];
 const channel: NotificationChannel = { name: "test", send: async (site, alert) => void sent.push({ site, alert }) };
 
 function ctx(over: Partial<RunContext> = {}): RunContext {
-  return { store, channel, dryRun: false, sleep: async () => {}, ...over };
+  return { store, channel, dryRun: false, sleep: async () => {}, selfHeal: { probe: async () => true, redeploy: null }, ...over };
 }
 
 beforeEach(async () => {
@@ -274,6 +274,58 @@ describe("runOnce", () => {
     expect(types.filter((t) => t === "system_degraded")).toHaveLength(1);
     // And it's recorded in history under a null siteId.
     expect((await store.history.recent()).some((h) => h.type === "system_degraded")).toBe(true);
+  });
+
+  it("systemic episode: names the cause, redeploys itself once after 30 min, then sends an all-clear", async () => {
+    await runOnce(ctx()); // a healthy pass first: re-arms the systemic page
+    await store.sites.setEnabled("s1", false);
+    await store.sites.upsert({ id: "d1", name: "Dead One", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: "http://127.0.0.1:9" } });
+    await store.sites.upsert({ id: "d2", name: "Dead Two", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: "http://localhost:9" } });
+    let redeploys = 0;
+    const selfHeal = { probe: async () => true, redeploy: async () => void redeploys++ };
+
+    await runOnce(ctx({ selfHeal }));
+    const first = sent.find((s) => s.alert.type === "system_degraded")!.alert.product.note!;
+    expect(first).toContain("could be reached");
+    expect(first).toContain("ECONNREFUSED"); // every line names its error
+    expect(first).not.toMatch(/: *$/m);
+    expect(first).toContain("redeploys itself once");
+    expect(redeploys).toBe(0); // not on the first pass
+
+    // 31 minutes on and still unreachable → exactly one redeploy, latched.
+    const blob = JSON.parse((await store.meta.get("systemic_episode"))!);
+    blob.open.since = new Date(Date.now() - 31 * 60_000).toISOString();
+    await store.meta.set("systemic_episode", JSON.stringify(blob));
+    sent.length = 0;
+    for (let pass = 0; pass < 2; pass++) {
+      for (const id of ["d1", "d2"]) await store.commands.enqueue("run_now", id);
+      await runOnce(ctx({ selfHeal }));
+    }
+    expect(redeploys).toBe(1);
+    expect(sent.filter((s) => s.alert.product.title === "Auto-redeploy")).toHaveLength(1);
+
+    // Recovery: one all-clear with the duration, and the episode is closed.
+    sent.length = 0;
+    await store.sites.setEnabled("s1", true);
+    await store.commands.enqueue("run_now", "s1");
+    await runOnce(ctx({ selfHeal }));
+    const clear = sent.filter((s) => s.alert.type === "site_recovered" && s.site === "Beacon worker");
+    expect(clear).toHaveLength(1);
+    expect(clear[0]!.alert.product.note).toMatch(/lasted about 3\d min, and Beacon redeployed itself/);
+    expect(JSON.parse((await store.meta.get("systemic_episode"))!).open).toBeNull();
+  });
+
+  it("no redeploy when the control host is unreachable too, or when it is not armed", async () => {
+    await runOnce(ctx()); // a healthy pass first: re-arms the systemic page
+    await store.sites.setEnabled("s1", false);
+    await store.sites.upsert({ id: "d1", name: "Dead One", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: "http://127.0.0.1:9" } });
+    await store.sites.upsert({ id: "d2", name: "Dead Two", intervalMinutes: 20, source: { kind: "shopify_rest", baseUrl: "http://localhost:9" } });
+    await store.meta.set("systemic_episode", JSON.stringify({ open: { since: new Date(Date.now() - 3_600_000).toISOString() }, lastRedeployAt: null }));
+    let redeploys = 0;
+    await runOnce(ctx({ selfHeal: { probe: async () => false, redeploy: async () => void redeploys++ } }));
+    expect(redeploys).toBe(0);
+    const note = sent.find((s) => s.alert.type === "system_degraded")!.alert.product.note!;
+    expect(note).toContain("outbound network is down");
   });
 
   it("does not call two failing checkers on ONE store a systemic failure", async () => {

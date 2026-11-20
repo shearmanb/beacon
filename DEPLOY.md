@@ -26,6 +26,10 @@ no new signups. On first boot it auto-seeds from the legacy JSON in the repo
    - *(optional)* `HEALTHCHECK_URL`, and `BEACON_DRY_RUN=1` for the first deploy
      (worker computes + logs but sends/persists nothing — verify zero false
      alerts, then remove it).
+   - *(optional)* `RAILWAY_API_TOKEN` = an **account or workspace** token
+     (railway.com → Account Settings → Tokens; a project token is likely
+     refused). Arms the self-redeploy after 30 min of unreachable stores,
+     at most once a day. Unset = Beacon only tells you to redeploy.
 4. **Generate a domain** (Settings → Networking → Generate Domain) → open the
    URL, log in. Done — that's your live dashboard, editable from there on.
 

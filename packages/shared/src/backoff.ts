@@ -23,6 +23,43 @@ export function isBlockLikeFailure(statusCode: number | null | undefined, messag
   return [401, 403, 429, 430, 503].includes(statusCode);
 }
 
+/** Status-less failures that never got an HTTP answer: DNS, TCP connect, reset.
+ *  Node puts the code in the message ("connect ETIMEDOUT 1.2.3.4:443");
+ *  `describeError` below does the same for the errors that arrive blank. */
+export const CONNECT_RE =
+  /\b(ETIMEDOUT|ECONNREFUSED|ECONNRESET|ENETUNREACH|EHOSTUNREACH|ENOTFOUND|EAI_AGAIN|EPIPE)\b|socket hang up/;
+
+export type FailureKind = "block" | "stall" | "connect" | "other";
+
+/** ONE classification of a failed check, shared by the retry, the alerts and
+ *  the self-heal loop: blocked (the host said no), stalled (it left us
+ *  hanging), connect (we never reached it — our network, not their WAF). */
+export function failureKind(statusCode: number | null | undefined, message: string): FailureKind {
+  if (statusCode != null) return isBlockLikeFailure(statusCode, message) ? "block" : "other";
+  if (STALL_RE.test(message)) return "stall";
+  return CONNECT_RE.test(message) ? "connect" : "other";
+}
+
+/** An error's message, or — when Node leaves it blank — its code and inner
+ *  errors. A connect that fails on every address (IPv4 + IPv6) surfaces as an
+ *  AggregateError with an EMPTY message; the 2026-11-17 systemic page listed
+ *  three sites with nothing after the colon because of it. */
+export function describeError(err: unknown): string {
+  if (!(err instanceof Error)) return String(err);
+  if (err.message) return err.message;
+  const e = err as Error & { code?: string; errors?: unknown; cause?: unknown };
+  const inner = [...(Array.isArray(e.errors) ? e.errors : []), e.cause]
+    .map((x) => (x instanceof Error ? x.message : ""))
+    .filter(Boolean);
+  return [e.code ?? e.name, [...new Set(inner)].slice(0, 3).join("; ")].filter(Boolean).join(": ");
+}
+
+/** Give a blank error its description in place (keeps the stack and `code`). */
+export function nameError<T>(err: T): T {
+  if (err instanceof Error && !err.message) err.message = describeError(err);
+  return err;
+}
+
 export interface ErrorLogEntry {
   ts: string;
   message?: string;

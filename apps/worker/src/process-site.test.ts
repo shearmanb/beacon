@@ -373,3 +373,51 @@ describe("channel-flap damping + reappearance guard", () => {
     expect(Object.keys(seen)).toEqual(["a"]); // the stale entry is pruned
   });
 });
+
+describe("connect retry (2a)", () => {
+  const noWait = async () => {};
+  // What Node raises when a connect fails on every address: a BLANK message.
+  const blank = () => Object.assign(new AggregateError([new Error("connect ETIMEDOUT 1.2.3.4:443")], ""), { code: "ETIMEDOUT" });
+  function flaky(failures: unknown[], products: NormalizedProduct[]): SourceAdapter & { calls: number } {
+    const a = {
+      kind: "shopify_rest" as const,
+      calls: 0,
+      fetch: async (): Promise<FetchResult> => {
+        const err = failures[a.calls++];
+        if (err) throw err;
+        return { kind: "products", products, pageCount: 1 };
+      },
+    };
+    return a;
+  }
+
+  it("absorbs a one-off connect failure: the check succeeds and the blip is logged, not counted", async () => {
+    const adapter = flaky([blank()], [prod("a", true)]);
+    const out = await processSite({ site: site(), prevState: { lastChecked: "t", products: {} }, adapter, deps, ignored: noneIgnored, retryWait: noWait });
+    expect(adapter.calls).toBe(2);
+    expect(out.ok).toBe(true);
+    expect(out.newState.consecutiveErrors).toBe(0);
+    const log = out.newState.errorLog as Array<{ message: string }>;
+    expect(log.at(-1)?.message).toContain("ETIMEDOUT");
+    expect(log.at(-1)?.message).toContain("recovered");
+  });
+
+  it("a connect failure that survives the retry is a NAMED failure, never a blank one", async () => {
+    const adapter = flaky([blank(), blank()], []);
+    const out = await processSite({ site: site(), prevState: undefined, adapter, deps, ignored: noneIgnored, retryWait: noWait });
+    expect(adapter.calls).toBe(2);
+    expect(out.ok).toBe(false);
+    expect(out.newState.lastError).toBe("ETIMEDOUT: connect ETIMEDOUT 1.2.3.4:443");
+    expect(out.newState.cooldownUntil ?? null).toBeNull(); // not a block: no breaker
+  });
+
+  it("never retries a block, and retries only the first failure of a streak", async () => {
+    const blocked = flaky([new HttpError(429, "https://x.com")], []);
+    await processSite({ site: site(), prevState: undefined, adapter: blocked, deps, ignored: noneIgnored, retryWait: noWait });
+    expect(blocked.calls).toBe(1);
+
+    const midStreak = flaky([blank()], []);
+    await processSite({ site: site(), prevState: { lastChecked: "t", products: {}, consecutiveErrors: 2 }, adapter: midStreak, deps, ignored: noneIgnored, retryWait: noWait });
+    expect(midStreak.calls).toBe(1);
+  });
+});

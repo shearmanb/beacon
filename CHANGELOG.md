@@ -14,6 +14,19 @@ title, one sentence saying what changed and why, then short bullets. One fact
 per bullet; name the file or setting it lives in. Entries below the
 "Older entries" line keep their original single-paragraph form.
 
+## 2026-11-20 — Systemic failures: retry, named causes, all-clear, self-redeploy
+
+A one-pass route blip between Railway and Shopify (2026-11-17, 6:55 PM) paged "Systemic Failure" with a blank error after every site name; connect failures are now retried, named, explained, closed with an all-clear and, if they last, answered with one self-redeploy.
+
+- **Cause of the blank lines:** a connect that fails on every address is a Node `AggregateError` with an empty message. `describeError` / `nameError` (`@beacon/shared` `backoff.ts`) fill it with the code and inner errors; applied in `packages/fetch` and `buildErrorOutcome`.
+- **One classification:** `failureKind` (`backoff.ts`) → `block` / `stall` / `connect` / `other`. `connect` = no HTTP answer at all (`CONNECT_RE`).
+- **Connect retry:** `processSite` retries a `connect` failure once after `CONNECT_RETRY_MS` (20 s), only on the first failure of a streak, never a block or stall. A blip it absorbs is written to `errorLog` ("retried … and recovered") but is not a failure.
+- **Cause-aware page:** the `system_degraded` note says unreachable vs blocked vs mixed, and what Beacon will do next. `site_error` got a "never reached the store" wording too.
+- **Control probe:** on an all-connect systemic pass, one GET to `BEACON_CONTROL_URL` (default `www.gstatic.com/generate_204`) tells "Railway's whole network is down" from "only the route to the stores is down" (`apps/worker/src/self-heal.ts`).
+- **Episode + all-clear:** the open episode lives in the `systemic_episode` meta blob; the first successful check closes it with one `site_recovered` page from "Beacon worker" giving the duration.
+- **Auto-redeploy:** after `REDEPLOY_AFTER_MS` (30 min) of nothing but connect failures, with the control host answering, the worker calls Railway's `serviceInstanceRedeploy`. Max one per 24 h, latched in the meta blob before the call. Inert until `RAILWAY_API_TOKEN` (an account or workspace token) is set. Never fires on blocks.
+- **Outbox:** systemic pages that Discord refuses now go to `alert_outbox` instead of being only logged.
+
 ## 2026-11-18 — Discord product alerts link straight to the bottle
 
 Operator ask: a SharedPour Channel alert ("Penelope Cooper Series: Madagascar")

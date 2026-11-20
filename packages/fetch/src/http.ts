@@ -17,6 +17,7 @@ import { request as httpsRequest } from "node:https";
 import { request as httpRequest, type ClientRequest, type IncomingHttpHeaders, type RequestOptions } from "node:http";
 import { URL } from "node:url";
 import { createGunzip, createInflate, createBrotliDecompress } from "node:zlib";
+import { nameError } from "@beacon/shared";
 import { identityForHost, type HostIdentity } from "./identity.js";
 
 // Hard ceiling on total request time (headers + body + decompression). Guards
@@ -283,7 +284,7 @@ function _httpGet(
 
     req.on("error", (err) => {
       clearDeadline();
-      fail(err);
+      fail(nameError(err)); // a connect failure on every address arrives with a blank message
     });
     req.setTimeout(SOCKET_IDLE_TIMEOUT_MS, () => {
       req?.destroy(new Error(`Socket idle timeout fetching ${url}`));

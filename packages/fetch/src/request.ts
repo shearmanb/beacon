@@ -6,6 +6,7 @@
 import { request as httpsRequest } from "node:https";
 import { request as httpRequest } from "node:http";
 import { URL } from "node:url";
+import { nameError } from "@beacon/shared";
 import { HttpError, type HttpResponse } from "./http.js";
 
 const REQUEST_DEADLINE_MS = 30_000;
@@ -87,7 +88,7 @@ export function httpPost(url: string, body: string, options: PostOptions = {}): 
 
     req.on("error", (err) => {
       clearDeadline();
-      fail(err);
+      fail(nameError(err)); // a connect failure on every address arrives with a blank message
     });
     req.setTimeout(SOCKET_IDLE_TIMEOUT_MS, () => {
       req.destroy(new Error(`Socket idle timeout posting ${url}`));

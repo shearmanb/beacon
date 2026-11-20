@@ -7,7 +7,7 @@
 // a stub adapter.
 
 import { runSiteCheck, sourceUrl, type AdapterDeps, type SiteDefinition, type SiteState, type SourceAdapter } from "@beacon/core";
-import { STALL_RE, type Alert } from "@beacon/shared";
+import { STALL_RE, describeError, failureKind, sleep, type Alert } from "@beacon/shared";
 import { annotateProducts, type AnnotatedProduct } from "./annotate.js";
 
 export const ERROR_ALERT_THRESHOLD = 5;
@@ -24,6 +24,14 @@ export const TIGHT_ERROR_ALERT_THRESHOLD = 3;
 // Recovery latency is bounded by the daily re-page + the fallback channel
 // carrying the actual monitoring.
 export const COOLDOWN_STEPS_MIN = [5, 15, 60, 180];
+// Connect retry (2026-11-20): a check that never reached the store (DNS / TCP
+// connect / reset — no HTTP answer) is retried ONCE after this pause before it
+// counts as a failure. The 2026-11-17 "systemic failure" page was a one-pass
+// route blip between Railway and Shopify; a retry would have absorbed it.
+// Never retries a block or a stall (the host answered "no" — re-poking is
+// rude and useless), and only on the FIRST failure of a streak, so a real
+// outage costs one pause per site, not one per pass.
+export const CONNECT_RETRY_MS = 20_000;
 const CHECK_HISTORY_CAP = 100;
 const ERROR_LOG_CAP = 25;
 // A site stuck erroring re-pages once a day (3e) — mirrors the empty-guard's
@@ -85,6 +93,8 @@ export interface ProcessSiteArgs {
   ignored: Set<string>;
   /** True when the site's current effective interval is a drop-window cadence — errors page earlier. */
   tightWindow?: boolean;
+  /** The pause before a connect retry (tests pass a no-op). */
+  retryWait?: (ms: number) => Promise<void>;
 }
 
 export async function processSite({
@@ -94,11 +104,30 @@ export async function processSite({
   deps,
   ignored,
   tightWindow,
+  retryWait = sleep,
 }: ProcessSiteArgs): Promise<SiteOutcome> {
   const nowIso = () => new Date().toISOString();
   try {
-    const startedAt = Date.now();
-    const result = await runSiteCheck(site, prevState, adapter, deps);
+    let startedAt = Date.now();
+    let result;
+    let retriedAfter: string | null = null;
+    try {
+      result = await runSiteCheck(site, prevState, adapter, deps);
+    } catch (err) {
+      const message = describeError(err);
+      const connect = failureKind((err as { statusCode?: number }).statusCode, message) === "connect";
+      const firstOfStreak = ((prevState?.consecutiveErrors as number | undefined) ?? 0) === 0;
+      if (!connect || !firstOfStreak || deps.signal?.aborted) throw err;
+      await retryWait(CONNECT_RETRY_MS);
+      if (deps.signal?.aborted) throw err; // out of budget: report the real failure, not "aborted"
+      startedAt = Date.now();
+      try {
+        result = await runSiteCheck(site, prevState, adapter, deps);
+      } catch (err2) {
+        throw deps.signal?.aborted ? err : err2;
+      }
+      retriedAfter = message;
+    }
     const ms = Date.now() - startedAt;
     annotateProducts(
       prevState?.products as Record<string, AnnotatedProduct> | undefined,
@@ -125,7 +154,12 @@ export async function processSite({
       // scratch by the pipeline, so without this a single success erased every
       // trace of an intermittent failure — exactly the pattern (periodic
       // bot-challenge blocks) the error log exists to make visible.
-      errorLog: (prevState?.errorLog as unknown[] | undefined) ?? [],
+      // A blip the retry absorbed is logged too (never counted as a failure),
+      // so a route that drops connections every evening is visible on /errors.
+      errorLog: [
+        ...((prevState?.errorLog as unknown[] | undefined) ?? []),
+        ...(retriedAfter ? [{ ts: nowIso(), message: `${retriedAfter} — retried after ${CONNECT_RETRY_MS / 1000}s and recovered`, statusCode: null }] : []),
+      ].slice(-ERROR_LOG_CAP),
     };
 
     // Recovery: we had an open error page; close it.
@@ -319,8 +353,9 @@ function buildErrorOutcome(
   err: unknown,
   tightWindow = false,
 ): SiteOutcome {
-  const message = err instanceof Error ? err.message : String(err);
+  const message = describeError(err);
   const statusCode = (err as { statusCode?: number }).statusCode;
+  const unreachable = failureKind(statusCode, message) === "connect";
   const stalled = statusCode == null && STALL_RE.test(message);
   const prev = prevState ?? ({} as SiteState);
   const consecutiveErrors = ((prev.consecutiveErrors as number | undefined) ?? 0) + 1;
@@ -379,7 +414,10 @@ function buildErrorOutcome(
     ? "What to check: 1) open the site in your own browser — if it loads fine, this is a server-IP block, not an outage; " +
       "2) hit 🩺 Diagnose on the tile for a step-by-step verdict (incl. whether the Storefront fallback still works); " +
       "3) if it stays fully blocked for days, a Railway redeploy can rotate the egress IP."
-    : "What to check: 1) does the URL still load in your browser (store moved/renamed?); " +
+    : unreachable
+      ? "What to check: 1) does the URL load in your browser — if it does, the store is fine and the route from Railway to it is down; " +
+        "2) hit 🩺 Diagnose on the tile; 3) if several stores fail this way at once Beacon pages a systemic failure and handles it itself."
+      : "What to check: 1) does the URL still load in your browser (store moved/renamed?); " +
       "2) hit 🩺 Diagnose on the tile; 3) if the site redesigned, the source config may need updating (⚙ source on the tile).";
 
   const events: Alert[] = shouldAlert
@@ -392,6 +430,7 @@ function buildErrorOutcome(
             note:
               `${consecutiveErrors} consecutive failures${statusCode ? ` (HTTP ${statusCode}` +
               `${statusCode === 403 || statusCode === 401 || statusCode === 430 ? " — looks blocked (bot protection?); the page may still load fine in a browser" : ""})` : ""}` +
+              `${unreachable ? " (never reached the store — the connection failed before any answer; not a block)" : ""}` +
               `${stalled ? " (connections left hanging with no response — looks like tar-pit bot mitigation; the page may still load fine in a browser)" : ""}. ` +
               `Last error: ${message}${dueForRealert ? " (daily reminder)" : ""}\n\n${tips}`,
           },
