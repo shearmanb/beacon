@@ -4,6 +4,7 @@ import { ThemeSwitcher } from "../components/ThemeSwitcher";
 import { AutoRefresh } from "../components/AutoRefresh";
 import { DeployStamp } from "../components/DeployStamp";
 import { DEFAULT_THEME, THEME_IDS } from "../lib/themes";
+import { QUICK_LINKS } from "../lib/quick-links";
 
 export const metadata = {
   title: "Beacon",
@@ -81,6 +82,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   ))}
                 </div>
               </details>
+            </nav>
+            <nav className="quick" aria-label="Shop quick links">
+              {QUICK_LINKS.map((l) => (
+                <a key={l.href} href={l.href} title={l.title} target="_blank" rel="noreferrer">
+                  {l.label} ↗
+                </a>
+              ))}
             </nav>
           </header>
           {children}

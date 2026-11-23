@@ -14,6 +14,14 @@ title, one sentence saying what changed and why, then short bullets. One fact
 per bullet; name the file or setting it lives in. Entries below the
 "Older entries" line keep their original single-paragraph form.
 
+## 2026-11-23 — Header shop quick links
+
+Three links on the far right of the header (Reveries shop, SharedPour search for "reveries", T8KE purchase page) so the stores that sell bottles are one click away from any page.
+
+- List lives in `apps/web/lib/quick-links.ts`; nothing else reads it. Edit it to add or remove a shop.
+- Each link opens a new tab; styled from `--accent` (`.quick` in `globals.css`), so every theme picks it up.
+- On a phone the links sit on row 1 beside the wordmark; the nav keeps row 2.
+
 ## 2026-11-20 — Systemic failures: retry, named causes, all-clear, self-redeploy
 
 A one-pass route blip between Railway and Shopify (2026-11-17, 6:55 PM) paged "Systemic Failure" with a blank error after every site name; connect failures are now retried, named, explained, closed with an all-clear and, if they last, answered with one self-redeploy.
