@@ -14,6 +14,14 @@ title, one sentence saying what changed and why, then short bullets. One fact
 per bullet; name the file or setting it lives in. Entries below the
 "Older entries" line keep their original single-paragraph form.
 
+## 2026-11-23 (2) — CLAUDE.md slimmed to a map; detail moved to REBUILD.md
+
+`CLAUDE.md` loads into every session, and its "How Beacon runs" section had grown to dense paragraphs; it is now one line per subsystem (what, where, what not to break) and the full text lives in `REBUILD.md`.
+
+- `CLAUDE.md`: 16 KB → 10 KB. Master instructions, git workflow, standing rules and the v1 → v2 checklist are unchanged.
+- `REBUILD.md` → "Subsystem reference": the old bullets, moved word for word.
+- Fixed while moving: three paths missing `src/` (`harvest.ts`, `diagnose.ts`, `backup.ts`), the header line (now names the quick links), and `REBUILD.md`'s pointer to operational history (`CHANGELOG.md`, not `CLAUDE.md`).
+
 ## 2026-11-23 — Header shop quick links
 
 Three links on the far right of the header (Reveries shop, SharedPour search for "reveries", T8KE purchase page) so the stores that sell bottles are one click away from any page.
