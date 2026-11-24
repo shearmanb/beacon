@@ -17,7 +17,9 @@
 // What's in the bundle:
 //   • site definitions, schedules, ignored products, reminders
 //   • the meta blobs that hold hand-curated config (the Unicorn watchlist,
-//     target bottles and buying notes — irreplaceable by re-scraping)
+//     target bottles and buying notes — irreplaceable by re-scraping), and the
+//     vABC limited-list baseline (without it a restore re-baselines silently
+//     and any change during the outage is never reported)
 //   • per-site product BASELINES, which is what actually prevents the
 //     false-alert flood on restore
 // What's NOT: the secrets table (never put tokens in the repo — the preventive
@@ -30,8 +32,8 @@ const BACKUP_INTERVAL_MS = 24 * 3_600_000;
 const BACKUP_PATH = "analytics/backup/beacon-restore.json";
 const META_KEY = "configBackup"; // JSON: { at: iso }
 const HTTP_TIMEOUT_MS = 20_000;
-// Meta keys worth carrying: hand-authored config, not operational bookkeeping.
-const BACKED_UP_META_KEYS = ["unicorn_config", "auto_imminent"];
+// Meta keys worth carrying: hand-authored config + diff baselines, not bookkeeping.
+const BACKED_UP_META_KEYS = ["unicorn_config", "auto_imminent", "vabc_state"];
 // Per-site state fields that are pure operational history — dropped so the
 // bundle stays small and well under the GitHub contents API's 1 MB read limit.
 const VOLATILE_STATE_FIELDS = ["checkHistory", "errorLog", "viaFlips", "recentlySeen", "seenTitles"];

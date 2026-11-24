@@ -16,3 +16,4 @@ export * from "./extractors/types.js";
 export * from "./extractors/registry.js";
 export { parseCampariCards, campariV1 } from "./extractors/campari_v1.js";
 export * from "./unicorn.js";
+export * from "./vabc.js";

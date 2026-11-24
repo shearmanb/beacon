@@ -25,6 +25,7 @@ import {
   unicornTermSchema,
   type UnicornConfig,
 } from "@beacon/core";
+import { parseVabcState, VABC_STATE_META_KEY } from "@beacon/core";
 import { getStore } from "../lib/store";
 import type { AddResult, PreviewResult } from "../lib/site-forms";
 import type { UnicornActionResult, UnicornPreviewResult } from "../lib/unicorn-forms";
@@ -509,6 +510,14 @@ export async function ignoreUnicornLot(
 }
 
 /** "Scan now": flag the scan state; the worker's next ~60s loop picks it up. */
+/** /vabc "Check now": the worker picks the flag up on its next ~60s loop. */
+export async function requestVabcCheck(): Promise<void> {
+  const store = await getStore();
+  const state = parseVabcState(await store.meta.get(VABC_STATE_META_KEY));
+  await store.meta.set(VABC_STATE_META_KEY, JSON.stringify({ ...state, forceCheckRequested: true }));
+  revalidatePath("/vabc");
+}
+
 export async function requestUnicornScan(): Promise<void> {
   const store = await getStore();
   const state = parseUnicornScanState(await store.meta.get(UNICORN_STATE_META_KEY));

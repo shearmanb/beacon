@@ -238,6 +238,15 @@ export async function runOnce(ctx: RunContext): Promise<RunResult> {
     log(`Unicorn scan error (continuing): ${(err as Error).message}`);
   }
 
+  // vABC limited-availability list watcher: same isolation contract as Unicorn
+  // (own meta blob, own /vabc page, daily cadence, no site-health coupling).
+  try {
+    const { maybeCheckVabc } = await import("./vabc.js");
+    await maybeCheckVabc(ctx);
+  } catch (err) {
+    log(`vABC check error (continuing): ${(err as Error).message}`);
+  }
+
   rows = normalizeRows(await store.sites.list(), log); // refresh after auto-off/harvest mutations
 
   const anyImminentActive = rows.some((r) => r.enabled && r.definition.imminent);

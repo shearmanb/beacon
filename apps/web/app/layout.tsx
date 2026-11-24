@@ -40,6 +40,7 @@ const MORE_LINKS = [
   { href: "/add", label: "Add site" },
   { href: "/errors", label: "Errors" },
   { href: "/unicorn", label: "Unicorn", title: "Unicorn Auctions watcher — isolated from site tracking" },
+  { href: "/vabc", label: "vABC list", title: "vABC limited-availability list — daily additions/removals" },
   { href: "/api/export/history", label: "Export", title: "Download the full alert history as JSONL — feed it to Claude to mine drop-timing patterns" },
   { href: "/reminders", label: "Reminders" },
   { href: "https://reveriesregistry.com/", label: "Reveries Registry ↗", title: "The Reveries Registry — fan-made archive of every Reveries release (opens in a new tab)", external: true },

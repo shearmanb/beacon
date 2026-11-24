@@ -14,6 +14,18 @@ title, one sentence saying what changed and why, then short bullets. One fact
 per bullet; name the file or setting it lives in. Entries below the
 "Older entries" line keep their original single-paragraph form.
 
+## 2026-11-24 — vABC limited-availability list watcher
+
+A daily side job reads abc.virginia.gov/products/limited-availability and posts one Discord message when bottles are added to or removed from the list, so changes are caught without anyone re-checking the page by hand.
+
+- Code: `packages/core/src/vabc.ts` (parser, diff, read guards), `apps/worker/src/vabc.ts` (daily job), page `/vabc` (More ▾), "Check now" = `requestVabcCheck` in `apps/web/app/actions.ts`.
+- Keyed on the 6-digit product code per section (Limited vs On-Shelf); name edits are not changes, a move between sections is a removal plus an addition.
+- A bad read never becomes a diff: a Cloudflare challenge, an HTTP error, or fewer than 5 limited bottles parsed is a failed check and the baseline stays put. A shrink of more than half the list is held until the next read returns the identical list.
+- Cadence: 22–26 h after a good read, ~3 h retry after a failed one. One `site_error` warning after 3 failures in a row, a `site_recovered` all-clear when reads work again. The first read baselines quietly (history only, rule 3).
+- Risk: vABC is behind Cloudflare; a dev-container fetch got the challenge page (HTTP 403). Whether Railway's egress is challenged is unknown until the first live check, and if it is, the warning above fires within ~9 h.
+- State: `vabc_state` meta blob, added to the off-box backup bundle so a restored volume keeps the baseline. Kill switch: `VABC_WATCH=off`.
+- Parser checked against a saved copy of the live page (89 limited + 5 on-shelf). Discord notes are budgeted under the 4096-char embed limit (links dropped and "…and N more" past ~12 changes). Tests: 462 → 483.
+
 ## 2026-11-23 (2) — CLAUDE.md slimmed to a map; detail moved to REBUILD.md
 
 `CLAUDE.md` loads into every session, and its "How Beacon runs" section had grown to dense paragraphs; it is now one line per subsystem (what, where, what not to break) and the full text lives in `REBUILD.md`.
