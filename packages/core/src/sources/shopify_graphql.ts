@@ -13,10 +13,11 @@
 // the Storefront call is the cheap, WAF-free part of a check, the page load is
 // not, so the two are decoupled (2026-11-13).
 
-import { httpGet, httpPost } from "@beacon/fetch";
+import { httpGet } from "@beacon/fetch";
 import { htmlToText, type NormalizedProduct } from "@beacon/shared";
 import type { SourceOf } from "../schema.js";
 import type { AdapterDeps, FetchResult, PrevState, SourceAdapter } from "./types.js";
+import { VARIANT_FIELDS, postStorefront, storefrontCartUrl } from "./shopify_rest.js";
 
 interface StorefrontNode {
   title: string;
@@ -28,6 +29,7 @@ interface StorefrontNode {
   featuredImage?: { url?: string };
   descriptionHtml?: string | null;
   onlineStoreUrl?: string | null;
+  variants?: Parameters<typeof storefrontCartUrl>[1];
   publishedAt?: string | null;
   createdAt?: string | null;
   updatedAt?: string | null;
@@ -40,7 +42,7 @@ type Embed = { type: "collection" | "product"; id: string };
 // onlineStoreUrl is the product's own page on the store's primary domain (null
 // when the product isn't published to the Online Store channel).
 const NODE_FIELDS =
-  "title handle vendor productType availableForSale priceRange { minVariantPrice { amount } } featuredImage { url } descriptionHtml onlineStoreUrl publishedAt createdAt updatedAt";
+  "title handle vendor productType availableForSale priceRange { minVariantPrice { amount } } featuredImage { url } descriptionHtml onlineStoreUrl publishedAt createdAt updatedAt " + VARIANT_FIELDS;
 
 // Channel scope pages through the root product list 250 at a time (the
 // Storefront API's max page size), newest first, so a fresh drop is always on
@@ -78,6 +80,10 @@ function normalize(node: StorefrontNode, src: SourceOf<"shopify_graphql">): Norm
     url,
     details: htmlToText(node.descriptionHtml),
     pageUrl: node.onlineStoreUrl && node.onlineStoreUrl !== url ? node.onlineStoreUrl : null,
+    // The cart lives on the Shopify store, never on `url` (which can be a
+    // non-Shopify page hosting the embed): the product's own storefront when
+    // it has one, else the myshopify domain, which redirects to it.
+    cartUrl: storefrontCartUrl(node.onlineStoreUrl ?? `https://${src.domain}`, node.variants),
     listedAt: node.publishedAt ?? node.createdAt ?? null,
     updatedAt: node.updatedAt ?? null,
   };
@@ -144,13 +150,7 @@ export const shopifyGraphqlAdapter: SourceAdapter = {
     }
 
     if (src.scope === "channel") {
-      const post: Post = async (query, variables) =>
-        (
-          await httpPost(endpointFor(src), JSON.stringify({ query, variables }), {
-            headers: { "X-Shopify-Storefront-Access-Token": token },
-            signal: deps?.signal,
-          })
-        ).body;
+      const post: Post = (query, variables) => postStorefront(endpointFor(src), token, query, variables, deps?.signal);
       const nodes = await fetchChannel(src, post);
       return {
         kind: "products",
@@ -195,10 +195,7 @@ export const shopifyGraphqlAdapter: SourceAdapter = {
         ? `{ product(id: "gid://shopify/Product/${embed.id}") { ${NODE_FIELDS} } }`
         : `{ collection(id: "gid://shopify/Collection/${embed.id}") { products(first: ${COLLECTION_PAGE_SIZE}, sortKey: CREATED, reverse: true) { nodes { ${NODE_FIELDS} } } } }`;
 
-    const res = await httpPost(endpointFor(src), JSON.stringify({ query }), {
-      headers: { "X-Shopify-Storefront-Access-Token": token },
-      signal: deps?.signal,
-    });
+    const res = { body: await postStorefront(endpointFor(src), token, query, undefined, deps?.signal) };
     const data = JSON.parse(res.body) as {
       data?: {
         collection?: { products?: { nodes?: StorefrontNode[] } } | null;

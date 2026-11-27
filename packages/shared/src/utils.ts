@@ -58,3 +58,28 @@ export function htmlToText(html: string | null | undefined, max = DETAILS_MAX_CH
   const at = cut.lastIndexOf(" ");
   return `${(at > max * 0.6 ? cut.slice(0, at) : cut).trimEnd()}…`;
 }
+
+/**
+ * Shopify cart permalink — `https://<store>/cart/<variantId>:1` — which puts
+ * one of that variant in a fresh cart and lands on checkout. It only ADDS TO
+ * CART: the operator still completes the purchase in their own browser, where
+ * their login / Shop Pay / autofill live. The ONE builder, so every source
+ * (REST, Storefront) produces the same link.
+ * Picks the first buyable variant (else the first), and accepts a numeric REST
+ * id or a Storefront GID (`gid://shopify/ProductVariant/123`). Null when there
+ * is no usable id or store URL — callers then simply offer no cart link.
+ */
+export function shopifyCartUrl(
+  storeUrl: string,
+  variants: ReadonlyArray<{ id?: string | number | null; available?: boolean | null }> | null | undefined,
+): string | null {
+  const pick = variants?.find((v) => v?.available && v.id != null) ?? variants?.find((v) => v?.id != null);
+  const id = pick ? /(\d+)$/.exec(String(pick.id))?.[1] : undefined;
+  if (!id) return null;
+  try {
+    const { protocol, origin } = new URL(storeUrl);
+    return protocol === "https:" || protocol === "http:" ? `${origin}/cart/${id}:1` : null;
+  } catch {
+    return null;
+  }
+}

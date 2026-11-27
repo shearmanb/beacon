@@ -14,6 +14,19 @@ title, one sentence saying what changed and why, then short bullets. One fact
 per bullet; name the file or setting it lives in. Entries below the
 "Older entries" line keep their original single-paragraph form.
 
+## 2026-11-27 — "Add to Cart" link on Discord product alerts
+
+Product alerts for a buyable bottle on a Shopify store now carry a 🛒 Add to Cart button, so the click lands on checkout with the bottle in the cart instead of on the product page.
+
+- The link is Shopify's cart permalink, `https://<store>/cart/<variant-id>:1`. It only adds to the cart: the purchase is finished by hand in the operator's own browser, where the login, Shop Pay and autofill live. Beacon never touches a browser or a checkout.
+- One builder, `shopifyCartUrl` in `@beacon/shared` `utils.ts`; the result is stored as `cartUrl` on the product. It picks the first buyable variant, else the first.
+- `shopify_rest` reads the variant id it was already downloading. The two Storefront callers (`shopify_graphql`, and the REST adapter's fallback) ask for `variants(first: 3)` (`VARIANT_FIELDS` in `shopify_rest.ts`).
+- For `shopify_graphql` the link sits on the product's own storefront (`onlineStoreUrl`), else the myshopify domain — never on `url`, which can be a non-Shopify page hosting the embed. Checked live: `shared-pour.myshopify.com/cart/<id>:1` answers 301 to the same path on sharedpour.com.
+- Safe fallback (`postStorefront` in `shopify_rest.ts`): if the API answers a query that selects variants with GraphQL errors, the same query is re-sent without them and that endpoint is asked without variants for 6 h. The roster is never lost over a cart link. Added because the cost of the larger query could not be tested against the live API before shipping.
+- The button (`packages/notify/src/discord.ts`) shows only when the alert's product is `available` and has a `cartUrl`: a sold-out or not-yet-buyable bottle would land on an error page. Non-Shopify checkers get no button.
+- `diff()` keys on presence and availability only, so the new stored field re-alerts nothing.
+- Not done: the dashboard does not show the link. If it is added there it must pass `rosterIsLive()` / `behindWall()` (standing rule 1).
+
 ## 2026-11-24 — vABC limited-availability list watcher
 
 A daily side job reads abc.virginia.gov/products/limited-availability and posts one Discord message when bottles are added to or removed from the list, so changes are caught without anyone re-checking the page by hand.

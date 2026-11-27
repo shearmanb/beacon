@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { htmlToText, jitter, randomFrom, sleep } from "./utils.js";
+import { htmlToText, jitter, randomFrom, shopifyCartUrl, sleep } from "./utils.js";
 
 describe("jitter", () => {
   it("stays within [base-spread, base+spread]", () => {
@@ -50,5 +50,27 @@ describe("htmlToText", () => {
     const out = htmlToText("word ".repeat(100), 50)!;
     expect(out.length).toBeLessThanOrEqual(51);
     expect(out.endsWith("word…")).toBe(true);
+  });
+});
+
+describe("shopifyCartUrl", () => {
+  it("builds the cart permalink on the store's origin from a numeric id or a Storefront GID", () => {
+    expect(shopifyCartUrl("https://sharedpour.com/products/x", [{ id: 4455, available: true }])).toBe("https://sharedpour.com/cart/4455:1");
+    expect(shopifyCartUrl("https://shop.example.com", [{ id: "gid://shopify/ProductVariant/987654321", available: true }])).toBe(
+      "https://shop.example.com/cart/987654321:1",
+    );
+  });
+
+  it("prefers the first buyable variant, else the first", () => {
+    expect(shopifyCartUrl("https://s.com", [{ id: 1, available: false }, { id: 2, available: true }])).toBe("https://s.com/cart/2:1");
+    expect(shopifyCartUrl("https://s.com", [{ id: 1, available: false }, { id: 2, available: false }])).toBe("https://s.com/cart/1:1");
+  });
+
+  it("is null without a usable variant id or store URL", () => {
+    expect(shopifyCartUrl("https://s.com", [])).toBeNull();
+    expect(shopifyCartUrl("https://s.com", undefined)).toBeNull();
+    expect(shopifyCartUrl("https://s.com", [{ available: true }])).toBeNull();
+    expect(shopifyCartUrl("https://s.com", [{ id: "not-an-id" }])).toBeNull();
+    expect(shopifyCartUrl("not a url", [{ id: 1 }])).toBeNull();
   });
 });

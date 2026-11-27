@@ -34,7 +34,7 @@ function shopifyProduct(handle: string, available: boolean, price: string) {
     vendor: "TestVendor",
     product_type: "Whiskey",
     tags: ["a", "b"],
-    variants: [{ price, available }],
+    variants: [{ id: 4000 + handle.length, price, available }],
     images: [{ src: `https://img/${handle}.jpg` }],
   };
 }
@@ -61,6 +61,7 @@ describe("shopifyRestAdapter", () => {
     expect(a.available).toBe(true);
     expect(a.minPrice).toBe(59.99);
     expect(a.url).toBe(`${base}/products/a`);
+    expect(a.cartUrl).toBe(`${base}/cart/4001:1`);
     expect(a.image).toBe("https://img/a.jpg");
     expect(a.tags).toEqual(["a", "b"]);
     expect(a.details).toBe("Barrel #5160\nNose: caramel");

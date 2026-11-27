@@ -26,6 +26,9 @@ export interface NormalizedProduct {
    *  embed: every product's `url` is the same /shop page). Kept separate so
    *  `url` still drives the password-wall gate (behindWall) by host. */
   pageUrl?: string | null;
+  /** Shopify cart permalink for one of this product's variants (see
+   *  shopifyCartUrl). Only sources that know a variant id set it. */
+  cartUrl?: string | null;
   /** When the store says the product went live (Shopify published_at, else
    *  created_at) and was last changed (updated_at). Raw material for the
    *  detection-lag measurement in diff() — never used to decide an alert. */
@@ -66,6 +69,7 @@ export interface AlertProduct {
   tags?: string[];
   details?: string | null;
   pageUrl?: string | null;
+  cartUrl?: string | null;
   note?: string;
   listedAt?: string | null;
   updatedAt?: string | null;

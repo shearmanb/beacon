@@ -5,11 +5,12 @@
 // (not per-site config).
 
 import { httpGet, httpPost, conditionalHeaders, extractValidators } from "@beacon/fetch";
-import { htmlToText, sleep, DETAILS_MAX_CHARS, type NormalizedProduct } from "@beacon/shared";
+import { htmlToText, shopifyCartUrl, sleep, DETAILS_MAX_CHARS, type NormalizedProduct } from "@beacon/shared";
 import type { SourceOf } from "../schema.js";
 import type { AdapterDeps, FetchResult, PrevState, SourceAdapter } from "./types.js";
 
 export interface ShopifyVariant {
+  id?: number | string | null;
   price?: string | number | null;
   available?: boolean;
 }
@@ -98,6 +99,7 @@ export function normalizeShopifyProduct(p: ShopifyProduct, origin: string): Norm
     available: isAvailable(p.variants),
     image: p.images?.[0]?.src ?? null,
     url: `${origin}/products/${p.handle}`,
+    cartUrl: shopifyCartUrl(origin, p.variants),
     details: htmlToText(p.body_html),
     listedAt: p.published_at ?? p.created_at ?? null,
     updatedAt: p.updated_at ?? null,
@@ -325,6 +327,7 @@ interface StorefrontNode {
   availableForSale: boolean;
   priceRange?: { minVariantPrice?: { amount?: string } };
   featuredImage?: { url?: string };
+  variants?: StorefrontVariants;
   description?: string | null;
   publishedAt?: string | null;
   createdAt?: string | null;
@@ -335,10 +338,66 @@ interface StorefrontPage {
   nodes?: StorefrontNode[];
 }
 
+// Variant ids for the cart link, shared by both Storefront callers (this
+// fallback and the shopify_graphql adapter). 3 is plenty: a bottle is one
+// variant, and the cap keeps a 250-product page small.
+export const VARIANT_FIELDS = "variants(first: 3) { nodes { id availableForSale } }";
+type StorefrontVariants = { nodes?: Array<{ id?: string | null; availableForSale?: boolean }> } | null | undefined;
+
+/** Storefront variant nodes → the shared cart permalink (null when none). */
+export function storefrontCartUrl(storeUrl: string, variants: StorefrontVariants): string | null {
+  return shopifyCartUrl(storeUrl, variants?.nodes?.map((v) => ({ id: v.id, available: v.availableForSale })));
+}
+
+// Safe fallback: the cart link must never cost a check. If the API answers a
+// query that selects variants with GraphQL errors (e.g. a query-cost cap on a
+// 250-product page), the same query is re-sent without them — the roster comes
+// back as before, just with no cart links — and that endpoint is asked without
+// variants for VARIANT_RETRY_MS before the selection is tried again.
+const VARIANT_RETRY_MS = 6 * 3_600_000;
+const variantsOffUntil = new Map<string, number>();
+
+function hasGraphqlErrors(body: string): boolean {
+  try {
+    const errors = (JSON.parse(body) as { errors?: unknown }).errors;
+    return Array.isArray(errors) && errors.length > 0;
+  } catch {
+    return false; // not JSON: the caller's own structure check reports it
+  }
+}
+
+/** POST one Storefront query and return the body (see the fallback above). */
+export async function postStorefront(
+  endpoint: string,
+  token: string,
+  query: string,
+  variables: Record<string, unknown> | undefined,
+  signal: AbortSignal | undefined,
+): Promise<string> {
+  const send = async (q: string): Promise<string> =>
+    (
+      await httpPost(endpoint, JSON.stringify({ query: q, variables }), {
+        headers: { "X-Shopify-Storefront-Access-Token": token },
+        signal,
+      })
+    ).body;
+  const plain = query.replace(VARIANT_FIELDS, "");
+  if (plain === query || (variantsOffUntil.get(endpoint) ?? 0) > Date.now()) return send(plain);
+  const body = await send(query);
+  if (!hasGraphqlErrors(body)) return body;
+  const retried = await send(plain);
+  if (!hasGraphqlErrors(retried)) {
+    variantsOffUntil.set(endpoint, Date.now() + VARIANT_RETRY_MS);
+    console.warn(`[storefront] ${endpoint} rejected the variants selection — cart links off for 6 h: ${body.slice(0, 200)}`);
+  }
+  return retried;
+}
+
 // Plain-text description, truncated server-side: the fallback may page 2,000
 // products, so full descriptionHtml would multiply the response for nothing.
 const NODE_FIELDS = `title handle vendor productType tags availableForSale publishedAt createdAt updatedAt
   priceRange { minVariantPrice { amount } } featuredImage { url }
+  ${VARIANT_FIELDS}
   description(truncateAt: ${DETAILS_MAX_CHARS})`;
 
 function normalizeStorefront(n: StorefrontNode, origin: string): NormalizedProduct {
@@ -353,6 +412,7 @@ function normalizeStorefront(n: StorefrontNode, origin: string): NormalizedProdu
     available: !!n.availableForSale,
     image: n.featuredImage?.url ?? null,
     url: `${origin}/products/${n.handle}`,
+    cartUrl: storefrontCartUrl(origin, n.variants),
     details: n.description?.trim() || null,
     listedAt: n.publishedAt ?? n.createdAt ?? null,
     updatedAt: n.updatedAt ?? null,
@@ -393,16 +453,13 @@ async function fetchViaStorefront(
     const query = collectionHandle
       ? `query($cursor: String) { collection(handle: "${collectionHandle}") { ${inner} } }`
       : `query($cursor: String) { ${inner} }`;
-    const res = await httpPost(endpoint, JSON.stringify({ query, variables: { cursor } }), {
-      headers: { "X-Shopify-Storefront-Access-Token": token },
-      signal: deps?.signal,
-    });
-    const json = JSON.parse(res.body) as {
+    const body = await postStorefront(endpoint, token, query, { cursor }, deps?.signal);
+    const json = JSON.parse(body) as {
       data?: { products?: StorefrontPage; collection?: { products?: StorefrontPage } | null };
     };
     const pageData = collectionHandle ? json.data?.collection?.products : json.data?.products;
     if (!Array.isArray(pageData?.nodes)) {
-      throw new Error(`Storefront fallback returned unexpected structure: ${res.body.slice(0, 200)}`);
+      throw new Error(`Storefront fallback returned unexpected structure: ${body.slice(0, 200)}`);
     }
     all.push(...pageData.nodes);
     if (!pageData.pageInfo?.hasNextPage || !pageData.pageInfo.endCursor) break;

@@ -97,6 +97,10 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
   // homepage); `url` itself stays as stored — behindWall() gates by its host.
   const pageUrl = !siteLevel && product.pageUrl && product.pageUrl !== product.url ? product.pageUrl : null;
   const primaryUrl = pageUrl ?? product.url;
+  // Cart permalink (adds the bottle to the cart in the operator's own browser;
+  // it never buys). Only while the store says it is buyable — a sold-out or
+  // not-yet-live bottle would just land on an error page.
+  const cartUrl = !siteLevel && product.available && product.cartUrl ? product.cartUrl : null;
 
   let embed: Embed;
   if (siteLevel) {
@@ -152,6 +156,7 @@ export function buildDiscordPayload(siteName: string, alert: Alert): string {
               type: 1,
               components: [
                 { type: 2, style: 5, label: siteLevel ? "View Site" : "View Product", url: primaryUrl },
+                ...(cartUrl ? [{ type: 2, style: 5, label: "🛒 Add to Cart", url: cartUrl }] : []),
                 // The shared shop page, when the main link went to the product's own page.
                 ...(pageUrl ? [{ type: 2, style: 5, label: "View Shop", url: product.url }] : []),
               ],

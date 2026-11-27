@@ -25,6 +25,19 @@ describe("buildDiscordPayload", () => {
     expect(payload.components[0].components[0].label).toBe("View Product");
   });
 
+  it("adds an Add to Cart link button only for a buyable bottle that carries a cart link", () => {
+    const product = { handle: "a", title: "A", url: "https://s.com/products/a", cartUrl: "https://s.com/cart/123:1" };
+    const buttons = (available: boolean, type: Alert["type"] = "restock") =>
+      JSON.parse(buildDiscordPayload("S", { type, product: { ...product, available } })).components[0].components;
+    expect(buttons(true)).toEqual([
+      { type: 2, style: 5, label: "View Product", url: "https://s.com/products/a" },
+      { type: 2, style: 5, label: "🛒 Add to Cart", url: "https://s.com/cart/123:1" },
+    ]);
+    // Sold out / listed-but-not-buyable: the permalink would land on an error.
+    expect(buttons(false, "sold_out")).toHaveLength(1);
+    expect(buttons(false, "new_product")).toHaveLength(1);
+  });
+
   it("formats a site-level alert (site_reset) with the wave-reset label", () => {
     const alert: Alert = { type: "site_reset", product: { title: "Reveries", url: "https://x", note: "password wall" } };
     const embed = JSON.parse(buildDiscordPayload("Reveries", alert)).embeds[0];

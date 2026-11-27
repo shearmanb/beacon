@@ -130,8 +130,14 @@ describe("shopifyGraphqlAdapter", () => {
             featuredImage: { url: "https://img/r1.jpg" },
             descriptionHtml: "<p>Barrel #5160</p><p>Nose: caramel</p>",
             onlineStoreUrl: "https://sharedpour.com/products/reveries-batch-1",
+            variants: { nodes: [{ id: "gid://shopify/ProductVariant/41001", availableForSale: true }] },
           },
-          { title: "Reveries Batch 0", handle: "reveries-batch-0", availableForSale: false },
+          {
+            title: "Reveries Batch 0",
+            handle: "reveries-batch-0",
+            availableForSale: false,
+            variants: { nodes: [{ id: "gid://shopify/ProductVariant/41000", availableForSale: false }] },
+          },
         ]),
       );
 
@@ -148,10 +154,34 @@ describe("shopifyGraphqlAdapter", () => {
     expect(r1.url).toBe("https://www.thereveries.co/shop");
     expect(r1.pageUrl).toBe("https://sharedpour.com/products/reveries-batch-1");
     expect(r1.details).toBe("Barrel #5160\nNose: caramel");
+    // The cart link sits on the product's own storefront, never the embed page.
+    expect(lastRequest?.body).toContain("variants(first: 3)");
+    expect(r1.cartUrl).toBe("https://sharedpour.com/cart/41001:1");
     const r0 = result.products.find((p) => p.handle === "reveries-batch-0")!;
     expect(r0.available).toBe(false);
     expect(r0.pageUrl).toBeNull();
+    // No storefront page of its own: the myshopify domain (it redirects).
+    expect(r0.cartUrl).toBe("https://shared-pour.myshopify.com/cart/41000:1");
     expect(r0.details).toBeNull();
+  });
+
+  it("re-asks without variants when the API rejects that selection, then stops asking for them", async () => {
+    const own = endpoint + "/cost-cap"; // its own endpoint: the back-off is per endpoint
+    const bodies: string[] = [];
+    handler = () => {
+      const body = lastRequest!.body;
+      bodies.push(body);
+      respond(body.includes("variants(") ? JSON.stringify({ errors: [{ message: "Query cost too high" }] }) : collectionResponse([NODE]));
+    };
+    const first = await shopifyGraphqlAdapter.fetch(makeSite({ endpoint: own }), {}, deps);
+    if (first.kind !== "products") throw new Error("expected products");
+    // The roster still comes back — only the cart link is missing.
+    expect(first.products.map((p) => p.handle)).toEqual([NODE.handle]);
+    expect(first.products[0]!.cartUrl).toBeNull();
+    expect(bodies.map((b) => b.includes("variants("))).toEqual([true, false]);
+    // The next check does not pay for the rejected selection again.
+    await shopifyGraphqlAdapter.fetch(makeSite({ endpoint: own }), {}, deps);
+    expect(bodies.map((b) => b.includes("variants("))).toEqual([true, false, false]);
   });
 
   it("uses empty-guard threshold 1 for a static collection that returns nothing", async () => {
